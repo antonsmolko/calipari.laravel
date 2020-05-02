@@ -7,7 +7,7 @@ namespace App\Services\Image\Handlers;
 use App\Services\Image\Repositories\CmsImageRepository;
 use Illuminate\Support\Arr;
 
-class GetItemsHandler
+class GetCmsItemsHandler
 {
     private CmsImageRepository $repository;
 

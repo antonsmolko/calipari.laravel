@@ -8,7 +8,7 @@ use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
 use App\Services\Cache\Tag;
 use App\Services\Image\Handlers\DeleteImageHandler;
-use App\Services\Image\Handlers\GetItemsHandler;
+use App\Services\Image\Handlers\GetCmsItemsHandler;
 use App\Services\Image\Handlers\SyncAssociativeCategoryOfImageHandler;
 use App\Services\Image\Handlers\UpdateImagePathHandler;
 use App\Services\Image\Handlers\UploadImageHandler;
@@ -22,7 +22,7 @@ class CmsImageService extends CmsBaseResourceService
     private UpdateImagePathHandler $updateItemPathHandler;
     private SyncAssociativeCategoryOfImageHandler $syncAssociativeCategoryHandler;
     private DeleteImageHandler $destroyHandler;
-    private GetItemsHandler $getItemsHandler;
+    private GetCmsItemsHandler $getItemsHandler;
 
     public function __construct(
         CmsImageRepository $repository,
@@ -31,7 +31,7 @@ class CmsImageService extends CmsBaseResourceService
         UpdateImagePathHandler $updateImagePathHandler,
         SyncAssociativeCategoryOfImageHandler $syncAssociativeCategoryOfImageHandler,
         DeleteImageHandler $deleteImageHandler,
-        GetItemsHandler $getItemsHandler
+        GetCmsItemsHandler $getItemsHandler
     )
     {
         parent::__construct($repository, $clearCacheByTagHandler);

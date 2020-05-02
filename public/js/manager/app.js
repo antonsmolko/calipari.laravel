@@ -83973,7 +83973,7 @@ var mutations = {
   UPDATE_FIELD: function UPDATE_FIELD(state, payload) {
     state.fields[payload.field] = payload.value;
   },
-  UPDATE_PUBLISH_FIELD: function UPDATE_PUBLISH_FIELD(state) {
+  TOGGLE_PUBLISH_FIELD: function TOGGLE_PUBLISH_FIELD(state) {
     state.fields.publish = +!state.fields.publish;
   },
   CLEAR_FIELDS: function CLEAR_FIELDS(state) {
@@ -84222,8 +84222,8 @@ var actions = {
   updateField: function updateField(context, payload) {
     context.commit('UPDATE_FIELD', payload);
   },
-  updatePublishField: function updatePublishField(context) {
-    context.commit('UPDATE_PUBLISH_FIELD');
+  togglePublishField: function togglePublishField(context) {
+    context.commit('TOGGLE_PUBLISH_FIELD');
   },
   clearFields: function clearFields(context) {
     context.commit('CLEAR_FIELDS');
@@ -84537,7 +84537,7 @@ var mutations = {
   UPDATE_FIELD: function UPDATE_FIELD(state, payload) {
     state.fields[payload.field] = payload.value;
   },
-  UPDATE_PUBLISH_FIELD: function UPDATE_PUBLISH_FIELD(state) {
+  TOGGLE_PUBLISH_FIELD: function TOGGLE_PUBLISH_FIELD(state) {
     state.fields.publish = +!state.fields.publish;
   },
   CLEAR_FIELDS: function CLEAR_FIELDS(state) {
@@ -84685,8 +84685,8 @@ var actions = {
   updateField: function updateField(context, payload) {
     context.commit('UPDATE_FIELD', payload);
   },
-  updatePublishField: function updatePublishField(context) {
-    context.commit('UPDATE_PUBLISH_FIELD');
+  togglePublishField: function togglePublishField(context) {
+    context.commit('TOGGLE_PUBLISH_FIELD');
   },
   clearFields: function clearFields(context) {
     context.commit('CLEAR_FIELDS');
@@ -86506,9 +86506,9 @@ module.exports = exported;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/smol/otus.laravel/resources/manager/js/app.js */"./resources/manager/js/app.js");
-__webpack_require__(/*! /Users/smol/otus.laravel/resources/manager/sass/app.scss */"./resources/manager/sass/app.scss");
-module.exports = __webpack_require__(/*! /Users/smol/otus.laravel/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/smol/develop/projects/calipari/calipari.laravel/resources/manager/js/app.js */"./resources/manager/js/app.js");
+__webpack_require__(/*! /Users/smol/develop/projects/calipari/calipari.laravel/resources/manager/sass/app.scss */"./resources/manager/sass/app.scss");
+module.exports = __webpack_require__(/*! /Users/smol/develop/projects/calipari/calipari.laravel/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

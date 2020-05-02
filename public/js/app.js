@@ -50832,7 +50832,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/smol/otus.laravel/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/smol/develop/projects/calipari/calipari.laravel/resources/js/app.js */"./resources/js/app.js");
 
 
 /***/ })

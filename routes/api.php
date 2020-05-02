@@ -21,6 +21,9 @@ Route::post('/cdek/settlements', 'CDEK\CDEKController@getSettlements');
 Route::post('/cdek/price', 'CDEK\CDEKController@getPrice');
 //Route::get('/cdek/curl', 'CDEK\CDEKController@curlGet');
 
+/* Payment */
+Route::get('/payment/create/{hash_number}', 'Payment\PaymentController@create');
+Route::post('/payment/notifications', 'Payment\PaymentController@notify');
 
 // Authorisation
 
@@ -47,11 +50,15 @@ Route::group(['prefix' => '/auth'], function() {
 
 // Client API
 
-Route::post('catalog/images', 'Client\Image\ImageController@getItems');
+Route::get('catalog/images', 'Client\Image\ImageController@getItems')
+//    ->middleware('lqb.delimiter')
+    ->name('catalog.images');
+
 Route::get('catalog/images/{id}', 'Client\Image\ImageController@getItem')
     ->where('id', '[0-9]+');
 
-Route::post('catalog/images/wish-list', 'Client\Image\ImageController@getWishListItems');
+Route::get('catalog/images/wish-list', 'Client\Image\ImageController@getWishListItems')
+    ->name('catalog.images.wish-list');
 
 Route::get('catalog/categories', 'Client\Category\CategoryController@index');
 
@@ -60,10 +67,27 @@ Route::post('catalog/categories/{id}/images', 'Client\Category\CategoryControlle
     ->where('id', '[0-9]+');
 
 // Filters
-Route::get('catalog/categories/{id}/filters', 'Client\Category\CategoryController@getFilters')
-    ->name('category.filters');
-Route::post('catalog/categories/filters/wish-list', 'Client\Category\CategoryController@getFiltersByImageIds')
-    ->name('category.filters.wish-list');
+//Route::post('catalog/categories/{id}/filters', 'Client\Category\CategoryController@getFilters')
+//    ->name('category.filters');
+//Route::post('catalog/categories/filters/wish-list', 'Client\Category\CategoryController@getFiltersByImageIds')
+//    ->name('category.filters.wish-list');
+
+Route::prefix('catalog/filters')
+//    ->middleware('lqb.delimiter')
+    ->group(function() {
+//        Route::get('/', 'Client\Filter\FilterController@getFilters')
+//            ->name('catalog.filters');
+        Route::get('formats', 'Client\Filter\FilterController@getFormatFilters')
+            ->name('catalog.filters.formats');
+        Route::get('tags', 'Client\Filter\FilterController@getTagFilters')
+            ->name('catalog.filters.tags');
+        Route::get('topics', 'Client\Filter\FilterController@getTopicFilters')
+            ->name('catalog.filters.topics');
+        Route::get('colors', 'Client\Filter\FilterController@getColorFilters')
+            ->name('catalog.filters.colors');
+        Route::get('interiors', 'Client\Filter\FilterController@getInteriorFilters')
+            ->name('catalog.filters.interiors');
+    });
 
 // Delivery
 Route::get('delivery', 'Client\Delivery\DeliveryController@index');

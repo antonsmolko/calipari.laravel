@@ -79,7 +79,6 @@ class ClientCategoryService extends ClientBaseResourceService
         list('filter' => $filter, 'pagination' => $pagination) = $requestData;
 
         $category = $this->repository->getItem($categoryId);
-        $paginateData = $this->repository->getImages($category, $pagination, $filter);
 
         $filtersKey = [];
 
@@ -93,30 +92,44 @@ class ClientCategoryService extends ClientBaseResourceService
             Arr::collapse([
                 ['client', $category->alias, 'images'],
                 Arr::flatten($pagination),
-                Arr::flatten($filtersKey)
+                $filtersKey
             ]),
         );
 
         return Cache::tags(Tag::IMAGES_TAG)
-            ->remember($key, TTL::IMAGES_TTL, function () use ($paginateData) {
-                return $paginateData;
+            ->remember($key, TTL::IMAGES_TTL, function () use ($category, $pagination, $filter) {
+                return $this->repository->getImages($category, $pagination, $filter);
             });
     }
 
     /**
      * @param int $categoryId
+     * @param array $filter
      * @return array
      */
-    public function getFilters(int $categoryId): array
+    public function getFilters(int $categoryId, array $filter = null): array
     {
-        $filters = $this->getFiltersHandler->handle($categoryId);
+        $filtersKey = [];
 
-        $key = $this->cacheKeyManager->getCategoriesKey(['client', 'category_' . $categoryId, 'filters']);
+        if ($filter !== null) {
+            foreach($filter as $key => $value) {
+                if ($value) {
+                    $filtersKey[$key] = $key . '_' . implode('_', $value);
+                }
+            }
+        }
 
-        return Cache::tags(Tag::CATEGORIES_TAG)
-            ->remember($key, TTL::CATEGORIES_TTL, function () use ($filters) {
-                return $filters;
-            });
+        $key = $this->cacheKeyManager->getCategoriesKey([
+            'client',
+            'category_' . $categoryId,
+            'filters_' . implode('_', array_values($filtersKey))
+        ]);
+
+        return $this->getFiltersHandler->handle($categoryId, $filter);
+//        return Cache::tags(Tag::CATEGORIES_TAG)
+//            ->remember($key, TTL::CATEGORIES_TTL, function () use ($categoryId, $filter) {
+//                return $this->getFiltersHandler->handle($categoryId, $filter);
+//            });
     }
 
     /**
@@ -126,13 +139,11 @@ class ClientCategoryService extends ClientBaseResourceService
      */
     public function getFiltersByImageIds(array $ids): array
     {
-        $filters = $this->getWishListFiltersHandler->handle($ids);
-
         $key = $this->cacheKeyManager->getCategoriesKey(['client', 'wishList_' . implode('.', $ids), 'filters']);
 
         return Cache::tags(Tag::CATEGORIES_TAG)
-            ->remember($key, TTL::CATEGORIES_TTL, function () use ($filters) {
-                return $filters;
+            ->remember($key, TTL::CATEGORIES_TTL, function () use ($ids) {
+                return $this->getWishListFiltersHandler->handle($ids);
             });
     }
 }

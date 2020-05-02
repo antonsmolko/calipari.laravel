@@ -100,20 +100,110 @@ class Image extends Model
     }
 
     /**
+     * @return float|int
+     */
+    public function getRatioAttribute()
+    {
+        return $this->width / $this->height;
+    }
+
+    public function getArticleAttribute()
+    {
+        return str_pad($this->id, config('settings.image_article_length'), "0", STR_PAD_LEFT);
+    }
+
+    public function scopeWhereCategory($query, int $id)
+    {
+        return $query
+            ->published()
+            ->whereHas('categories', fn (Builder $query) => $query
+                ->where('id', $id));
+    }
+
+    public function scopeWhereKeys($query, string $value)
+    {
+        $ids = explode(';', $value);
+
+        return $query
+            ->published()
+            ->whereIn('id', $ids);
+    }
+
+    public function scopeWhereFormats($query, string $value)
+    {
+        $ids = explode(';', $value);
+
+        return $query
+            ->whereHas('format', fn (Builder $query) => $query
+                ->whereIn('id', $ids));
+    }
+
+    public function scopeWhereTags($query, string $value)
+    {
+        $ids = explode(';', $value);
+
+        return $query
+            ->whereHas('tags', fn (Builder $query) => $query
+                ->whereIn('id', $ids));
+    }
+
+//    public function scopeWhereCategories($query, string $value)
+//    {
+//        $ids = explode(';', $value);
+//
+//        return $query
+//            ->whereHas('categories', fn (Builder $query) => $query
+//                ->whereIn('id', $ids));
+//    }
+
+    public function scopeWhereTopics($query, string $value)
+    {
+        $ids = explode(';', $value);
+
+        return $query
+            ->whereHas('topics', fn (Builder $query) => $query
+                ->whereIn('id', $ids));
+    }
+
+    public function scopeWhereColors($query, string $value)
+    {
+        $ids = explode(';', $value);
+
+        return $query
+            ->whereHas('colors', fn (Builder $query) => $query
+                ->whereIn('id', $ids));
+    }
+
+    public function scopeWhereInteriors($query, string $value)
+    {
+        $ids = explode(';', $value);
+
+        return $query
+            ->whereHas('interiors', fn (Builder $query) => $query
+                ->whereIn('id', $ids));
+    }
+
+
+
+
+
+
+
+    /**
      * @param $query
      * @param array $filter
      * @return mixed
      */
     public function scopeFiltered($query, array $filter)
     {
-        list('categories' => $categories, 'tags' => $tags) = $filter;
+        list(
+            'categories' => $categories,
+            'tags' => $tags,
+            'formats' => $formats) = $filter;
 
         return $query
-            ->whereHas('tags', function (Builder $query) use ($tags) {
-                $query->whereIn('id', $tags);
-            })
-            ->orWhereHas('categories', function (Builder $query) use ($categories) {
-                $query->whereIn('id', $categories);
-            });
+            ->whereHas('tags', fn (Builder $query) => $query->whereIn('id', $tags))
+            ->orWhereHas('format', fn (Builder $query) => $query->whereIn('id', $formats))
+            ->orWhereHas('categories', fn (Builder $query) => $query->whereIn('id', $categories));
     }
 }

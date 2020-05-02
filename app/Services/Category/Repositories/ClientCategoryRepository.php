@@ -65,25 +65,33 @@ class ClientCategoryRepository extends ClientBaseResourceRepository
 
     /**
      * @param int $categoryId
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @param array $filter
+     * @return mixed
      */
-    public function getFilters(int $categoryId)
+    public function getFilters(int $categoryId, array $filter = null)
     {
         return $this->model::select(['id', 'title', 'alias', 'image_path', 'type'])
                             ->getFilters($categoryId)
-                            ->withImageCountWhereCategoryId($categoryId)
-                            ->published()
+                            ->when($filter, function ($query, $filter) {
+                                return $query->filtered($filter);
+                            })
+                            ->withImageCountWhereCategoryId($categoryId, $filter)
                             ->get();
     }
 
     /**
      * WishList Filters
      * @param array $ids
+     * @param array $filter
      * @return mixed
      */
-    public function getFiltersByImageIds(array $ids)
+    public function getFiltersByImageIds(array $ids, array $filter = null)
     {
         return $this->model::select(['id', 'title', 'alias', 'image_path', 'type'])
-            ->getFiltersByImageIds($ids);
+            ->getFiltersByImageIds($ids, $filter)
+            ->when($filter, function ($query, $filter) {
+                return $query->filtered($filter);
+            })
+            ->get();
     }
 }

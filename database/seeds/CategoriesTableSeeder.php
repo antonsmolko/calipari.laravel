@@ -20,14 +20,14 @@ class CategoriesTableSeeder extends Seeder
 
         foreach (config('seeds.categories.colors') as $category) {
             $category = factory(App\Models\Category::class)->create($category);
-            $images = $this->getAttachData(300);
+            $images = $this->getAttachData(200);
 
             $category->images()->attach($images, ['category_type' => 'colors']);
         }
 
         foreach (config('seeds.categories.interiors') as $category) {
             $category = factory(App\Models\Category::class)->create($category);
-            $images = $this->getAttachData(300);
+            $images = $this->getAttachData(100);
 
             $category->images()->attach($images, ['category_type' => 'interiors']);
         }

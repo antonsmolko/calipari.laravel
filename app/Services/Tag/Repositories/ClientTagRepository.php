@@ -18,25 +18,32 @@ class ClientTagRepository
 
     /**
      * @param int $categoryId
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @param array|null $filter
+     * @return mixed
      */
-    public function getFiltersByCategoryId(int $categoryId)
+    public function getFiltersByCategoryId(int $categoryId, array $filter = null)
     {
         return $this->model::select(['id', 'title'])
                             ->getFiltersByCategoryId($categoryId)
+                            ->when($filter, function ($query, $filter) {
+                                return $query->filtered($filter);
+                            })
                             ->withImageCountWhereCategoryId($categoryId)
-                            ->published()
                             ->get();
     }
 
     /**
-     * WishList Filters
      * @param array $ids
+     * @param array|null $filter
      * @return mixed
      */
-    public function getFiltersByImageIds(array $ids)
+    public function getFiltersByImageIds(array $ids, array $filter = null)
     {
         return $this->model::select(['id', 'title'])
-            ->getFiltersByImageIds($ids);
+            ->getFiltersByImageIds($ids)
+            ->when($filter, function ($query, $filter) {
+                return $query->filtered($filter);
+            })
+            ->get();
     }
 }

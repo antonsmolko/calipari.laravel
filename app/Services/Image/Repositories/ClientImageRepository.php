@@ -6,10 +6,14 @@ namespace App\Services\Image\Repositories;
 
 use App\Models\Image;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
-use App\Services\Image\Resources\ImageToClient as ImageToClientResource;
 use App\Services\Image\Resources\ImageToClientCollection;
 use App\Services\Image\Resources\ImageToEditor as ImageToEditorResource;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedInclude;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\QueryBuilderRequest;
 
 class ClientImageRepository extends ClientBaseResourceRepository
 {
@@ -31,35 +35,77 @@ class ClientImageRepository extends ClientBaseResourceRepository
         return new ImageToEditorResource($this->model::findOrFail($id));
     }
 
-//    /**
-//     * @param array $pagination
-//     * @return Collection
-//     */
-//    public function getItems(array $pagination): Collection
-//    {
-//        return ImageToClientResource::collection($this->model
-//            ->load('likes')
-//            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page'])
-//            ->published())
-//            ->orderBy('id', $pagination['sort_order'] ?? 'asc');
-//    }
+    /**
+     * @param Request $request
+     * @return \Illuminate\Database\Eloquent\Builder[]|Collection|\Illuminate\Support\Collection|QueryBuilder[]
+     */
+    public function getItems(Request $request)
+    {
+        $pagination = $request->pagination;
+
+        return QueryBuilder::for(Image::class)
+            ->defaultSort('-id')
+            ->allowedFilters([
+                AllowedFilter::scope('category', 'whereCategory'),
+                AllowedFilter::scope('formats', 'whereFormats'),
+                AllowedFilter::scope('tags', 'whereTags'),
+                AllowedFilter::scope('topics', 'whereTopics'),
+                AllowedFilter::scope('colors', 'whereColors'),
+                AllowedFilter::scope('interiors', 'whereInteriors')
+            ])
+            ->when(
+                $pagination,
+                fn ($query, $pagination) => $query
+                    ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']),
+                fn ($query) => $query->get()
+            );
+    }
 
     /**
-     * @param array $ids
-     * @param array $pagination
-     * @param array|null $filter
-     * @return ImageToClientCollection
+     * @param Request $request
+     * @return array
      */
-    public function getWishListItems(array $ids, array $pagination, array $filter = null): ImageToClientCollection
+    public function getModelKeys(Request $request): array
     {
-        return new ImageToClientCollection($this->model
-            ->whereIn('id', $ids)
-            ->published()
-            ->when($filter, function ($query, $filter) {
-                return $query->filtered($filter);
-            })
-            ->orderBy('id', $pagination['sort_order'] ?? 'asc')
-            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page'])
-        );
+        $images = $this->getItems($request);
+
+        return $images->modelKeys();
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Database\Concerns\BuildsQueries|mixed|QueryBuilder
+     */
+    public function getWishListItems(Request $request)
+    {
+        $pagination = $request->pagination;
+
+        return QueryBuilder::for(Image::class)
+            ->defaultSort('-id')
+            ->allowedFilters([
+                AllowedFilter::scope('keys', 'whereKeys'),
+                AllowedFilter::scope('formats', 'whereFormats'),
+                AllowedFilter::scope('tags', 'whereTags'),
+                AllowedFilter::scope('topics', 'whereTopics'),
+                AllowedFilter::scope('colors', 'whereColors'),
+                AllowedFilter::scope('interiors', 'whereInteriors')
+            ])
+            ->when(
+                $pagination,
+                fn ($query, $pagination) => $query
+                    ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']),
+                fn ($query) => $query->get()
+            );
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getWishListModelKeys(Request $request): array
+    {
+        $images = $this->getWishListItems($request);
+
+        return $images->modelKeys();
     }
 }

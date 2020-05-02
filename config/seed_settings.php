@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'images_count' => 500
+    'images_count' => 1000
 ];

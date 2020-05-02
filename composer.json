@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.4",
         "ext-json": "*",
+        "creativeorange/gravatar": "~1.0",
         "fideloper/proxy": "^4.0",
         "fruitcake/laravel-cors": "^1.0",
         "intervention/image": "^2.5",
@@ -25,8 +26,9 @@
         "santigarcor/laratrust": "5.2.*",
         "socialiteproviders/vkontakte": "^4.0",
         "socialiteproviders/yandex": "^3.0",
+        "spatie/laravel-query-builder": "^2.8",
         "tymon/jwt-auth": "^1.0",
-        "creativeorange/gravatar": "~1.0"
+        "yandex-money/yandex-checkout-sdk-php": "^1.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

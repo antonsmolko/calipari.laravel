@@ -64,6 +64,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'social' => \App\Http\Middleware\SocialMiddleware::class,
         'auth.valid' => \App\Http\Middleware\UserValid::class,
+        'lqb.delimiter' => \App\Http\Middleware\ApplySemicolonDelimiter::class,
     ];
 
     /**

@@ -16,12 +16,12 @@ class ImageToClient extends JsonResource
     {
         return [
             'id' => $this->id,
-            'article' => str_pad($this->id, 5, "0", STR_PAD_LEFT),
+            'article' => $this->article,
             'path' => $this->path,
             'format' => $this->format->title,
             'views' => $this->views,
             'likes' => $this->likes->count(),
-            'ratio' => $this->width / $this->height
+            'ratio' => $this->ratio
         ];
     }
 }

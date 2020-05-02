@@ -5,7 +5,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2020-04-24 07:50:06.
+    * Generated on 2020-04-30 09:10:01.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -44,6 +44,7 @@ namespace PHPSTORM_META {
         'Laravel\Socialite\Contracts\Factory' => \Laravel\Socialite\SocialiteManager::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
         'SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface' => \SocialiteProviders\Manager\Helpers\ConfigRetriever::class,
+        'Spatie\QueryBuilder\QueryBuilderRequest' => \Spatie\QueryBuilder\QueryBuilderRequest::class,
         'Whoops\Handler\HandlerInterface' => \Facade\Ignition\ErrorPage\IgnitionWhoopsHandler::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,
@@ -232,6 +233,7 @@ namespace PHPSTORM_META {
         'Laravel\Socialite\Contracts\Factory' => \Laravel\Socialite\SocialiteManager::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
         'SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface' => \SocialiteProviders\Manager\Helpers\ConfigRetriever::class,
+        'Spatie\QueryBuilder\QueryBuilderRequest' => \Spatie\QueryBuilder\QueryBuilderRequest::class,
         'Whoops\Handler\HandlerInterface' => \Facade\Ignition\ErrorPage\IgnitionWhoopsHandler::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,
@@ -420,6 +422,7 @@ namespace PHPSTORM_META {
         'Laravel\Socialite\Contracts\Factory' => \Laravel\Socialite\SocialiteManager::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
         'SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface' => \SocialiteProviders\Manager\Helpers\ConfigRetriever::class,
+        'Spatie\QueryBuilder\QueryBuilderRequest' => \Spatie\QueryBuilder\QueryBuilderRequest::class,
         'Whoops\Handler\HandlerInterface' => \Facade\Ignition\ErrorPage\IgnitionWhoopsHandler::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,
@@ -608,6 +611,7 @@ namespace PHPSTORM_META {
         'Laravel\Socialite\Contracts\Factory' => \Laravel\Socialite\SocialiteManager::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
         'SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface' => \SocialiteProviders\Manager\Helpers\ConfigRetriever::class,
+        'Spatie\QueryBuilder\QueryBuilderRequest' => \Spatie\QueryBuilder\QueryBuilderRequest::class,
         'Whoops\Handler\HandlerInterface' => \Facade\Ignition\ErrorPage\IgnitionWhoopsHandler::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,
@@ -796,6 +800,7 @@ namespace PHPSTORM_META {
         'Laravel\Socialite\Contracts\Factory' => \Laravel\Socialite\SocialiteManager::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
         'SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface' => \SocialiteProviders\Manager\Helpers\ConfigRetriever::class,
+        'Spatie\QueryBuilder\QueryBuilderRequest' => \Spatie\QueryBuilder\QueryBuilderRequest::class,
         'Whoops\Handler\HandlerInterface' => \Facade\Ignition\ErrorPage\IgnitionWhoopsHandler::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,
@@ -984,6 +989,7 @@ namespace PHPSTORM_META {
         'Laravel\Socialite\Contracts\Factory' => \Laravel\Socialite\SocialiteManager::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
         'SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface' => \SocialiteProviders\Manager\Helpers\ConfigRetriever::class,
+        'Spatie\QueryBuilder\QueryBuilderRequest' => \Spatie\QueryBuilder\QueryBuilderRequest::class,
         'Whoops\Handler\HandlerInterface' => \Facade\Ignition\ErrorPage\IgnitionWhoopsHandler::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,
@@ -1172,6 +1178,7 @@ namespace PHPSTORM_META {
         'Laravel\Socialite\Contracts\Factory' => \Laravel\Socialite\SocialiteManager::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
         'SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface' => \SocialiteProviders\Manager\Helpers\ConfigRetriever::class,
+        'Spatie\QueryBuilder\QueryBuilderRequest' => \Spatie\QueryBuilder\QueryBuilderRequest::class,
         'Whoops\Handler\HandlerInterface' => \Facade\Ignition\ErrorPage\IgnitionWhoopsHandler::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,
@@ -1360,6 +1367,7 @@ namespace PHPSTORM_META {
         'Laravel\Socialite\Contracts\Factory' => \Laravel\Socialite\SocialiteManager::class,
         'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
         'SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface' => \SocialiteProviders\Manager\Helpers\ConfigRetriever::class,
+        'Spatie\QueryBuilder\QueryBuilderRequest' => \Spatie\QueryBuilder\QueryBuilderRequest::class,
         'Whoops\Handler\HandlerInterface' => \Facade\Ignition\ErrorPage\IgnitionWhoopsHandler::class,
         'auth' => \Illuminate\Auth\AuthManager::class,
         'auth.driver' => \Tymon\JWTAuth\JWTGuard::class,

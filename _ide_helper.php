@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 7.7.1 on 2020-04-24 07:50:06.
+ * Generated for Laravel 7.8.1 on 2020-04-30 09:10:01.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -8347,6 +8347,40 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
+         * Create a new redirect response to a signed named route.
+         *
+         * @param string $route
+         * @param mixed $parameters
+         * @param \DateTimeInterface|\DateInterval|int|null $expiration
+         * @param int $status
+         * @param array $headers
+         * @return \Illuminate\Http\RedirectResponse 
+         * @static 
+         */ 
+        public static function signedRoute($route, $parameters = [], $expiration = null, $status = 302, $headers = [])
+        {
+                        /** @var \Illuminate\Routing\Redirector $instance */
+                        return $instance->signedRoute($route, $parameters, $expiration, $status, $headers);
+        }
+        
+        /**
+         * Create a new redirect response to a signed named route.
+         *
+         * @param string $route
+         * @param \DateTimeInterface|\DateInterval|int|null $expiration
+         * @param mixed $parameters
+         * @param int $status
+         * @param array $headers
+         * @return \Illuminate\Http\RedirectResponse 
+         * @static 
+         */ 
+        public static function temporarySignedRoute($route, $expiration, $parameters = [], $status = 302, $headers = [])
+        {
+                        /** @var \Illuminate\Routing\Redirector $instance */
+                        return $instance->temporarySignedRoute($route, $expiration, $parameters, $status, $headers);
+        }
+        
+        /**
          * Create a new redirect response to a controller action.
          *
          * @param string|array $action
@@ -15007,6 +15041,63 @@ namespace Intervention\Image\Facades {
  
 }
 
+namespace Creativeorange\Gravatar\Facades { 
+
+    /**
+     * 
+     *
+     */ 
+    class Gravatar {
+        
+        /**
+         * Override the default image fallback set in the config.
+         * 
+         * Can either be a public URL to an image or a valid themed image.
+         * For more info, visit http://en.gravatar.com/site/implement/images/#default-image
+         *
+         * @param string $fallback
+         * @return \Creativeorange\Gravatar\Gravatar 
+         * @static 
+         */ 
+        public static function fallback($fallback)
+        {
+                        /** @var \Creativeorange\Gravatar\Gravatar $instance */
+                        return $instance->fallback($fallback);
+        }
+        
+        /**
+         * Check if Gravatar has an avatar for the given email address
+         *
+         * @param $email
+         * @return bool 
+         * @throws InvalidEmailException
+         * @static 
+         */ 
+        public static function exists($email)
+        {
+                        /** @var \Creativeorange\Gravatar\Gravatar $instance */
+                        return $instance->exists($email);
+        }
+        
+        /**
+         * Get the gravatar url
+         *
+         * @param $email
+         * @param string $configGroup
+         * @return string 
+         * @throws InvalidEmailException
+         * @static 
+         */ 
+        public static function get($email, $configGroup = 'default')
+        {
+                        /** @var \Creativeorange\Gravatar\Gravatar $instance */
+                        return $instance->get($email, $configGroup);
+        }
+         
+    }
+ 
+}
+
 namespace Barryvdh\Debugbar { 
 
     /**
@@ -15607,63 +15698,6 @@ namespace Barryvdh\Debugbar {
             //Method inherited from \DebugBar\DebugBar            
                         /** @var \Barryvdh\Debugbar\LaravelDebugbar $instance */
                         return $instance->offsetUnset($key);
-        }
-         
-    }
- 
-}
-
-namespace Creativeorange\Gravatar\Facades { 
-
-    /**
-     * 
-     *
-     */ 
-    class Gravatar {
-        
-        /**
-         * Override the default image fallback set in the config.
-         * 
-         * Can either be a public URL to an image or a valid themed image.
-         * For more info, visit http://en.gravatar.com/site/implement/images/#default-image
-         *
-         * @param string $fallback
-         * @return \Creativeorange\Gravatar\Gravatar 
-         * @static 
-         */ 
-        public static function fallback($fallback)
-        {
-                        /** @var \Creativeorange\Gravatar\Gravatar $instance */
-                        return $instance->fallback($fallback);
-        }
-        
-        /**
-         * Check if Gravatar has an avatar for the given email address
-         *
-         * @param $email
-         * @return bool 
-         * @throws InvalidEmailException
-         * @static 
-         */ 
-        public static function exists($email)
-        {
-                        /** @var \Creativeorange\Gravatar\Gravatar $instance */
-                        return $instance->exists($email);
-        }
-        
-        /**
-         * Get the gravatar url
-         *
-         * @param $email
-         * @param string $configGroup
-         * @return string 
-         * @throws InvalidEmailException
-         * @static 
-         */ 
-        public static function get($email, $configGroup = 'default')
-        {
-                        /** @var \Creativeorange\Gravatar\Gravatar $instance */
-                        return $instance->get($email, $configGroup);
         }
          
     }
@@ -20826,9 +20860,9 @@ namespace  {
 
     class Image extends \Intervention\Image\Facades\Image {}
 
-    class Debugbar extends \Barryvdh\Debugbar\Facade {}
-
     class Gravatar extends \Creativeorange\Gravatar\Facades\Gravatar {}
+
+    class Debugbar extends \Barryvdh\Debugbar\Facade {}
 
     class Flare extends \Facade\Ignition\Facades\Flare {}
 

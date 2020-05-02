@@ -110,6 +110,9 @@ return [
         'login' => [
 
         ],
+        'request' => [
+            'invalid_request_parameters' => 'Неправильные параметры запроса!'
+        ]
     ],
 
     /*

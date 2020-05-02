@@ -7,28 +7,43 @@ namespace App\Services\Image;
 use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Cache\Tag;
 use App\Services\Cache\TTL;
+use App\Services\Image\Handlers\GetClientItemsHandler;
 use App\Services\Image\Repositories\ClientImageRepository;
+use App\Services\Image\Resources\ImageToClientCollection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 
 class ClientImageService
 {
     private ClientImageRepository $repository;
-
+    private GetClientItemsHandler $getItemsHandler;
     private CacheKeyManager $cacheKeyManager;
 
     /**
      * ClientImageService constructor.
      * @param ClientImageRepository $repository
+     * @param GetClientItemsHandler $getItemsHandler
      * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         ClientImageRepository $repository,
+        GetClientItemsHandler $getItemsHandler,
         CacheKeyManager $cacheKeyManager
     )
     {
         $this->repository = $repository;
         $this->cacheKeyManager = $cacheKeyManager;
+        $this->getItemsHandler = $getItemsHandler;
+    }
+
+    /**
+     * @param Request $request
+     * @return ImageToClientCollection
+     */
+    public function getItems(Request $request): ImageToClientCollection
+    {
+        return new ImageToClientCollection($this->getItemsHandler->handle($request));
     }
 
     /**
@@ -71,38 +86,38 @@ class ClientImageService
 //    }
 
     /**
-     * @param array $requestData
-     * @return mixed
+     * @param Request $request
+     * @return ImageToClientCollection
      */
-    public function getWishListItems(array $requestData)
+    public function getWishListItems(Request $request)
     {
-        list(
-            'key' => $ids,
-            'filter' => $filter,
-            'pagination' => $pagination) = $requestData;
+//        list(
+//            'key' => $ids,
+//            'filter' => $filter,
+//            'pagination' => $pagination) = $requestData;
 
-        $paginateData = $this->repository->getWishListItems($ids, $pagination, $filter);
+        return new ImageToClientCollection($this->repository->getWishListItems($request));
 
-        $filtersKey = [];
-
-        if ($filter !== null) {
-            foreach($filter as $key => $field) {
-                $filtersKey[$key] = ($key . '_' . implode('_', $field));
-            }
-        }
-
-        $key = $this->cacheKeyManager
-            ->getImagesKey(
-                Arr::collapse([
-                    ['client', 'published', 'wishList'],
-                    Arr::flatten($ids),
-                    Arr::flatten($pagination),
-                    Arr::flatten($filtersKey)
-            ]));
-
-        return Cache::tags(Tag::IMAGES_TAG)
-            ->remember($key, TTL::IMAGES_TTL, function () use ($paginateData) {
-                return $paginateData;
-            });
+//        $filtersKey = [];
+//
+//        if ($filter !== null) {
+//            foreach($filter as $key => $field) {
+//                $filtersKey[$key] = ($key . '_' . implode('_', $field));
+//            }
+//        }
+//
+//        $key = $this->cacheKeyManager
+//            ->getImagesKey(
+//                Arr::collapse([
+//                    ['client', 'published', 'wishList'],
+//                    Arr::flatten($ids),
+//                    Arr::flatten($pagination),
+//                    Arr::flatten($filtersKey)
+//            ]));
+//
+//        return Cache::tags(Tag::IMAGES_TAG)
+//            ->remember($key, TTL::IMAGES_TTL, function () use ($paginateData) {
+//                return $paginateData;
+//            });
     }
 }

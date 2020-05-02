@@ -7,7 +7,7 @@ namespace App\Services\Format\Repositories;
 use App\Models\Format;
 use Illuminate\Database\Eloquent\Collection;
 
-class FormatRepository
+class CmsFormatRepository
 {
     /**
      * @return Collection
