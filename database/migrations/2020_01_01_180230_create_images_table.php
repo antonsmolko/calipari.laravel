@@ -23,9 +23,19 @@ class CreateImagesTable extends Migration
             $table->unsignedInteger('format_id')->nullable();
             $table->unsignedInteger('owner_id')->nullable();
             $table->unsignedInteger('views')->default(0);
-            $table->tinyInteger('publish')->unsigned()->default(1 );
+            $table->unsignedTinyInteger('publish')->default(1 );
             $table->text('description')->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('images', function(Blueprint $table) {
+            $table->foreign('owner_id')->references('id')->on('owners')
+                ->onDelete('set null')->onUpdate('cascade');
+        });
+
+        Schema::table('images', function(Blueprint $table) {
+            $table->foreign('format_id')->references('id')->on('formats')
+                ->onDelete('set null')->onUpdate('cascade');
         });
     }
 

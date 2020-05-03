@@ -18,14 +18,9 @@ class CreateFormatsTable extends Migration
             $table->string('title', 50)->unique();
             $table->string('alias', 50)->unique();
             $table->string('icon', 50)->unique();
-            $table->decimal('min', 2,1)->unsigned();
-            $table->decimal('max', 2,1)->unsigned();
+            $table->unsignedDecimal('min', 2,1);
+            $table->unsignedDecimal('max', 2,1);
             $table->timestamps();
-        });
-
-        Schema::table('images', function(Blueprint $table) {
-            $table->foreign('format_id')->references('id')->on('formats')
-                ->onDelete('set null')->onUpdate('cascade');
         });
     }
 

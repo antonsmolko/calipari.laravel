@@ -13,21 +13,21 @@ class CategoriesTableSeeder extends Seeder
     {
         foreach (config('seeds.categories.topics') as $category) {
             $category = factory(App\Models\Category::class)->create($category);
-            $images = $this->getAttachData(100);
+            $images = $this->getAttachData(config('seed_settings.group_images_count'));
 
             $category->images()->attach($images, ['category_type' => 'topics']);
         }
 
         foreach (config('seeds.categories.colors') as $category) {
             $category = factory(App\Models\Category::class)->create($category);
-            $images = $this->getAttachData(200);
+            $images = $this->getAttachData(config('seed_settings.group_images_count'));
 
             $category->images()->attach($images, ['category_type' => 'colors']);
         }
 
         foreach (config('seeds.categories.interiors') as $category) {
             $category = factory(App\Models\Category::class)->create($category);
-            $images = $this->getAttachData(100);
+            $images = $this->getAttachData(config('seed_settings.group_images_count'));
 
             $category->images()->attach($images, ['category_type' => 'interiors']);
         }

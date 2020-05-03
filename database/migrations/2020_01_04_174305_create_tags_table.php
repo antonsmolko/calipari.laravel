@@ -17,7 +17,7 @@ class CreateTagsTable extends Migration
             $table->id();
             $table->string('title', 50)->unique();
             $table->text('description')->nullable();
-            $table->tinyInteger('publish')->unsigned()->default(0);
+            $table->unsignedTinyInteger('publish')->default(0);
             $table->timestamps();
         });
     }

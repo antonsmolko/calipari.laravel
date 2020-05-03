@@ -22,6 +22,11 @@ class CreateSettingsTable extends Migration
             $table->unsignedInteger('group_id')->nullable();
             $table->timestamps();
         });
+
+        Schema::table('settings', function(Blueprint $table) {
+            $table->foreign('group_id')->references('id')->on('setting_groups')
+                ->onDelete('set null')->onUpdate('cascade');
+        });
     }
 
     /**
