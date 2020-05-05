@@ -10,6 +10,7 @@ use App\Services\Cache\TTL;
 use App\Services\Image\Handlers\GetClientItemsHandler;
 use App\Services\Image\Repositories\ClientImageRepository;
 use App\Services\Image\Resources\ImageToClientCollection;
+use App\Services\Tag\Repositories\ClientTagRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
@@ -17,22 +18,26 @@ use Illuminate\Support\Facades\Cache;
 class ClientImageService
 {
     private ClientImageRepository $repository;
+    private ClientTagRepository $tagRepository;
     private GetClientItemsHandler $getItemsHandler;
     private CacheKeyManager $cacheKeyManager;
 
     /**
      * ClientImageService constructor.
      * @param ClientImageRepository $repository
+     * @param ClientTagRepository $tagRepository
      * @param GetClientItemsHandler $getItemsHandler
      * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         ClientImageRepository $repository,
+        ClientTagRepository $tagRepository,
         GetClientItemsHandler $getItemsHandler,
         CacheKeyManager $cacheKeyManager
     )
     {
         $this->repository = $repository;
+        $this->tagRepository = $tagRepository;
         $this->cacheKeyManager = $cacheKeyManager;
         $this->getItemsHandler = $getItemsHandler;
     }
@@ -119,5 +124,10 @@ class ClientImageService
 //            ->remember($key, TTL::IMAGES_TTL, function () use ($paginateData) {
 //                return $paginateData;
 //            });
+    }
+
+    public function getWishListTags(array $keys)
+    {
+        return $this->tagRepository->getItemsByImageKeys($keys);
     }
 }

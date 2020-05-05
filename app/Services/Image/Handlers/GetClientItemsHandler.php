@@ -29,14 +29,18 @@ class GetClientItemsHandler
     {
         $filter = $request->filter;
 
-        if (isset($filter['category']) && !empty($filter['category'])) {
-            return $this->repository->getItems($request);
-        }
+//        if (isset($filter['category']) && !empty($filter['category'])) {
+//            return $this->repository->getItems($request);
+//        }
+//
+//        if (isset($filter['keys']) && !empty($filter['keys'])) {
+//            return $this->repository->getWishListItems($request);
+//        }
 
-        if (isset($filter['keys']) && !empty($filter['keys'])) {
-            return $this->repository->getWishListItems($request);
-        }
+        return isset($filter['keys']) && !empty($filter['keys'])
+            ? $this->repository->getWishListItems($request)
+            : $this->repository->getItems($request);
 
-        abort(400, __('validation.custom.request.invalid_request_parameters'));
+//        abort(400, __('validation.custom.request.invalid_request_parameters'));
     }
 }

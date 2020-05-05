@@ -7,12 +7,9 @@ use App\Events\Models\Image\ImageDeleted;
 use App\Events\Models\Image\ImageSaved;
 use App\Events\Models\Image\ImageUpdated;
 use Illuminate\Database\Eloquent\Builder;
-use Laravel\Scout\Searchable;
 
 class Image extends Model
 {
-    use Searchable;
-
     /**
      * @var array
      */

@@ -108,4 +108,26 @@ class ClientImageRepository extends ClientBaseResourceRepository
 
         return $images->modelKeys();
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Database\Eloquent\Builder[]|Collection|\Illuminate\Support\Collection|QueryBuilder[]
+     */
+    public function getItemsByTag(Request $request)
+    {
+        $pagination = $request->pagination;
+
+        return QueryBuilder::for(Image::class)
+            ->defaultSort('-id')
+            ->allowedFilters([
+                AllowedFilter::scope('tags', 'whereTags')
+            ])
+            ->when(
+                $pagination,
+                fn ($query) => $query
+                    ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']),
+                fn ($query) => $query
+                    ->get()
+            );
+    }
 }

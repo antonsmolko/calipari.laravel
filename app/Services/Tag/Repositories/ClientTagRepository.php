@@ -4,8 +4,10 @@
 namespace App\Services\Tag\Repositories;
 
 use App\Models\Tag;
+use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
+use App\Services\Tag\Resources\TagFromSearch as TagResource;
 
-class ClientTagRepository
+class ClientTagRepository extends ClientBaseResourceRepository
 {
     /**
      * TagRepository constructor.
@@ -18,32 +20,40 @@ class ClientTagRepository
 
     /**
      * @param int $categoryId
-     * @param array|null $filter
      * @return mixed
      */
-    public function getFiltersByCategoryId(int $categoryId, array $filter = null)
+    public function getItemsByCategoryId(int $categoryId)
     {
         return $this->model::select(['id', 'title'])
-                            ->getFiltersByCategoryId($categoryId)
-                            ->when($filter, function ($query, $filter) {
-                                return $query->filtered($filter);
-                            })
-                            ->withImageCountWhereCategoryId($categoryId)
-                            ->get();
+            ->published()
+            ->byCategoryId($categoryId)
+            ->withImageCountWhereCategoryId($categoryId)
+            ->orderBy('title', 'asc')
+            ->get();
     }
 
     /**
-     * @param array $ids
-     * @param array|null $filter
+     * @param array $keys
      * @return mixed
      */
-    public function getFiltersByImageIds(array $ids, array $filter = null)
+    public function getItemsByImageKeys(array $keys)
     {
         return $this->model::select(['id', 'title'])
-            ->getFiltersByImageIds($ids)
-            ->when($filter, function ($query, $filter) {
-                return $query->filtered($filter);
-            })
+            ->published()
+            ->whereImageIdIn($keys)
+            ->withImageCountWhereImageIdIn($keys)
+            ->orderBy('title', 'asc')
             ->get();
+    }
+
+    /**
+     * @param string $search
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getSearchedItems(string $search)
+    {
+        return TagResource::collection($this->model::search($search)
+            ->where('publish', Tag::PUBLISHED)
+            ->get());
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services\Category;
 
 
 use App\Services\Base\Resource\ClientBaseResourceService;
+use App\Services\Cache\Key;
 use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Cache\Tag;
 use App\Services\Cache\TTL;
@@ -50,9 +51,8 @@ class ClientCategoryService extends ClientBaseResourceService
     {
         $key = $this->cacheKeyManager->getCategoriesKey(['client', 'published']);
 
-        return Cache::tags(Tag::CATEGORIES_TAG)->remember($key, TTL::CATEGORIES_TTL, function () {
-            return $this->repository->index();
-        });
+        return Cache::tags(Tag::CATEGORIES_TAG)
+            ->remember($key, TTL::CATEGORIES_TTL, fn () => $this->repository->index());
     }
 
     /**
@@ -64,9 +64,19 @@ class ClientCategoryService extends ClientBaseResourceService
         $categoryKey = $this->cacheKeyManager->getCategoriesKey(['client', $alias]);
 
         return Cache::tags(Tag::CATEGORIES_TAG)
-            ->remember($categoryKey, TTL::CATEGORIES_TTL, function () use ($alias) {
-                return $this->repository->getItemByAlias($alias);
-            });
+            ->remember($categoryKey, TTL::CATEGORIES_TTL, fn () => $this->repository->getItemByAlias($alias));
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function getItemTags(int $id)
+    {
+        $tagKey = $this->cacheKeyManager->getResourceKey(Key::TAGS_PREFIX, ['client', 'by_category_' . $id]);
+
+        return Cache::tags(Tag::TAGS_TAG)
+            ->remember($tagKey, TTL::TAGS_TTL, fn () => $this->tagRepository->getItemsByCategoryId($id));
     }
 
     /**
@@ -97,9 +107,7 @@ class ClientCategoryService extends ClientBaseResourceService
         );
 
         return Cache::tags(Tag::IMAGES_TAG)
-            ->remember($key, TTL::IMAGES_TTL, function () use ($category, $pagination, $filter) {
-                return $this->repository->getImages($category, $pagination, $filter);
-            });
+            ->remember($key, TTL::IMAGES_TTL, fn () => $this->repository->getImages($category, $pagination, $filter));
     }
 
     /**

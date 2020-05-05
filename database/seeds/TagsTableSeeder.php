@@ -11,8 +11,27 @@ class TagsTableSeeder extends Seeder
      */
     public function run()
     {
-        foreach (config('seeds.tags') as $format) {
-            DB::table('tags')->insert($format);
+        foreach (config('seeds.tags') as $tag) {
+            $tag = App\Models\Tag::create($tag);
+            $images = $this->getAttachData(config('seed_settings.tag_images_count'));
+            $tag->images()->attach($images);
         }
+    }
+
+    /**
+     * @param int $count
+     * @return mixed
+     */
+    protected function getAttachData(int $count)
+    {
+        return Arr::random($this->getRangeImageIds(), $count);
+    }
+
+    /**
+     * @return array
+     */
+    protected function getRangeImageIds()
+    {
+        return range(1, config('seed_settings.images_count'));
     }
 }

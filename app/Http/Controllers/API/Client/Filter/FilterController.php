@@ -20,15 +20,6 @@ class FilterController extends Controller
         $this->filterService = $filterService;
     }
 
-//    /**
-//     * @param Request $request
-//     * @return JsonResponse
-//     */
-//    public function getFilters(Request $request): JsonResponse
-//    {
-//        return response()->json($this->filterService->getFilters($request));
-//    }
-
     /**
      * @param Request $request
      * @return JsonResponse

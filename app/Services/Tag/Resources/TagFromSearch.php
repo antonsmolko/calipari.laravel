@@ -4,7 +4,7 @@ namespace App\Services\Tag\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TagToFilter extends JsonResource
+class TagFromSearch extends JsonResource
 {
     /**
      * Transform the resource into an array.

@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\API\Cms\Tag;
 
 use App\Http\Controllers\API\Cms\SubCategory\SubCategoryController;
-use App\Services\Tag\TagService;
+use App\Services\Tag\CmsTagService;
 use App\Http\Controllers\API\Cms\Tag\Requests\CreateTagRequest;
 use App\Http\Controllers\API\Cms\Tag\Requests\UpdateTagRequest;
 use Illuminate\Http\JsonResponse;
 
 class TagController extends SubCategoryController
 {
-    public function __construct(TagService $service)
+    public function __construct(CmsTagService $service)
     {
         parent::__construct($service);
     }

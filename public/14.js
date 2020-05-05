@@ -208,6 +208,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       };
     }
   }),
+  created: function created() {
+    this.init(this.category_type);
+  },
+  beforeDestroy: function beforeDestroy() {
+    this.paginationReset();
+  },
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])({
     publishAction: 'images/publish',
     resetPaginationAction: 'images/resetPagination',
@@ -220,6 +226,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     init: function init(category_type) {
       var _this = this;
 
+      this.resetPaginationAction();
       this.getItemWithImagesAction({
         type: category_type,
         id: this.id,
@@ -348,13 +355,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     isSearchDataEmpty: function isSearchDataEmpty() {
       return !!this.searchQuery && !this.searchedData.length;
     }
-  }),
-  created: function created() {
-    this.init(this.category_type);
-  },
-  beforeDestroy: function beforeDestroy() {
-    this.paginationReset();
-  }
+  })
 });
 
 /***/ }),

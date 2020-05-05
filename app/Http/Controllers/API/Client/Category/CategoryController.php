@@ -33,6 +33,15 @@ class CategoryController extends BaseResourceController
     }
 
     /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getItemTags(int $id)
+    {
+        return response()->json($this->service->getItemTags($id));
+    }
+
+    /**
      * @param FormRequest $request
      * @param int $id
      * @return JsonResponse
@@ -42,42 +51,32 @@ class CategoryController extends BaseResourceController
         return response()->json($this->service->getImages($id, $request->all()));
     }
 
+
+//    public function getFilters(FormRequest $request)
+//    {
+////        return $request->all();
+//
+////        dd($request->all());
+////        $categories = Category::byTags($request['filter']['by_tags']);
+//        $categories = QueryBuilder::for(Category::class)
+//            ->allowedFilters([
+//                AllowedFilter::scope('get_filters'),
+////                AllowedFilter::scope('by_tags'),
+//                AllowedFilter::scope('by_formats'),
+//            ])
+//            ->get();
+//
+//        return response()->json($categories);
+////        return response()->json($this->service->getFilters($categoryId, $request->all()));
+//    }
+//
 //    /**
-//     * @param Request $request
-//     * @param int $categoryId
+//     * WishList Filters
+//     * @param FormRequest $request
 //     * @return JsonResponse
 //     */
-//    public function getFilters(Request $request, int $categoryId): JsonResponse
+//    public function getFiltersByImageIds(FormRequest $request): JsonResponse
 //    {
-//        return response()->json($this->service->getFilters($categoryId, $request->all()));
+//        return response()->json($this->service->getFiltersByImageIds($request->all()));
 //    }
-
-
-    public function getFilters(FormRequest $request)
-    {
-//        return $request->all();
-
-//        dd($request->all());
-//        $categories = Category::byTags($request['filter']['by_tags']);
-        $categories = QueryBuilder::for(Category::class)
-            ->allowedFilters([
-                AllowedFilter::scope('get_filters'),
-//                AllowedFilter::scope('by_tags'),
-                AllowedFilter::scope('by_formats'),
-            ])
-            ->get();
-
-        return response()->json($categories);
-//        return response()->json($this->service->getFilters($categoryId, $request->all()));
-    }
-
-    /**
-     * WishList Filters
-     * @param FormRequest $request
-     * @return JsonResponse
-     */
-    public function getFiltersByImageIds(FormRequest $request): JsonResponse
-    {
-        return response()->json($this->service->getFiltersByImageIds($request->all()));
-    }
 }

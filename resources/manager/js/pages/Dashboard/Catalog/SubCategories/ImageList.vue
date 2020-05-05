@@ -120,6 +120,12 @@
                 }
             }
         },
+        created () {
+            this.init(this.category_type);
+        },
+        beforeDestroy() {
+            this.paginationReset();
+        },
         methods: {
             ...mapActions({
                 publishAction: 'images/publish',
@@ -131,6 +137,7 @@
                 getImagesAction: 'subCategories/getImages'
             }),
             init (category_type) {
+                this.resetPaginationAction();
                 this.getItemWithImagesAction({
                     type: category_type,
                     id: this.id,
@@ -242,12 +249,6 @@
             isSearchDataEmpty () {
                 return !!this.searchQuery && !this.searchedData.length;
             }
-        },
-        created () {
-            this.init(this.category_type);
-        },
-        beforeDestroy() {
-            this.paginationReset();
         }
     }
 </script>

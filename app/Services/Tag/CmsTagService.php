@@ -8,21 +8,22 @@ use App\Services\Base\Category\Handlers\GetExcludedImagesHandler;
 use App\Services\Base\Category\Handlers\GetImagesHandler;
 use App\Services\Base\Category\Handlers\UploadHandler;
 use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Cache\Tag;
 use App\Services\SubCategory\SubCategoryService;
-use App\Services\Tag\Repositories\TagRepository;
+use App\Services\Tag\Repositories\CmsTagRepository;
 
-class TagService extends SubCategoryService
+class CmsTagService extends SubCategoryService
 {
     /**
      * TagService constructor.
-     * @param TagRepository $repository
+     * @param CmsTagRepository $repository
      * @param ClearCacheByTagHandler $clearCacheByTagHandler
      * @param UploadHandler $uploadHandler
      * @param GetImagesHandler $showImagesHandler
      * @param GetExcludedImagesHandler $showExcludedImagesHandler
      */
     public function __construct(
-        TagRepository $repository,
+        CmsTagRepository $repository,
         ClearCacheByTagHandler $clearCacheByTagHandler,
         UploadHandler $uploadHandler,
         GetImagesHandler $showImagesHandler,
@@ -36,5 +37,6 @@ class TagService extends SubCategoryService
             $showImagesHandler,
             $showExcludedImagesHandler
         );
+        $this->cacheTag = Tag::TAGS_TAG;
     }
 }

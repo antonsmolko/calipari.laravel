@@ -36,6 +36,18 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Category\CategoryClearByTag::class,
         ],
 
+        \App\Events\Models\Tag\TagSaved::class => [
+            \App\Listeners\Cache\Tag\TagClearByTag::class,
+        ],
+
+        \App\Events\Models\Tag\TagUpdated::class => [
+            \App\Listeners\Cache\Tag\TagClearByTag::class,
+        ],
+
+        \App\Events\Models\Tag\TagDeleted::class => [
+            \App\Listeners\Cache\Tag\TagClearByTag::class,
+        ],
+
         \App\Events\Models\Image\ImageSaved::class => [
             \App\Listeners\Cache\Image\ImageClearByTag::class,
         ],

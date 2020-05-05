@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as BaseModel;
 
 class Model extends BaseModel
@@ -13,8 +14,12 @@ class Model extends BaseModel
 
     const PUBLISHED = 1;
 
-    public function scopePublished($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopePublished(Builder $query): Builder
     {
-        $query->where('publish', self::PUBLISHED);
+        return $query->where('publish', self::PUBLISHED);
     }
 }

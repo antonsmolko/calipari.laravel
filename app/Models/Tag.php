@@ -2,17 +2,28 @@
 
 namespace App\Models;
 
+use App\Events\Models\Tag\TagDeleted;
+use App\Events\Models\Tag\TagSaved;
+use App\Events\Models\Tag\TagUpdated;
 use App\Models\Filter\Filtered;
 use Illuminate\Database\Eloquent\Builder;
+use Laravel\Scout\Searchable;
 
 class Tag extends Model
 {
+    use Searchable;
     use Filtered;
 
     /**
      * @var array
      */
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    protected $dispatchesEvents = [
+        'saved' => TagSaved::class,
+        'updated' => TagUpdated::class,
+        'deleted' => TagDeleted::class,
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -21,39 +32,18 @@ class Tag extends Model
         return $this->belongsToMany('App\Models\Image');
     }
 
-    public function scopeWhereImageIdsIn($query, array $ids)
-    {
-        return $query
-            ->whereHas('images', fn (Builder $query) => $query->whereIn('id', $ids));
-    }
-
-    public function scopeWithImagesCountIn($query, array $ids)
-    {
-        return $query->withCount(['images' => fn (Builder $query) => $query
-            ->whereIn('id', $ids)
-        ]);
-
-    }
-
-
-
-
-
     /**
      * @param $query
      * @param int $categoryId
      * @return mixed
      */
-    public function scopeGetFiltersByCategoryId($query, int $categoryId) {
+    public function scopeByCategoryId($query, int $categoryId) {
         return $query
-            ->published()
-            ->whereHas('images', function (Builder $query) use ($categoryId) {
-                $query
-                    ->published()
-                    ->whereHas('categories', function (Builder $query) use ($categoryId) {
-                        $query->where('id', $categoryId);
-                    });
-            });
+            ->whereHas('images', fn (Builder $query) => $query
+                ->published()
+                ->whereHas('categories', fn (Builder $query) => $query
+                    ->where('id', $categoryId))
+            );
     }
 
     /**
@@ -63,49 +53,56 @@ class Tag extends Model
      */
     public function scopeWithImageCountWhereCategoryId($query, int $categoryId)
     {
-        return $query->withCount(['images' => function (Builder $query) use ($categoryId) {
-            $query
-                ->published()
-                ->whereHas('categories', function (Builder $query) use ($categoryId) {
-                    $query->where('id', $categoryId);
-                });
-        }]);
-
-    }
-
-    /**
-     * @param $query
-     * @param array $ids
-     * @return mixed
-     */
-    public function scopeGetFiltersByImageIds($query, array $ids) {
         return $query
-            ->published()
-            ->whereHas('images', function (Builder $query) use ($ids) {
-                $query->published()->whereIn('id', $ids);
-            })
-            ->withCount(['images' => function (Builder $query) use ($ids) {
-                $query->published()->whereIn('id', $ids);
-            }]);
+            ->withCount(['images' => fn (Builder $query) => $query
+                ->published()
+                ->whereHas('categories', fn (Builder $query) => $query
+                    ->where('id', $categoryId))
+            ]);
+
     }
 
     /**
      * @param $query
-     * @param array $filter
+     * @param array $keys
      * @return mixed
      */
-    public function scopeFiltered($query, array $filter)
+    public function scopeWhereImageIdIn($query, array $keys) {
+        return $query
+            ->whereHas('images', fn (Builder $query) => $query
+                ->published()
+                ->whereIn('id', $keys));
+    }
+
+    /**
+     * @param $query
+     * @param array $keys
+     * @return mixed
+     */
+    public function scopeWithImageCountWhereImageIdIn($query, array $keys)
     {
         return $query
-            ->whereHas('images', function (Builder $query) use ($filter) {
-                $query
-                    ->published()
-                    ->where('format', function (Builder $query) use ($filter) {
-                        $query->whereIn('id', $filter['formats']);
-                    })
-                    ->orWhereHas('categories', function (Builder $query) use ($filter) {
-                        $query->whereIn('id', $filter['categories']);
-                    });
-            });
+            ->withCount(['images' => fn (Builder $query) => $query
+                ->published()
+                ->whereIn('id', $keys)
+            ]);
+
     }
+
+//    /**
+//     * @param $query
+//     * @param array $filter
+//     * @return mixed
+//     */
+//    public function scopeFiltered($query, array $filter)
+//    {
+//        return $query
+//            ->whereHas('images', fn (Builder $query) => $query
+//                ->published()
+//                ->where('format', fn (Builder $query) => $query
+//                    ->whereIn('id', $filter['formats']))
+//                ->orWhereHas('categories', fn (Builder $query) => $query
+//                    ->whereIn('id', $filter['categories']))
+//            );
+//    }
 }

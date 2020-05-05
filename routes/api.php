@@ -50,43 +50,48 @@ Route::group(['prefix' => '/auth'], function() {
 
 // Client API
 
-Route::get('catalog/images', 'Client\Image\ImageController@getItems')
-//    ->middleware('lqb.delimiter')
-    ->name('catalog.images');
-
-Route::get('catalog/images/{id}', 'Client\Image\ImageController@getItem')
-    ->where('id', '[0-9]+');
-
-Route::get('catalog/images/wish-list', 'Client\Image\ImageController@getWishListItems')
-    ->name('catalog.images.wish-list');
-
-Route::get('catalog/categories', 'Client\Category\CategoryController@index');
-
-Route::get('catalog/categories/{category}', 'Client\Category\CategoryController@getItemByAlias');
-Route::post('catalog/categories/{id}/images', 'Client\Category\CategoryController@getImages')
-    ->where('id', '[0-9]+');
-
-// Filters
-//Route::post('catalog/categories/{id}/filters', 'Client\Category\CategoryController@getFilters')
-//    ->name('category.filters');
-//Route::post('catalog/categories/filters/wish-list', 'Client\Category\CategoryController@getFiltersByImageIds')
-//    ->name('category.filters.wish-list');
-
-Route::prefix('catalog/filters')
-//    ->middleware('lqb.delimiter')
+Route::prefix('catalog')
     ->group(function() {
-//        Route::get('/', 'Client\Filter\FilterController@getFilters')
-//            ->name('catalog.filters');
-        Route::get('formats', 'Client\Filter\FilterController@getFormatFilters')
-            ->name('catalog.filters.formats');
-        Route::get('tags', 'Client\Filter\FilterController@getTagFilters')
-            ->name('catalog.filters.tags');
-        Route::get('topics', 'Client\Filter\FilterController@getTopicFilters')
-            ->name('catalog.filters.topics');
-        Route::get('colors', 'Client\Filter\FilterController@getColorFilters')
-            ->name('catalog.filters.colors');
-        Route::get('interiors', 'Client\Filter\FilterController@getInteriorFilters')
-            ->name('catalog.filters.interiors');
+        Route::get('images', 'Client\Image\ImageController@getItems')
+            //    ->middleware('lqb.delimiter')
+            ->name('catalog.images');
+        Route::get('images/{id}', 'Client\Image\ImageController@getItem')
+            ->where('id', '[0-9]+');
+
+        Route::get('images/wish-list', 'Client\Image\ImageController@getWishListItems')
+            ->name('catalog.images.wish-list');
+        Route::post('images/wish-list/tags', 'Client\Image\ImageController@getWishListTags')
+            ->name('catalog.tags.wish-list');
+
+        Route::get('categories', 'Client\Category\CategoryController@index');
+
+        Route::get('categories/{category}', 'Client\Category\CategoryController@getItemByAlias');
+        Route::post('categories/{id}/images', 'Client\Category\CategoryController@getImages')
+            ->where('id', '[0-9]+');
+        Route::get('categories/{id}/tags', 'Client\Category\CategoryController@getItemTags')
+            ->where('id', '[0-9]+');
+
+
+        // Search
+        Route::get('tags/{query}', 'Client\Tag\TagController@getSearchedItems');
+
+
+        // Filters
+
+        Route::prefix('filters')
+//    ->middleware('lqb.delimiter')
+            ->group(function() {
+                Route::get('formats', 'Client\Filter\FilterController@getFormatFilters')
+                    ->name('catalog.filters.formats');
+                Route::get('tags', 'Client\Filter\FilterController@getTagFilters')
+                    ->name('catalog.filters.tags');
+                Route::get('topics', 'Client\Filter\FilterController@getTopicFilters')
+                    ->name('catalog.filters.topics');
+                Route::get('colors', 'Client\Filter\FilterController@getColorFilters')
+                    ->name('catalog.filters.colors');
+                Route::get('interiors', 'Client\Filter\FilterController@getInteriorFilters')
+                    ->name('catalog.filters.interiors');
+            });
     });
 
 // Delivery

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API\Client\Image;
 
+use App\Http\Controllers\API\Client\Image\Requests\GetRequest;
+use App\Http\Controllers\API\Client\Image\Requests\WishListRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FormRequest;
 use App\Services\Image\ClientImageService;
@@ -21,7 +23,7 @@ class ImageController extends Controller
         $this->service = $service;
     }
 
-    public function getItems(Request $request)
+    public function getItems(GetRequest $request)
     {
         return response()->json($this->service->getItems($request));
     }
@@ -36,11 +38,20 @@ class ImageController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param WishListRequest $request
      * @return JsonResponse
      */
-    public function getWishListItems(Request $request): JsonResponse
+    public function getWishListItems(WishListRequest $request): JsonResponse
     {
         return response()->json($this->service->getWishListItems($request));
+    }
+
+    /**
+     * @param WishListRequest $request
+     * @return JsonResponse
+     */
+    public function getWishListTags(WishListRequest $request): JsonResponse
+    {
+        return response()->json($this->service->getWishListTags($request->keys));
     }
 }

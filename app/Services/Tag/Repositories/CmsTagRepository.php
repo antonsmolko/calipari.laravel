@@ -6,7 +6,7 @@ namespace App\Services\Tag\Repositories;
 use App\Models\Tag;
 use App\Services\SubCategory\Repositories\SubCategoryRepository;
 
-class TagRepository extends SubCategoryRepository
+class CmsTagRepository extends SubCategoryRepository
 {
     /**
      * TagRepository constructor.
