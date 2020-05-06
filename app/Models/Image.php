@@ -117,6 +117,14 @@ class Image extends Model
                 ->where('id', $id));
     }
 
+    public function scopeWhereTag($query, int $id)
+    {
+        return $query
+            ->published()
+            ->whereHas('tags', fn (Builder $query) => $query
+                ->where('id', $id));
+    }
+
     public function scopeWhereKeys($query, string $value)
     {
         $ids = explode(';', $value);

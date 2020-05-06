@@ -53,7 +53,7 @@ class ClientTagRepository extends ClientBaseResourceRepository
     public function getSearchedItems(string $search)
     {
         return TagResource::collection($this->model::search($search)
-            ->where('publish', Tag::PUBLISHED)
+            ->where('publish', $this->model::PUBLISHED)
             ->get());
     }
 }

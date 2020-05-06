@@ -4,27 +4,36 @@
 namespace App\Services\Search;
 
 
-use App\Services\Search\Repository\SearchRepository;
+use App\Services\Category\Repositories\ClientCategoryRepository;
+use App\Services\Tag\Repositories\ClientTagRepository;
 
 class SearchService
 {
-    private SearchRepository $repository;
+    private ClientTagRepository $tagRepository;
+    private ClientCategoryRepository $categoryRepository;
 
     /**
      * SearchService constructor.
-     * @param SearchRepository $repository
+     * @param ClientTagRepository $tagRepository
+     * @param ClientCategoryRepository $categoryRepository
      */
-    public function __construct(SearchRepository $repository)
+    public function __construct(
+        ClientTagRepository $tagRepository,
+        ClientCategoryRepository $categoryRepository)
     {
-        $this->repository = $repository;
+        $this->tagRepository = $tagRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
-     * @param string $search
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param string $query
+     * @return array
      */
-    public function getSearchableTags(string $search)
+    public function getSearchedResult(string $query): array
     {
-        return $this->repository->getSearchableTags($search);
+        $tags = $this->tagRepository->getSearchedItems($query);
+        $categories = $this->categoryRepository->getSearchedItems($query);
+
+        return [...$tags, ...$categories];
     }
 }

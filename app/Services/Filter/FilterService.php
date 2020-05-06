@@ -32,25 +32,13 @@ class FilterService
         $this->getModelKeysHandler = $getModelKeysHandler;
     }
 
-//    /**
-//     * @param Request $request
-//     * @return array
-//     */
-//    public function getFilters(Request $request): array
-//    {
-//        $exceptCategoryId = $request['filter']['category'];
-//        $imageKeys = $this->imageRepository->getModelKeys($request);
-//
-//        return $this->getFiltersByImageKeysHandler->handle($exceptCategoryId, $imageKeys);
-//    }
-
     /**
      * @param Request $request
      * @return array
      */
     public function getFormatFilters(Request $request): array
     {
-        $imageKeys = $this->getModelKeysHandler->handle($request);
+        $imageKeys = $this->imageRepository->getModelKeys($request);
 
         return ['formats' => $this->filterRepository
             ->getFormatFiltersByImageKeys($imageKeys)];
@@ -62,10 +50,13 @@ class FilterService
      */
     public function getTagFilters(Request $request): array
     {
-        $imageKeys = $this->getModelKeysHandler->handle($request);
+        $imageKeys = $this->imageRepository->getModelKeys($request);
+        $exceptId = isset($request->filter['restrictive_tag'])
+            ? $request->filter['restrictive_tag']
+            : null;
 
         return ['tags' => $this->filterRepository
-            ->getTagFiltersByImageKeys($imageKeys)];
+            ->getTagFiltersByImageKeys($imageKeys, $exceptId)];
     }
 
     /**
@@ -74,9 +65,9 @@ class FilterService
      */
     public function getTopicFilters(Request $request): array
     {
-        $imageKeys = $this->getModelKeysHandler->handle($request);
-        $exceptId = isset($request->filter['category'])
-            ? $request->filter['category']
+        $imageKeys = $this->imageRepository->getModelKeys($request);
+        $exceptId = isset($request->filter['restrictive_category'])
+            ? $request->filter['restrictive_category']
             : null;
 
         return ['topics' => $this->filterRepository
@@ -89,9 +80,9 @@ class FilterService
      */
     public function getColorFilters(Request $request): array
     {
-        $imageKeys = $this->getModelKeysHandler->handle($request);
-        $exceptId = isset($request->filter['category'])
-            ? $request->filter['category']
+        $imageKeys = $this->imageRepository->getModelKeys($request);
+        $exceptId = isset($request->filter['restrictive_category'])
+            ? $request->filter['restrictive_category']
             : null;
 
         return ['colors' => $this->filterRepository
@@ -104,9 +95,9 @@ class FilterService
      */
     public function getInteriorFilters(Request $request): array
     {
-        $imageKeys = $this->getModelKeysHandler->handle($request);
-        $exceptId = isset($request->filter['category'])
-            ? $request->filter['category']
+        $imageKeys = $this->imageRepository->getModelKeys($request);
+        $exceptId = isset($request->filter['restrictive_category'])
+            ? $request->filter['restrictive_category']
             : null;
 
         return ['interiors' => $this->filterRepository

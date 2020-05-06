@@ -28,12 +28,14 @@ class FilterRepository
 
     /**
      * @param array $keys
+     * @param int|null $exceptId
      * @return mixed
      */
-    public function getTagFiltersByImageKeys(array $keys)
+    public function getTagFiltersByImageKeys(array $keys, int $exceptId = null)
     {
         return Tag::select(['id', 'title'])
             ->published()
+            ->when($exceptId, fn ($query, $exceptId) => $query->where('id', '<>', $exceptId))
             ->whereImageKeysIn($keys)
             ->withImagesCountIn($keys)
             ->get();

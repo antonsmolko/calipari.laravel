@@ -6,6 +6,7 @@ namespace App\Services\Category\Repositories;
 
 use App\Models\Category;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
+use App\Services\Category\Resources\CategoryFromSearch as CategoryFromSearchResource;
 use App\Services\Image\Resources\ImageToClientCollection;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -93,5 +94,16 @@ class ClientCategoryRepository extends ClientBaseResourceRepository
                 return $query->filtered($filter);
             })
             ->get();
+    }
+
+    /**
+     * @param string $search
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getSearchedItems(string $search)
+    {
+        return CategoryFromSearchResource::collection($this->model::search($search)
+            ->where('publish', $this->model::PUBLISHED)
+            ->get());
     }
 }

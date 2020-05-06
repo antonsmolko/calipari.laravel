@@ -7,9 +7,11 @@ use App\Events\Models\Category\CategorySaved;
 use App\Events\Models\Category\CategoryUpdated;
 use App\Models\Filter\Filtered;
 use Illuminate\Database\Eloquent\Builder;
+use Laravel\Scout\Searchable;
 
 class Category extends Model
 {
+    use Searchable;
     use Filtered;
 
     /**

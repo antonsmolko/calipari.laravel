@@ -36,7 +36,7 @@ const mutations = {
     UPDATE_FIELD(state, payload) {
         state.fields[payload.field] = payload.value;
     },
-    UPDATE_PUBLISH_FIELD(state) {
+    TOGGLE_PUBLISH_FIELD(state) {
         state.fields.publish = +!state.fields.publish;
     },
     CLEAR_FIELDS(state) {
@@ -104,8 +104,8 @@ const actions = {
     updateField(context, payload) {
         context.commit('UPDATE_FIELD', payload);
     },
-    updatePublishField(context) {
-        context.commit('UPDATE_PUBLISH_FIELD');
+    togglePublishField(context) {
+        context.commit('TOGGLE_PUBLISH_FIELD');
     },
     clearFields(context) {
         context.commit('CLEAR_FIELDS');

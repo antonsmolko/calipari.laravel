@@ -61,7 +61,7 @@ Route::prefix('catalog')
         Route::get('images/wish-list', 'Client\Image\ImageController@getWishListItems')
             ->name('catalog.images.wish-list');
         Route::post('images/wish-list/tags', 'Client\Image\ImageController@getWishListTags')
-            ->name('catalog.tags.wish-list');
+            ->name('catalog.images.wish-list.tags');
 
         Route::get('categories', 'Client\Category\CategoryController@index');
 
@@ -73,7 +73,7 @@ Route::prefix('catalog')
 
 
         // Search
-        Route::get('tags/{query}', 'Client\Tag\TagController@getSearchedItems');
+        Route::get('search/{query}', 'Client\Search\SearchController');
 
 
         // Filters

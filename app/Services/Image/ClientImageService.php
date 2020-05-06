@@ -48,7 +48,8 @@ class ClientImageService
      */
     public function getItems(Request $request): ImageToClientCollection
     {
-        return new ImageToClientCollection($this->getItemsHandler->handle($request));
+//        return new ImageToClientCollection($this->getItemsHandler->handle($request));
+        return new ImageToClientCollection($this->repository->getItems($request));
     }
 
     /**

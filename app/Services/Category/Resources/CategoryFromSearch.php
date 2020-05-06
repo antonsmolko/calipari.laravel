@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\Tag\Resources;
+namespace App\Services\Category\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TagFromSearch extends JsonResource
+class CategoryFromSearch extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +17,9 @@ class TagFromSearch extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'image_path' => $this->image_path,
 //            'image_count' => $this->images->count(),
-            'type' => 'tag'
+            'type' => 'category'
         ];
     }
 }
