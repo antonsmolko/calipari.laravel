@@ -7,7 +7,7 @@ export const changeField = {
                 this.$v[field].$touch();
             }
 
-            this.$store.dispatch(`${this.storeModule}/updateField`, { field, value: value.trim() });
+            this.$store.dispatch(`${this.storeModule}/setItemField`, { field, value: value.trim() });
         }
     }
 }
@@ -15,7 +15,7 @@ export const changeField = {
 export const changeFile = {
     methods: {
         onFileChange(field, value) {
-            this.$store.dispatch(`${this.storeModule}/updateField`, { field, value: value });
+            this.$store.dispatch(`${this.storeModule}/setItemField`, { field, value: value });
         }
     }
 }
@@ -27,7 +27,7 @@ export const changeSelect = {
                 this.$v[field].$touch();
             }
 
-            this.$store.dispatch(`${this.storeModule}/updateField`, { field, value });
+            this.$store.dispatch(`${this.storeModule}/setItemField`, { field, value });
         }
     }
 }
@@ -36,7 +36,7 @@ export const changePublishEdit = {
     methods: {
         onPublishChange () {
             this.$v.publish.$touch();
-            this.$store.dispatch(`${this.storeModule}/updatePublishField`);
+            this.$store.dispatch(`${this.storeModule}/togglePublishField`);
         }
     }
 }
@@ -44,7 +44,7 @@ export const changePublishEdit = {
 export const changePublish = {
     methods: {
         onPublishChange () {
-            this.$store.dispatch(`${this.storeModule}/updatePublishField`);
+            this.$store.dispatch(`${this.storeModule}/togglePublishField`);
         }
     }
 }

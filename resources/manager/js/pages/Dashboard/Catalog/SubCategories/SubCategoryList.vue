@@ -38,7 +38,14 @@
                             </md-table-cell>
 
                             <md-table-cell md-label="Опубликован">
-                                <md-switch :value="!item.publish" @change="onPublishChange(item)" />
+                                <md-switch
+                                    :disabled="!item.images_count"
+                                    :value="!item.publish"
+                                    @change="onPublishChange(item)" >
+                                    <template>
+                                        <span v-if="!item.images_count">Для публикации добавьте изображения</span>
+                                    </template>
+                                </md-switch>
                             </md-table-cell>
 
                             <md-table-cell md-label="Действия">

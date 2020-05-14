@@ -44,12 +44,12 @@ class CmsImageService extends CmsBaseResourceService
     }
 
     /**
-     * @param array $pagination
+     * @param array $requestData
      * @return mixed
      */
-    public function getItems(array $pagination)
+    public function getItems(array $requestData)
     {
-        return $this->getItemsHandler->handle($pagination);
+        return $this->repository->getItems($requestData);
     }
 
     /**
@@ -67,11 +67,7 @@ class CmsImageService extends CmsBaseResourceService
      */
     public function store(array $storeData)
     {
-        $this->storeHandler->handle($storeData['images']);
-
-        $pagination = Arr::except($storeData, ['images']);
-
-        return $this->repository->getItems($pagination);
+        return $this->storeHandler->handle($storeData['images']);
     }
 
     /**
@@ -124,5 +120,16 @@ class CmsImageService extends CmsBaseResourceService
         $item = $this->repository->getItem($id);
 
         return $this->repository->publish($item);
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function removeOwner(int $id)
+    {
+        $item = $this->repository->getItem($id);
+
+        return $this->repository->removeOwner($item);
     }
 }

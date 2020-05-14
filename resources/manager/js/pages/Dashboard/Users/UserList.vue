@@ -1,5 +1,5 @@
 <template>
-    <div class="md-layout" v-if="responseData">
+    <div class="md-layout">
         <div class="md-layout-item">
             <md-card class="mt-0">
                 <md-card-content class="md-between">
@@ -13,8 +13,8 @@
             <md-card>
                 <card-icon-header title="Список Пользователей" icon="assignment" />
                 <md-card-content>
-                    <v-extended-table v-if="items.length"
-                                      :items="items"
+                    <v-extended-table :serverPagination="true"
+                                      :resourceUrl="resourceUrl"
                                       :searchFields="propsToSearch" >
 
                         <template slot-scope="{ item }">
@@ -30,9 +30,7 @@
                             <md-table-cell md-label="Email">{{ item.email }}</md-table-cell>
 
                             <md-table-cell md-label="Роль">
-                                <span class="md-category-tag"
-                                      v-for="(role, index) in item.roles"
-                                      :key="index">{{ role.display_name }}</span>
+                                <span class="md-category-tag">{{ item.role_name }}</span>
                             </md-table-cell>
 
                             <md-table-cell md-label="Заказы" md-sort-by="orders_count">
@@ -58,11 +56,6 @@
                         </template>
 
                     </v-extended-table>
-                    <template v-else>
-                        <div class="alert alert-info">
-                            <span><h3>У Вас еще нет пользователей!</h3></span>
-                        </div>
-                    </template>
                 </md-card-content>
             </md-card>
         </div>
@@ -84,41 +77,35 @@
         mixins: [ pageTitle, deleteMethod ],
         data () {
             return {
+                resourceUrl: '/users/paginate',
                 propsToSearch: ['name', 'email'],
                 responseData: false,
                 storeModule: 'users'
             }
         },
-        computed: {
-            ...mapState('users', [
-                'items'
-            ])
+        created() {
+            this.setPageTitle('Пользователи');
         },
         methods: {
-            ...mapActions('users', {
-                getItemsAction: 'getItems',
-                publishAction: 'publish'
+            ...mapActions({
+                togglePublishAction: 'table/togglePublish',
             }),
-            onDelete(item) {
+            getRoleName (id) {
+                return this.$store.getters['roles/itemName'](id);
+            },
+            onDelete (item) {
                 return this.delete({
                     payload: item.id,
                     title: item.name,
                     alertText: `пользователя «${item.name}»`,
                     storeModule: this.storeModule,
-                    successText: 'Пользователь удален!'
+                    successText: 'Пользователь удален!',
+                    tableMode: true
                 })
             },
-            onPublishChange(id) {
-                this.publishAction(id);
+            onPublishChange (id) {
+                this.togglePublishAction(`/users/${id}/publish`);
             },
-        },
-        created() {
-            this.getItemsAction()
-                .then(() => {
-                    this.setPageTitle('Пользователи');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push({ name: 'manager.dashboard' }));
         }
     }
 </script>

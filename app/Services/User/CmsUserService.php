@@ -45,6 +45,15 @@ class CmsUserService extends CmsBaseResourceService
     }
 
     /**
+     * @param array $requestData
+     * @return mixed
+     */
+    public function getItems(array $requestData)
+    {
+        return $this->repository->getItems($requestData);
+    }
+
+    /**
      * @param int $id
      * @return JsonResource
      */

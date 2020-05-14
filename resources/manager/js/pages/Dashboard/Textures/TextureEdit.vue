@@ -56,14 +56,6 @@
                         </div>
                         <div class="md-layout md-gutter mt-2">
                             <div class="md-layout-item">
-                                <v-image title="Миниатюра"
-                                         name="thumb"
-                                         :imgDefault="thumbPath"
-                                         :vField="$v.thumb"
-                                         :differ="true"
-                                         :module="storeModule" />
-                            </div>
-                            <div class="md-layout-item">
                                 <v-image title="Образец"
                                          name="sample"
                                          :imgDefault="samplePath"
@@ -103,7 +95,6 @@
 
 <script>
     import { mapState, mapActions } from 'vuex'
-
     import {required, numeric, minLength} from 'vuelidate/lib/validators'
 
     import { pageTitle } from '@/mixins/base'
@@ -141,9 +132,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.name.$dirty
-                        ? true
-                        : !this.isUniqueNameEdit
+                    return (value.trim() === '') && !this.$v.name.$dirty || !this.isUniqueNameEdit
                 }
             },
             price: {
@@ -154,9 +143,6 @@
             width: {
                 required,
                 numeric,
-                touch: false
-            },
-            thumb: {
                 touch: false
             },
             sample: {
@@ -177,10 +163,8 @@
                 name: state => state.fields.name,
                 price: state => state.fields.price,
                 width: state => state.fields.width,
-                thumbPath: state => state.fields.thumb_path,
                 samplePath: state => state.fields.sample_path,
                 backgroundPath: state => state.fields.background_path,
-                thumb: state => state.fields.thumb,
                 sample: state => state.fields.sample,
                 background: state => state.fields.background,
                 description: state => state.fields.description,
@@ -190,11 +174,23 @@
                 return !!this.$store.getters['textures/isUniqueNameEdit'](this.name, this.id);
             },
         },
+        created () {
+            Promise.all([
+                this.getItemsAction(),
+                this.getItemAction(this.id)
+            ])
+                .then(() => {
+                    this.setPageTitle(`Фактура «${this.name}»`);
+                    this.responseData = true;
+                })
+                .then(() => this.$v.$reset())
+                .catch(() => this.$router.push(this.redirectRoute));
+        },
         methods: {
             ...mapActions('textures', {
                 getItemAction: 'getItem',
                 getItemsAction: 'getItems',
-                clearFieldsAction: 'clearFields'
+                clearFieldsAction: 'clearItemFields'
             }),
             onUpdate () {
                 return this.update({
@@ -203,7 +199,6 @@
                             name : this.name,
                             price : this.price,
                             width : this.width,
-                            thumb: this.thumb,
                             sample: this.sample,
                             background: this.background,
                             description: this.description,
@@ -227,16 +222,6 @@
                     redirectRoute: this.redirectRoute
                 })
             }
-        },
-        created() {
-            this.getItemsAction()
-                .then(() => this.getItemAction(this.id))
-                .then(() => {
-                    this.setPageTitle(`Фактура «${this.name}»`);
-                    this.responseData = true;
-                })
-                .then(() => this.$v.$reset())
-                .catch(() => this.$router.push(this.redirectRoute));
         }
     }
 </script>

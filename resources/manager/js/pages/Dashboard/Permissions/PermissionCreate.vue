@@ -82,14 +82,10 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.name.$dirty
-                        ? true
-                        : !this.isUniqueName
+                    return (value.trim() === '') && !this.$v.name.$dirty || !this.isUniqueName
                 },
                 testAlias (value) {
-                    return value.trim() === ''
-                        ? true
-                        : (/^([a-z0-9]+[-]?)+[a-z0-9]$/).test(value);
+                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
                 }
             },
             displayName: {
@@ -97,9 +93,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.displayName.$dirty
-                        ? true
-                        : !this.isUniqueDisplayName
+                    return (value.trim() === '') && !this.$v.displayName.$dirty || !this.isUniqueDisplayName
                 }
             },
             description: {
@@ -122,7 +116,7 @@
         methods: {
             ...mapActions('permissions', {
                 getItemsAction: 'getItems',
-                clearFieldsAction: 'clearFields',
+                clearFieldsAction: 'clearItemFields',
             }),
             onCreate() {
                 return this.create({
@@ -139,10 +133,10 @@
             }
         },
         created() {
+            this.clearFieldsAction();
             this.getItemsAction()
                 .then(() => {
                     this.setPageTitle('Новая Привилегия');
-                    this.clearFieldsAction();
                     this.responseData = true;
                 })
                 .catch(() => this.$router.push(this.redirectRoute));

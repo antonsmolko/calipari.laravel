@@ -10,6 +10,7 @@ use App\Services\Setting\Handlers\SetImageSettingValueHandler;
 use App\Services\Setting\Repositories\CmsSettingRepository;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 
 class CmsSettingService extends CmsBaseResourceService
 {
@@ -83,6 +84,11 @@ class CmsSettingService extends CmsBaseResourceService
     public function update(int $id, array $updateData): Setting
     {
         $item = $this->repository->getItem($id);
+
+        if ((int) $updateData['group_id'] === 0) {
+            $item = $this->repository->dissociateGroup($item);
+            $updateData = Arr::except($updateData, ['group_id']);
+        }
 
         return $this->repository->update($item, $updateData);
     }

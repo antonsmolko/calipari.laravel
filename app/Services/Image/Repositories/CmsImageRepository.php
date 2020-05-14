@@ -31,49 +31,57 @@ class CmsImageRepository extends CmsBaseResourceRepository
     }
 
     /**
-     * @param array $pagination
+     * @param array $requestData
      * @return Paginator
      */
-    public function getItems(array $pagination)
+    public function getItems(array $requestData)
     {
         return $this->model::with(config('query_builder.image'))
-            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
+            ->when(!empty($requestData['query']),
+                fn ($query) => $query->where('id', 'like', $requestData['query'] . '%'))
+            ->orderBy($requestData['sort_by'], $requestData['sort_order'])
+            ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']);
     }
 
-    /**
-     * @param array $pagination
-     * @return mixed
-     */
-    public function getQueryItems(array $pagination)
-    {
-//        ->when($sortBy, function ($query, $sortBy) {
-//            return $query->orderBy($sortBy);
-//        }, function ($query) {
-//            return $query->orderBy('name');
-//        })
-        return $this->model::where('id', 'like', $pagination['query'] . '%')
-            ->with(config('query_builder.image'))
-            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
-    }
+//    /**
+//     * @param array $pagination
+//     * @return mixed
+//     */
+//    public function getQueryItems(array $pagination)
+//    {
+//        return $this->model::where('id', 'like', $pagination['query'] . '%')
+//            ->with(config('query_builder.image'))
+//            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
+//            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
+//    }
 
     /**
-     * @param Image $image
+     * @param Image $item
      * @param string $relation
      * @param $syncData
      */
-    public function syncAssociations(Image $image, string $relation, $syncData)
+    public function syncAssociations(Image $item, string $relation, $syncData)
     {
-        $image->$relation()->sync($syncData);
+        $item->$relation()->sync($syncData);
     }
 
     /**
-     * @param Image $image
+     * @param Image $item
      * @param array $fillData
      */
-    public function fillAttributesFromArray(Image $image, array $fillData)
+    public function fillAttributesFromArray(Image $item, array $fillData)
     {
-        $image->fill($fillData)->save();
+        $item->fill($fillData)->save();
+    }
+
+    /**
+     * @param Image $item
+     * @return mixed
+     */
+    public function removeOwner(Image $item)
+    {
+        $item->owner()->dissociate();
+
+        return $item->save();
     }
 }

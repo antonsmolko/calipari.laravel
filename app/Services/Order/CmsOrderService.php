@@ -42,6 +42,24 @@ class CmsOrderService
     }
 
     /**
+     * @param array $requestData
+     * @return Resources\CmsOrderFromListCollection
+     */
+    public function getCurrentItems(array $requestData)
+    {
+        return $this->repository->getCurrentItems($requestData);
+    }
+
+    /**
+     * @param array $requestData
+     * @return Resources\CmsOrderFromListCollection
+     */
+    public function getCompletedItems(array $requestData)
+    {
+        return $this->repository->getCompletedItems($requestData);
+    }
+
+    /**
      * @param int $id
      * @return mixed
      */

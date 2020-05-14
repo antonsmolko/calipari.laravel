@@ -214,140 +214,113 @@ return [
     'owners' => [
         [
             'title' => 'Shutterstock',
-            'description' => 'https://shutterstock.com/ru/',
-            'publish' => 1
+            'description' => 'https://shutterstock.com/ru/'
         ],
         [
             'title' => 'Depositphotos',
-            'description' => 'https://ru.depositphotos.com/',
-            'publish' => 1
+            'description' => 'https://ru.depositphotos.com/'
         ],
         [
             'title' => 'Эдуард',
-            'description' => '',
-            'publish' => 1
+            'description' => ''
         ],
     ],
     'tags' => [
         [
             'title' => 'Праздники',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Машинки',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Мультики',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Мстители',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Железный человек',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Халк',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Звездные войны',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Дарт Вейдер',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Чубака',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Футбол',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Месси',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Роналду',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Леброн Джеймс',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Баскетбол',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Майкл Джордан',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Стефен Карри',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Формула 1',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Ferrari',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Lamborghini',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Aston Martin',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Mercedes Benz',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'BMV',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'Audi',
             'description' => '',
-            'publish' => 1
         ],
         [
             'title' => 'McLaren',
             'description' => '',
-            'publish' => 1
         ]
     ],
     'seeds_uploads_path' => 'seed_data/',
@@ -359,136 +332,119 @@ return [
                 'title' => 'Абстракция',
                 'alias' => 'abstraction',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Архитектура',
                 'alias' => 'architecture',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Геометрия',
                 'alias' => 'geometry',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Живопись',
                 'alias' => 'painting',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Животные',
                 'alias' => 'animals',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Замки',
                 'alias' => 'castles',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Карты',
                 'alias' => 'maps',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Корабли',
                 'alias' => 'ships',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Космос',
                 'alias' => 'space',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Мегаполис',
                 'alias' => 'megalopolis',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Природа',
                 'alias' => 'nature',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Ретро',
                 'alias' => 'retro',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Текстуры',
                 'alias' => 'textures',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Улицы, улочки, дома',
                 'alias' => 'streets-houses',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Флористика',
                 'alias' => 'floristics',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Фоны',
                 'alias' => 'backgrounds',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Цветы и растения',
                 'alias' => 'flowers-plants',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ]
         ],
         'colors' => [
@@ -497,48 +453,42 @@ return [
                 'title' => 'Белый',
                 'alias' => 'white',
                 'description' => 'Изображения преимущественно белого цвета',
-                'keywords' => 'белый, white',
-                'publish' => 1
+                'keywords' => 'белый, white'
             ],
             [
                 'type' => 'colors',
                 'title' => 'Черный',
                 'alias' => 'black',
                 'description' => 'Изображения преимущественно черного цвета',
-                'keywords' => 'черный, black',
-                'publish' => 1
+                'keywords' => 'черный, black'
             ],
             [
                 'type' => 'colors',
                 'title' => 'Красный',
                 'alias' => 'tomato',
                 'description' => 'Изображения преимущественно красного цвета',
-                'keywords' => 'красный, red',
-                'publish' => 1
+                'keywords' => 'красный, red'
             ],
             [
                 'type' => 'colors',
                 'title' => 'Зеленый',
                 'alias' => 'limegreen',
                 'description' => 'Изображения преимущественно зеленого цвета',
-                'keywords' => 'зеленый, green',
-                'publish' => 1
+                'keywords' => 'зеленый, green'
             ],
             [
                 'type' => 'colors',
                 'title' => 'Синий',
                 'alias' => 'dodgerblue',
                 'description' => 'Изображения преимущественно синего цвета',
-                'keywords' => 'синий, blue, голубой',
-                'publish' => 1
+                'keywords' => 'синий, blue, голубой'
             ],
             [
                 'type' => 'colors',
                 'title' => 'Фиолетовый',
                 'alias' => 'darkviolet',
                 'description' => 'Изображения преимущественно фиолетового цвета',
-                'keywords' => 'фиолетовый, violet',
-                'publish' => 1
+                'keywords' => 'фиолетовый, violet'
             ]
         ],
         'interiors' => [
@@ -547,48 +497,42 @@ return [
                 'title' => 'Гостиная',
                 'alias' => 'living-room',
                 'description' => 'Изображения для гостиной',
-                'keywords' => 'гостиная, living room',
-                'publish' => 1
+                'keywords' => 'гостиная, living room'
             ],
             [
                 'type' => 'interiors',
                 'title' => 'Спальня',
                 'alias' => 'bad-room',
                 'description' => 'Изображения для спальной',
-                'keywords' => 'спальня, bad room',
-                'publish' => 1
+                'keywords' => 'спальня, bad room'
             ],
             [
                 'type' => 'interiors',
                 'title' => 'Кухня',
                 'alias' => 'kitchen',
                 'description' => 'Изображения для кухни',
-                'keywords' => 'кухня, kitchen',
-                'publish' => 1
+                'keywords' => 'кухня, kitchen'
             ],
             [
                 'type' => 'interiors',
                 'title' => 'Детская',
                 'alias' => 'child-room',
                 'description' => 'Изображения для детской',
-                'keywords' => 'детская, child room',
-                'publish' => 1
+                'keywords' => 'детская, child room'
             ],
             [
                 'type' => 'interiors',
                 'title' => 'Прихожая',
                 'alias' => 'hallway',
                 'description' => 'Изображения для коридора',
-                'keywords' => 'прихожая, hallway',
-                'publish' => 1
+                'keywords' => 'прихожая, hallway'
             ],
             [
                 'type' => 'interiors',
                 'title' => 'Офис',
                 'alias' => 'office',
                 'description' => 'Изображения для офиса',
-                'keywords' => 'офис, office',
-                'publish' => 1
+                'keywords' => 'офис, office'
             ]
         ]
     ],

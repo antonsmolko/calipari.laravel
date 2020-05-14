@@ -13,37 +13,34 @@
             <md-card>
                 <card-icon-header title="Список Привилегий" icon="assignment" />
                 <md-card-content>
-                    <template v-if="items.length">
-                        <md-table v-model="items" class="paginated-table table-striped table-hover">
-                            <md-table-row slot="md-table-row" slot-scope="{ item }">
+                    <md-table v-if="items.length" :value="items" class="paginated-table table-striped table-hover">
+                        <md-table-row slot="md-table-row" slot-scope="{ item }">
 
-                                <md-table-cell md-label="#" style="width: 50px">
-                                    {{ item.id }}
-                                </md-table-cell>
+                            <md-table-cell md-label="#" style="width: 50px">
+                                {{ item.id }}
+                            </md-table-cell>
 
-                                <md-table-cell md-label="Имя">
-                                    <span class="md-subheading">{{ item.display_name }}</span>
-                                </md-table-cell>
+                            <md-table-cell md-label="Имя">
+                                <span class="md-subheading">{{ item.display_name }}</span>
+                            </md-table-cell>
 
-                                <md-table-cell md-label="Алиас">
-                                    {{ item.name }}
-                                </md-table-cell>
+                            <md-table-cell md-label="Алиас">
+                                {{ item.name }}
+                            </md-table-cell>
 
-                                <md-table-cell md-label="Описание">
-                                    {{ item.description }}
-                                </md-table-cell>
+                            <md-table-cell md-label="Описание">
+                                {{ item.description }}
+                            </md-table-cell>
 
-                                <md-table-cell md-label="Действия">
+                            <md-table-cell md-label="Действия">
 
-                                    <table-actions :item="item"
-                                                   :subPath="storeModule"
-                                                   @delete="onDelete"/>
-                                </md-table-cell>
+                                <table-actions :item="item"
+                                               :subPath="storeModule"
+                                               @delete="onDelete"/>
+                            </md-table-cell>
 
-                            </md-table-row>
-
-                        </md-table>
-                    </template>
+                        </md-table-row>
+                    </md-table>
                     <template v-else>
                         <div class="alert alert-info">
                             <span><h3>У Вас еще нет привилегий!</h3></span>

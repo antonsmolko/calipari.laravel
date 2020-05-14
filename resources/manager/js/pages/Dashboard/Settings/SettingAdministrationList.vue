@@ -22,11 +22,10 @@
                                                 route="manager.settings.create" />
                         </div>
 
-                        <v-extended-table v-if="settings.length"
-                                          :items="settings"
-                                          :searchFields="[ 'display_name', 'key_name' ]" >
-
-                            <template slot-scope="{ item }">
+                        <md-table v-if="settings.length"
+                                  :value="settings"
+                                  class="paginated-table table-striped table-hover">
+                            <md-table-row slot="md-table-row" slot-scope="{ item }">
 
                                 <md-table-cell md-label="#" class="width-small">
                                     {{ item.id }}
@@ -55,10 +54,9 @@
                                                    @delete="onDeleteSetting"/>
 
                                 </md-table-cell>
+                            </md-table-row>
 
-                            </template>
-
-                        </v-extended-table>
+                        </md-table>
 
                         <template v-else>
                             <div class="alert alert-info mt-3">
@@ -72,11 +70,10 @@
                         <router-button-link title="Создать группу" icon="add" color="md-success"
                                             route="manager.settings.groups.create" />
                     </div>
-                    <v-extended-table v-if="settingGroups.length"
-                                      :items="settingGroups"
-                                      :searchFields="[ 'title' ]" >
-
-                        <template slot-scope="{ item }">
+                    <md-table v-if="settingGroups.length"
+                              :value="settingGroups"
+                              class="paginated-table table-striped table-hover">
+                        <md-table-row slot="md-table-row" slot-scope="{ item }">
 
                             <md-table-cell md-label="#" class="width-small">
                                 {{ item.id }}
@@ -106,9 +103,8 @@
 
                             </md-table-cell>
 
-                        </template>
-
-                    </v-extended-table>
+                        </md-table-row>
+                    </md-table>
                     <template v-else>
                         <div class="alert alert-info mt-3">
                             <span><h3>У Вас еще нет групп!</h3></span>

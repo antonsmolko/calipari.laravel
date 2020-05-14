@@ -1,5 +1,4 @@
 import { uniqueFieldEditMixin, uniqueFieldMixin } from "../../mixins/getters";
-
 import { axiosAction } from "../../mixins/actions";
 
 const state = {
@@ -12,71 +11,71 @@ const state = {
 };
 
 const mutations = {
-    UPDATE_ITEMS(state, payload) {
+    SET_ITEMS (state, payload) {
         state.items = payload;
     },
-    UPDATE_FIELD(state, payload) {
-        state.fields[payload.field] = payload.value;
-    },
-    DELETE_ITEM(state, payload) {
+    DELETE_ITEM (state, payload) {
         state.items = state.items.filter(item => item.id !== payload);
     },
-    CLEAR_FIELDS(state) {
-        for(let field in state.fields) {
+    SET_ITEM_FIELD (state, { field, value }) {
+        state.fields[field] = value;
+    },
+    CLEAR_ITEM_FIELDS (state) {
+        for(const field of Object.keys(state.fields)) {
             state.fields[field] = '';
         }
     },
-    UPDATE_FIELDS(state, payload) {
-        for(let field in state.fields) {
+    SET_ITEM_FIELDS (state, payload) {
+        for(const field of Object.keys(state.fields)) {
             state.fields[field] = payload[field] === null ? '' : payload[field];
         }
-    },
+    }
 };
 
 const actions = {
-    getItems(context) {
-        return axiosAction('get', context, {
-            url: '/api/manager/permissions',
-            thenContent: response => context.commit('UPDATE_ITEMS', response.data)
+    getItems ({ commit }) {
+        return axiosAction('get', commit, {
+            url: '/permissions',
+            thenContent: response => commit('SET_ITEMS', response.data)
         })
     },
-    getItem(context, id) {
-        return axiosAction('get', context, {
-            url: `/api/manager/permissions/${id}`,
-            thenContent: response => context.commit('UPDATE_FIELDS', response.data)
+    getItem ({ commit }, id) {
+        return axiosAction('get', commit, {
+            url: `/permissions/${id}`,
+            thenContent: response => commit('SET_ITEM_FIELDS', response.data)
         })
     },
-    store(context, payload) {
-        const form = new FormData();
-        for(let item in payload) {
-            form.append(item, payload[item]);
+    store ({ commit }, payload) {
+        const data = new FormData();
+        for(let [field, value] of Object.entries(payload)) {
+            data.append(field, value);
         }
-        return axiosAction('post', context, {
-            url: '/api/manager/permissions',
-            data: form
+        return axiosAction('post', commit, {
+            url: '/permissions',
+            data
         })
     },
-    update(context, payload) {
-        const form = new FormData();
-        for(let item in payload.formData) {
-            form.append(item, payload.formData[item]);
+    update ({ commit }, { id, formData }) {
+        const data = new FormData();
+        for(let [field, value] of Object.entries(formData)) {
+            data.append(field, value);
         }
-        return axiosAction('post', context, {
-            url: `/api/manager/permissions/${payload.id}`,
-            data: form
+        return axiosAction('post', commit, {
+            url: `/permissions/${id}`,
+            data
         })
     },
-    destroy(context, id) {
-        return axiosAction('delete', context, {
-            url: `/api/manager/permissions/${id}`,
-            thenContent: response => context.commit('DELETE_ITEM', id)
+    delete ({ commit }, { payload }) {
+        return axiosAction('delete', commit, {
+            url: `/permissions/${payload}`,
+            thenContent: response => commit('DELETE_ITEM', payload)
         })
     },
-    updateField(context, payload) {
-        context.commit('UPDATE_FIELD', payload);
+    setItemField ({ commit }, payload) {
+        commit('SET_ITEM_FIELD', payload);
     },
-    clearFields(context) {
-        context.commit('CLEAR_FIELDS');
+    clearItemFields ({ commit }) {
+        commit('CLEAR_ITEM_FIELDS');
     }
 };
 

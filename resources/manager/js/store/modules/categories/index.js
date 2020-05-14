@@ -11,18 +11,16 @@ const state = {
         image_path: '',
         publish: '',
         description: '',
-        keywords: ''
+        keywords: '',
+        hasImages: ''
     },
     item: '',
     items: []
 };
 
 const mutations = {
-    UPDATE_ITEMS(state, payload) {
-        state.items = payload;
-    },
-    UPDATE_ITEM(state, payload) {
-        state.item = payload;
+    SET_FIELD (state, { field, value }) {
+        state[field] = value;
     },
     DELETE_ITEM(state, payload) {
         state.items = state.items.filter(item => item.id !== payload);
@@ -34,213 +32,132 @@ const mutations = {
             }
         });
     },
-    UPDATE_FIELD(state, payload) {
-        state.fields[payload.field] = payload.value;
+    SET_ITEM_FIELD(state, { field, value }) {
+        state.fields[field] = value;
     },
     TOGGLE_PUBLISH_FIELD(state) {
         state.fields.publish = +!state.fields.publish;
     },
     CLEAR_FIELDS(state) {
-        for(let field in state.fields) {
+        for (const field of Object.keys(state.fields)) {
             state.fields[field] = '';
         }
     },
-    UPDATE_FIELDS(state, payload) {
-        for(let field in state.fields) {
-            state.fields[field] = payload[field] === null ? '' : payload[field];
+    SET_FIELDS(state, payload) {
+        for (const field of Object.keys(state.fields)) {
+            if (Object.hasOwnProperty.call(payload, field)) {
+                state.fields[field] = payload[field];
+            }
         }
     }
 };
 
 const actions = {
-    getItems(context) {
-        return axiosAction('get', context, {
-            url: '/api/manager/catalog/categories',
-            thenContent: response => context.commit('UPDATE_ITEMS', response.data)
+    getItem ({ commit }, id) {
+        return axiosAction('get', commit, {
+            url: `/catalog/categories/${id}`,
+            thenContent: response => commit('SET_FIELD', { field: 'item', value: response.data})
         })
     },
-    getItemsByType(context, category_type) {
-        return axiosAction('get', context, {
-            url: `/api/manager/catalog/categories/type/${category_type}`,
-            thenContent: response => context.commit('UPDATE_ITEMS', response.data)
+    getItemFromEdit ({ commit }, id) {
+        return axiosAction('get', commit, {
+            url: `/catalog/categories/${id}/edit`,
+            thenContent: response => commit('SET_FIELDS', response.data)
         })
     },
-    getItem(context, payload) {
-        return axiosAction('get', context, {
-            url: `/api/manager/catalog/categories/${payload}`,
-            thenContent: response => context.commit('UPDATE_FIELDS', response.data)
+    getItems ({ commit }) {
+        return axiosAction('get', commit, {
+            url: '/catalog/categories',
+            thenContent: response => commit('SET_FIELD', { field: 'items', value: response.data})
         })
     },
-    getImages(context, payload) {
+    getItemsByType ({ commit }, category_type) {
+        return axiosAction('get', commit, {
+            url: `/catalog/categories/type/${category_type}`,
+            thenContent: response => commit('SET_FIELD', { field: 'items', value: response.data})
+        })
+    },
+    store ({ commit }, payload) {
         const form = new FormData();
-
-        for(let field in payload.paginationData) {
-            form.append(field, payload.paginationData[field]);
+        for (const [field, value] of Object.entries(payload)) {
+            form.append(field, value);
         }
-
-        return axiosAction('post', context, {
-            url: `/api/manager/catalog/categories/${payload.id}/images`,
-            data: form,
-            thenContent: response => {
-                context.commit('images/SET_PAGINATION', response.data, { root: true });
-                payload.paginationData['query']
-                    ? context.commit('SET_SEARCHED_DATA', response.data.data, { root: true })
-                    : context.commit('images/UPDATE_ITEMS', response.data.data, { root: true });
-            }
-        })
-    },
-    getItemWithImages(context, payload) {
-        const form = new FormData();
-
-        for(let field in payload.paginationData) {
-            form.append(field, payload.paginationData[field]);
-        }
-        return axiosAction('post', context, {
-            url: `/api/manager/catalog/categories/${payload.id}/with-images`,
-            data: form,
-            thenContent: response => {
-                context.commit('images/SET_PAGINATION', response.data['paginateData'], { root: true });
-                context.commit('UPDATE_ITEM', response.data.item);
-                context.commit('images/UPDATE_ITEMS', response.data['paginateData'].data, { root: true });
-            }
-        })
-    },
-    getExcludedImages(context, payload) {
-        const form = new FormData();
-
-        for(let field in payload.paginationData) {
-            form.append(field, payload.paginationData[field]);
-        }
-
-        return axiosAction('post', context, {
-            url: `/api/manager/catalog/categories/${payload.id}/images/excluded`,
-            data: form,
-            thenContent: response => {
-                context.commit('images/SET_PAGINATION', response.data, { root: true });
-                payload.paginationData['query']
-                    ? context.commit('SET_SEARCHED_DATA', response.data.data, { root: true })
-                    : context.commit('images/UPDATE_ITEMS', response.data.data, { root: true });
-            }
-        })
-    },
-    getItemWithExcludedImages(context, payload) {
-        const form = new FormData();
-
-        for(let field in payload.paginationData) {
-            form.append(field, payload.paginationData[field]);
-        }
-
-        return axiosAction('post', context, {
-            url: `/api/manager/catalog/categories/${payload.id}/with-excluded-images`,
-            data: form,
-            thenContent: response => {
-                context.commit('images/SET_PAGINATION', response.data['paginateData'], { root: true });
-                context.commit('UPDATE_ITEM', response.data.item);
-                context.commit('images/UPDATE_ITEMS', response.data['paginateData'].data, { root: true });
-            }
-        })
-    },
-    publish(context, payload) {
-        return axiosAction('get', context, {
-            url: `/api/manager/catalog/categories/${payload}/publish`,
-            thenContent: response => context.commit('CHANGE_PUBLISH', response.data)
-        })
-    },
-    store(context, payload) {
-        const form = new FormData();
-        for(let field in payload) {
-            form.append(field, payload[field]);
-        }
-        return axiosAction('post', context, {
-            url: `/api/manager/catalog/categories`,
+        return axiosAction('post', commit, {
+            url: `/catalog/categories`,
             data: form
         })
     },
-    update(context, payload) {
+    update ({ commit }, payload) {
         const form = new FormData();
-        for(let field in payload.formData) {
-            if (field !== 'image') {
-                form.append(field, payload.formData[field]);
-            } else {
-                if (payload.formData[field]) {
-                    form.append(field, payload.formData[field]);
+        for (const [field, value] of Object.entries(payload.formData)) {
+            if (field !== 'image' || value) {
+                form.append(field, value);
+            }
+        }
+        return axiosAction('post', commit, {
+            url: `/catalog/categories/${payload.category_id}`,
+            data: form
+        })
+    },
+    delete ({ commit, dispatch }, { payload, tableMode = false }) {
+        return axiosAction('delete', commit, {
+            url: `/catalog/categories/${payload}`,
+            thenContent: (response) => {
+                if (tableMode) {
+                    dispatch('table/getItemsGet', null, { root: true });
+                    dispatch('table/deleteSearchedItem', payload, { root: true });
                 }
             }
-        }
-        return axiosAction('post', context, {
-            url: `/api/manager/catalog/categories/${payload.category_id}`,
-            data: form
         })
     },
-    destroy(context, id) {
-        return axiosAction('delete', context, {
-            url: `/api/manager/catalog/categories/${id}`,
-            thenContent: response => {
-                context.commit('DELETE_ITEM', id);
-                context.commit('DELETE_SEARCHED_DATA_ITEM', id, { root: true })
-            }
+    removeImage ({ commit, dispatch }, { categoryId, imageId }) {
+        return axiosAction('get', commit, {
+            url: `/catalog/categories/${categoryId}/images/${imageId}/remove`,
+            thenContent: response => dispatch('table/updateItemsPost', null, { root: true })
         })
     },
-    uploadImages(context, payload) {
-        const form = new FormData();
-
-        for(let file of payload.files) {
-            form.append('images[]', file);
+    uploadImages ({ commit, dispatch }, { files, id }) {
+        const data = new FormData();
+        for(let file of files) {
+            data.append('images[]', file);
         }
 
-        for(let field in payload.paginationData) {
-            form.append(field, payload.paginationData[field]);
-        }
-
-        return axiosAction('post', context, {
-            url: `/api/manager/catalog/categories/${payload.id}/upload`,
-            data: form,
-            config: {
+        return axiosAction('post', commit, {
+            url: `/catalog/categories/${id}/upload`,
+            data,
+            options: {
                 onUploadProgress: (imageUpload) => {
-                    context.commit(
+                    commit(
                         'images/CHANGE_FILE_PROGRESS',
-                        Math.round((imageUpload.loaded / imageUpload.total) * 100), {root: true});
+                        Math.round((imageUpload.loaded / imageUpload.total) * 100),
+                        {root: true}
+                    );
                 }
             },
-            thenContent: response => {
-                context.commit('images/CHANGE_FILE_PROGRESS', 0, { root: true });
-                context.commit('images/SET_PAGINATION', response.data, { root: true });
-                context.commit('images/UPDATE_ITEMS', response.data.data, { root: true });
+            thenContent: (response) => {
+                commit('images/CHANGE_FILE_PROGRESS', 0, { root: true });
+                commit('table/SET_PAGINATION_FIELD', { field: 'current_page', value: 1 }, { root: true });
+                dispatch('table/getItemsPost', null, { root: true });
             }
         })
     },
-    removeImage(context, payload) {
-        const form = new FormData();
-
-        for(let field in payload.paginationData) {
-            form.append(field, payload.paginationData[field]);
-        }
-
-        return axiosAction('post', context, {
-            url: `/api/manager/catalog/categories/${payload.category_id}/images/${payload.image_id}/remove`,
-            data: form,
-            thenContent: response => {
-                context.commit('images/SET_PAGINATION', response.data, { root: true });
-                payload.paginationData['query']
-                    ? context.commit('SET_SEARCHED_DATA', response.data.data, { root: true })
-                    : context.commit('images/UPDATE_ITEMS', response.data.data, { root: true });
-            }
+    addSelectedImages({ commit }, { id, data }) {
+        return axiosAction('post', commit, {
+            url: `/catalog/categories/${id}/images/add`,
+            data
         })
     },
-    addSelectedImages(context, payload) {
-        return axiosAction('post', context, {
-            url: `/api/manager/catalog/categories/${payload.category_id}/images/add`,
-            data: payload.selected_images
-        })
+    setItemField({ commit }, payload) {
+        commit('SET_ITEM_FIELD', payload);
     },
-    updateField(context, payload) {
-        context.commit('UPDATE_FIELD', payload);
+    togglePublishField({ commit }) {
+        commit('TOGGLE_PUBLISH_FIELD');
     },
-    togglePublishField(context) {
-        context.commit('TOGGLE_PUBLISH_FIELD');
+    clearFields({ commit }) {
+        commit('CLEAR_FIELDS');
     },
-    clearFields(context) {
-        context.commit('CLEAR_FIELDS');
+    setField({ commit }, payload) {
+        commit('SET_FIELD', payload);
     }
 };
 

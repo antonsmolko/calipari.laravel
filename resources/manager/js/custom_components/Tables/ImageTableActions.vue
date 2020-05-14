@@ -11,7 +11,7 @@
                             icon="edit"
                             color="md-success"
                             route="manager.images.edit"
-                            :params="{ id: item.id, page }" />
+                            :params="{ id: item.id }" />
 
         <control-button title="Удалить"
                         icon="delete"
@@ -31,10 +31,6 @@
             remove: {
                 type: Boolean,
                 default: false
-            },
-            page: {
-                type: Number,
-                default: null
             }
         },
         methods: {

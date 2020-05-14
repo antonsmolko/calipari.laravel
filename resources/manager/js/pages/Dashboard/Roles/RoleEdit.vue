@@ -60,10 +60,11 @@
                                    :key="permission.id"
                                    :value="permission.id"
                                    v-model="selectedPermissions"
-                                   @change="onCheck()"
+                                   @change="onCheck"
                         >
                             {{ permission.display_name }}
                         </md-switch>
+                        <input-notification-require v-if="$v.selectedPermissions.$error" name="Привелегии" />
                     </md-card-content>
                 </md-card>
             </div>
@@ -73,14 +74,15 @@
 
 <script>
     import { mapActions, mapState } from 'vuex'
-
     import { required, minLength } from 'vuelidate/lib/validators'
 
+    import { InputNotificationRequire } from '@/custom_components/InputNotifications';
     import { pageTitle } from '@/mixins/base'
     import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
 
     export default {
         name: 'RoleEdit',
+        components: { InputNotificationRequire },
         mixins: [ pageTitle, updateMethod, deleteMethod ],
         props: {
             id: {
@@ -103,14 +105,10 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.name.$dirty
-                        ? true
-                        : !this.isUniqueNameEdit
+                    return (value.trim() === '') && !this.$v.name.$dirty || !this.isUniqueNameEdit
                 },
                 testAlias (value) {
-                    return value.trim() === ''
-                        ? true
-                        : (/^([a-z0-9]+[-]?)+[a-z0-9]$/).test(value);
+                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
                 }
             },
             displayName: {
@@ -118,15 +116,14 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.displayName.$dirty
-                        ? true
-                        : !this.isUniqueDisplayNameEdit
+                    return (value.trim() === '') && !this.$v.displayName.$dirty || !this.isUniqueDisplayNameEdit
                 }
             },
             description: {
                 touch: false
             },
-            permissions: {
+            selectedPermissions: {
+                required,
                 touch: false
             }
         },
@@ -145,17 +142,34 @@
                 return !!this.$store.getters['roles/isUniqueDisplayName'](this.displayName);
             }
         },
+        async created() {
+            await Promise.all([
+                this.getItemsAction(),
+                this.getPermissionsAction(),
+                this.getItemAction(this.id)
+            ])
+                .then(() => {
+                    this.setPageTitle(this.displayName);
+                    this.selectedPermissions = this.permissions.slice(0);
+                    this.responseData = true;
+                })
+                .then(() => {
+                    this.$v.$reset();
+                    this.controlSaveVisibilities = true;
+                })
+                .catch(() => this.$router.push(this.redirectRoute));
+        },
         methods: {
             ...mapActions({
                 getItemsAction: 'roles/getItems',
                 getItemAction: 'roles/getItem',
-                clearFieldsAction: 'roles/clearFields',
+                clearFieldsAction: 'roles/clearItemFields',
                 getPermissionsAction: 'permissions/getItems',
             }),
             onCheck() {
                 this.isDiffer(this.permissions, this.selectedPermissions)
-                    ? this.$v.permissions.$touch()
-                    : this.$v.permissions.$reset()
+                    ? this.$v.selectedPermissions.$touch()
+                    : this.$v.selectedPermissions.$reset()
             },
             isDiffer(a, b) {
                 return !!a.filter(i => !b.includes(i)).concat(b.filter(i => !a.includes(i))).length;
@@ -187,23 +201,6 @@
                     redirectRoute: this.redirectRoute
                 })
             }
-        },
-        async created() {
-            await Promise.all([
-                this.getItemsAction(),
-                this.getPermissionsAction(),
-                this.getItemAction(this.id)
-            ])
-                .then(() => {
-                    this.setPageTitle(this.displayName);
-                    this.selectedPermissions = this.permissions.slice(0);
-                    this.responseData = true;
-                })
-                .then(() => {
-                    this.$v.$reset();
-                    this.controlSaveVisibilities = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
         }
     }
 </script>

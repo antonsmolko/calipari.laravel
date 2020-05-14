@@ -106,7 +106,7 @@
                 required,
                 touch: false,
                 testAlias (value) {
-                    return value.trim() === '' || (/^([a-z0-9]+[-]?)+[a-z0-9]$/).test(value);
+                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
                 },
                 minLength: minLength(2),
                 isUnique (value) {

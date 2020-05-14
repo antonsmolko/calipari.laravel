@@ -18,6 +18,15 @@ class BaseCategoryController extends BaseResourceController
     }
 
     /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getItemFromEdit(int $id): JsonResponse
+    {
+        return response()->json($this->service->getItemFromEdit($id));
+    }
+
+    /**
      * @param string $type
      * @return JsonResponse
      */
@@ -36,15 +45,15 @@ class BaseCategoryController extends BaseResourceController
         return response()->json($this->service->getImages($id, $request->all()));
     }
 
-    /**
-     * @param FormRequest $request
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function getItemWithImages(FormRequest $request, int $id): JsonResponse
-    {
-        return response()->json($this->service->getItemWithImages($id, $request->all()));
-    }
+//    /**
+//     * @param FormRequest $request
+//     * @param int $id
+//     * @return JsonResponse
+//     */
+//    public function getItemWithImages(FormRequest $request, int $id): JsonResponse
+//    {
+//        return response()->json($this->service->getItemWithImages($id, $request->all()));
+//    }
 
     /**
      * @param FormRequest $request
@@ -56,15 +65,15 @@ class BaseCategoryController extends BaseResourceController
         return response()->json($this->service->getExcludedImages($id, $request->all()));
     }
 
-    /**
-     * @param FormRequest $request
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function getItemWithExcludedImages(FormRequest $request, int $id): JsonResponse
-    {
-        return response()->json($this->service->getItemWithExcludedImages($id, $request->all()));
-    }
+//    /**
+//     * @param FormRequest $request
+//     * @param int $id
+//     * @return JsonResponse
+//     */
+//    public function getItemWithExcludedImages(FormRequest $request, int $id): JsonResponse
+//    {
+//        return response()->json($this->service->getItemWithExcludedImages($id, $request->all()));
+//    }
 
     /**
      * @param FormRequest $request
@@ -86,13 +95,12 @@ class BaseCategoryController extends BaseResourceController
     }
 
     /**
-     * @param FormRequest $request
      * @param int $categoryId
      * @param int $imageId
      * @return mixed
      */
-    public function removeImage(FormRequest $request, int $categoryId, int $imageId)
+    public function removeImage(int $categoryId, int $imageId)
     {
-        return $this->service->removeImage($categoryId, $imageId, $request->all());
+        return $this->service->removeImage($categoryId, $imageId);
     }
 }

@@ -1,5 +1,4 @@
 import { uniqueFieldEditMixin, uniqueFieldMixin } from "../../mixins/getters";
-
 import { axiosAction } from "../../mixins/actions";
 
 const state = {
@@ -7,8 +6,6 @@ const state = {
         name: '',
         price: '',
         width: '',
-        thumb_path: '',
-        thumb: '',
         sample_path: '',
         sample: '',
         background_path: '',
@@ -20,95 +17,93 @@ const state = {
 };
 
 const mutations = {
-    UPDATE_ITEMS(state, payload) {
+    SET_ITEMS (state, payload) {
         state.items = payload;
     },
-    DELETE_ITEM(state, payload) {
+    DELETE_ITEM (state, payload) {
         state.items = state.items.filter(item => item.id !== payload);
     },
-    CHANGE_PUBLISH(state, payload) {
+    CHANGE_PUBLISH (state, payload) {
         state.items.forEach(item => {
             if(item.id === payload.id) {
                 item.publish = payload.publish;
             }
         });
     },
-    UPDATE_FIELD(state, payload) {
-        state.fields[payload.field] = payload.value;
+    SET_ITEM_FIELD (state, { field, value }) {
+        state.fields[field] = value;
     },
-    TOGGLE_PUBLISH_FIELD(state) {
+    TOGGLE_PUBLISH_FIELD (state) {
         state.fields.publish = +!state.fields.publish;
     },
-    CLEAR_FIELDS(state) {
-        for(let field in state.fields) {
+    CLEAR_ITEM_FIELDS (state) {
+        for(const field of Object.keys(state.fields)) {
             state.fields[field] = '';
         }
     },
-    UPDATE_FIELDS(state, payload) {
-        for(let field in state.fields) {
+    SET_ITEM_FIELDS (state, payload) {
+        for(const field of Object.keys(state.fields)) {
             state.fields[field] = payload[field] === null ? '' : payload[field];
         }
     }
 };
 
 const actions = {
-    getItems(context) {
-        return axiosAction('get', context, {
-            url: '/api/manager/textures',
-            thenContent: response => context.commit('UPDATE_ITEMS', response.data)
+    getItems ({ commit }) {
+        return axiosAction('get', commit, {
+            url: '/textures',
+            thenContent: response => commit('SET_ITEMS', response.data)
         })
     },
-    getItem(context, payload) {
-        return axiosAction('get', context, {
-            url: `/api/manager/textures/${payload}`,
-            thenContent: response => context.commit('UPDATE_FIELDS', response.data)
+    getItem ({ commit }, id) {
+        return axiosAction('get', commit, {
+            url: `/textures/${id}`,
+            thenContent: response => commit('SET_ITEM_FIELDS', response.data)
         })
     },
-    publish(context, payload) {
-        return axiosAction('get', context, {
-            url: `/api/manager/textures/${payload}/publish`,
-            thenContent: response => context.commit('CHANGE_PUBLISH', response.data)
+    publish ({ commit }, id) {
+        return axiosAction('get', commit, {
+            url: `/textures/${id}/publish`,
+            thenContent: response => commit('CHANGE_PUBLISH', response.data)
         })
     },
-    store(context, payload) {
-        const form = new FormData();
-        for (let field in payload) {
-            form.append(field, payload[field]);
+    store ({ commit }, payload) {
+        const data = new FormData();
+        for (const [field, value] of Object.entries(payload)) {
+            data.append(field, value);
         }
-        return axiosAction('post', context, {
-            url: '/api/manager/textures',
-            data: form
+        return axiosAction('post', commit, {
+            url: '/textures',
+            data
         })
     },
-    update(context, payload) {
-        const form = new FormData();
-        const images = ['thumb', 'sample', 'background'];
-        for(let field in payload.formData) {
-            if (!images.includes(field)) {
-                form.append(field, payload.formData[field]);
-            } else if (payload.formData[field]) {
-                form.append(field, payload.formData[field]);
+    update({ commit }, { id, formData }) {
+        const data = new FormData();
+        const images = ['sample', 'background'];
+        for (const [field, value] of Object.entries(formData)) {
+            if (!images.includes(field) || value) {
+                data.append(field, value);
             }
         }
-        return axiosAction('post', context, {
-            url: `/api/manager/textures/${payload.id}`,
-            data: form
+        return axiosAction('post', commit, {
+            url: `/textures/${id}`,
+            data
         })
     },
-    destroy(context, id) {
-        return axiosAction('delete', context, {
-            url: `/api/manager/textures/${id}`,
-            thenContent: response => context.commit('DELETE_ITEM', id)
+    delete ({ commit }, { payload }) {
+        return axiosAction('delete', commit, {
+            url: `/textures/${payload}`,
+            thenContent: response => commit('DELETE_ITEM', payload)
         })
     },
-    updateField(context, payload) {
-        context.commit('UPDATE_FIELD', payload);
+    setItemField ({ commit }, payload) {
+        commit('SET_ITEM_FIELD', payload);
     },
-    togglePublishField(context) {
-        context.commit('TOGGLE_PUBLISH_FIELD');
+    togglePublishField ({ commit }) {
+        commit('TOGGLE_PUBLISH_FIELD');
     },
-    clearFields(context) {
-        context.commit('CLEAR_FIELDS');
+    clearItemFields ({ commit }) {
+        commit('CLEAR_ITEM_FIELDS');
     }
 };
 

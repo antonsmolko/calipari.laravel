@@ -149,9 +149,14 @@ Route::group(['prefix' => 'manager'], function() {
     Route::post('images/paginate', 'Cms\Image\ImageController@getItems')
         ->name('images.list');
     Route::post('images/{id}', 'Cms\Image\ImageController@update')
+        ->where('id', '[0-9]+')
         ->name('images.update');
     Route::get('images/{id}/publish', 'Cms\Image\ImageController@publish')
+        ->where('id', '[0-9]+')
         ->name('images.publish');
+    Route::get('images/{id}/remove-owner', 'Cms\Image\ImageController@removeOwner')
+        ->where('id', '[0-9]+')
+        ->name('images.remove-owner');
     Route::apiResource('images', 'Cms\Image\ImageController')
         ->except(['index', 'create', 'edit', 'update']);
 
@@ -164,21 +169,23 @@ Route::group(['prefix' => 'manager'], function() {
         // Categories
 
         Route::group(['prefix' => 'categories'], function() {
+            Route::get('{id}/edit', 'Cms\Category\CategoryController@getItemFromEdit')
+                ->where('id', '[0-9]+');
             Route::get('type/{type}', 'Cms\Category\CategoryController@getItemsByType')
                 ->where('type', '[a-z]+');
             Route::post('{id}/images', 'Cms\Category\CategoryController@getImages')
                 ->where('id', '[0-9]+');
-            Route::post('{id}/with-images', 'Cms\Category\CategoryController@getItemWithImages')
-                ->where('id', '[0-9]+');
+//            Route::post('{id}/with-images', 'Cms\Category\CategoryController@getItemWithImages')
+//                ->where('id', '[0-9]+');
             Route::post('{id}/images/excluded', 'Cms\Category\CategoryController@getExcludedImages')
                 ->where('id', '[0-9]+');
-            Route::post('{id}/with-excluded-images', 'Cms\Category\CategoryController@getItemWithExcludedImages')
-                ->where('id', '[0-9]+');
+//            Route::post('{id}/with-excluded-images', 'Cms\Category\CategoryController@getItemWithExcludedImages')
+//                ->where('id', '[0-9]+');
             Route::post('{id}', 'Cms\Category\CategoryController@update')
                 ->where('id', '[0-9]+');
             Route::post('{id}/images/add', 'Cms\Category\CategoryController@addImages')
                 ->where('id', '[0-9]+');
-            Route::post('{id}/images/{image_id}/remove', 'Cms\Category\CategoryController@removeImage')
+            Route::get('{id}/images/{image_id}/remove', 'Cms\Category\CategoryController@removeImage')
                 ->where('id,image_id', '[0-9]+');
             Route::post('{id}/upload', 'Cms\Category\CategoryController@upload')
                 ->where('id', '[0-9]+');
@@ -234,8 +241,6 @@ Route::group(['prefix' => 'manager'], function() {
                 ->where('id', '[0-9]+');
             Route::post('{id}/images/add', 'Cms\Owner\OwnerController@addImages')
                 ->where('id', '[0-9]+');
-            Route::post('{id}/images/{image_id}/remove', 'Cms\Owner\OwnerController@removeImage')
-                ->where('id,image_id', '[0-9]+');
             Route::post('{id}/upload', 'Cms\Owner\OwnerController@upload')
                 ->where('id', '[0-9]+');
             Route::get('{id}/publish', 'Cms\Owner\OwnerController@publish')
@@ -286,6 +291,8 @@ Route::group(['prefix' => 'manager'], function() {
     // Users
 
     Route::group(['prefix' => 'users'], function() {
+        Route::post('/paginate', 'Cms\User\UserController@getItems')
+            ->name('users');
         Route::post('{id}', 'Cms\User\UserController@update')
             ->where('id', '[0-9]+')
             ->name('users.update');
@@ -297,7 +304,7 @@ Route::group(['prefix' => 'manager'], function() {
             ->name('users.password');
     });
     Route::apiResource('users', 'Cms\User\UserController')
-        ->except(['create', 'edit', 'update']);
+        ->except(['index', 'create', 'edit', 'update']);
 
 
     // Roles
@@ -335,10 +342,12 @@ Route::group(['prefix' => 'manager'], function() {
 
         // Orders
         Route::group(['prefix' => 'orders'], function() {
-            Route::get('/', 'Cms\Order\OrderController@getItems');
+//            Route::get('/', 'Cms\Order\OrderController@getItems');
             Route::get('/{id}', 'Cms\Order\OrderController@getItem');
             Route::get('/{id}/details', 'Cms\Order\OrderController@getItemDetails');
             Route::post('/{id}/status', 'Cms\Order\OrderController@changeStatus');
+            Route::post('/current', 'Cms\Order\OrderController@getCurrentItems');
+            Route::post('/completed', 'Cms\Order\OrderController@getCompletedItems');
         });
 
         // OrderStatuses

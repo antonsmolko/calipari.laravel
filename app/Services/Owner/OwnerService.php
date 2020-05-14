@@ -10,7 +10,6 @@ use App\Services\Base\Category\Handlers\UploadHandler;
 use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
 use App\Services\Owner\Repositories\OwnerRepository;
 use App\Services\SubCategory\SubCategoryService;
-use Illuminate\Support\Arr;
 
 class OwnerService extends SubCategoryService
 {
@@ -48,12 +47,7 @@ class OwnerService extends SubCategoryService
     {
         $category = $this->repository->getItem($id);
 
-        $uploadImages = $requestData['images'];
-        $pagination = Arr::except($requestData, ['images']);
-
-        $this->uploadHandler->handle($id, $uploadImages, $this->repository);
-
-        return $this->repository->getImages($category, $pagination);
+        return $this->uploadHandler->handle($category, $requestData['images']);
     }
 
     /**
@@ -75,20 +69,5 @@ class OwnerService extends SubCategoryService
     public function addImages(int $id, array $images)
     {
         $this->repository->addImages($id, $images);
-    }
-
-    /**
-     * @param int $categoryId
-     * @param int $imageId
-     * @param array $pagination
-     * @return mixed|void
-     */
-    public function removeImage(int $categoryId, int $imageId, array $pagination)
-    {
-        $category = $this->repository->getItem($categoryId);
-
-        return !!$this->repository->removeImage(null, $imageId)
-            ? $this->getImagesHandler->handle($category, $pagination)
-            : abort(500);
     }
 }

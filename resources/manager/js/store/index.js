@@ -14,6 +14,7 @@ import settingGroups from './modules/setting-groups';
 import deliveries from './modules/deliveries';
 import orders from './modules/orders';
 import orderStatuses from './modules/order-statuses';
+import table from './modules/table';
 
 Vue.use(Vuex);
 
@@ -112,6 +113,7 @@ export default new Vuex.Store({
         settingGroups,
         deliveries,
         orders,
-        orderStatuses
+        orderStatuses,
+        table
     }
 });

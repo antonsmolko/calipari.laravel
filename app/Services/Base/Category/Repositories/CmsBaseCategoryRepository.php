@@ -10,80 +10,82 @@ class CmsBaseCategoryRepository extends CmsBaseResourceRepository
 {
     protected string $table = 'categories';
 
+//    /**
+//     * @param int $id
+//     * @return mixed
+//     */
+//    public function getItemFromEdit(int $id)
+//    {
+//        return $this->model::findOrFail($id);
+//    }
+
     /**
      * @param $category
      * @param array $pagination
      * @return mixed
      */
-    public function getImages($category, array $pagination)
+    public function getImages($category, array $requestData)
     {
         return $category->images()
             ->with(config('query_builder.image'))
-            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
+            ->when(!empty($requestData['query']),
+                fn ($query) => $query->where('id', 'like', $requestData['query'] . '%'))
+            ->orderBy($requestData['sort_by'], $requestData['sort_order'])
+            ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']);
     }
+
+//    /**
+//     * @param $category
+//     * @param array $pagination
+//     * @return mixed
+//     */
+//    public function getQueryImages($category, array $pagination)
+//    {
+//        return $category->images()
+//            ->where('id', 'like', $pagination['query'] . '%')
+//            ->with(config('query_builder.image'))
+//            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
+//            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
+//    }
 
     /**
      * @param $category
-     * @param array $pagination
+     * @param array $requestData
      * @return mixed
      */
-    public function getQueryImages($category, array $pagination)
+    public function getExcludedImages($category, array $requestData)
     {
-        return $category->images()
-            ->where('id', 'like', $pagination['query'] . '%')
+        return Image::whereDoesntHave($this->table, fn ($query) => $query->where('id', $category->id))
             ->with(config('query_builder.image'))
-            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
+            ->when(!empty($requestData['query']),
+                fn ($query) => $query->where('id', 'like', $requestData['query'] . '%'))
+            ->orderBy($requestData['sort_by'], $requestData['sort_order'])
+            ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']);
     }
+
+//    /**
+//     * @param $category
+//     * @param array $pagination
+//     * @return mixed
+//     */
+//    public function getQueryExcludedImages($category, array $pagination)
+//    {
+//        return Image::whereDoesntHave($this->table, function ($query) use ($category) {
+//            $query->where('id', $category->id);
+//        })
+//            ->where('id', 'like', $pagination['query'] . '%')
+//            ->with(config('query_builder.image'))
+//            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
+//            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
+//    }
 
     /**
      * @param $category
-     * @param array $pagination
-     * @return mixed
-     */
-    public function getExcludedImages($category, array $pagination)
-    {
-        return Image::whereDoesntHave($this->table, function ($query) use ($category) {
-            $query->where('id', $category->id);
-        })
-            ->with(config('query_builder.image'))
-            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
-    }
-
-    /**
-     * @param $category
-     * @param array $pagination
-     * @return mixed
-     */
-    public function getQueryExcludedImages($category, array $pagination)
-    {
-        return Image::whereDoesntHave($this->table, function ($query) use ($category) {
-            $query->where('id', $category->id);
-        })
-            ->where('id', 'like', $pagination['query'] . '%')
-            ->with(config('query_builder.image'))
-            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
-    }
-
-    /**
-     * @param mixed $category
      * @param array $images
+     * @return mixed
      */
     public function addImages($category, array $images)
     {
-        $category->images()->attach($images, ['category_type' => $category->type]);
-    }
-
-    /**
-     * @param mixed $category
-     * @param int $imageId
-     * @return bool|int
-     */
-    public function removeImage($category, int $imageId)
-    {
-        return $category->images()->detach($imageId);
+        return $category->images()->attach($images, ['category_type' => $category->type]);
     }
 }

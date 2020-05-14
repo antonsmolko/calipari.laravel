@@ -1,67 +1,48 @@
-import last from 'lodash/last'
+import first from "lodash/first";
 import { axiosAction } from "../../mixins/actions";
 
 const state = {
-    item: {},
-    items: []
+    item: {}
 };
 
 const mutations = {
-    SET_ITEMS(state, payload) {
-        state.items = payload;
-    },
     SET_ITEM(state, payload) {
         state.item = payload
-    },
-    UPDATE_ITEMS(state, payload) {
-        state.items = state.items.map(item => item.id === payload.id ? payload : item);
-    },
-    DELETE_ITEM(state, payload) {
-        state.items = state.items.filter(item => item.id !== payload);
     }
 };
 
 const actions = {
-    getItems(context) {
-        return axiosAction('get', context, {
-            url: '/api/manager/store/orders',
-            thenContent: response => context.commit('SET_ITEMS', response.data)
+    getItem({ commit }, id) {
+        return axiosAction('get', commit, {
+            url: `/store/orders/${id}/details`,
+            thenContent: response => commit('SET_ITEM', response.data)
         })
     },
-    getItem(context, id) {
-        return axiosAction('get', context, {
-            url: `/api/manager/store/orders/${id}/details`,
-            thenContent: response => context.commit('SET_ITEM', response.data)
+    delete({ commit }, { payload }) {
+        return axiosAction('delete', commit, {
+            url: `/store/orders/${payload}`,
+            thenContent: response => commit('DELETE_ITEM', payload)
         })
     },
-    destroy(context, id) {
-        return axiosAction('delete', context, {
-            url: `/api/manager/store/orders/${id}`,
-            thenContent: response => context.commit('DELETE_ITEM', id)
-        })
-    },
-    changeStatus(context, { id, status, list = true }) {
-        return axiosAction('post', context, {
-            url: `/api/manager/store/orders/${id}/status`,
+    changeStatus({ commit }, { id, status, list = true }) {
+        return axiosAction('post', commit, {
+            url: `/store/orders/${id}/status`,
             data: { status, list },
             thenContent: (response) => {
+                const item = response.data;
+                const currentStatus = first([...item.statuses]);
+
                 list
-                    ? context.commit('UPDATE_ITEMS', response.data)
-                    : context.commit('SET_ITEM', response.data)
+                    ? currentStatus.alias === 'completed'
+                        ? commit('table/DELETE_ITEM', item, { root: true })
+                        : commit('table/UPDATE_ITEMS', item, { root: true })
+                    : commit('SET_ITEM', response.data)
             }
         })
     }
 };
 
 const getters = {
-    completedItems: state => state.items.filter((item) => {
-        const currentStatus = last([...item.statuses]);
-        return currentStatus.alias === 'completed';
-    }),
-    notCompletedItems: state => state.items.filter((item) => {
-        const currentStatus = last([...item.statuses]);
-        return currentStatus.alias !== 'completed';
-    })
 };
 
 export default {

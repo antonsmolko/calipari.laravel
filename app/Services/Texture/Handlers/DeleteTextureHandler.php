@@ -27,7 +27,6 @@ class DeleteTextureHandler
      */
     public function handle(Texture $item): int
     {
-        uploader()->remove($item['thumb_path']);
         uploader()->remove($item['sample_path']);
         uploader()->remove($item['background_path']);
 

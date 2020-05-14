@@ -56,9 +56,12 @@
                                  :module="storeModule" />
 
                         <v-switch :vField="$v.publish"
+                                  :disabled="!hasImages"
                                   :differ="true"
                                   :value="publish"
-                                  :module="storeModule" />
+                                  :module="storeModule">
+                            <span v-if="!hasImages">Для публикации добавьте изображения</span>
+                        </v-switch>
 
                     </md-card-content>
                 </md-card>
@@ -104,8 +107,7 @@
             id: {
                 type: [ Number, String ],
                 required: true
-            },
-            // result: []
+            }
         },
         mixins: [
             categoryPage,
@@ -135,7 +137,7 @@
                     return ((value.trim() === '') && !this.$v.alias.$dirty) || !this.isUniqueAliasEdit
                 },
                 testAlias (value) {
-                    return value.trim() === '' || (/^([a-z0-9]+[-]?)+[a-z0-9]$/).test(value);
+                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
                 }
             },
             image: {
@@ -159,7 +161,8 @@
                 imagePath: state => state.fields.image_path,
                 publish: state => state.fields.publish,
                 description: state => state.fields.description,
-                keywords: state => state.fields.keywords
+                keywords: state => state.fields.keywords,
+                hasImages: state => state.fields.hasImages
             }),
             isUniqueTitleEdit () {
                 return !!this.$store.getters['categories/isUniqueTitleEdit'](this.title, this.id);
@@ -168,10 +171,26 @@
                 return !!this.$store.getters['categories/isUniqueAliasEdit'](this.alias, this.id);
             }
         },
+        created() {
+            this.clearFieldsAction();
+            Promise.all([
+                this.getItemsAction(),
+                this.getItemAction(this.id)
+            ])
+                .then(() => {
+                    this.setPageTitle(this.title);
+                    this.responseData = true;
+                })
+                .catch(() => this.$router.push(this.redirectRoute));
+        },
+        beforeDestroy () {
+            this.clearFieldsAction();
+        },
         methods: {
             ...mapActions('categories', {
-                getItemAction: 'getItem',
-                getItemsAction: 'getItems'
+                getItemAction: 'getItemFromEdit',
+                getItemsAction: 'getItems',
+                clearFieldsAction: 'clearFields'
             }),
             onUpdate () {
                 return this.update({
@@ -203,15 +222,6 @@
                     redirectRoute: this.redirectRoute
                 })
             }
-        },
-        created() {
-            this.getItemsAction()
-                .then(() => this.getItemAction(this.id))
-                .then(() => {
-                    this.setPageTitle(this.title);
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
         }
     }
 </script>

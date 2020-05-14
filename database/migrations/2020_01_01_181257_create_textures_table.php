@@ -16,7 +16,6 @@ class CreateTexturesTable extends Migration
         Schema::create('textures', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 50)->unique();
-            $table->string('thumb_path', 100);
             $table->string('sample_path', 100);
             $table->string('background_path', 100);
             $table->unsignedInteger('width');

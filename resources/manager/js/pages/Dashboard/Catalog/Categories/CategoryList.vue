@@ -1,5 +1,5 @@
 <template>
-    <div class="md-layout" v-if="responseData">
+    <div class="md-layout">
         <div class="md-layout-item">
             <md-card class="mt-0">
                 <md-card-content class="md-between">
@@ -16,9 +16,10 @@
             <md-card>
                 <card-icon-header :title="tableTitle" icon="assignment" />
                 <md-card-content>
-                    <v-extended-table v-if="items.length"
-                                      :items="items"
-                                      :searchFields="[ 'title', 'alias' ]" >
+                    <v-extended-table :resourceUrl="resourceUrl"
+                                      editItemPathName="manager.catalog.categories.edit"
+                                      :searchFields="[ 'title', 'alias' ]"
+                                      emptyContent="У Вас нет категорий. Создайте их!" >
 
                         <template slot-scope="{ item }">
 
@@ -47,7 +48,14 @@
                             </md-table-cell>
 
                             <md-table-cell md-label="Опубликован">
-                                <md-switch :value="!item.publish" @change="onPublishChange(item)" />
+                                <md-switch
+                                    :disabled="!item.images_count"
+                                    :value="!item.publish"
+                                    @change="togglePublish(item)">
+                                    <template>
+                                        <span v-if="!item.images_count">Для публикации добавьте изображения</span>
+                                    </template>
+                                </md-switch>
                             </md-table-cell>
 
                             <md-table-cell md-label="Действия">
@@ -56,12 +64,6 @@
                         </template>
 
                     </v-extended-table>
-
-                    <template v-else>
-                        <div class="alert alert-info">
-                            <span><h3>{{ pageTitle }} не созданы!</h3></span>
-                        </div>
-                    </template>
 
                 </md-card-content>
             </md-card>
@@ -93,6 +95,7 @@
         },
         data () {
             return {
+                resourceUrl: `/catalog/categories/type/${this.category_type}`,
                 responseData: false
             }
         },
@@ -101,23 +104,26 @@
                 items: state => state.items,
             })
         },
+        created () {
+            this.setPageTitle(this.pageProps[this.category_type].PAGE_TITLE);
+            // this.init(this.category_type);
+        },
         methods: {
-            ...mapActions('categories', {
-                getItemsByTypeAction: 'getItemsByType',
-                publishAction: 'publish',
-                clearFieldsAction: 'clearFields'
+            ...mapActions({
+                // getItemsByTypeAction: 'getItemsByType',
+                togglePublishAction: 'table/togglePublish'
             }),
-            async init (category_type) {
-                this.responseData = false;
-                await this.setPageTitle('');
-                await this.clearFieldsAction();
-                await this.getItemsByTypeAction(category_type)
-                    .then(() => {
-                        this.setPageTitle(this.pageProps[category_type].PAGE_TITLE);
-                        this.responseData = true;
-                    })
-                    .catch(() => this.$router.push({ name: 'manager.catalog' }));
-            },
+            // async init (category_type) {
+                // this.responseData = false;
+                // await this.setPageTitle('');
+                // this.setPageTitle(this.pageProps[category_type].PAGE_TITLE);
+                // await this.getItemsByTypeAction(category_type)
+                //     .then(() => {
+                //         this.setPageTitle(this.pageProps[category_type].PAGE_TITLE);
+                //         this.responseData = true;
+                //     })
+                //     .catch(() => this.$router.push({ name: 'manager.catalog' }));
+            // },
             onDelete (item) {
                 return this.delete({
                     module: 'categories',
@@ -125,15 +131,13 @@
                     title: item.title,
                     alertText: `категорию «${item.title}»`,
                     storeModule: this.storeModule,
-                    successText: 'Категория удалена!'
+                    successText: 'Категория удалена!',
+                    tableMode: true
                 })
             },
-            onPublishChange (item) {
-                this.publishAction(item.id);
+            togglePublish (item) {
+                this.togglePublishAction(`/catalog/categories/${item.id}/publish`);
             }
-        },
-        created () {
-            this.init(this.category_type);
         }
     }
 </script>

@@ -105,4 +105,13 @@ class Tag extends Model
 //                    ->whereIn('id', $filter['categories']))
 //            );
 //    }
+    public function scopeHasImages($query)
+    {
+        return $query->has('images');
+    }
+
+    public function shouldBeSearchable()
+    {
+        return $this->publish === 1 && $this->images->count();
+    }
 }

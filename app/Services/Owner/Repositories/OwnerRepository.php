@@ -34,40 +34,29 @@ class OwnerRepository extends SubCategoryRepository
             ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
     }
 
-    /**
-     * @param $category
-     * @param array $pagination
-     * @return mixed
-     */
-    public function getQueryExcludedImages($category, array $pagination)
-    {
-        return Image::whereDoesntHave('owner')
-            ->where('id', 'like', $pagination['query'] . '%')
-            ->with(config('query_builder.image'))
-            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
-    }
+//    /**
+//     * @param $category
+//     * @param array $pagination
+//     * @return mixed
+//     */
+//    public function getQueryExcludedImages($category, array $pagination)
+//    {
+//        return Image::whereDoesntHave('owner')
+//            ->where('id', 'like', $pagination['query'] . '%')
+//            ->with(config('query_builder.image'))
+//            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
+//            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
+//    }
 
     /**
      * @param mixed $categoryId
      * @param array $imageIds
+     * @return mixed|void
      */
     public function addImages($categoryId, array $imageIds)
     {
-        Image::whereIn('id', $imageIds)->update([
+        return Image::whereIn('id', $imageIds)->update([
             'owner_id' => $categoryId,
         ]);
-    }
-
-    /**
-     * @param mixed $categoryId
-     * @param int $imageId
-     * @return bool|int
-     */
-    public function removeImage($categoryId, int $imageId)
-    {
-        $image = Image::findOrFail($imageId);
-        $image->owner()->dissociate();
-        return $image->save();
     }
 }

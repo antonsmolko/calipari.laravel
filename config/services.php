@@ -57,7 +57,12 @@ return [
     'yandex' => [
         'client_id' => env('YANDEX_CLIENT_ID'),
         'client_secret' => env('YANDEX_CLIENT_SECRET'),
-        'redirect' => env('YANDEX_REDIRECT_URL')
+        'redirect' => env('YANDEX_REDIRECT_URL'),
+        'scopes' => [
+            'login:info',
+            'login:email',
+            'login:avatar'
+        ]
     ],
 
     'cdek' => [

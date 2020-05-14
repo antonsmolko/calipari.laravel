@@ -15,6 +15,8 @@ class TagsTableSeeder extends Seeder
             $tag = App\Models\Tag::create($tag);
             $images = $this->getAttachData(config('seed_settings.tag_images_count'));
             $tag->images()->attach($images);
+            $tag->publish = 1;
+            $tag->save();
         }
     }
 

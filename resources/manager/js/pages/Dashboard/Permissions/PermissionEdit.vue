@@ -93,14 +93,10 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.name.$dirty
-                        ? true
-                        : !this.isUniqueNameEdit
+                    return (value.trim() === '') && !this.$v.name.$dirty || !this.isUniqueNameEdit
                 },
                 testAlias (value) {
-                    return value.trim() === ''
-                        ? true
-                        : (/^([a-z0-9]+[-]?)+[a-z0-9]$/).test(value);
+                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
                 }
             },
             displayName: {
@@ -108,9 +104,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.displayName.$dirty
-                        ? true
-                        : !this.isUniqueDisplayNameEdit
+                    return (value.trim() === '') && !this.$v.displayName.$dirty || !this.isUniqueDisplayNameEdit
                 }
             },
             description: {
@@ -130,12 +124,31 @@
                 return !!this.$store.getters['permissions/isUniqueDisplayNameEdit'](this.displayName, this.id);
             }
         },
+        created () {
+            Promise.all([
+                this.getItemsAction(),
+                this.getItemAction(this.id)
+            ])
+                .then(() => {
+                    this.setPageTitle(this.displayName);
+                    this.responseData = true;
+                })
+                .then(() => {
+                    this.$v.$reset();
+                    this.controlSaveVisibilities = true;
+                })
+                .catch(() => this.$router.push(this.redirectRoute));
+        },
+        beforeDestroy () {
+            this.clearFieldsAction();
+        },
         methods: {
             ...mapActions('permissions', {
                 getItemsAction: 'getItems',
-                getItemAction: 'getItem'
+                getItemAction: 'getItem',
+                clearFieldsAction: 'clearItemFields'
             }),
-            onUpdate() {
+            onUpdate () {
                 return this.update({
                     sendData: {
                         formData: {
@@ -151,7 +164,7 @@
                     redirectRoute: this.redirectRoute
                 });
             },
-            onDelete() {
+            onDelete () {
                 return this.delete({
                     payload: this.id,
                     title: this.displayName,
@@ -161,19 +174,6 @@
                     redirectRoute: this.redirectRoute
                 })
             }
-        },
-        created() {
-            this.getItemsAction()
-                .then(() => this.getItemAction(this.id))
-                .then(() => {
-                    this.setPageTitle(this.displayName);
-                    this.responseData = true;
-                })
-                .then(() => {
-                    this.$v.$reset();
-                    this.controlSaveVisibilities = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
         }
     }
 </script>

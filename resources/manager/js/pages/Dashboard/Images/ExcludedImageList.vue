@@ -1,5 +1,5 @@
 <template>
-    <div v-if="responseData">
+    <div>
 
         <div class="md-layout">
             <div class="md-layout-item">
@@ -24,12 +24,9 @@
                 <md-card>
                     <card-icon-header title="Каталог изображений" icon="image" />
                     <md-card-content>
-                        <image-list-table v-if="items.length"
-                                          :items="items"
-                                          @search="handleSearch"
-                                          @changePage="changePage"
-                                          @changeSort="changeSort"
-                                          @publish="onPublishChange">
+                        <image-list-table :resourceUrl="resourceUrl"
+                                          emptyContent="Пока нет других изображений!"
+                                          @publish="togglePublish">
 
                             <template #first-column="{ item }">
                                 <md-table-cell md-label="#" md-sort-by="id" style="width: 50px">
@@ -44,11 +41,6 @@
                             </template>
 
                         </image-list-table>
-                        <template v-else>
-                            <div class="alert alert-info">
-                                <span><h3>Пока нет других изображений!</h3></span>
-                            </div>
-                        </template>
                     </md-card-content>
                 </md-card>
             </div>
@@ -89,7 +81,7 @@
         data () {
             return {
                 storeModule: 'images',
-                responseData: false,
+                resourceUrl: `/catalog/categories/${this.id}/images/excluded`,
                 selected: [],
                 loading: false
             }
@@ -97,80 +89,28 @@
         computed: {
             ...mapState({
                 category: state => state.categories.item,
-                items: state => state.images.items,
-                title: state => state.categories.fields.title,
-                pagination: state => state.images.pagination,
-                searchQuery: state => state.searchQuery,
-                searchedData: state => state.searchedData
-
-            }),
-            paginationData () {
-                return {
-                    current_page: this.pagination.current_page,
-                    per_page: this.pagination.per_page,
-                    sort_by: this.pagination.sort_by,
-                    sort_order: this.pagination.sort_order
-                }
-            }
+                title: state => state.categories.fields.title
+            })
+        },
+        created () {
+            this.getCategoryAction(this.id)
+                .then(() => this.setPageTitle(`Изображения каталога доступные для добавления в категорию «${this.category.title}».`))
+                .catch(() => this.$router.push(this.redirectRoute));
         },
         methods: {
             ...mapActions({
-                publishAction: 'images/publish',
-                updatePaginationAction: 'images/updatePaginationFields',
-                getExcludedImagesAction: 'categories/getExcludedImages',
-                getCategoryWithExcludedImagesAction: 'categories/getItemWithExcludedImages'
+                getCategoryAction: 'categories/getItem',
+                togglePublishAction: 'table/togglePublish'
             }),
-            onPublishChange(id) {
-                this.publishAction(id);
+            togglePublish(id) {
+                this.togglePublishAction(`/images/${id}/publish`);
             },
             onImagesAdd() {
                 return this.addImages({
                     category: this.category,
                     selected: this.selected
                 })
-            },
-            changePage (item) {
-                this.changePaginationSetting({ current_page: item });
-            },
-            changeSort (sortOrder) {
-                this.changePaginationSetting({ sort_order: sortOrder });
-            },
-            changePaginationSetting (settingObject) {
-                this.updatePaginationAction(settingObject);
-                !!this.searchQuery && this.searchedData.length
-                    ? this.search(this.searchQuery)
-                    : this.rebootImageList();
-            },
-            search (query, currentPageFirst = false) {
-                const paginationData = Object.assign({ query }, this.paginationData);
-
-                if (currentPageFirst) {
-                    paginationData.current_page = 1;
-                }
-                this.getExcludedImagesAction({ id: this.id, paginationData });
-            },
-            handleSearch (query) {
-                query
-                    ? this.search(query, true)
-                    : this.rebootImageList(true)
-            },
-            rebootImageList (currentPageFirst = false) {
-                const paginationData = Object.assign({}, this.paginationData);
-
-                if (currentPageFirst) {
-                    paginationData.current_page = 1;
-                }
-
-                return this.getExcludedImagesAction({ id: this.id, paginationData })
             }
-        },
-        created() {
-            this.getCategoryWithExcludedImagesAction({ id: this.id, paginationData: this.paginationData })
-                .then(() => {
-                    this.setPageTitle('Каталог изображений');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
         }
     }
 </script>

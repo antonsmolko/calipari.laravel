@@ -60,7 +60,7 @@
                 if (this.vField)
                     this.touched(this.vField, value);
 
-                this.$store.dispatch(`${this.storeModule}updateField`, {
+                this.$store.dispatch(`${this.storeModule}setItemField`, {
                     field: this.name,
                     value: value.trim()
                 });

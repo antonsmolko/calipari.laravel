@@ -7,7 +7,7 @@ export const createMethod = {
 
             return this.$store.dispatch(`${module}store`, sendData)
                 .then(() => {
-                    this.$router.go(-1) ? this.$router.go(-1) : this.$router.push(redirectRoute);
+                    window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
 
                     return swal.fire({
                         title: successText,
@@ -28,7 +28,7 @@ export const updateMethod = {
 
             return this.$store.dispatch(`${module}update`, sendData)
                 .then(() => {
-                    this.$router.go(-1) ? this.$router.go(-1) : this.$router.push(redirectRoute);
+                    window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
 
                     return swal.fire({
                         title: successText,
@@ -52,8 +52,7 @@ export const deleteMethod = {
             successText,
             storeModule = null,
             redirectRoute = null,
-            categoryId = null,
-            paginationData = null,
+            tableMode = false
 
         }) {
             const module = storeModule ? `${storeModule}/` : '';
@@ -61,21 +60,12 @@ export const deleteMethod = {
             return deleteSwalFireConfirm(alertText)
                 .then((result) => {
                     if (result.value) {
-                        return this.$store.dispatch(`${module}destroy`, payload)
+                        return this.$store.dispatch(`${module}delete`, { payload, tableMode })
                             .then(() => {
                                 if (redirectRoute) {
-                                    this.$router.go(-1)
+                                    window.history.length > 1
                                         ? this.$router.go(-1)
                                         : this.$router.push(redirectRoute);
-                                }
-
-                                if (paginationData) {
-                                    categoryId
-                                        ? this.$store.dispatch('categories/getImages', {
-                                            id: categoryId,
-                                            data: paginationData
-                                        })
-                                        : this.$store.dispatch('images/getItems', paginationData);
                                 }
 
                                 return deleteSwalFireAlert(successText, title);
@@ -114,13 +104,13 @@ const deleteSwalFireAlert = (successText, title) => {
 
 export const uploadMethod = {
     methods: {
-        async upload ({ uploadFiles, type = null, id = null, storeModule = null, paginationData }) {
+        async upload ({ uploadFiles, type = null, id = null, storeModule = null }) {
             const files = Array.from(uploadFiles);
             const module = storeModule ? storeModule : 'categories';
 
             id
-                ? await this.$store.dispatch(`${module}/uploadImages`, { files, id, type, paginationData })
-                : await this.$store.dispatch('images/store', { files, paginationData });
+                ? await this.$store.dispatch(`${module}/uploadImages`, { files, id, type })
+                : await this.$store.dispatch('images/store', files);
 
             return await swal.fire({
                 title: 'Изображения загружены!',
@@ -136,7 +126,10 @@ export const uploadMethod = {
 export const imageAddMethod = {
     methods: {
         addImages ({ category, selected }) {
-            this.$store.dispatch('categories/addSelectedImages',{ category_id: category.id, selected_images: selected })
+            this.$store.dispatch('categories/addSelectedImages',{
+                id: category.id,
+                data: selected
+            })
                 .then(() => {
                     this.$router.push({ name: 'manager.catalog.categories.images', params: { id: category.id } });
 

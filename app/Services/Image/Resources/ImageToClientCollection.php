@@ -21,7 +21,7 @@ class ImageToClientCollection extends ResourceCollection
                 'total' => $this->total(),
                 'count' => $this->count(),
                 'per_page' => $this->perPage(),
-                'current_page' => $this->currentPage()
+                'current_page' => $this->currentPage(),
             ]
         ];
     }

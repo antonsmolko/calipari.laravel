@@ -144,10 +144,6 @@
                 type: [ Number, String ],
                 required: true
             },
-            page: {
-                type: Number,
-                default: null
-            },
             result: []
         },
         data() {
@@ -216,7 +212,7 @@
                 clearFieldsAction: 'images/clearFields',
                 getCategoriesAction: 'categories/getItems',
                 getSubcategoriesAction: 'subCategories/getItemsWithType',
-                setPreviousPageAction: 'images/setPreviousPage'
+                setTableRouteDetectorFieldAction: 'table/setRouteDetectorField'
             }),
             onUpdate () {
                 return this.update({
@@ -253,9 +249,11 @@
         async created() {
             await this.clearFieldsAction();
             await this.getItemAction(this.id)
-                .then(() => this.getCategoriesAction())
-                .then(() => this.getSubcategoriesAction('tags'))
-                .then(() => this.getSubcategoriesAction('owners'))
+            await Promise.all([
+                this.getCategoriesAction(),
+                this.getSubcategoriesAction('tags'),
+                this.getSubcategoriesAction('owners')
+            ])
                 .then(() => {
                     this.setPageTitle(`Изображение «${this.item.article}»`);
                     this.responseData = true;
@@ -267,7 +265,13 @@
                 .catch(() => {
                     this.$router.go(-1) ? this.$router.go(-1) : this.$router.push(this.redirectRoute)
                 });
-            await this.setPreviousPageAction(this.page);
+        },
+        beforeRouteEnter(to, from, next) {
+            next(vm => vm.setTableRouteDetectorFieldAction({ field: 'to', value: from.name }));
+        },
+        beforeRouteLeave(to, from, next) {
+            this.setTableRouteDetectorFieldAction({ field: 'from', value: from.name });
+            next();
         }
     }
 </script>

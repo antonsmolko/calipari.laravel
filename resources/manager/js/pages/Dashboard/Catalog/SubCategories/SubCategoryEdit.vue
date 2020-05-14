@@ -36,8 +36,11 @@
                         <div class="space-10"></div>
 
                         <v-switch :vField="$v.publish"
+                                  :disabled="!hasImages"
                                   :value="publish"
-                                  :module="storeModule" />
+                                  :module="storeModule" >
+                            <span v-if="!hasImages">Для публикации добавьте изображения</span>
+                        </v-switch>
 
                     </md-card-content>
                 </md-card>
@@ -101,7 +104,8 @@
             ...mapState('subCategories', {
                 title: state => state.fields.title,
                 publish: state => state.fields.publish,
-                description: state => state.fields.description
+                description: state => state.fields.description,
+                hasImages: state => state.fields.hasImages
             }),
             isUniqueTitleEdit () {
                 return !!this.$store.getters['subCategories/isUniqueTitleEdit'](this.title, this.id);

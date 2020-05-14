@@ -28,11 +28,6 @@ class UpdateTextureHandler
      */
     public function handle(Texture $item, array $updateData): Texture
     {
-        if (isset($updateData['thumb'])) {
-            $thumbAttributes = uploader()->refresh($item['thumb_path'], $updateData['thumb']);
-            $updateData['thumb_path'] = $thumbAttributes['path'];
-        }
-
         if (isset($updateData['sample'])) {
             $sampleAttributes = uploader()->refresh($item['sample_path'], $updateData['sample']);
             $updateData['sample_path'] = $sampleAttributes['path'];
@@ -43,6 +38,6 @@ class UpdateTextureHandler
             $updateData['background_path'] = $backgroundAttributes['path'];
         }
 
-        return $this->repository->update($item, Arr::except($updateData, ['thumb', 'sample', 'background']));
+        return $this->repository->update($item, Arr::except($updateData, ['sample', 'background']));
     }
 }

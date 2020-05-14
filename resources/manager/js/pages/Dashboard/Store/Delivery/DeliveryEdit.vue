@@ -131,7 +131,7 @@
                     return ((value.trim() === '') && !this.$v.alias.$dirty) || !this.isUniqueAliasEdit
                 },
                 testAlias (value) {
-                    return value.trim() === '' || (/^([a-z0-9]+[-]?)+[a-z0-9]$/).test(value);
+                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
                 }
             },
             price: {

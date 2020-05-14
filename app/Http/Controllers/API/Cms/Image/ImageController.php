@@ -59,4 +59,13 @@ class ImageController extends BaseResourceController
     {
         $this->service->update($id, $request->all());
     }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function removeOwner(int $id)
+    {
+        return $this->service->removeOwner($id);
+    }
 }

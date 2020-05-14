@@ -47,10 +47,6 @@
                                  :vRules="{ required: true }"
                                  :module="storeModule" />
 
-                        <v-switch :vField="$v.publish"
-                                  :value="publish"
-                                  :module="storeModule" />
-
                     </md-card-content>
                 </md-card>
             </div>
@@ -116,7 +112,7 @@
                 required,
                 touch: false,
                 testAlias (value) {
-                    return value.trim() === '' || (/^([a-z0-9]+[-]?)+[a-z0-9]$/).test(value);
+                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
                 },
                 minLength: minLength(2),
                 isUnique (value) {
@@ -150,6 +146,18 @@
                 return !!this.$store.getters['categories/isUniqueAlias'](this.alias);
             }
         },
+        created () {
+            this.getItemsAction()
+                .then(() => {
+                    this.setPageTitle(this.pageProps[this.category_type].CREATE_PAGE_TITLE);
+                    this.clearFieldsAction();
+                    this.responseData = true;
+                })
+                .catch(() => this.$router.push(this.redirectRoute));
+        },
+        beforeDestroy () {
+            this.clearFieldsAction();
+        },
         methods: {
             ...mapActions('categories', {
                 getItemsAction: 'getItems',
@@ -172,15 +180,6 @@
                     redirectRoute: this.redirectRoute
                 })
             }
-        },
-        created () {
-            this.getItemsAction()
-                .then(() => {
-                    this.setPageTitle(this.pageProps[this.category_type].CREATE_PAGE_TITLE);
-                    this.clearFieldsAction();
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
         }
     }
 </script>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Cms\Order;
 
 
 use App\Http\Controllers\API\Cms\Order\Requests\ChangeStatusRequest;
+use App\Http\Requests\FormRequest;
 use App\Services\Order\CmsOrderService;
 use Illuminate\Http\JsonResponse;
 
@@ -26,6 +27,24 @@ class OrderController
     public function getItems(): JsonResponse
     {
         return response()->json($this->service->getItems());
+    }
+
+    /**
+     * @param FormRequest $request
+     * @return JsonResponse
+     */
+    public function getCurrentItems(FormRequest $request): JsonResponse
+    {
+        return response()->json($this->service->getCurrentItems($request->all()));
+    }
+
+    /**
+     * @param FormRequest $request
+     * @return JsonResponse
+     */
+    public function getCompletedItems(FormRequest $request): JsonResponse
+    {
+        return response()->json($this->service->getCompletedItems($request->all()));
     }
 
     /**

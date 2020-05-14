@@ -90,9 +90,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.displayName.$dirty
-                        ? true
-                        : !this.isUniqueDisplayName
+                    return (value.trim() === '') && !this.$v.displayName.$dirty || !this.isUniqueDisplayName
                 }
             },
             keyName: {
@@ -100,14 +98,10 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.keyName.$dirty
-                        ? true
-                        : !this.isUniqueKeyName
+                    return (value.trim() === '') && !this.$v.keyName.$dirty || !this.isUniqueKeyName
                 },
                 testKey (value) {
-                    return value.trim() === ''
-                        ? true
-                        : (/^([a-z0-9]+[_]?)+[a-z0-9]$/).test(value);
+                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
                 }
             },
             type: {
@@ -137,7 +131,7 @@
         methods: {
             ...mapActions({
                 getItemsWithTypesAction: 'settings/getItemsWithTypes',
-                clearFieldsAction: 'settings/clearFields',
+                clearFieldsAction: 'settings/clearItemFields',
                 getGroupsAction: 'settingGroups/getItems'
             }),
             onCreate() {
@@ -157,8 +151,10 @@
         },
         created() {
             this.clearFieldsAction();
-            this.getItemsWithTypesAction()
-                .then(() => this.getGroupsAction())
+            Promise.all([
+                this.getItemsWithTypesAction(),
+                this.getGroupsAction()
+            ])
                 .then(() => {
                     if(!this.settingGroups.length) this.$router.push(this.redirectRoute);
                     this.setPageTitle('Новая настройка');

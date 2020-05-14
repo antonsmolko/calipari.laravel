@@ -6,6 +6,7 @@ namespace App\Services\Tag\Repositories;
 use App\Models\Tag;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
 use App\Services\Tag\Resources\TagFromSearch as TagResource;
+use Illuminate\Database\Query\Builder;
 
 class ClientTagRepository extends ClientBaseResourceRepository
 {
@@ -52,8 +53,6 @@ class ClientTagRepository extends ClientBaseResourceRepository
      */
     public function getSearchedItems(string $search)
     {
-        return TagResource::collection($this->model::search($search)
-            ->where('publish', $this->model::PUBLISHED)
-            ->get());
+        return TagResource::collection($this->model::search($search)->get());
     }
 }

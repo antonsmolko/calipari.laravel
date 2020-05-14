@@ -31,9 +31,6 @@
 
                         <div class="space-10"></div>
 
-                        <v-switch :vField="$v.publish"
-                                  :module="storeModule" />
-
                     </md-card-content>
                 </md-card>
             </div>

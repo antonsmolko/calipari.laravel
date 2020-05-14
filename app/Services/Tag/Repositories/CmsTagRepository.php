@@ -5,6 +5,7 @@ namespace App\Services\Tag\Repositories;
 
 use App\Models\Tag;
 use App\Services\SubCategory\Repositories\SubCategoryRepository;
+use App\Services\Tag\Resources\TagFromEdit as TagFromEditResource;
 
 class CmsTagRepository extends SubCategoryRepository
 {
@@ -16,5 +17,14 @@ class CmsTagRepository extends SubCategoryRepository
     {
         $this->model = $model;
         $this->table = 'tags';
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function getItemFromEdit(int $id)
+    {
+        return new TagFromEditResource($this->model::findOrFail($id));
     }
 }
