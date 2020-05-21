@@ -29,9 +29,13 @@ class UpdateHandler
     public function handle(Category $category, array $updateData)
     {
         if(array_key_exists('image', $updateData)) {
-            $uploadArray = uploader()->refresh($category->image_path, $updateData['image']);
-
+            uploader()->remove($category->image_path);
+            $uploadArray = uploader()->upload($updateData['image']);
             $updateData = Arr::add(Arr::except($updateData, ['image']), 'image_path', $uploadArray['path']);
+        }
+
+        if (!$category->images()->count()) {
+            $updateData['publish'] = 0;
         }
 
         return $this->repository->update($category, $updateData);

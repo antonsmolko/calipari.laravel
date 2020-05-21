@@ -4,9 +4,10 @@
 namespace App\Services\Image\Repositories;
 
 
+use App\Models\Category;
 use App\Models\Image;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
-use App\Services\Image\Resources\ImageToEditor as ImageToEditorResource;
+use App\Services\Image\Resources\FromEditorClient as ImageFromEditorResource;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -25,26 +26,31 @@ class ClientImageRepository extends ClientBaseResourceRepository
 
     /**
      * @param int $id
-     * @return ImageToEditorResource
+     * @return ImageFromEditorResource
      */
-    public function getResourceItem(int $id): ImageToEditorResource
+    public function getResourceItem(int $id): ImageFromEditorResource
     {
-        return new ImageToEditorResource($this->model::findOrFail($id));
+        return new ImageFromEditorResource($this->model::findOrFail($id));
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Database\Eloquent\Builder[]|Collection|\Illuminate\Support\Collection|QueryBuilder[]
+     * @param bool $collectionRestriction
+     * @return \Illuminate\Database\Concerns\BuildsQueries|mixed|QueryBuilder
      */
-    public function getItems(Request $request)
+    public function getItems(Request $request, bool $collectionRestriction = true)
     {
         $pagination = $request->pagination;
 
         return QueryBuilder::for(Image::class)
+            ->when($collectionRestriction, fn ($query) => $query
+                ->whereDoesntHave('collection')
+                ->orWhereHas('collection', fn ($query) => $query->whereColumn('main_image_id', 'images.id'))
+            )
             ->defaultSort('-id')
             ->allowedFilters([
                 AllowedFilter::scope('restrictive_category', 'whereCategory'),
-                AllowedFilter::scope('restrictive_tag', 'whereTag'),
+                AllowedFilter::scope('restrictive_collection', 'whereCollection'),
                 AllowedFilter::scope('restrictive_keys', 'whereKeys'),
                 AllowedFilter::scope('formats', 'whereFormats'),
                 AllowedFilter::scope('tags', 'whereTags'),
@@ -62,51 +68,15 @@ class ClientImageRepository extends ClientBaseResourceRepository
 
     /**
      * @param Request $request
+     * @param bool $collectionRestriction
      * @return array
      */
-    public function getModelKeys(Request $request): array
+    public function getModelKeys(Request $request, bool $collectionRestriction = false): array
     {
-        $images = $this->getItems($request);
+        $images = $this->getItems($request, $collectionRestriction);
 
         return $images->modelKeys();
     }
-
-//    /**
-//     * @param Request $request
-//     * @return \Illuminate\Database\Concerns\BuildsQueries|mixed|QueryBuilder
-//     */
-//    public function getWishListItems(Request $request)
-//    {
-//        $pagination = $request->pagination;
-//
-//        return QueryBuilder::for(Image::class)
-//            ->defaultSort('-id')
-//            ->allowedFilters([
-//                AllowedFilter::scope('keys', 'whereKeys'),
-//                AllowedFilter::scope('formats', 'whereFormats'),
-//                AllowedFilter::scope('tags', 'whereTags'),
-//                AllowedFilter::scope('topics', 'whereTopics'),
-//                AllowedFilter::scope('colors', 'whereColors'),
-//                AllowedFilter::scope('interiors', 'whereInteriors')
-//            ])
-//            ->when(
-//                $pagination,
-//                fn ($query, $pagination) => $query
-//                    ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']),
-//                fn ($query) => $query->get()
-//            );
-//    }
-//
-//    /**
-//     * @param Request $request
-//     * @return array
-//     */
-//    public function getWishListModelKeys(Request $request): array
-//    {
-//        $images = $this->getWishListItems($request);
-//
-//        return $images->modelKeys();
-//    }
 
     /**
      * @param Request $request

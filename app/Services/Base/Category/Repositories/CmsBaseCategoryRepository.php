@@ -10,18 +10,9 @@ class CmsBaseCategoryRepository extends CmsBaseResourceRepository
 {
     protected string $table = 'categories';
 
-//    /**
-//     * @param int $id
-//     * @return mixed
-//     */
-//    public function getItemFromEdit(int $id)
-//    {
-//        return $this->model::findOrFail($id);
-//    }
-
     /**
      * @param $category
-     * @param array $pagination
+     * @param array $requestData
      * @return mixed
      */
     public function getImages($category, array $requestData)
@@ -34,20 +25,6 @@ class CmsBaseCategoryRepository extends CmsBaseResourceRepository
             ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']);
     }
 
-//    /**
-//     * @param $category
-//     * @param array $pagination
-//     * @return mixed
-//     */
-//    public function getQueryImages($category, array $pagination)
-//    {
-//        return $category->images()
-//            ->where('id', 'like', $pagination['query'] . '%')
-//            ->with(config('query_builder.image'))
-//            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-//            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
-//    }
-
     /**
      * @param $category
      * @param array $requestData
@@ -55,29 +32,14 @@ class CmsBaseCategoryRepository extends CmsBaseResourceRepository
      */
     public function getExcludedImages($category, array $requestData)
     {
-        return Image::whereDoesntHave($this->table, fn ($query) => $query->where('id', $category->id))
+        return Image::doesntHave('collection')
+            ->whereDoesntHave('categories', fn ($query) => $query->where('id', $category->id))
             ->with(config('query_builder.image'))
             ->when(!empty($requestData['query']),
                 fn ($query) => $query->where('id', 'like', $requestData['query'] . '%'))
             ->orderBy($requestData['sort_by'], $requestData['sort_order'])
             ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']);
     }
-
-//    /**
-//     * @param $category
-//     * @param array $pagination
-//     * @return mixed
-//     */
-//    public function getQueryExcludedImages($category, array $pagination)
-//    {
-//        return Image::whereDoesntHave($this->table, function ($query) use ($category) {
-//            $query->where('id', $category->id);
-//        })
-//            ->where('id', 'like', $pagination['query'] . '%')
-//            ->with(config('query_builder.image'))
-//            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-//            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
-//    }
 
     /**
      * @param $category
@@ -87,5 +49,13 @@ class CmsBaseCategoryRepository extends CmsBaseResourceRepository
     public function addImages($category, array $images)
     {
         return $category->images()->attach($images, ['category_type' => $category->type]);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWithoutPublishedImagesItems()
+    {
+        return $this->model::withoutPublishedImages();
     }
 }

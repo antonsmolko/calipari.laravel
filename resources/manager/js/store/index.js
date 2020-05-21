@@ -5,6 +5,7 @@ import images from './modules/images';
 
 import categories from './modules/categories';
 import subCategories from './modules/sub-categories';
+import collections from './modules/collections';
 import textures from './modules/textures';
 import users from './modules/users';
 import roles from './modules/roles';
@@ -34,15 +35,16 @@ const mutations = {
     },
     UPDATE_ERRORS(state, payload) {
         state.serverErrors = [];
-        let error = payload;
+        const error = payload;
         switch (error.status) {
             case 404:
                 state.serverErrors.push(errors.ERROR_NOTFOUND);
                 break;
+            case 400:
             case 422:
                 if (error.data.errors) {
-                    for (let errorKey in error.data.errors) {
-                        error.data.errors[errorKey].forEach(errorMessage => state.serverErrors.push(errorMessage));
+                    for (const errors of Object.values(error.data.errors)) {
+                        errors.forEach(errorMessage => state.serverErrors.push(errorMessage));
                     }
                 } else {
                     state.serverErrors.push(error.data.message);
@@ -105,6 +107,7 @@ export default new Vuex.Store({
         images,
         categories,
         subCategories,
+        collections,
         users,
         roles,
         permissions,

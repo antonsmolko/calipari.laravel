@@ -31,21 +31,6 @@ class FilterRepository
      * @param int|null $exceptId
      * @return mixed
      */
-    public function getTagFiltersByImageKeys(array $keys, int $exceptId = null)
-    {
-        return Tag::select(['id', 'title'])
-            ->published()
-            ->when($exceptId, fn ($query, $exceptId) => $query->where('id', '<>', $exceptId))
-            ->whereImageKeysIn($keys)
-            ->withImagesCountIn($keys)
-            ->get();
-    }
-
-    /**
-     * @param array $keys
-     * @param int|null $exceptId
-     * @return mixed
-     */
     public function getCategoryFiltersByImageKeys(array $keys, int $exceptId = null)
     {
         $categories = Category::select(['id', 'title', 'alias', 'image_path', 'type'])
@@ -102,6 +87,22 @@ class FilterRepository
             ->published()
             ->when($exceptId, fn ($query, $exceptId) => $query->where('id', '<>', $exceptId))
             ->where('type', 'interiors')
+            ->whereImageKeysIn($keys)
+            ->withImagesCountIn($keys)
+            ->get();
+    }
+
+    /**
+     * @param array $keys
+     * @param int|null $exceptId
+     * @return mixed
+     */
+    public function getTagFiltersByImageKeys(array $keys, int $exceptId = null)
+    {
+        return Category::select(['id', 'title', 'alias', 'image_path', 'type'])
+            ->published()
+            ->when($exceptId, fn ($query, $exceptId) => $query->where('id', '<>', $exceptId))
+            ->where('type', 'tags')
             ->whereImageKeysIn($keys)
             ->withImagesCountIn($keys)
             ->get();

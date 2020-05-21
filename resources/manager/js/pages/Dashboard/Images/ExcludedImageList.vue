@@ -11,7 +11,7 @@
                         />
                         <div v-if="selected.length">
                             <control-button title="Добавить изображения"
-                                            icon="add"
+                                            icon="check"
                                             @click="onImagesAdd" />
                         </div>
                     </md-card-content>
@@ -102,13 +102,13 @@
                 getCategoryAction: 'categories/getItem',
                 togglePublishAction: 'table/togglePublish'
             }),
-            togglePublish(id) {
+            togglePublish (id) {
                 this.togglePublishAction(`/images/${id}/publish`);
             },
-            onImagesAdd() {
+            onImagesAdd () {
                 return this.addImages({
-                    category: this.category,
-                    selected: this.selected
+                    id: this.category.id,
+                    data: this.selected
                 })
             }
         }

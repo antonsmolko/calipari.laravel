@@ -37,6 +37,15 @@ class CategoriesTableSeeder extends Seeder
             $category->publish = 1;
             $category->save();
         }
+
+        foreach (config('seeds.categories.tags') as $category) {
+            $category = factory(App\Models\Category::class)->create($category);
+            $images = $this->getAttachData(config('seed_settings.group_images_count'));
+
+            $category->images()->attach($images, ['category_type' => 'tags']);
+            $category->publish = 1;
+            $category->save();
+        }
     }
 
     /**

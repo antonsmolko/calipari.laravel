@@ -51,8 +51,8 @@ class FilterService
     public function getTagFilters(Request $request): array
     {
         $imageKeys = $this->imageRepository->getModelKeys($request);
-        $exceptId = isset($request->filter['restrictive_tag'])
-            ? $request->filter['restrictive_tag']
+        $exceptId = isset($request->filter['restrictive_category'])
+            ? $request->filter['restrictive_category']
             : null;
 
         return ['tags' => $this->filterRepository

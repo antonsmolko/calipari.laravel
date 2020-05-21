@@ -12,7 +12,7 @@ const state = {
         publish: '',
         description: '',
         keywords: '',
-        hasImages: ''
+        has_published_images: ''
     },
     item: '',
     items: []
@@ -103,7 +103,7 @@ const actions = {
         return axiosAction('delete', commit, {
             url: `/catalog/categories/${payload}`,
             thenContent: (response) => {
-                if (tableMode) {
+                if (tableMode === 'table') {
                     dispatch('table/getItemsGet', null, { root: true });
                     dispatch('table/deleteSearchedItem', payload, { root: true });
                 }
@@ -141,7 +141,7 @@ const actions = {
             }
         })
     },
-    addSelectedImages({ commit }, { id, data }) {
+    addSelectedImages ({ commit }, { id, data }) {
         return axiosAction('post', commit, {
             url: `/catalog/categories/${id}/images/add`,
             data

@@ -7,6 +7,7 @@ return [
         'interiors:id,title,alias',
         'tags:id,title',
         'owner:id,title',
-        'format:id,icon,title'
+        'format:id,icon,title',
+        'collection:id,title,main_image_id'
     ]
 ];

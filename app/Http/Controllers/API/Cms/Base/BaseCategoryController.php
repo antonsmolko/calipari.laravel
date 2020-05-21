@@ -45,16 +45,6 @@ class BaseCategoryController extends BaseResourceController
         return response()->json($this->service->getImages($id, $request->all()));
     }
 
-//    /**
-//     * @param FormRequest $request
-//     * @param int $id
-//     * @return JsonResponse
-//     */
-//    public function getItemWithImages(FormRequest $request, int $id): JsonResponse
-//    {
-//        return response()->json($this->service->getItemWithImages($id, $request->all()));
-//    }
-
     /**
      * @param FormRequest $request
      * @param int $id
@@ -64,16 +54,6 @@ class BaseCategoryController extends BaseResourceController
     {
         return response()->json($this->service->getExcludedImages($id, $request->all()));
     }
-
-//    /**
-//     * @param FormRequest $request
-//     * @param int $id
-//     * @return JsonResponse
-//     */
-//    public function getItemWithExcludedImages(FormRequest $request, int $id): JsonResponse
-//    {
-//        return response()->json($this->service->getItemWithExcludedImages($id, $request->all()));
-//    }
 
     /**
      * @param FormRequest $request

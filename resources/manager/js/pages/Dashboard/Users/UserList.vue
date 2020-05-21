@@ -90,9 +90,6 @@
             ...mapActions({
                 togglePublishAction: 'table/togglePublish',
             }),
-            getRoleName (id) {
-                return this.$store.getters['roles/itemName'](id);
-            },
             onDelete (item) {
                 return this.delete({
                     payload: item.id,
@@ -100,7 +97,7 @@
                     alertText: `пользователя «${item.name}»`,
                     storeModule: this.storeModule,
                     successText: 'Пользователь удален!',
-                    tableMode: true
+                    tableMode: 'table'
                 })
             },
             onPublishChange (id) {

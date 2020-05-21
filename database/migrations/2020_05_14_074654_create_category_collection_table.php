@@ -14,8 +14,18 @@ class CreateCategoryCollectionTable extends Migration
     public function up()
     {
         Schema::create('category_collection', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('collection_id');
+            $table->string('category_type', 20);
+            $table->primary(['category_id', 'collection_id']);
+        });
+
+        Schema::table('category_collection', function(Blueprint $table) {
+            $table->foreign('category_id')->references('id')->on('categories')
+                ->onDelete('cascade')->onUpdate('cascade');
+
+            $table->foreign('collection_id')->references('id')->on('collections')
+                ->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

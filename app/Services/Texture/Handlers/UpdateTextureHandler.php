@@ -29,12 +29,14 @@ class UpdateTextureHandler
     public function handle(Texture $item, array $updateData): Texture
     {
         if (isset($updateData['sample'])) {
-            $sampleAttributes = uploader()->refresh($item['sample_path'], $updateData['sample']);
+            uploader()->remove($item['sample_path']);
+            $sampleAttributes = uploader()->upload($updateData['sample']);
             $updateData['sample_path'] = $sampleAttributes['path'];
         }
 
         if (isset($updateData['background'])) {
-            $backgroundAttributes = uploader()->refresh($item['background_path'], $updateData['background']);
+            uploader()->remove($item['background_path']);
+            $backgroundAttributes = uploader()->upload($updateData['background']);
             $updateData['background_path'] = $backgroundAttributes['path'];
         }
 

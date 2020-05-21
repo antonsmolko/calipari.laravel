@@ -3,6 +3,7 @@
 namespace App\Services\Base\Resource\Repositories;
 
 
+use App\Models\Image;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -70,6 +71,18 @@ abstract class CmsBaseResourceRepository
     public function publish($item)
     {
         $item->publish = +!$item->publish;
+        $item->save();
+
+        return $item;
+    }
+
+    /**
+     * @param $item
+     * @return mixed
+     */
+    public function unpublish($item)
+    {
+        $item->publish = 0;
         $item->save();
 
         return $item;

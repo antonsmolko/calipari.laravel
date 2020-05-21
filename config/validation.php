@@ -27,6 +27,9 @@ return [
         'max_size' => 5120,
         'mimes' => 'jpeg,png'
     ],
+    'images' => [
+        'max_print_width' => 5000
+    ],
     'alias' => [
         'min' => 2,
         'max' => 50,
@@ -43,5 +46,13 @@ return [
     ],
     'integer' => [
         'max' => 10
+    ],
+    'categories' => [
+        'types' => [
+            'topics',
+            'colors',
+            'tags',
+            'interiors'
+        ]
     ]
 ];

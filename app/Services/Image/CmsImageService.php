@@ -7,39 +7,59 @@ namespace App\Services\Image;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
 use App\Services\Cache\Tag;
+use App\Services\Collection\Repositories\CmsCollectionRepository;
 use App\Services\Image\Handlers\DeleteImageHandler;
-use App\Services\Image\Handlers\GetCmsItemsHandler;
-use App\Services\Image\Handlers\SyncAssociativeCategoryOfImageHandler;
+use App\Services\Image\Handlers\GetSyncDataHandler;
+use App\Services\Image\Handlers\SyncUpdateWithCollectionHandler;
+use App\Services\Image\Handlers\UpdateHandler;
 use App\Services\Image\Handlers\UpdateImagePathHandler;
-use App\Services\Image\Handlers\UploadImageHandler;
+use App\Services\Image\Handlers\UploadHandler;
 use App\Services\Image\Repositories\CmsImageRepository;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
 
 class CmsImageService extends CmsBaseResourceService
 {
-    private UploadImageHandler $storeHandler;
+    private CmsCollectionRepository $collectionRepository;
+    private UploadHandler $uploadHandler;
     private UpdateImagePathHandler $updateItemPathHandler;
-    private SyncAssociativeCategoryOfImageHandler $syncAssociativeCategoryHandler;
     private DeleteImageHandler $destroyHandler;
-    private GetCmsItemsHandler $getItemsHandler;
+    private GetSyncDataHandler $getSyncDataHandler;
+    private UpdateHandler $updateHandler;
+    private SyncUpdateWithCollectionHandler $syncUpdateWithCollectionHandler;
 
+    /**
+     * CmsImageService constructor.
+     * @param CmsImageRepository $repository
+     * @param CmsCollectionRepository $collectionRepository
+     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param UploadHandler $uploadHandler
+     * @param UpdateImagePathHandler $updateImagePathHandler
+     * @param DeleteImageHandler $deleteImageHandler
+     * @param GetSyncDataHandler $getSyncDataHandler
+     * @param UpdateHandler $updateHandler
+     * @param SyncUpdateWithCollectionHandler $syncUpdateWithCollectionHandler
+     */
     public function __construct(
         CmsImageRepository $repository,
+        CmsCollectionRepository $collectionRepository,
         ClearCacheByTagHandler $clearCacheByTagHandler,
-        UploadImageHandler $uploadImageHandler,
+        UploadHandler $uploadHandler,
         UpdateImagePathHandler $updateImagePathHandler,
-        SyncAssociativeCategoryOfImageHandler $syncAssociativeCategoryOfImageHandler,
         DeleteImageHandler $deleteImageHandler,
-        GetCmsItemsHandler $getItemsHandler
+        GetSyncDataHandler $getSyncDataHandler,
+        UpdateHandler $updateHandler,
+        SyncUpdateWithCollectionHandler $syncUpdateWithCollectionHandler
     )
     {
         parent::__construct($repository, $clearCacheByTagHandler);
-        $this->storeHandler = $uploadImageHandler;
+        $this->collectionRepository = $collectionRepository;
+        $this->uploadHandler = $uploadHandler;
         $this->updateItemPathHandler = $updateImagePathHandler;
-        $this->syncAssociativeCategoryHandler = $syncAssociativeCategoryOfImageHandler;
         $this->destroyHandler = $deleteImageHandler;
-        $this->getItemsHandler = $getItemsHandler;
+        $this->getSyncDataHandler = $getSyncDataHandler;
+        $this->updateHandler = $updateHandler;
+        $this->syncUpdateWithCollectionHandler = $syncUpdateWithCollectionHandler;
         $this->cacheTag = Tag::IMAGES_TAG;
     }
 
@@ -53,6 +73,15 @@ class CmsImageService extends CmsBaseResourceService
     }
 
     /**
+     * @param array $requestData
+     * @return mixed
+     */
+    public function getTrashedItems(array $requestData)
+    {
+        return $this->repository->getTrashedItems($requestData);
+    }
+
+    /**
      * @param int $id
      * @return JsonResource
      */
@@ -62,41 +91,37 @@ class CmsImageService extends CmsBaseResourceService
     }
 
     /**
-     * @param array $storeData
-     * @return mixed
+     * @param array $files
+     * @return array|mixed
      */
-    public function store(array $storeData)
+    public function store(array $files)
     {
-        return $this->storeHandler->handle($storeData['images']);
+        return $this->uploadHandler->handle($files);
     }
 
     /**
      * @param int $id
-     * @param array $updateData
+     * @param array $requestData
      * @return mixed|void
      */
-    public function update(int $id, array $updateData)
+    public function update(int $id, array $requestData)
     {
         $image = $this->repository->getItem($id);
 
-        $this->syncAssociativeCategoryHandler
-            ->handle($image, 'topics', $updateData['topics'] ?? null);
-        $this->syncAssociativeCategoryHandler
-            ->handle($image, 'colors', $updateData['colors'] ?? null);
-        $this->syncAssociativeCategoryHandler
-            ->handle($image, 'interiors', $updateData['interiors'] ?? null);
+        $rawSyncData = Arr::only($requestData, ['topics', 'colors', 'interiors', 'tags']);
+        $updateData = Arr::only($requestData, ['publish', 'owner_id', 'max_print_width', 'description']);
+        $syncData = $this->getSyncDataHandler->handle($rawSyncData);
 
-        $this->repository
-            ->syncAssociations($image, 'tags', $updateData['tags'] ?? null);
+        $this->updateHandler->handle($image, $syncData, $updateData);
 
-        if ($updateData['owner_id'] == 0) {
-            $updateData['owner_id'] = null;
+        $collection = $image->collection;
+        if ($collection) {
+            $this->syncUpdateWithCollectionHandler->handle($id, $collection, $updateData);
         }
 
-        $this->repository
-            ->fillAttributesFromArray($image, Arr::only($updateData, ['publish', 'owner_id', 'description']));
-
-        Arr::has($updateData, 'image') && $this->updateItemPathHandler->handle($image, $updateData['image']);
+        if (Arr::has($requestData, 'image')) {
+            $this->updateItemPathHandler->handle($image, $requestData['image']);
+        }
     }
 
     /**
@@ -115,11 +140,32 @@ class CmsImageService extends CmsBaseResourceService
      * @param int $id
      * @return mixed
      */
+    public function forceDelete(int $id)
+    {
+        return $this->repository->forceDelete($id);
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function restore(int $id)
+    {
+        return $this->repository->restore($id);
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
     public function publish(int $id)
     {
         $item = $this->repository->getItem($id);
+        $collection = $item->collection;
 
-        return $this->repository->publish($item);
+        return !$collection || $collection->main_image_id !== $item->id
+            ? $this->repository->publish($item)
+            : abort(400, __('image_validation.unable_to_unpublish_main_image_of_collection'));
     }
 
     /**

@@ -55,11 +55,13 @@ Route::prefix('catalog')
         Route::get('images', 'Client\Image\ImageController@getItems')
             //    ->middleware('lqb.delimiter')
             ->name('catalog.images');
+
         Route::get('images/{id}', 'Client\Image\ImageController@getItem')
             ->where('id', '[0-9]+');
 
-        Route::get('images/wish-list', 'Client\Image\ImageController@getWishListItems')
-            ->name('catalog.images.wish-list');
+        Route::get('images/{id}/editor', 'Client\Image\ImageController@getItemFromEditor')
+            ->where('id', '[0-9]+');
+
         Route::post('images/wish-list/tags', 'Client\Image\ImageController@getWishListTags')
             ->name('catalog.images.wish-list.tags');
 
@@ -68,12 +70,19 @@ Route::prefix('catalog')
         Route::get('categories/{category}', 'Client\Category\CategoryController@getItemByAlias');
         Route::post('categories/{id}/images', 'Client\Category\CategoryController@getImages')
             ->where('id', '[0-9]+');
+
         Route::get('categories/{id}/tags', 'Client\Category\CategoryController@getItemTags')
             ->where('id', '[0-9]+');
 
 
         // Search
         Route::get('search/{query}', 'Client\Search\SearchController');
+
+        // Collection
+        Route::get('collections/{collection}', 'Client\Collection\CollectionController@getItemByAliasWithImages')
+            ->where('collection', '[a-z]+');
+        Route::get('collections/{id}/tags', 'Client\Collection\CollectionController@getItemTags')
+            ->where('id', '[0-9]+');
 
 
         // Filters
@@ -148,15 +157,23 @@ Route::group(['prefix' => 'manager'], function() {
 
     Route::post('images/paginate', 'Cms\Image\ImageController@getItems')
         ->name('images.list');
-    Route::post('images/{id}', 'Cms\Image\ImageController@update')
+    Route::post('images/trashed/paginate', 'Cms\Image\ImageController@getTrashedItems')
+        ->name('images.trashed.list');
+    Route::get('images/{id}/force-delete', 'Cms\Image\ImageController@forceDelete')
         ->where('id', '[0-9]+')
-        ->name('images.update');
+        ->name('images.force.delete');
+    Route::get('images/{id}/restore', 'Cms\Image\ImageController@restore')
+        ->where('id', '[0-9]+')
+        ->name('images.restore');
     Route::get('images/{id}/publish', 'Cms\Image\ImageController@publish')
         ->where('id', '[0-9]+')
         ->name('images.publish');
     Route::get('images/{id}/remove-owner', 'Cms\Image\ImageController@removeOwner')
         ->where('id', '[0-9]+')
         ->name('images.remove-owner');
+    Route::post('images/{id}', 'Cms\Image\ImageController@update')
+        ->where('id', '[0-9]+')
+        ->name('images.update');
     Route::apiResource('images', 'Cms\Image\ImageController')
         ->except(['index', 'create', 'edit', 'update']);
 
@@ -175,12 +192,8 @@ Route::group(['prefix' => 'manager'], function() {
                 ->where('type', '[a-z]+');
             Route::post('{id}/images', 'Cms\Category\CategoryController@getImages')
                 ->where('id', '[0-9]+');
-//            Route::post('{id}/with-images', 'Cms\Category\CategoryController@getItemWithImages')
-//                ->where('id', '[0-9]+');
             Route::post('{id}/images/excluded', 'Cms\Category\CategoryController@getExcludedImages')
                 ->where('id', '[0-9]+');
-//            Route::post('{id}/with-excluded-images', 'Cms\Category\CategoryController@getItemWithExcludedImages')
-//                ->where('id', '[0-9]+');
             Route::post('{id}', 'Cms\Category\CategoryController@update')
                 ->where('id', '[0-9]+');
             Route::post('{id}/images/add', 'Cms\Category\CategoryController@addImages')
@@ -195,58 +208,35 @@ Route::group(['prefix' => 'manager'], function() {
         Route::apiResource('categories', 'Cms\Category\CategoryController')
             ->except(['create', 'edit', 'update']);
 
-
-        // Tags
-
-        Route::group(['prefix' => 'tags'], function() {
-            Route::post('{id}', 'Cms\Tag\TagController@update')
-                ->where('id', '[0-9]+');
-            Route::post('{id}/images', 'Cms\Tag\TagController@getImages')
-                ->where('id', '[0-9]+');
-            Route::post('{id}/with-images', 'Cms\Tag\TagController@getItemWithImages')
-                ->where('id', '[0-9]+');
-            Route::post('{id}/images/excluded', 'Cms\Tag\TagController@getExcludedImages')
-                ->where('id', '[0-9]+');
-            Route::post('{id}/with-excluded-images', 'Cms\Tag\TagController@getItemWithExcludedImages')
-                ->where('id', '[0-9]+');
-            Route::post('{id}', 'Cms\Tag\TagController@update')
-                ->where('id', '[0-9]+');
-            Route::post('{id}/images/add', 'Cms\Tag\TagController@addImages')
-                ->where('id', '[0-9]+');
-            Route::post('{id}/images/{image_id}/remove', 'Cms\Tag\TagController@removeImage')
-                ->where('id,image_id', '[0-9]+');
-            Route::post('{id}/upload', 'Cms\Tag\TagController@upload')
-                ->where('id', '[0-9]+');
-            Route::get('{id}/publish', 'Cms\Tag\TagController@publish')
-                ->where('id', '[0-9]+');
-        });
-        Route::apiResource('tags', 'Cms\Tag\TagController')
-            ->except(['create', 'edit', 'update']);
-
-
         // Owners
 
         Route::group(['prefix' => 'owners'], function() {
-            Route::post('{id}', 'Cms\Owner\OwnerController@update')
-                ->where('id', '[0-9]+');
             Route::post('{id}/images', 'Cms\Owner\OwnerController@getImages')
-                ->where('id', '[0-9]+');
-            Route::post('{id}/with-images', 'Cms\Owner\OwnerController@getItemWithImages')
                 ->where('id', '[0-9]+');
             Route::post('{id}/images/excluded', 'Cms\Owner\OwnerController@getExcludedImages')
                 ->where('id', '[0-9]+');
-            Route::post('{id}/with-excluded-images', 'Cms\Owner\OwnerController@getItemWithExcludedImages')
-                ->where('id', '[0-9]+');
-            Route::post('{id}', 'Cms\Owner\OwnerController@update')
-                ->where('id', '[0-9]+');
             Route::post('{id}/images/add', 'Cms\Owner\OwnerController@addImages')
                 ->where('id', '[0-9]+');
+            Route::get('{id}/images/{image_id}/remove', 'Cms\Owner\OwnerController@removeImage')
+                ->where('id,image_id', '[0-9]+');
             Route::post('{id}/upload', 'Cms\Owner\OwnerController@upload')
                 ->where('id', '[0-9]+');
-            Route::get('{id}/publish', 'Cms\Owner\OwnerController@publish')
+        });
+        Route::apiResource('owners', 'Cms\Owner\OwnerController')->except(['create', 'edit']);
+
+        // Collections
+
+        Route::group(['prefix' => 'collections'], function() {
+            Route::get('{id}/images', 'Cms\Collection\CollectionController@getImages')
+                ->where('id', '[0-9]+');
+            Route::post('{id}/upload', 'Cms\Collection\CollectionController@upload')
+                ->where('id', '[0-9]+');
+            Route::post('{id}/set-main-image', 'Cms\Collection\CollectionController@setMainImage')
+                ->where('id', '[0-9]+');
+            Route::get('{id}/publish', 'Cms\Collection\CollectionController@publish')
                 ->where('id', '[0-9]+');
         });
-        Route::apiResource('owners', 'Cms\Owner\OwnerController')->except(['create', 'edit', 'update']);
+        Route::apiResource('collections', 'Cms\Collection\CollectionController');
     });
 
 

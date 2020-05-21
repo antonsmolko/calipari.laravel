@@ -56,11 +56,11 @@
                                  :module="storeModule" />
 
                         <v-switch :vField="$v.publish"
-                                  :disabled="!hasImages"
+                                  :disabled="!hasPublishedImages"
                                   :differ="true"
                                   :value="publish"
                                   :module="storeModule">
-                            <span v-if="!hasImages">Для публикации добавьте изображения</span>
+                            <span v-if="!hasPublishedImages">Нет опубликованных изображений!</span>
                         </v-switch>
 
                     </md-card-content>
@@ -162,7 +162,7 @@
                 publish: state => state.fields.publish,
                 description: state => state.fields.description,
                 keywords: state => state.fields.keywords,
-                hasImages: state => state.fields.hasImages
+                hasPublishedImages: state => state.fields.has_published_images
             }),
             isUniqueTitleEdit () {
                 return !!this.$store.getters['categories/isUniqueTitleEdit'](this.title, this.id);

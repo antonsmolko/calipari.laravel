@@ -17,9 +17,10 @@
                 <card-icon-header :title="tableTitle" icon="assignment" />
                 <md-card-content>
 
-                    <v-extended-table v-if="items.length"
-                                      :items="items"
-                                      :searchFields="[ 'title', 'alias' ]" >
+                    <v-extended-table :resourceUrl="resourceUrl"
+                                      editItemPathName="manager.catalog.subcategories.edit"
+                                      :searchFields="[ 'title', 'alias' ]"
+                                      :emptyContent="`${tableTitle} не созданы. Создайте их!`" >
 
                         <template slot-scope="{ item }">
 
@@ -37,16 +38,16 @@
                                 {{ item.images_count }}
                             </md-table-cell>
 
-                            <md-table-cell md-label="Опубликован">
-                                <md-switch
-                                    :disabled="!item.images_count"
-                                    :value="!item.publish"
-                                    @change="onPublishChange(item)" >
-                                    <template>
-                                        <span v-if="!item.images_count">Для публикации добавьте изображения</span>
-                                    </template>
-                                </md-switch>
-                            </md-table-cell>
+<!--                            <md-table-cell md-label="Опубликован">-->
+<!--                                <md-switch-->
+<!--                                    :disabled="!item.images_count"-->
+<!--                                    :value="!item.publish"-->
+<!--                                    @change="togglePublish(item)" >-->
+<!--                                    <template>-->
+<!--                                        <span v-if="!item.images_count">Для публикации добавьте изображения</span>-->
+<!--                                    </template>-->
+<!--                                </md-switch>-->
+<!--                            </md-table-cell>-->
 
                             <md-table-cell md-label="Действия">
                                 <category-table-actions :item="item"
@@ -56,12 +57,6 @@
 
                         </template>
                     </v-extended-table>
-
-                    <template v-else>
-                        <div class="alert alert-info">
-                            <span><h3>{{ pageTitle }} не созданы!</h3></span>
-                        </div>
-                    </template>
 
                 </md-card-content>
             </md-card>
@@ -92,32 +87,19 @@
         },
         data () {
             return {
+                resourceUrl: `/catalog/${this.category_type}`,
                 storeModule: 'subCategories',
                 responseData: false
             }
         },
-        computed: {
-            ...mapState('subCategories', {
-                items: state => state.items,
-            })
+        created () {
+            this.setPageTitle(this.pageProps[this.category_type].PAGE_TITLE);
+            this.responseData = true;
         },
         methods: {
-            ...mapActions('subCategories', {
-                getItemsAction: 'getItems',
-                publishAction: 'publish',
-                clearFieldsAction: 'clearFields'
+            ...mapActions({
+                togglePublishAction: 'table/togglePublish'
             }),
-            async init (category_type) {
-                this.responseData = false;
-                await this.setPageTitle('');
-                await this.clearFieldsAction();
-                await this.getItemsAction(category_type)
-                    .then(() => {
-                        this.setPageTitle(this.pageProps[category_type].PAGE_TITLE);
-                        this.responseData = true;
-                    })
-                    .catch(() => this.$router.push({ name: 'manager.catalog' }));
-            },
             onDelete (item) {
                 this.delete({
                     storeModule: this.storeModule,
@@ -127,18 +109,13 @@
                     },
                     title: item.title,
                     alertText: this.pageProps[this.category_type].DELETE_CONFIRM_TEXT(item.title),
-                    successText: this.pageProps[this.category_type].DELETE_SUCCESS_TEXT
+                    successText: this.pageProps[this.category_type].DELETE_SUCCESS_TEXT,
+                    tableMode: 'table'
                 })
             },
-            onPublishChange (item) {
-                this.publishAction({
-                    type: this.category_type,
-                    id: item.id
-                });
-            }
-        },
-        created () {
-            this.init(this.category_type);
+            // togglePublish (item) {
+            //     this.togglePublishAction(`/catalog/${this.category_type}/${item.id}/publish`);
+            // }
         }
     }
 </script>

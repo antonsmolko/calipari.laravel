@@ -5,35 +5,37 @@ namespace App\Services\Search;
 
 
 use App\Services\Category\Repositories\ClientCategoryRepository;
-use App\Services\Tag\Repositories\ClientTagRepository;
+use App\Services\Collection\Repositories\ClientCollectionRepository;
+use Illuminate\Support\Arr;
 
 class SearchService
 {
-    private ClientTagRepository $tagRepository;
     private ClientCategoryRepository $categoryRepository;
+    private ClientCollectionRepository $collectionRepository;
 
     /**
      * SearchService constructor.
-     * @param ClientTagRepository $tagRepository
      * @param ClientCategoryRepository $categoryRepository
+     * @param ClientCollectionRepository $collectionRepository
      */
     public function __construct(
-        ClientTagRepository $tagRepository,
-        ClientCategoryRepository $categoryRepository)
+        ClientCategoryRepository $categoryRepository,
+        ClientCollectionRepository $collectionRepository)
     {
-        $this->tagRepository = $tagRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->collectionRepository = $collectionRepository;
     }
 
     /**
      * @param string $query
      * @return array
      */
-    public function getSearchedResult(string $query): array
+    public function getSearchedResult(string $query)
     {
-        $tags = $this->tagRepository->getSearchedItems($query);
         $categories = $this->categoryRepository->getSearchedItems($query);
+        $collections = $this->collectionRepository->getSearchedItems($query);
 
-        return [...$tags, ...$categories];
+        return [...$categories, ...$collections];
+//        return $this->categoryRepository->getSearchedItems($query);
     }
 }

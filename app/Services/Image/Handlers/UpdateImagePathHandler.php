@@ -26,10 +26,19 @@ class UpdateImagePathHandler
      */
     public function handle(Image $image, UploadedFile $imageFile)
     {
-        $upload = uploader();
-        $uploadAttributes = $upload->upload($imageFile);
+        $uploader = uploader();
 
-        $upload->remove($image->path);
-        $upload->update($image, $uploadAttributes);
+        if ($uploader->isEqualSizes($imageFile, $image)) {
+            abort(422, __('image_validation.dimensions_should_be_same_as_previous', [
+                'width' => $image->width,
+                'height' => $image->height
+            ]));
+        }
+
+        $uploadAttributes = $uploader
+            ->refresh($image->path)
+            ->upload($imageFile);
+
+        $uploader->update($image, $uploadAttributes);
     }
 }

@@ -6,7 +6,7 @@
       { rtl: $route.meta.rtlActive }
     ]"
     >
-        <notifications />
+        <notifications :timeout="7000" />
         <side-bar
             :active-color="sidebarBackground"
             :background-image="sidebarBackgroundImage"
@@ -18,6 +18,7 @@
                 <sidebar-item :link="{name: 'Панель управления', icon: 'dashboard', path: '/manager/dashboard'}" />
                 <sidebar-item :link="{name: 'Конфигурация', icon: 'settings', path: '/manager/settings'}" />
                 <sidebar-item :link="{name: 'Изображения', icon: 'image', path: '/manager/images'}" />
+                <sidebar-item :link="{name: 'Корзина', icon: 'delete', path: '/manager/images/trashed'}" />
                 <sidebar-item :link="{name: 'Магазин', icon: 'local_mall', path: '/manager/store'}">
                     <sidebar-item :link="{name: 'Доставка', icon: 'local_mall', path: '/manager/store/deliveries'}" />
                     <sidebar-item :link="{name: 'Статусы заказа', icon: 'update', path: '/manager/store/order-statuses'}" />
@@ -27,7 +28,9 @@
                     <sidebar-item :link="{name: 'Темы', path: '/manager/catalog/categories/topics'}" />
                     <sidebar-item :link="{name: 'Цвета', path: '/manager/catalog/categories/colors'}" />
                     <sidebar-item :link="{name: 'Интерьеры', path: '/manager/catalog/categories/interiors'}" />
-                    <sidebar-item :link="{name: 'Теги', path: '/manager/catalog/subcategories/tags'}" />
+                    <sidebar-item :link="{name: 'Теги', path: '/manager/catalog/categories/tags'}" />
+<!--                    <sidebar-item :link="{name: 'Теги', path: '/manager/catalog/subcategories/tags'}" />-->
+                    <sidebar-item :link="{name: 'Коллекции', path: '/manager/catalog/collections'}" />
                     <sidebar-item :link="{name: 'Владельцы', path: '/manager/catalog/subcategories/owners'}" />
                 </sidebar-item>
                 <sidebar-item :link="{name: 'Фактуры', icon: 'style', path: '/manager/textures'}" />

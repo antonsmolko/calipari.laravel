@@ -6,7 +6,8 @@ namespace App\Services\Category\Repositories;
 
 use App\Models\Category;
 use App\Services\Base\Category\Repositories\CmsBaseCategoryRepository;
-use App\Services\Category\Resources\CategoryFromEdit as CategoryFromEditResource;
+use App\Services\Category\Resources\FromEdit as FromEditResource;
+use App\Services\Category\Resources\FromList as FromListResource;
 use Illuminate\Database\Eloquent\Collection;
 
 class CmsCategoryRepository extends CmsBaseCategoryRepository
@@ -25,13 +26,13 @@ class CmsCategoryRepository extends CmsBaseCategoryRepository
 
     /**
      * @param string $type
-     * @return Collection
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function getItemsByType(string $type): Collection {
-        return $this->model::where('type', $type)
-            ->withCount('images')
+    public function getItemsByType(string $type)
+    {
+        return FromListResource::collection($this->model::where('type', $type)
             ->orderBy('id')
-            ->get();
+            ->get());
     }
 
     /**
@@ -40,7 +41,7 @@ class CmsCategoryRepository extends CmsBaseCategoryRepository
      */
     public function getItemFromEdit(int $id)
     {
-        return new CategoryFromEditResource($this->model::findOrFail($id));
+        return new FromEditResource($this->model::findOrFail($id));
     }
 
     /**

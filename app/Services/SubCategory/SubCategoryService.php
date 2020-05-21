@@ -5,10 +5,9 @@ namespace App\Services\SubCategory;
 
 
 use App\Services\Base\Category\CmsBaseCategoryService;
-use App\Services\Base\Category\Handlers\GetExcludedImagesHandler;
-use App\Services\Base\Category\Handlers\GetImagesHandler;
-use App\Services\Base\Category\Handlers\UploadHandler;
+use App\Services\Image\Handlers\UploadHandler;
 use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Image\CmsImageService;
 use App\Services\SubCategory\Repositories\SubCategoryRepository;
 
 abstract class SubCategoryService extends CmsBaseCategoryService
@@ -18,23 +17,20 @@ abstract class SubCategoryService extends CmsBaseCategoryService
      * @param SubCategoryRepository $repository
      * @param ClearCacheByTagHandler $clearCacheByTagHandler
      * @param UploadHandler $uploadHandler
-     * @param GetImagesHandler $showImagesHandler
-     * @param GetExcludedImagesHandler $showExcludedImagesHandler
+     * @param CmsImageService $imageService
      */
     public function __construct(
         SubCategoryRepository $repository,
         ClearCacheByTagHandler $clearCacheByTagHandler,
         UploadHandler $uploadHandler,
-        GetImagesHandler $showImagesHandler,
-        GetExcludedImagesHandler $showExcludedImagesHandler
+        CmsImageService $imageService
     )
     {
         parent::__construct(
             $repository,
             $clearCacheByTagHandler,
             $uploadHandler,
-            $showImagesHandler,
-            $showExcludedImagesHandler
+            $imageService
         );
     }
 }

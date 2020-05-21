@@ -9,9 +9,11 @@ const state = {
         interiors: [],
         tags: [],
         owner_id: '',
+        max_print_width: '',
         description: ''
     },
     item: {},
+    items: [],
     fileProgress: 0,
 };
 
@@ -31,6 +33,9 @@ const mutations = {
         }
         state.item = {};
     },
+    DELETE_ITEM (state, id) {
+        state.items = state.items.filter(item => item.id !== id);
+    },
     SET_ITEM_FIELDS (state, payload) {
         for(const field of Object.keys(state.fields)) {
             if (Object.hasOwnProperty.call(payload, field)) {
@@ -40,7 +45,14 @@ const mutations = {
     },
     CHANGE_FILE_PROGRESS (state, payload) {
         state.fileProgress = payload;
-    }
+    },
+    CHANGE_PUBLISH(state, payload) {
+        state.items.forEach(item => {
+            if (item.id === payload.id) {
+                item.publish = payload.publish;
+            }
+        });
+    },
 };
 
 const actions = {
@@ -74,14 +86,13 @@ const actions = {
             }
         })
     },
-    update ({ commit }, payload) {
+    update ({ commit }, { id, formData }) {
         const data = new FormData();
-        const fields = payload.formData;
 
-        for(const [field, value] of Object.entries(fields)) {
+        for(const [field, value] of Object.entries(formData)) {
             if (value instanceof Array) {
                 for(const item of value) {
-                    data.append(field, item);
+                    data.append(`${field}[]`, item);
                 }
             } else if (field !== 'image' || value) {
                 data.append(field, value);
@@ -89,19 +100,40 @@ const actions = {
         }
 
         return axiosAction('post', commit, {
-            url: `/images/${payload.id}`,
+            url: `/images/${id}`,
             data
+        })
+    },
+    togglePublish({ commit }, id) {
+        return axiosAction('get', commit, {
+            url: `/images/${id}/publish`,
+            thenContent: response => commit('CHANGE_PUBLISH', response.data)
         })
     },
     delete ({ commit, dispatch, rootSate }, { payload, tableMode = false }) {
         return axiosAction('delete', commit, {
             url: `/images/${payload}`,
             thenContent: (response) => {
-                if (tableMode) {
+                if (tableMode === 'table') {
                     dispatch('table/updateItemsPost', null, { root: true });
+                }
+                if (tableMode === 'images') {
+                    commit('DELETE_ITEM', payload)
                 }
             }
         })
+    },
+    forceDelete ({ commit, dispatch }, { payload }) {
+        return axiosAction('get', commit, {
+            url: `/images/${payload}/force-delete`,
+            thenContent: response => dispatch('table/updateItemsPost', null, {root: true})
+        });
+    },
+    restore ({ commit, dispatch }, id) {
+        return axiosAction('get', commit, {
+            url: `/images/${id}/restore`,
+            thenContent: response => dispatch('table/updateItemsPost', null, {root: true})
+        });
     },
     setItemField ({ commit }, payload) {
         commit('SET_ITEM_FIELD', payload);

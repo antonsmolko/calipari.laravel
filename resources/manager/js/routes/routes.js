@@ -17,6 +17,11 @@ const ImageEdit = resolve => {
         resolve(require('@/pages/Dashboard/Images/ImageEdit.vue'))
     })
 };
+const ImageTrashedList = resolve => {
+    require.ensure(['@/pages/Dashboard/Images/ImageTrashedList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Images/ImageTrashedList.vue'))
+    })
+};
 
 // Category pages
 const CatalogPanel = resolve => {
@@ -64,6 +69,28 @@ const SubCategoryImageList = resolve => {
 const SubCategoryExcludedImageList = resolve => {
     require.ensure(['@/pages/Dashboard/Catalog/SubCategories/ExcludedImageList.vue'], () => {
         resolve(require('@/pages/Dashboard/Catalog/SubCategories/ExcludedImageList.vue'))
+    })
+};
+
+// Category pages
+const CollectionList = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/Collections/CollectionList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/Collections/CollectionList.vue'))
+    })
+};
+const CollectionCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/Collections/CollectionCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/Collections/CollectionCreate.vue'))
+    })
+};
+const CollectionEdit = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/Collections/CollectionEdit.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/Collections/CollectionEdit.vue'))
+    })
+};
+const CollectionImageList = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/Collections/ImageList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/Collections/ImageList.vue'))
     })
 };
 
@@ -249,6 +276,11 @@ const managerImagePages = [
             to.params.category_type = 'images';
             next();
         }
+    },
+    {
+        path: 'images/trashed',
+        name: 'manager.images.trashed',
+        component: ImageTrashedList
     },
     {
         path: 'images/:id',
@@ -473,6 +505,36 @@ const managerSubCategoriesPages = {
     ]
 };
 
+const managerCollectionsPages = {
+    path: '/manager/catalog',
+    component: DashboardLayout,
+    children: [
+        {
+            path: 'collections',
+            name: 'manager.catalog.collections',
+            component: CollectionList,
+            props: true
+        },
+        {
+            path: 'collections/create',
+            name: 'manager.catalog.collections.create',
+            component: CollectionCreate
+        },
+        {
+            path: 'collections/:id',
+            name: 'manager.catalog.collections.edit',
+            component: CollectionEdit,
+            props: true
+        },
+        {
+            path: 'collections/:id/images',
+            name: 'manager.catalog.collections.images',
+            component: CollectionImageList,
+            props: true
+        }
+    ]
+};
+
 const managerDeliveriesPages = {
     path: '/manager/store',
     component: DashboardLayout,
@@ -553,6 +615,7 @@ const routes = [
     managerPages,
     managerCategoriesPages,
     managerSubCategoriesPages,
+    managerCollectionsPages,
     managerDeliveriesPages,
     managerOrderPages,
     managerOrderStatusPages,

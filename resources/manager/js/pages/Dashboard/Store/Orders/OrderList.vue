@@ -221,7 +221,7 @@
                     alertText: `заказ «${item.number}»`,
                     storeModule: this.storeModule,
                     successText: 'Заказ удален!',
-                    tableMode: true
+                    tableMode: 'table'
                 })
             },
             getStatusById (id) {

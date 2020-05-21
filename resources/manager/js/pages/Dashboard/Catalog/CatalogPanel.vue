@@ -10,7 +10,9 @@
         <panel-card-link route="manager.catalog.categories.list" :params="{ category_type: 'topics' }" icon="collections_bookmark" title="Темы" color="blue" />
         <panel-card-link route="manager.catalog.categories.list" :params="{ category_type: 'colors' }" icon="palette" title="Цвета" color="rose" />
         <panel-card-link route="manager.catalog.categories.list" :params="{ category_type: 'interiors' }" icon="meeting_room" title="Интерьеры" color="green" />
-        <panel-card-link route="manager.catalog.subcategories.list" :params="{ category_type: 'tags' }" icon="local_offer" title="Теги" color="primary" />
+        <panel-card-link route="manager.catalog.categories.list" :params="{ category_type: 'tags' }" icon="local_offer" title="Теги" color="primary" />
+<!--        <panel-card-link route="manager.catalog.subcategories.list" :params="{ category_type: 'tags' }" icon="local_offer" title="Теги" color="primary" />-->
+        <panel-card-link route="manager.catalog.collections" icon="view_module" title="Коллекции" color="cyan" />
         <panel-card-link route="manager.catalog.subcategories.list" :params="{ category_type: 'owners' }" icon="cloud" title="Владельцы" color="warning" />
     </div>
 </template>

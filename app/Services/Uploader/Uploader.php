@@ -2,6 +2,7 @@
 
 namespace App\Services\Uploader;
 
+use App\Models\Image;
 use App\Services\Format\FormatService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
@@ -12,6 +13,10 @@ class Uploader
     private array $fileProps = [];
     private string $baseStoragePath;
     private array $uploadRules;
+    private bool $refresh = false;
+
+    /** @var string|null $name */
+    private $name = null;
 
     private ImageValidationBuilder $imageValidationBuilder;
 
@@ -86,6 +91,18 @@ class Uploader
     }
 
     /**
+     * @param string|null $name
+     * @return $this
+     */
+    public function refresh(string $name): Uploader
+    {
+        $this->refresh = true;
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
      * @param UploadedFile $uploadFile
      * @param null $pathStorage
      * @return array|void
@@ -101,6 +118,10 @@ class Uploader
         $this->setQuantitativeProps($uploadFile, $storagePath);
 
         $this->makeDirectory($this->fileProps['path']);
+
+        if ($this->refresh) {
+            $this->remove($this->fileProps['name']);
+        }
 
         $uploadFile->move($this->fileProps['path'], $this->fileProps['name']);
 
@@ -154,16 +175,15 @@ class Uploader
     }
 
     /**
-     * @param string $imagePath
-     * @param UploadedFile $image
-     * @param null $pathStorage
-     * @return array|void
+     * @param UploadedFile $file
+     * @param Image $image
+     * @return bool|void
      */
-    public function refresh(string $imagePath, UploadedFile $image, $pathStorage = null): array
+    public function isEqualSizes(UploadedFile $file, Image $image)
     {
-        $this->remove($imagePath, $pathStorage);
+        list($width, $height) = getImageSize($file);
 
-        return $this->upload($image, $pathStorage);
+        return $width === $image->width && $height === $image->height;
     }
 
     /**
@@ -201,7 +221,7 @@ class Uploader
         $this->setProps('width', getImageSize($uploadFile)[0]);
         $this->setProps('height', getImageSize($uploadFile)[1]);
         $this->setProps('format_id', $this->getFormatId(getImageSize($uploadFile)[0], getImageSize($uploadFile)[1], $this->formatService->index()));
-        $this->setProps('name', sha1($this->fileProps['original_name'] . microtime(true)) . '.' . $this->fileProps['extension']); // 3e89bc7b416ccce075e0fca2f2cc1172feb6dc24.jpg
+        $this->setProps('name', $this->name ?? sha1($this->fileProps['original_name'] . microtime(true)) . '.' . $this->fileProps['extension']); // 3e89bc7b416ccce075e0fca2f2cc1172feb6dc24.jpg
         $this->setProps('directory', substr($this->fileProps['name'], 0, 1) . '/' . substr($this->fileProps['name'], 0, 3)); // 3/3e8
         $this->setProps('path', $pathStorage . $this->fileProps['directory']);
     }

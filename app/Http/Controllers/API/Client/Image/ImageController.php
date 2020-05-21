@@ -38,12 +38,12 @@ class ImageController extends Controller
     }
 
     /**
-     * @param WishListRequest $request
+     * @param int $id
      * @return JsonResponse
      */
-    public function getWishListItems(WishListRequest $request): JsonResponse
+    public function getItemFromEditor(int $id): JsonResponse
     {
-        return response()->json($this->service->getWishListItems($request));
+        return response()->json($this->service->getItemFromEditor($id));
     }
 
     /**

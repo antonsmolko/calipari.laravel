@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4 class="card-title">{{ title }}</h4>
+        <h4 class="card-title" v-if="title">{{ title }}</h4>
         <div class="form-group">
             <div class="file-input">
                 <div v-if="!imageData">
@@ -43,7 +43,7 @@
         },
         props: {
             title: {
-                type: String,
+                type: [String, Boolean],
                 default: 'Изображение'
             },
             name: {
@@ -70,7 +70,7 @@
         data() {
             return {
                 imageData: '',
-                imagePlaceholder: '/img/image_placeholder.jpg'
+                imagePlaceholder: this.$config.imagePlaceholder
             }
         },
         computed: {

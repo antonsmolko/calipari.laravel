@@ -225,104 +225,104 @@ return [
             'description' => ''
         ],
     ],
-    'tags' => [
-        [
-            'title' => 'Праздники',
-            'description' => '',
-        ],
-        [
-            'title' => 'Машинки',
-            'description' => '',
-        ],
-        [
-            'title' => 'Мультики',
-            'description' => '',
-        ],
-        [
-            'title' => 'Мстители',
-            'description' => '',
-        ],
-        [
-            'title' => 'Железный человек',
-            'description' => '',
-        ],
-        [
-            'title' => 'Халк',
-            'description' => '',
-        ],
-        [
-            'title' => 'Звездные войны',
-            'description' => '',
-        ],
-        [
-            'title' => 'Дарт Вейдер',
-            'description' => '',
-        ],
-        [
-            'title' => 'Чубака',
-            'description' => '',
-        ],
-        [
-            'title' => 'Футбол',
-            'description' => '',
-        ],
-        [
-            'title' => 'Месси',
-            'description' => '',
-        ],
-        [
-            'title' => 'Роналду',
-            'description' => '',
-        ],
-        [
-            'title' => 'Леброн Джеймс',
-            'description' => '',
-        ],
-        [
-            'title' => 'Баскетбол',
-            'description' => '',
-        ],
-        [
-            'title' => 'Майкл Джордан',
-            'description' => '',
-        ],
-        [
-            'title' => 'Стефен Карри',
-            'description' => '',
-        ],
-        [
-            'title' => 'Формула 1',
-            'description' => '',
-        ],
-        [
-            'title' => 'Ferrari',
-            'description' => '',
-        ],
-        [
-            'title' => 'Lamborghini',
-            'description' => '',
-        ],
-        [
-            'title' => 'Aston Martin',
-            'description' => '',
-        ],
-        [
-            'title' => 'Mercedes Benz',
-            'description' => '',
-        ],
-        [
-            'title' => 'BMV',
-            'description' => '',
-        ],
-        [
-            'title' => 'Audi',
-            'description' => '',
-        ],
-        [
-            'title' => 'McLaren',
-            'description' => '',
-        ]
-    ],
+//    'tags' => [
+//        [
+//            'title' => 'Праздники',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Машинки',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Мультики',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Мстители',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Железный человек',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Халк',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Звездные войны',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Дарт Вейдер',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Чубака',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Футбол',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Месси',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Роналду',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Леброн Джеймс',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Баскетбол',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Майкл Джордан',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Стефен Карри',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Формула 1',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Ferrari',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Lamborghini',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Aston Martin',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Mercedes Benz',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'BMV',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Audi',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'McLaren',
+//            'description' => '',
+//        ]
+//    ],
     'seeds_uploads_path' => 'seed_data/',
     'seeds_path' => 'storage/uploads/seed_uploads/',
     'categories' => [
@@ -534,7 +534,177 @@ return [
                 'description' => 'Изображения для офиса',
                 'keywords' => 'офис, office'
             ]
-        ]
+        ],
+        'tags' => [
+            [
+                'title' => 'Праздники',
+                'alias' => 'holidays',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Машинки',
+                'alias' => 'cars',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Мультики',
+                'alias' => 'cartoons',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Мстители',
+                'alias' => 'avengers',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Железный человек',
+                'alias' => 'iron-man',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Халк',
+                'alias' => 'hulk',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Звездные войны',
+                'alias' => 'star-wars',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Дарт Вейдер',
+                'alias' => 'dart-weider',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Чубака',
+                'alias' => 'chewbuck',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Футбол',
+                'alias' => 'football',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Месси',
+                'alias' => 'messi',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Роналду',
+                'alias' => 'ronaldu',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Леброн Джеймс',
+                'alias' => 'lebron',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Баскетбол',
+                'alias' => 'basketball',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Майкл Джордан',
+                'alias' => 'mj',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Стефен Карри',
+                'alias' => 'stef',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Формула 1',
+                'alias' => 'f1',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Ferrari',
+                'alias' => 'ferrari',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Lamborghini',
+                'alias' => 'lamborghini',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Aston Martin',
+                'alias' => 'aston-martin',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Mercedes Benz',
+                'alias' => 'mercedes-benz',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'BMV',
+                'alias' => 'bmv',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Audi',
+                'alias' => 'audi',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'McLaren',
+                'alias' => 'mclaren',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ]
+        ],
     ],
     'textures' => [
         [

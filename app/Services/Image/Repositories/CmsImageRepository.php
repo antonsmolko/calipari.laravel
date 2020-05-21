@@ -7,7 +7,7 @@ namespace App\Services\Image\Repositories;
 use App\Models\Image;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
 use Illuminate\Contracts\Pagination\Paginator;
-use App\Services\Image\Resources\ImageToEdit as ImageToEditResource;
+use App\Services\Image\Resources\FromEditCms as ImageToEditResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CmsImageRepository extends CmsBaseResourceRepository
@@ -34,6 +34,20 @@ class CmsImageRepository extends CmsBaseResourceRepository
      * @param array $requestData
      * @return Paginator
      */
+    public function getTrashedItems(array $requestData)
+    {
+        return $this->model::onlyTrashed()
+            ->with(config('query_builder.image'))
+            ->when(!empty($requestData['query']),
+                fn ($query) => $query->where('id', 'like', $requestData['query'] . '%'))
+            ->orderBy($requestData['sort_by'], $requestData['sort_order'])
+            ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']);
+    }
+
+    /**
+     * @param array $requestData
+     * @return Paginator
+     */
     public function getItems(array $requestData)
     {
         return $this->model::with(config('query_builder.image'))
@@ -43,35 +57,34 @@ class CmsImageRepository extends CmsBaseResourceRepository
             ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']);
     }
 
-//    /**
-//     * @param array $pagination
-//     * @return mixed
-//     */
-//    public function getQueryItems(array $pagination)
-//    {
-//        return $this->model::where('id', 'like', $pagination['query'] . '%')
-//            ->with(config('query_builder.image'))
-//            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-//            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
-//    }
-
     /**
      * @param Image $item
-     * @param string $relation
-     * @param $syncData
+     * @param array $syncData
+     * @return array
      */
-    public function syncAssociations(Image $item, string $relation, $syncData)
+    public function syncCategories(Image $item, array $syncData)
     {
-        $item->$relation()->sync($syncData);
+        return $item->categories()->sync($syncData);
     }
 
     /**
      * @param Image $item
-     * @param array $fillData
+     * @param array $syncData
+     * @return array
      */
-    public function fillAttributesFromArray(Image $item, array $fillData)
+    public function syncNonColorCategories(Image $item, array $syncData)
     {
-        $item->fill($fillData)->save();
+        return $item->nonColorCategories()->sync($syncData);
+    }
+
+    /**
+     * @param $item
+     * @param array $updateData
+     * @return mixed
+     */
+    public function update($item, array $updateData)
+    {
+        return $item->update($updateData);
     }
 
     /**
@@ -83,5 +96,27 @@ class CmsImageRepository extends CmsBaseResourceRepository
         $item->owner()->dissociate();
 
         return $item->save();
+    }
+
+    /**
+     * @param int $id
+     * @return bool|mixed|null
+     */
+    public function forceDelete(int $id)
+    {
+        return $this->model::onlyTrashed()
+            ->where('id', $id)
+            ->forceDelete();
+    }
+
+    /**
+     * @param int $id
+     * @return bool|null
+     */
+    public function restore(int $id)
+    {
+        return $this->model::onlyTrashed()
+            ->where('id', $id)
+            ->restore();
     }
 }

@@ -34,6 +34,21 @@
                 </span>
             </md-table-cell>
 
+            <md-table-cell md-label="Коллекция">
+                <template v-if="item.collection">
+                    <md-badge
+                        v-if="item.id === item.collection.main_image_id"
+                        md-content="М">
+                        <span class="md-category-tag">
+                            {{ item.collection.title }}
+                        </span>
+                    </md-badge>
+                    <span v-else class="md-category-tag">
+                        {{ item.collection.title }}
+                    </span>
+                </template>
+            </md-table-cell>
+
             <md-table-cell md-label="Формат">
                 <span v-if="item.format">
                     <md-icon>{{ item.format.icon }}</md-icon>
@@ -61,6 +76,7 @@
     import TagsTableCell from "@/custom_components/Tables/TagsTableCell";
     import PaletteTableCell from "@/custom_components/Tables/PaletteTableCell";
     import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
+    import { Badge } from '@/components'
 
     export default {
         name: "ImageListTable",
@@ -68,7 +84,8 @@
             VExtendedTable,
             TagsTableCell,
             PaletteTableCell,
-            ThumbTableCell
+            ThumbTableCell,
+            Badge
         },
         props: {
             resourceUrl: {

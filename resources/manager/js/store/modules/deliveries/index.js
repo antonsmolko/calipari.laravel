@@ -26,7 +26,7 @@ const mutations = {
     DELETE_ITEM (state, payload) {
         state.items = state.items.filter(item => item.id !== payload);
     },
-    CLEAR_FIELDS (state) {
+    CLEAR_ITEM_FIELDS (state) {
         for(const field of Object.keys(state.fields)) {
             state.fields[field] = '';
         }
@@ -46,19 +46,19 @@ const mutations = {
 };
 
 const actions = {
-    getItems({ commit }) {
+    getItems ({ commit }) {
         return axiosAction('get', commit, {
             url: '/store/deliveries',
             thenContent: response => commit('SET_ITEMS', response.data)
         })
     },
-    getItem({ commit }, id) {
+    getItem ({ commit }, id) {
         return axiosAction('get', commit, {
             url: `/store/deliveries/${id}`,
             thenContent: response => commit('SET_ITEM_FIELDS', response.data)
         })
     },
-    store({ commit }, formData) {
+    store ({ commit }, formData) {
         const data = new FormData();
         for(const [key, value] of Object.entries(formData)) {
             data.append(key, value);
@@ -68,7 +68,7 @@ const actions = {
             data
         })
     },
-    update({ commit }, { id, formData }) {
+    update ({ commit }, { id, formData }) {
         const data = new FormData();
         for(const [key, value] of Object.entries(formData)) {
             data.append(key, value);
@@ -78,27 +78,27 @@ const actions = {
             data
         })
     },
-    delete({ commit }, { payload }) {
+    delete ({ commit }, { payload }) {
         return axiosAction('delete', commit, {
             url: `/store/deliveries/${payload}`,
             thenContent: response => commit('DELETE_ITEM', payload)
         })
     },
-    publish({ commit }, id) {
+    publish ({ commit }, id) {
         return axiosAction('get', commit, {
             url: `/store/deliveries/${id}/publish`,
             thenContent: response => commit('CHANGE_PUBLISH', response.data)
 
         })
     },
-    setItemField({ commit }, payload) {
+    setItemField ({ commit }, payload) {
         commit('SET_ITEM_FIELD', payload);
     },
-    togglePublishField({ commit }) {
+    togglePublishField ({ commit }) {
         commit('TOGGLE_PUBLISH_FIELD');
     },
-    clearFields({ commit }) {
-        commit('CLEAR_FIELDS');
+    clearItemFields ({ commit }) {
+        commit('CLEAR_ITEM_FIELDS');
     }
 };
 

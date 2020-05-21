@@ -118,9 +118,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty
-                        ? true
-                        : !this.isUniqueTitleEdit
+                    return (value.trim() === '') && !this.$v.title.$dirty || !this.isUniqueTitleEdit
                 },
             },
             alias: {
@@ -201,8 +199,10 @@
             }
         },
         created() {
-            this.getItemsAction()
-                .then(() => this.getItemAction(this.id))
+            Promise.all([
+                this.getItemAction(this.id),
+                this.getItemsAction()
+            ])
                 .then(() => {
                     this.setPageTitle(this.title);
                     this.responseData = true;

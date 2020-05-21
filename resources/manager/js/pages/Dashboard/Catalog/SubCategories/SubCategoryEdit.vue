@@ -33,14 +33,14 @@
                                     :vField="$v.description"
                                     :module="storeModule" />
 
-                        <div class="space-10"></div>
+                        <div class="space-30"></div>
 
-                        <v-switch :vField="$v.publish"
-                                  :disabled="!hasImages"
-                                  :value="publish"
-                                  :module="storeModule" >
-                            <span v-if="!hasImages">Для публикации добавьте изображения</span>
-                        </v-switch>
+<!--                        <v-switch :vField="$v.publish"-->
+<!--                                  :disabled="!hasImages"-->
+<!--                                  :value="publish"-->
+<!--                                  :module="storeModule" >-->
+<!--                            <span v-if="!hasImages">Для публикации добавьте изображения</span>-->
+<!--                        </v-switch>-->
 
                     </md-card-content>
                 </md-card>
@@ -88,14 +88,12 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty
-                        ? true
-                        : !this.isUniqueTitleEdit
+                    return (value.trim() === '') && !this.$v.title.$dirty || !this.isUniqueTitleEdit
                 }
             },
-            publish: {
-                touch: false
-            },
+            // publish: {
+            //     touch: false
+            // },
             description: {
                 touch: false
             }
@@ -103,7 +101,7 @@
         computed: {
             ...mapState('subCategories', {
                 title: state => state.fields.title,
-                publish: state => state.fields.publish,
+                // publish: state => state.fields.publish,
                 description: state => state.fields.description,
                 hasImages: state => state.fields.hasImages
             }),
@@ -111,19 +109,37 @@
                 return !!this.$store.getters['subCategories/isUniqueTitleEdit'](this.title, this.id);
             }
         },
+        created() {
+            this.clearFieldsAction()
+            Promise.all([
+                this.getItemsAction(this.category_type),
+                this.getItemAction({
+                    type: this.category_type,
+                    id: this.id
+                })
+            ])
+                .then(() => {
+                    this.setPageTitle(this.title);
+                    this.responseData = true;
+                })
+                .catch(() => this.$router.push(this.redirectRoute));
+        },
+        beforeDestroy () {
+            this.clearFieldsAction()
+        },
         methods: {
             ...mapActions('subCategories', {
                 getItemAction: 'getItem',
-                getItemsAction: 'getItems'
+                getItemsAction: 'getItems',
+                clearFieldsAction: 'clearItemFields'
             }),
             onUpdate () {
                 return this.update({
                     sendData: {
                         id: this.id,
                         type: this.category_type,
-                        formData: {
+                        data: {
                             title: this.title,
-                            publish: +this.publish,
                             description: this.description
                         }
                     },
@@ -146,18 +162,6 @@
                     redirectRoute: this.redirectRoute
                 })
             }
-        },
-        created() {
-            this.getItemsAction(this.category_type)
-                .then(() => this.getItemAction({
-                    type: this.category_type,
-                    id: this.id
-                }))
-                .then(() => {
-                    this.setPageTitle(this.title);
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
         }
     }
 </script>

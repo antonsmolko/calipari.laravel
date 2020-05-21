@@ -9,39 +9,24 @@ use App\Services\Cache\Key;
 use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Cache\Tag;
 use App\Services\Cache\TTL;
-use App\Services\Category\Handlers\GetFiltersHandler;
-use App\Services\Category\Handlers\GetWishListFiltersHandler;
 use App\Services\Category\Repositories\ClientCategoryRepository;
-use App\Services\Tag\Repositories\ClientTagRepository;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 
 class ClientCategoryService extends ClientBaseResourceService
 {
-    private ClientTagRepository $tagRepository;
-    private GetFiltersHandler $getFiltersHandler;
-    private GetWishListFiltersHandler $getWishListFiltersHandler;
 
     /**
      * ClientCategoryService constructor.
      * @param ClientCategoryRepository $repository
      * @param CacheKeyManager $cacheKeyManager
-     * @param ClientTagRepository $tagRepository
-     * @param GetFiltersHandler $getFiltersHandler
-     * @param GetWishListFiltersHandler $getWishListFiltersHandler
      */
     public function __construct(
         ClientCategoryRepository $repository,
-        CacheKeyManager $cacheKeyManager,
-        ClientTagRepository $tagRepository,
-        GetFiltersHandler $getFiltersHandler,
-        GetWishListFiltersHandler $getWishListFiltersHandler
+        CacheKeyManager $cacheKeyManager
     )
     {
         parent::__construct($repository, $cacheKeyManager);
-        $this->tagRepository = $tagRepository;
-        $this->getFiltersHandler = $getFiltersHandler;
-        $this->getWishListFiltersHandler = $getWishListFiltersHandler;
     }
 
     /**
@@ -49,10 +34,11 @@ class ClientCategoryService extends ClientBaseResourceService
      */
     public function index()
     {
-        $key = $this->cacheKeyManager->getCategoriesKey(['client', 'published']);
-
-        return Cache::tags(Tag::CATEGORIES_TAG)
-            ->remember($key, TTL::CATEGORIES_TTL, fn () => $this->repository->index());
+        return $this->repository->index();
+//        $key = $this->cacheKeyManager->getCategoriesKey(['client', 'published']);
+//
+//        return Cache::tags(Tag::CATEGORIES_TAG)
+//            ->remember($key, TTL::CATEGORIES_TTL, fn () => $this->repository->index());
     }
 
     /**
@@ -75,8 +61,9 @@ class ClientCategoryService extends ClientBaseResourceService
     {
         $tagKey = $this->cacheKeyManager->getResourceKey(Key::TAGS_PREFIX, ['client', 'by_category_' . $id]);
 
-        return Cache::tags(Tag::TAGS_TAG)
-            ->remember($tagKey, TTL::TAGS_TTL, fn () => $this->tagRepository->getItemsByCategoryId($id));
+        return $this->repository->getItemTags($id);
+//        return Cache::tags(Tag::TAGS_TAG)
+//            ->remember($tagKey, TTL::TAGS_TTL, fn () => $this->repository->getItemTags($id));
     }
 
     /**
@@ -110,48 +97,48 @@ class ClientCategoryService extends ClientBaseResourceService
             ->remember($key, TTL::IMAGES_TTL, fn () => $this->repository->getImages($category, $pagination, $filter));
     }
 
-    /**
-     * @param int $categoryId
-     * @param array $filter
-     * @return array
-     */
-    public function getFilters(int $categoryId, array $filter = null): array
-    {
-        $filtersKey = [];
+//    /**
+//     * @param int $categoryId
+//     * @param array $filter
+//     * @return array
+//     */
+//    public function getFilters(int $categoryId, array $filter = null): array
+//    {
+//        $filtersKey = [];
+//
+//        if ($filter !== null) {
+//            foreach($filter as $key => $value) {
+//                if ($value) {
+//                    $filtersKey[$key] = $key . '_' . implode('_', $value);
+//                }
+//            }
+//        }
+//
+//        $key = $this->cacheKeyManager->getCategoriesKey([
+//            'client',
+//            'category_' . $categoryId,
+//            'filters_' . implode('_', array_values($filtersKey))
+//        ]);
 
-        if ($filter !== null) {
-            foreach($filter as $key => $value) {
-                if ($value) {
-                    $filtersKey[$key] = $key . '_' . implode('_', $value);
-                }
-            }
-        }
-
-        $key = $this->cacheKeyManager->getCategoriesKey([
-            'client',
-            'category_' . $categoryId,
-            'filters_' . implode('_', array_values($filtersKey))
-        ]);
-
-        return $this->getFiltersHandler->handle($categoryId, $filter);
+//        return $this->getFiltersHandler->handle($categoryId, $filter);
 //        return Cache::tags(Tag::CATEGORIES_TAG)
 //            ->remember($key, TTL::CATEGORIES_TTL, function () use ($categoryId, $filter) {
 //                return $this->getFiltersHandler->handle($categoryId, $filter);
 //            });
-    }
-
-    /**
-     * WishList Filters
-     * @param array $ids
-     * @return array
-     */
-    public function getFiltersByImageIds(array $ids): array
-    {
-        $key = $this->cacheKeyManager->getCategoriesKey(['client', 'wishList_' . implode('.', $ids), 'filters']);
-
-        return Cache::tags(Tag::CATEGORIES_TAG)
-            ->remember($key, TTL::CATEGORIES_TTL, function () use ($ids) {
-                return $this->getWishListFiltersHandler->handle($ids);
-            });
-    }
+//    }
+//
+//    /**
+//     * WishList Filters
+//     * @param array $ids
+//     * @return array
+//     */
+//    public function getFiltersByImageIds(array $ids): array
+//    {
+//        $key = $this->cacheKeyManager->getCategoriesKey(['client', 'wishList_' . implode('.', $ids), 'filters']);
+//
+//        return Cache::tags(Tag::CATEGORIES_TAG)
+//            ->remember($key, TTL::CATEGORIES_TTL, function () use ($ids) {
+//                return $this->getWishListFiltersHandler->handle($ids);
+//            });
+//    }
 }

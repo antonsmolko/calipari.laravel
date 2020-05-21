@@ -7,6 +7,7 @@
         :message="notification.message"
         :icon="notification.icon"
         :type="notification.type"
+        :timeout="timeout"
         :timestamp="notification.timestamp"
         :vertical-align="notification.verticalAlign"
         :horizontal-align="notification.horizontalAlign"
@@ -21,6 +22,12 @@ import Notification from "./Notification.vue";
 export default {
   components: {
     Notification
+  },
+  props: {
+      timeout: {
+          type: Number,
+          default: 5000
+      }
   },
   data() {
     return {

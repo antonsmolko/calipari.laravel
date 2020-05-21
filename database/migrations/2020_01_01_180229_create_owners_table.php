@@ -17,7 +17,6 @@ class CreateOwnersTable extends Migration
             $table->increments('id');
             $table->string('title', 50)->unique();
             $table->text('description')->nullable();
-            $table->unsignedTinyInteger('publish')->default(0);
             $table->timestamps();
         });
     }

@@ -6,7 +6,6 @@ namespace App\Services\Owner\Repositories;
 use App\Models\Image;
 use App\Models\Owner;
 use App\Services\SubCategory\Repositories\SubCategoryRepository;
-use Illuminate\Database\Eloquent\Collection;
 
 class OwnerRepository extends SubCategoryRepository
 {
@@ -23,40 +22,28 @@ class OwnerRepository extends SubCategoryRepository
 
     /**
      * @param $category
-     * @param array $pagination
+     * @param array $requestData
      * @return mixed
      */
-    public function getExcludedImages($category, array $pagination)
+    public function getExcludedImages($category, array $requestData)
     {
-        return Image::whereDoesntHave('owner')
+        return Image::doesntHave('owner')
+            ->doesntHave('collection')
             ->with(config('query_builder.image'))
-            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
+            ->when(!empty($requestData['query']),
+                fn ($query) => $query->where('id', 'like', $requestData['query'] . '%'))
+            ->orderBy($requestData['sort_by'], $requestData['sort_order'])
+            ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']);
     }
 
-//    /**
-//     * @param $category
-//     * @param array $pagination
-//     * @return mixed
-//     */
-//    public function getQueryExcludedImages($category, array $pagination)
-//    {
-//        return Image::whereDoesntHave('owner')
-//            ->where('id', 'like', $pagination['query'] . '%')
-//            ->with(config('query_builder.image'))
-//            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-//            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
-//    }
-
     /**
-     * @param mixed $categoryId
-     * @param array $imageIds
+     * @param mixed $ownerId
+     * @param array $imageKeys
      * @return mixed|void
      */
-    public function addImages($categoryId, array $imageIds)
+    public function addImages($ownerId, array $imageKeys)
     {
-        return Image::whereIn('id', $imageIds)->update([
-            'owner_id' => $categoryId,
-        ]);
+        return Image::whereIn('id', $imageKeys)
+            ->update(['owner_id' => $ownerId]);
     }
 }

@@ -10,5 +10,9 @@ return [
     'loading_failed' => 'Загрузка файла «:file_name» не удалась или файл поврежден!',
     'can_not_create_directory' => 'Не могу создать директорию «:path»!',
     'not_writable_directory' => 'Директория «:path» не доступна для записи!',
-    'wrong_proportions' => 'Пропорции изображения «:file_name» не входят в допустимые пределы!'
+    'wrong_proportions' => 'Пропорции изображения «:file_name» не входят в допустимые пределы!',
+    'unable_to_delete_main_image_of_collection' => 'Невозможно удалить главное изображение коллекции!',
+    'unable_to_unpublish_main_image_of_collection' => 'Невозможно отменить публикацию главного изображения коллекции!',
+    'unable_to_remove_image_of_collection' => 'Невозможно отвязать изображение коллекции!',
+    'dimensions_should_be_same_as_previous' => 'Размеры изображения должны быть такими же, как у предыдущего изображения: высота - :width px, ширина - :height px!'
 ];

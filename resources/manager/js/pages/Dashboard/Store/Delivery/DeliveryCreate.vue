@@ -97,9 +97,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty
-                        ? true
-                        : !this.isUniqueTitle
+                    return (value.trim() === '') && !this.$v.title.$dirty || !this.isUniqueTitle
                 }
             },
             alias: {
@@ -144,7 +142,7 @@
         methods: {
             ...mapActions('deliveries', {
                 getItemsAction: 'getItems',
-                clearFieldsAction: 'clearFields',
+                clearFieldsAction: 'clearItemFields',
             }),
             onCreate() {
                 return this.create({

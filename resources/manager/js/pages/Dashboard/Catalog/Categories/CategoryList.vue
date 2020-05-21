@@ -49,11 +49,11 @@
 
                             <md-table-cell md-label="Опубликован">
                                 <md-switch
-                                    :disabled="!item.images_count"
+                                    :disabled="!item.has_published_images"
                                     :value="!item.publish"
                                     @change="togglePublish(item)">
                                     <template>
-                                        <span v-if="!item.images_count">Для публикации добавьте изображения</span>
+                                        <span v-if="!item.has_published_images">Нет опубликованных изображений!</span>
                                     </template>
                                 </md-switch>
                             </md-table-cell>
@@ -106,24 +106,11 @@
         },
         created () {
             this.setPageTitle(this.pageProps[this.category_type].PAGE_TITLE);
-            // this.init(this.category_type);
         },
         methods: {
             ...mapActions({
-                // getItemsByTypeAction: 'getItemsByType',
                 togglePublishAction: 'table/togglePublish'
             }),
-            // async init (category_type) {
-                // this.responseData = false;
-                // await this.setPageTitle('');
-                // this.setPageTitle(this.pageProps[category_type].PAGE_TITLE);
-                // await this.getItemsByTypeAction(category_type)
-                //     .then(() => {
-                //         this.setPageTitle(this.pageProps[category_type].PAGE_TITLE);
-                //         this.responseData = true;
-                //     })
-                //     .catch(() => this.$router.push({ name: 'manager.catalog' }));
-            // },
             onDelete (item) {
                 return this.delete({
                     module: 'categories',
@@ -132,7 +119,7 @@
                     alertText: `категорию «${item.title}»`,
                     storeModule: this.storeModule,
                     successText: 'Категория удалена!',
-                    tableMode: true
+                    tableMode: 'table'
                 })
             },
             togglePublish (item) {

@@ -5,21 +5,19 @@ namespace App\Services\Category;
 
 
 use App\Services\Base\Category\CmsBaseCategoryService;
-use App\Services\Base\Category\Handlers\GetExcludedImagesHandler;
-use App\Services\Base\Category\Handlers\GetImagesHandler;
 use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
 use App\Services\Category\Handlers\DestroyHandler;
 use App\Services\Category\Handlers\StoreHandler;
 use App\Services\Category\Handlers\UpdateHandler;
-use App\Services\Base\Category\Handlers\UploadHandler;
+use App\Services\Image\CmsImageService;
+use App\Services\Image\Handlers\UploadHandler;
 use App\Services\Category\Repositories\CmsCategoryRepository;
 use Illuminate\Database\Eloquent\Collection;
 
 class CmsCategoryService extends CmsBaseCategoryService
 {
-    private StoreHandler $storeHandler;
-
     private UpdateHandler $updateHandler;
+    private StoreHandler $storeHandler;
 
     private DestroyHandler $destroyHandler;
 
@@ -27,41 +25,33 @@ class CmsCategoryService extends CmsBaseCategoryService
      * CmsCategoryService constructor.
      * @param CmsCategoryRepository $repository
      * @param ClearCacheByTagHandler $clearCacheByTagHandler
-     * @param UploadHandler $uploadHandler
-     * @param GetImagesHandler $getImagesHandler
-     * @param GetExcludedImagesHandler $getExcludedImagesHandler
      * @param StoreHandler $storeHandler
+     * @param UploadHandler $uploadHandler
+     * @param CmsImageService $imageService
      * @param UpdateHandler $updateHandler
-     * @param DestroyHandler $destroyHandler
      */
     public function __construct(
         CmsCategoryRepository $repository,
         ClearCacheByTagHandler $clearCacheByTagHandler,
-        UploadHandler $uploadHandler,
-        GetImagesHandler $getImagesHandler,
-        GetExcludedImagesHandler $getExcludedImagesHandler,
         StoreHandler $storeHandler,
-        UpdateHandler $updateHandler,
-        DestroyHandler $destroyHandler
-    )
+        UploadHandler $uploadHandler,
+        CmsImageService $imageService,
+        UpdateHandler $updateHandler)
     {
         parent::__construct(
             $repository,
             $clearCacheByTagHandler,
             $uploadHandler,
-            $getImagesHandler,
-            $getExcludedImagesHandler
-        );
+            $imageService);
         $this->storeHandler = $storeHandler;
         $this->updateHandler = $updateHandler;
-        $this->destroyHandler = $destroyHandler;
     }
 
     /**
      * @param string $type
-     * @return Collection
+     * @return mixed
      */
-    public function getItemsByType(string $type): Collection
+    public function getItemsByType(string $type)
     {
         return $this->repository->getItemsByType($type);
     }
@@ -82,9 +72,9 @@ class CmsCategoryService extends CmsBaseCategoryService
      */
     public function update(int $id, array $updateData)
     {
-        $category = $this->repository->getItem($id);
+        $item = $this->repository->getItem($id);
 
-        return $this->updateHandler->handle($category, $updateData);
+        return $this->updateHandler->handle($item, $updateData);
     }
 
     /**
@@ -94,8 +84,23 @@ class CmsCategoryService extends CmsBaseCategoryService
      */
     public function destroy(int $id): int
     {
-        $category = $this->repository->getItem($id);
+        $item = $this->repository->getItem($id);
 
-        return $this->destroyHandler->handle($category);
+        return $this->destroyHandler->handle($item);
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function publish(int $id)
+    {
+        $item = $this->repository->getItem($id);
+
+        if (!$item->publishedImages->count()) {
+            abort(422, __('common.unable_publish_category_without_publish_images'));
+        }
+
+        return $this->repository->publish($item);
     }
 }

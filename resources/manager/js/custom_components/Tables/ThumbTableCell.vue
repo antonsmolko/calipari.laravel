@@ -2,7 +2,7 @@
     <div v-if="path">
         <img class="md-table-thumb img-raised rounded"
              :style="`width: ${width}px; height: ${width*0.6}px`"
-             :src="`/image/widen/${width*1.5}/${path}`" alt="" >
+             :src="url" alt="" >
     </div>
 </template>
 
@@ -17,6 +17,15 @@
             width: {
                 type: Number,
                 default: 100
+            },
+            static: {
+                type: Boolean,
+                default: false
+            }
+        },
+        computed: {
+            url () {
+                return this.static ? this.path : `/image/widen/${this.width*1.5}/${this.path}`
             }
         }
     }

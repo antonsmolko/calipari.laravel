@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\Cms\Image;
 
 use App\Http\Controllers\API\Cms\Base\BaseResourceController;
-use App\Http\Controllers\API\Cms\Image\Requests\UpdateImageRequest;
+use App\Http\Controllers\API\Cms\Image\Requests\UpdateRequest;
 use App\Http\Requests\FormRequest;
 use App\Services\Image\CmsImageService;
 use Illuminate\Http\JsonResponse;
@@ -46,18 +46,46 @@ class ImageController extends BaseResourceController
      * @param FormRequest $request
      * @return JsonResponse
      */
-    public function store(FormRequest $request): JsonResponse
+    public function getTrashedItems(FormRequest $request): JsonResponse
     {
-        return response()->json($this->service->store($request->all()));
+        return response()->json($this->service->getTrashedItems($request->all()));
     }
 
     /**
-     * @param UpdateImageRequest $request
-     * @param int $id
+     * @param FormRequest $request
+     * @return JsonResponse
      */
-    public function update(UpdateImageRequest $request, int $id)
+    public function store(FormRequest $request): JsonResponse
     {
-        $this->service->update($id, $request->all());
+        return response()->json($this->service->store($request->images));
+    }
+
+    /**
+     * @param UpdateRequest $request
+     * @param int $id
+     * @return mixed|void
+     */
+    public function update(UpdateRequest $request, int $id)
+    {
+        return $this->service->update($id, $request->all());
+    }
+
+    /**
+     * @param int $id
+     * @return bool|null
+     */
+    public function forceDelete(int $id)
+    {
+        return $this->service->forceDelete($id);
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function restore(int $id)
+    {
+        return $this->service->restore($id);
     }
 
     /**

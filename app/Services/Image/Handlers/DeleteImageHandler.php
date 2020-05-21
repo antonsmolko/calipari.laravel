@@ -22,13 +22,16 @@ class DeleteImageHandler
 
     /**
      * @param Image $image
-     * @return int
-     * @throws \Exception
+     * @return int|void
      */
-    public function handle(Image $image): int
+    public function handle(Image $image)
     {
-        uploader()->remove($image->path);
+        $collection = $image->collection;
+        if (!$collection || $collection->main_image_id !== $image->id) {
+//            uploader()->remove($image->path);
+            return $this->repository->destroy($image);
+        }
 
-        return $this->repository->destroy($image);
+        return abort(400, __('image_validation.unable_to_delete_main_image_of_collection'));
     }
 }

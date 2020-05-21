@@ -6,12 +6,14 @@ namespace App\Services\Base\Category;
 
 use App\Services\Base\Category\Repositories\CmsBaseCategoryRepository;
 use App\Services\Base\Resource\CmsBaseResourceService;
-use App\Services\Base\Category\Handlers\UploadHandler;
+use App\Services\Image\Handlers\UploadHandler;
 use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
 use App\Services\Cache\Tag;
+use App\Services\Image\CmsImageService;
 
 class CmsBaseCategoryService extends CmsBaseResourceService
 {
+    protected CmsImageService $imageService;
     protected UploadHandler $uploadHandler;
 
     /**
@@ -19,16 +21,19 @@ class CmsBaseCategoryService extends CmsBaseResourceService
      * @param CmsBaseCategoryRepository $repository
      * @param ClearCacheByTagHandler $clearCacheByTagHandler
      * @param UploadHandler $uploadHandler
+     * @param CmsImageService $imageService
      */
     public function __construct(
         CmsBaseCategoryRepository $repository,
         ClearCacheByTagHandler $clearCacheByTagHandler,
-        UploadHandler $uploadHandler
+        UploadHandler $uploadHandler,
+        CmsImageService $imageService
     )
     {
         parent::__construct($repository, $clearCacheByTagHandler);
-        $this->uploadHandler = $uploadHandler;
         $this->cacheTag = Tag::CATEGORIES_TAG;
+        $this->imageService = $imageService;
+        $this->uploadHandler = $uploadHandler;
     }
 
     /**
@@ -48,8 +53,10 @@ class CmsBaseCategoryService extends CmsBaseResourceService
     public function upload(array $requestData, int $id)
     {
         $category = $this->repository->getItem($id);
+        $uploadedKeys = $this->uploadHandler->handle($requestData['images']);
 
-        return $this->uploadHandler->handle($category, $requestData['images']);
+        return $this->repository->addImages($category, $uploadedKeys);
+
     }
 
     /**
@@ -64,19 +71,6 @@ class CmsBaseCategoryService extends CmsBaseResourceService
         return $this->repository->getImages($category, $pagination);
     }
 
-//    /**
-//     * @param int $categoryId
-//     * @param array $pagination
-//     * @return array
-//     */
-//    public function getItemWithImages(int $categoryId, array $pagination): array
-//    {
-//        $category = $this->repository->getItem($categoryId);
-//        $paginateData = $this->repository->getImages($category, $pagination);
-//
-//        return ['item' => $category, 'paginateData' => $paginateData];
-//    }
-
     /**
      * @param int $categoryId
      * @param array $pagination
@@ -88,19 +82,6 @@ class CmsBaseCategoryService extends CmsBaseResourceService
 
         return $this->repository->getExcludedImages($category, $pagination);
     }
-
-//    /**
-//     * @param int $categoryId
-//     * @param array $pagination
-//     * @return array
-//     */
-//    public function getItemWithExcludedImages(int $categoryId, array $pagination): array
-//    {
-//        $category = $this->repository->getItem($categoryId);
-//        $paginateData = $this->repository->getExcludedImages($category, $pagination);
-//
-//        return ['item' => $category, 'paginateData' => $paginateData];
-//    }
 
     /**
      * @param array $images
@@ -121,7 +102,23 @@ class CmsBaseCategoryService extends CmsBaseResourceService
     public function removeImage(int $categoryId, int $imageId)
     {
         $category = $this->repository->getItem($categoryId);
+        $image = $this->imageService->getItem($imageId);
+        $collection = $image->collection;
 
-        return $this->repository->removeImage($category, $imageId);
+        if (!$collection || !$collection->main_image_id === $image->id) {
+            return $this->repository->removeImage($category, $imageId);
+        }
+
+        return abort(400, __('image_validation.unable_to_remove_image_of_collection'));
+    }
+
+    /**
+     * Unpublish Items if images_count === 0
+     */
+    public function processUnpublishItems()
+    {
+        $items = $this->repository->getWithoutPublishedImagesItems();
+
+        $items->each(fn ($item) => $this->repository->unpublish($item));
     }
 }

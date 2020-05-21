@@ -70,7 +70,7 @@ const actions = {
         return axiosAction('delete', commit, {
             url: `/users/${payload}`,
             thenContent: response => {
-                if (tableMode) {
+                if (tableMode === 'table') {
                     dispatch('table/updateItemsPost', null, { root: true });
                 }
             }

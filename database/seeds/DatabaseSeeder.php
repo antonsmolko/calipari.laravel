@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\File;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,7 +23,6 @@ class DatabaseSeeder extends Seeder
             OwnersTableSeeder::class,
             OrderStatusesTableSeeder::class,
             ImagesTableSeeder::class,
-            TagsTableSeeder::class,
             TexturesTableSeeder::class, // ! after ImagesTableSeeder::class
             CategoriesTableSeeder::class, // ! after ImagesTableSeeder::class
         ]);

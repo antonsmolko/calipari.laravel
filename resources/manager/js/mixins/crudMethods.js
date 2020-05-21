@@ -52,15 +52,16 @@ export const deleteMethod = {
             successText,
             storeModule = null,
             redirectRoute = null,
-            tableMode = false
-
+            tableMode = false,
+            force = false
         }) {
             const module = storeModule ? `${storeModule}/` : '';
+            const method = force ? 'forceDelete' : 'delete';
 
             return deleteSwalFireConfirm(alertText)
                 .then((result) => {
                     if (result.value) {
-                        return this.$store.dispatch(`${module}delete`, { payload, tableMode })
+                        return this.$store.dispatch(`${module}${method}`, { payload, tableMode })
                             .then(() => {
                                 if (redirectRoute) {
                                     window.history.length > 1
@@ -125,13 +126,10 @@ export const uploadMethod = {
 
 export const imageAddMethod = {
     methods: {
-        addImages ({ category, selected }) {
-            this.$store.dispatch('categories/addSelectedImages',{
-                id: category.id,
-                data: selected
-            })
+        addImages ({ id, data }) {
+            this.$store.dispatch('categories/addSelectedImages',{ id, data })
                 .then(() => {
-                    this.$router.push({ name: 'manager.catalog.categories.images', params: { id: category.id } });
+                    this.$router.push({ name: 'manager.catalog.categories.images', params: { id } });
 
                     return swal.fire({
                         title: 'Изображения добавлены!',
@@ -147,8 +145,8 @@ export const imageAddMethod = {
 
 export const subCategoryImageAddMethod = {
     methods: {
-        addImages ({ type, id, selected, redirectRoute }) {
-            this.$store.dispatch('subCategories/addSelectedImages', { type, id, selected_images: selected })
+        addImages ({ type, id, data, redirectRoute }) {
+            this.$store.dispatch('subCategories/addSelectedImages', { type, id, data })
                 .then(() => {
                     this.$router.push(redirectRoute);
 

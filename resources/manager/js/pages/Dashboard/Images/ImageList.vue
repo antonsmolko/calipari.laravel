@@ -92,7 +92,6 @@
         computed: {
             ...mapState({
                 category: state => state.categories.item,
-                items: state => state.images.items,
                 fileProgress: state => state.images.fileProgress
             }),
             resourceUrl () {
@@ -141,7 +140,7 @@
                     alertText: `изображение «${item.id}»`,
                     successText: 'Изображение удалено!',
                     storeModule: this.storeModule,
-                    tableMode: true
+                    tableMode: 'table'
                 })
             },
             togglePublish (id) {

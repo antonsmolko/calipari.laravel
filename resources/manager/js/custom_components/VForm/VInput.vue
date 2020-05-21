@@ -89,7 +89,8 @@
                 default: 30
             },
             icon: {
-                type: String
+                type: String,
+                default: null
             },
             type: {
                 type: String,
