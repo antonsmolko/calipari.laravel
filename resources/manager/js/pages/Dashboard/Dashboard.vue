@@ -9,6 +9,7 @@
         <panel-card-link route="manager.users" icon="people" title="Пользователи" :count="1234" color="blue"/>
         <panel-card-link route="manager.roles" icon="business_center" title="Роли" :count="14" color="light-blue" />
         <panel-card-link route="manager.permissions" icon="vpn_key" title="Привилегии" :count="24" color="cyan" />
+        <panel-card-link route="manager.pages" icon="layers" title="Страницы" :count="11" color="brown" />
     </div>
 </template>
 

@@ -16,6 +16,7 @@ import deliveries from './modules/deliveries';
 import orders from './modules/orders';
 import orderStatuses from './modules/order-statuses';
 import table from './modules/table';
+import pages from './modules/pages';
 
 Vue.use(Vuex);
 
@@ -117,6 +118,7 @@ export default new Vuex.Store({
         deliveries,
         orders,
         orderStatuses,
-        table
+        table,
+        pages
     }
 });

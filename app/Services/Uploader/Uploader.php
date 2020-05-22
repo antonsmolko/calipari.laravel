@@ -91,15 +91,16 @@ class Uploader
     }
 
     /**
-     * @param string|null $name
-     * @return $this
+     * @param UploadedFile $file
+     * @param string $removePath
+     * @return array|void
      */
-    public function refresh(string $name): Uploader
+    public function change(UploadedFile $file, string $removePath)
     {
-        $this->refresh = true;
-        $this->name = $name;
+        $uploadAttributes = $this->upload($file);
+        $this->remove($removePath);
 
-        return $this;
+        return $uploadAttributes;
     }
 
     /**
@@ -130,17 +131,40 @@ class Uploader
             : abort(422, trans('image_validation.error_image_upload'));
     }
 
+    /**
+     * @param $uploadModel
+     * @param array $recordAttributes
+     * @return mixed
+     */
     public function register($uploadModel, array $recordAttributes)
     {
         return $uploadModel
             ->create($recordAttributes);
     }
 
+    /**
+     * @param UploadedFile $uploadFile
+     * @param $uploadModel
+     * @param null $pathStorage
+     * @return mixed
+     */
     public function store(UploadedFile $uploadFile, $uploadModel, $pathStorage = null)
     {
         $recordAttributes = $this->upload($uploadFile, $pathStorage);
 
         return $this->register($uploadModel, $recordAttributes);
+    }
+
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function refresh(string $name): Uploader
+    {
+        $this->refresh = true;
+        $this->name = $name;
+
+        return $this;
     }
 
     /**

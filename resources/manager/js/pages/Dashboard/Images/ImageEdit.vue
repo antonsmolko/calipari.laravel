@@ -79,7 +79,7 @@
                                          :vRules="{ numeric: true }" />
 
                                 <v-input title="Описание"
-                                         icon="comment"
+                                         icon="description"
                                          name="description"
                                          :value="description"
                                          :maxlength="250"

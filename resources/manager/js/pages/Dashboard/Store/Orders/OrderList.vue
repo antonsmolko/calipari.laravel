@@ -143,7 +143,7 @@
 </template>
 
 <script>
-    import { mapActions, mapGetters } from 'vuex'
+    import { mapActions } from 'vuex'
 
     import first from 'lodash/first'
     import { pageTitle } from '@/mixins/base'

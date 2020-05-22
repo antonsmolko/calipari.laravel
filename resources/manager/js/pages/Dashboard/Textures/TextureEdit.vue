@@ -95,7 +95,7 @@
 
 <script>
     import { mapState, mapActions } from 'vuex'
-    import {required, numeric, minLength} from 'vuelidate/lib/validators'
+    import { required, numeric, minLength } from 'vuelidate/lib/validators'
 
     import { pageTitle } from '@/mixins/base'
     import { changePublishEdit } from '@/mixins/changingFields'
@@ -105,13 +105,13 @@
 
     export default {
         name: 'TextureEdit',
+        components: { 'text-editor': TextEditor },
         mixins: [
             pageTitle,
             changePublishEdit,
             updateMethod,
             deleteMethod
         ],
-        components: { 'text-editor': TextEditor },
         props: {
             id: {
                 type: [ Number, String ],

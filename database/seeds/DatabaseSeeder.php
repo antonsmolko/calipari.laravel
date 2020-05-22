@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             FormatsTableSeeder::class,
             OwnersTableSeeder::class,
             OrderStatusesTableSeeder::class,
+            PagesTableSeeder::class,
             ImagesTableSeeder::class,
             TexturesTableSeeder::class, // ! after ImagesTableSeeder::class
             CategoriesTableSeeder::class, // ! after ImagesTableSeeder::class

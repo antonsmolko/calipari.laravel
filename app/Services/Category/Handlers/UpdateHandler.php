@@ -28,13 +28,12 @@ class UpdateHandler
      */
     public function handle(Category $category, array $updateData)
     {
-        if(array_key_exists('image', $updateData)) {
-            uploader()->remove($category->image_path);
-            $uploadArray = uploader()->upload($updateData['image']);
+        if(array_key_exists('image', $updateData) && !empty($updateData['image'])) {
+            $uploadArray = uploader()->change($updateData['image'], $category->image_path);
             $updateData = Arr::add(Arr::except($updateData, ['image']), 'image_path', $uploadArray['path']);
         }
 
-        if (!$category->images()->count()) {
+        if (!$category->publishedImages()->count()) {
             $updateData['publish'] = 0;
         }
 

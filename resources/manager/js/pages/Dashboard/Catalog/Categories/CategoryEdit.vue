@@ -50,7 +50,6 @@
 
                         <v-image name="image"
                                  :imgDefault="imagePath"
-                                 :differ="true"
                                  :vField="$v.image"
                                  :vRules="{ required: true }"
                                  :module="storeModule" />

@@ -24,6 +24,12 @@
                         </template>
                         <input type="file" @change="onFileChange($event)">
                     </md-button>
+                    <md-button class="md-danger md-just-icon"
+                               @click="onFileChange($event, 'delete')"
+                               v-if="imgDefault && withDelete">
+                        <md-icon>close</md-icon>
+                        <md-tooltip md-direction="top">Удалить</md-tooltip>
+                    </md-button>
                 </div>
             </div>
             <div class="under-input-notice" v-if="vField && vRules && vField.$error">
@@ -65,6 +71,10 @@
             module: {
                 type: String,
                 default: null
+            },
+            withDelete: {
+                type: Boolean,
+                default: false
             }
         },
         data() {
@@ -89,6 +99,11 @@
                         this.removeImage();
                         break;
 
+                    case 'delete':
+                        this.removeImage();
+                        this.deleteImage();
+                        break;
+
                     default:
                         break;
                 }
@@ -111,10 +126,14 @@
             removeImage () {
                 this.imageData = '';
 
-                if (this.vField && this.imgDefault)
+                if (this.vField)
                     this.vField.$reset();
 
                 this.fileAction('');
+            },
+
+            deleteImage () {
+                this.$emit('delete');
             },
 
             createImage (file) {

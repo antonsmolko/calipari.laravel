@@ -9,6 +9,10 @@ return [
         'min' => 2,
         'max' => 100
     ],
+    'long_title' => [
+        'min' => 2,
+        'max' => 150
+    ],
     'description' => [
         'max' => 250
     ],

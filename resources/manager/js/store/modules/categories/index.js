@@ -78,25 +78,22 @@ const actions = {
         })
     },
     store ({ commit }, payload) {
-        const form = new FormData();
+        const data = new FormData();
         for (const [field, value] of Object.entries(payload)) {
-            form.append(field, value);
+            data.append(field, value);
         }
-        return axiosAction('post', commit, {
-            url: `/catalog/categories`,
-            data: form
-        })
+        return axiosAction('post', commit, { url: `/catalog/categories`, data })
     },
     update ({ commit }, payload) {
-        const form = new FormData();
+        const data = new FormData();
         for (const [field, value] of Object.entries(payload.formData)) {
             if (field !== 'image' || value) {
-                form.append(field, value);
+                data.append(field, value);
             }
         }
         return axiosAction('post', commit, {
             url: `/catalog/categories/${payload.category_id}`,
-            data: form
+            data
         })
     },
     delete ({ commit, dispatch }, { payload, tableMode = false }) {

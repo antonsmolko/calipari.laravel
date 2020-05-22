@@ -1,6 +1,32 @@
 <?php
 
 return [
+    'pages' => [
+        '1' => [
+            'title' => 'Главная',
+            'alias' => 'home'
+        ],
+        '2' => [
+            'title' => 'Каталог',
+            'alias' => 'catalog'
+        ],
+        '3' => [
+            'title' => 'Текстуры',
+            'alias' => 'textures'
+        ],
+        '4' => [
+            'title' => 'Контакты',
+            'alias' => 'contacts'
+        ],
+        '5' => [
+            'title' => 'Портфолио',
+            'alias' => 'portfolio'
+        ],
+        '6' => [
+            'title' => 'Политика конфиденциальности',
+            'alias' => 'policy'
+        ]
+    ],
     'formats' => [
         '1' => [
             'title' => 'Портрет',

@@ -348,4 +348,12 @@ Route::group(['prefix' => 'manager'], function() {
         // Carts
 //        Route::apiResource('carts', 'Cms\Cart\CmsCartController');
     });
+
+
+    // Pages
+    Route::group(['prefix' => 'pages'], function() {
+        Route::post('/{id}', 'Cms\Page\PageController@update');
+        Route::get('/{id}/delete-image', 'Cms\Page\PageController@deleteImage');
+    });
+    Route::apiResource('pages', 'Cms\Page\PageController')->except(['create', 'update', 'edit']);
 });

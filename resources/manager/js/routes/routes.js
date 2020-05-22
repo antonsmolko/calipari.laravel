@@ -247,6 +247,18 @@ const Order = resolve => {
     })
 };
 
+// Pages
+const PagesPanel = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/PagesPanel.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/PagesPanel.vue'))
+    })
+};
+const HomePage = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/HomePage.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/HomePage.vue'))
+    })
+};
+
 // Error pages
 const Error404 = resolve => {
     require.ensure(['@/pages/Dashboard/Errors/404.vue'], () => {
@@ -414,6 +426,14 @@ const managerStorePanel = [
     }
 ];
 
+const managerMenuPagesPanel = [
+    {
+        path: 'pages',
+        name: 'manager.pages',
+        component: PagesPanel
+    }
+];
+
 const managerPages = {
     path: '/manager',
     component: DashboardLayout,
@@ -427,7 +447,8 @@ const managerPages = {
         ...managerUsersPages,
         ...managerRolesPages,
         ...managerPermissionsPages,
-        ...managerStorePanel
+        ...managerStorePanel,
+        ...managerMenuPagesPanel
     ]
 };
 
@@ -599,6 +620,18 @@ const managerOrderPages = {
     ]
 };
 
+const managerMenuPages = {
+    path: '/manager/pages',
+    component: DashboardLayout,
+    children: [
+        {
+            path: 'nome',
+            name: 'manager.pages.home',
+            component: HomePage
+        }
+    ]
+};
+
 const managerErrorPages = {
     path: '/manager/errors',
     component: ErrorsLayout,
@@ -619,6 +652,7 @@ const routes = [
     managerDeliveriesPages,
     managerOrderPages,
     managerOrderStatusPages,
+    managerMenuPages,
     managerErrorPages,
     {
         path: '*',

@@ -11,6 +11,7 @@ class DefineRestrictionsForCollectionsHandler
 {
     /**
      * @param Request $request
+     * @return bool
      */
     public function handle(Request $request)
     {
