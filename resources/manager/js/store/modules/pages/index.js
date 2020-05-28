@@ -55,14 +55,6 @@ const actions = {
             }
         })
     },
-    // store ({ commit }, payload) {
-    //     const data = new FormData();
-    //     for (const [field, value] of Object.entries(payload)) {
-    //         data.append(field, value);
-    //     }
-    //
-    //     return axiosAction('post', commit, { url: `/pages`, data })
-    // },
     update ({ commit }, { id, formData }) {
         const data = new FormData();
         for (const [field, value] of Object.entries(formData)) {

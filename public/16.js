@@ -25,6 +25,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "TableActions",
   props: {
@@ -35,6 +37,14 @@ __webpack_require__.r(__webpack_exports__);
     subPath: {
       type: String,
       required: true
+    },
+    deleteDisabled: {
+      type: Boolean,
+      "default": false
+    },
+    editDisabled: {
+      type: Boolean,
+      "default": false
     }
   },
   methods: {
@@ -46,10 +56,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue?vue&type=script&lang=js&":
-/*!**************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue?vue&type=script&lang=js& ***!
-  \**************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -122,33 +132,46 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'PermissionList',
+  name: 'TextureList',
+  data: function data() {
+    return {
+      storeModule: 'textures',
+      responsive: false,
+      responseData: false
+    };
+  },
   components: {
     TableActions: _custom_components_Tables_TableActions__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   mixins: [_mixins_base__WEBPACK_IMPORTED_MODULE_2__["pageTitle"], _mixins_crudMethods__WEBPACK_IMPORTED_MODULE_3__["deleteMethod"]],
-  data: function data() {
-    return {
-      responseData: false,
-      storeModule: 'permissions'
-    };
-  },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('permissions', ['items'])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('permissions', {
-    getItemsAction: 'getItems'
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('textures', {
+    items: function items(state) {
+      return state.items;
+    }
+  })),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('textures', {
+    getItemsAction: 'getItems',
+    publishAction: 'publish'
   }), {
+    onPublishChange: function onPublishChange(id) {
+      this.publishAction(id);
+    },
     onDelete: function onDelete(item) {
       return this["delete"]({
         payload: item.id,
-        title: item.display_name,
-        alertText: "\u043F\u0440\u0438\u0432\u0438\u043B\u0435\u0433\u0438\u044E \xAB".concat(item.display_name, "\xBB"),
+        title: item.title,
+        alertText: "\u0444\u0430\u043A\u0442\u0443\u0440\u0430 \xAB".concat(item.name, "\xBB"),
         storeModule: this.storeModule,
-        successText: 'Привилегия удалена!'
+        successText: 'Фактура удалена!'
       });
     }
   }),
@@ -156,7 +179,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var _this = this;
 
     this.getItemsAction().then(function () {
-      _this.setPageTitle('Привилегии');
+      _this.setPageTitle('Фактуры');
 
       _this.responseData = true;
     })["catch"](function () {
@@ -166,6 +189,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     });
   }
 });
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=style&index=0&id=ae97b3f8&lang=scss&scoped=true&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--8-2!./node_modules/sass-loader/dist/cjs.js??ref--8-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=style&index=0&id=ae97b3f8&lang=scss&scoped=true& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".md-table-thumb[data-v-ae97b3f8] {\n  -o-object-fit: cover;\n     object-fit: cover;\n  width: 200px;\n  height: 100px;\n}", ""]);
+
+// exports
+
 
 /***/ }),
 
@@ -185,6 +227,37 @@ exports.push([module.i, "\n.table-actions[data-v-0f288b62] {\n    display: -webk
 
 // exports
 
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=style&index=0&id=ae97b3f8&lang=scss&scoped=true&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--8-2!./node_modules/sass-loader/dist/cjs.js??ref--8-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=style&index=0&id=ae97b3f8&lang=scss&scoped=true& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var api = __webpack_require__(/*! ../../../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+            var content = __webpack_require__(/*! !../../../../../../node_modules/css-loader!../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../node_modules/postcss-loader/src??ref--8-2!../../../../../../node_modules/sass-loader/dist/cjs.js??ref--8-3!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./TextureList.vue?vue&type=style&index=0&id=ae97b3f8&lang=scss&scoped=true& */ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=style&index=0&id=ae97b3f8&lang=scss&scoped=true&");
+
+            content = content.__esModule ? content.default : content;
+
+            if (typeof content === 'string') {
+              content = [[module.i, content, '']];
+            }
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = api(content, options);
+
+var exported = content.locals ? content.locals : {};
+
+
+
+module.exports = exported;
 
 /***/ }),
 
@@ -244,13 +317,19 @@ var render = function() {
               title: "Редактировать",
               icon: "edit",
               color: "md-success",
+              disabled: _vm.editDisabled,
               route: "manager." + _vm.subPath + ".edit",
               params: { id: _vm.item.id }
             }
           }),
           _vm._v(" "),
           _c("control-button", {
-            attrs: { title: "Удалить", icon: "delete", color: "md-danger" },
+            attrs: {
+              title: "Удалить",
+              icon: "delete",
+              disabled: _vm.deleteDisabled,
+              color: "md-danger"
+            },
             on: {
               click: function($event) {
                 return _vm.onDelete(_vm.item)
@@ -269,10 +348,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue?vue&type=template&id=588fa43a&":
-/*!******************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue?vue&type=template&id=588fa43a& ***!
-  \******************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=template&id=ae97b3f8&scoped=true&":
+/*!************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=template&id=ae97b3f8&scoped=true& ***!
+  \************************************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -285,169 +364,194 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.responseData
-    ? _c("div", { staticClass: "md-layout" }, [
-        _c(
-          "div",
-          { staticClass: "md-layout-item" },
-          [
-            _c(
-              "md-card",
-              { staticClass: "mt-0" },
-              [
-                _c(
-                  "md-card-content",
-                  { staticClass: "md-between" },
-                  [
-                    _c("router-button-link", {
-                      attrs: { title: "В панель управления" }
-                    }),
-                    _vm._v(" "),
-                    _c("router-button-link", {
-                      attrs: {
-                        title: "Создать привилегию",
-                        icon: "add",
-                        color: "md-success",
-                        route: "manager.permissions.create"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "space-1" }),
-            _vm._v(" "),
-            _c(
-              "md-card",
-              [
-                _c("card-icon-header", {
-                  attrs: { title: "Список Привилегий", icon: "assignment" }
-                }),
-                _vm._v(" "),
-                _c(
-                  "md-card-content",
-                  [
-                    _vm.items.length
-                      ? [
-                          _c("md-table", {
-                            staticClass:
-                              "paginated-table table-striped table-hover",
-                            scopedSlots: _vm._u(
-                              [
-                                {
-                                  key: "md-table-row",
-                                  fn: function(ref) {
-                                    var item = ref.item
-                                    return _c(
-                                      "md-table-row",
-                                      {},
-                                      [
-                                        _c(
-                                          "md-table-cell",
-                                          {
-                                            staticStyle: { width: "50px" },
-                                            attrs: { "md-label": "#" }
-                                          },
-                                          [
-                                            _vm._v(
-                                              "\n                                " +
-                                                _vm._s(item.id) +
-                                                "\n                            "
-                                            )
-                                          ]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "md-table-cell",
-                                          { attrs: { "md-label": "Имя" } },
-                                          [
-                                            _c(
-                                              "span",
-                                              { staticClass: "md-subheading" },
-                                              [
-                                                _vm._v(
-                                                  _vm._s(item.display_name)
-                                                )
-                                              ]
-                                            )
-                                          ]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "md-table-cell",
-                                          { attrs: { "md-label": "Алиас" } },
-                                          [
-                                            _vm._v(
-                                              "\n                                " +
-                                                _vm._s(item.name) +
-                                                "\n                            "
-                                            )
-                                          ]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "md-table-cell",
-                                          { attrs: { "md-label": "Описание" } },
-                                          [
-                                            _vm._v(
-                                              "\n                                " +
-                                                _vm._s(item.description) +
-                                                "\n                            "
-                                            )
-                                          ]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "md-table-cell",
-                                          { attrs: { "md-label": "Действия" } },
-                                          [
-                                            _c("table-actions", {
+    ? _c("div", [
+        _c("div", { staticClass: "md-layout" }, [
+          _c(
+            "div",
+            { staticClass: "md-layout-item" },
+            [
+              _c(
+                "md-card",
+                [
+                  _c(
+                    "md-card-content",
+                    { staticClass: "md-between" },
+                    [
+                      _c("router-button-link", {
+                        attrs: { title: "В панель управления" }
+                      }),
+                      _vm._v(" "),
+                      _c("router-button-link", {
+                        attrs: {
+                          title: "Создать фактуру",
+                          icon: "add",
+                          color: "md-success",
+                          route: "manager.textures.create"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "md-layout" }, [
+          _c(
+            "div",
+            { staticClass: "md-layout-item" },
+            [
+              _c(
+                "md-card",
+                [
+                  _c("card-icon-header", {
+                    attrs: { title: "Список фактур", icon: "style" }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "md-card-content",
+                    [
+                      _vm.items.length
+                        ? [
+                            _c("md-table", {
+                              staticClass:
+                                "paginated-table table-striped table-hover",
+                              scopedSlots: _vm._u(
+                                [
+                                  {
+                                    key: "md-table-row",
+                                    fn: function(ref) {
+                                      var item = ref.item
+                                      return _c(
+                                        "md-table-row",
+                                        {},
+                                        [
+                                          _c(
+                                            "md-table-cell",
+                                            {
+                                              staticClass: "width-small",
+                                              attrs: { "md-label": "#" }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                                    " +
+                                                  _vm._s(item.id) +
+                                                  "\n                                "
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "md-table-cell",
+                                            { attrs: { "md-label": "Превью" } },
+                                            [
+                                              _c("img", {
+                                                staticClass:
+                                                  "md-table-thumb img-raised rounded",
+                                                attrs: {
+                                                  src:
+                                                    "/image/crop/300/300/" +
+                                                    item.sample_path,
+                                                  alt: item.name
+                                                }
+                                              })
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "md-table-cell",
+                                            {
+                                              attrs: { "md-label": "Название" }
+                                            },
+                                            [
+                                              _c(
+                                                "span",
+                                                {
+                                                  staticClass: "md-subheading"
+                                                },
+                                                [_vm._v(_vm._s(item.name))]
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "md-table-cell",
+                                            {
                                               attrs: {
-                                                item: item,
-                                                subPath: _vm.storeModule
-                                              },
-                                              on: { delete: _vm.onDelete }
-                                            })
-                                          ],
-                                          1
-                                        )
-                                      ],
-                                      1
-                                    )
+                                                "md-label": "Опубликован"
+                                              }
+                                            },
+                                            [
+                                              _c("md-switch", {
+                                                attrs: { value: !item.publish },
+                                                on: {
+                                                  change: function($event) {
+                                                    return _vm.onPublishChange(
+                                                      item.id
+                                                    )
+                                                  }
+                                                }
+                                              })
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "md-table-cell",
+                                            {
+                                              attrs: { "md-label": "Действия" }
+                                            },
+                                            [
+                                              _c("table-actions", {
+                                                attrs: {
+                                                  item: item,
+                                                  subPath: _vm.storeModule
+                                                },
+                                                on: { delete: _vm.onDelete }
+                                              })
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    }
                                   }
-                                }
-                              ],
-                              null,
-                              false,
-                              3396054559
-                            ),
-                            model: {
-                              value: _vm.items,
-                              callback: function($$v) {
-                                _vm.items = $$v
-                              },
-                              expression: "items"
-                            }
-                          })
-                        ]
-                      : [
-                          _c("div", { staticClass: "alert alert-info" }, [
-                            _c("span", [
-                              _c("h3", [_vm._v("У Вас еще нет привилегий!")])
+                                ],
+                                null,
+                                false,
+                                3325158436
+                              ),
+                              model: {
+                                value: _vm.items,
+                                callback: function($$v) {
+                                  _vm.items = $$v
+                                },
+                                expression: "items"
+                              }
+                            })
+                          ]
+                        : [
+                            _c("div", { staticClass: "alert alert-info" }, [
+                              _c("span", [
+                                _c("h3", [_vm._v("У Вас еще нет фактур!")])
+                              ])
                             ])
-                          ])
-                        ]
-                  ],
-                  2
-                )
-              ],
-              1
-            )
-          ],
-          1
-        )
+                          ]
+                    ],
+                    2
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ])
       ])
     : _vm._e()
 }
@@ -584,7 +688,7 @@ var createMethod = {
           storeModule = _ref$storeModule === void 0 ? null : _ref$storeModule;
       var module = storeModule ? "".concat(storeModule, "/") : '';
       return this.$store.dispatch("".concat(module, "store"), sendData).then(function () {
-        _this.$router.go(-1) ? _this.$router.go(-1) : _this.$router.push(redirectRoute);
+        window.history.length > 1 ? _this.$router.go(-1) : _this.$router.push(redirectRoute);
         return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
           title: successText,
           text: "\xAB".concat(title, "\xBB"),
@@ -609,7 +713,7 @@ var updateMethod = {
           storeModule = _ref2$storeModule === void 0 ? null : _ref2$storeModule;
       var module = storeModule ? "".concat(storeModule, "/") : '';
       return this.$store.dispatch("".concat(module, "update"), sendData).then(function () {
-        _this2.$router.go(-1) ? _this2.$router.go(-1) : _this2.$router.push(redirectRoute);
+        window.history.length > 1 ? _this2.$router.go(-1) : _this2.$router.push(redirectRoute);
         return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
           title: successText,
           text: "\xAB".concat(title, "\xBB"),
@@ -634,23 +738,20 @@ var deleteMethod = {
           storeModule = _ref3$storeModule === void 0 ? null : _ref3$storeModule,
           _ref3$redirectRoute = _ref3.redirectRoute,
           redirectRoute = _ref3$redirectRoute === void 0 ? null : _ref3$redirectRoute,
-          _ref3$categoryId = _ref3.categoryId,
-          categoryId = _ref3$categoryId === void 0 ? null : _ref3$categoryId,
-          _ref3$paginationData = _ref3.paginationData,
-          paginationData = _ref3$paginationData === void 0 ? null : _ref3$paginationData;
+          _ref3$tableMode = _ref3.tableMode,
+          tableMode = _ref3$tableMode === void 0 ? false : _ref3$tableMode,
+          _ref3$force = _ref3.force,
+          force = _ref3$force === void 0 ? false : _ref3$force;
       var module = storeModule ? "".concat(storeModule, "/") : '';
+      var method = force ? 'forceDelete' : 'delete';
       return deleteSwalFireConfirm(alertText).then(function (result) {
         if (result.value) {
-          return _this3.$store.dispatch("".concat(module, "destroy"), payload).then(function () {
+          return _this3.$store.dispatch("".concat(module).concat(method), {
+            payload: payload,
+            tableMode: tableMode
+          }).then(function () {
             if (redirectRoute) {
-              _this3.$router.go(-1) ? _this3.$router.go(-1) : _this3.$router.push(redirectRoute);
-            }
-
-            if (paginationData) {
-              categoryId ? _this3.$store.dispatch('categories/getImages', {
-                id: categoryId,
-                data: paginationData
-              }) : _this3.$store.dispatch('images/getItems', paginationData);
+              window.history.length > 1 ? _this3.$router.go(-1) : _this3.$router.push(redirectRoute);
             }
 
             return deleteSwalFireAlert(successText, title);
@@ -693,13 +794,13 @@ var uploadMethod = {
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var uploadFiles, _ref4$type, type, _ref4$id, id, _ref4$storeModule, storeModule, paginationData, files, module;
+        var uploadFiles, _ref4$type, type, _ref4$id, id, _ref4$storeModule, storeModule, files, module;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                uploadFiles = _ref4.uploadFiles, _ref4$type = _ref4.type, type = _ref4$type === void 0 ? null : _ref4$type, _ref4$id = _ref4.id, id = _ref4$id === void 0 ? null : _ref4$id, _ref4$storeModule = _ref4.storeModule, storeModule = _ref4$storeModule === void 0 ? null : _ref4$storeModule, paginationData = _ref4.paginationData;
+                uploadFiles = _ref4.uploadFiles, _ref4$type = _ref4.type, type = _ref4$type === void 0 ? null : _ref4$type, _ref4$id = _ref4.id, id = _ref4$id === void 0 ? null : _ref4$id, _ref4$storeModule = _ref4.storeModule, storeModule = _ref4$storeModule === void 0 ? null : _ref4$storeModule;
                 files = Array.from(uploadFiles);
                 module = storeModule ? storeModule : 'categories';
 
@@ -712,8 +813,7 @@ var uploadMethod = {
                 return _this4.$store.dispatch("".concat(module, "/uploadImages"), {
                   files: files,
                   id: id,
-                  type: type,
-                  paginationData: paginationData
+                  type: type
                 });
 
               case 6:
@@ -722,10 +822,7 @@ var uploadMethod = {
 
               case 8:
                 _context.next = 10;
-                return _this4.$store.dispatch('images/store', {
-                  files: files,
-                  paginationData: paginationData
-                });
+                return _this4.$store.dispatch('images/store', files);
 
               case 10:
                 _context.next = 12;
@@ -755,16 +852,16 @@ var imageAddMethod = {
     addImages: function addImages(_ref5) {
       var _this5 = this;
 
-      var category = _ref5.category,
-          selected = _ref5.selected;
+      var id = _ref5.id,
+          data = _ref5.data;
       this.$store.dispatch('categories/addSelectedImages', {
-        category_id: category.id,
-        selected_images: selected
+        id: id,
+        data: data
       }).then(function () {
         _this5.$router.push({
           name: 'manager.catalog.categories.images',
           params: {
-            id: category.id
+            id: id
           }
         });
 
@@ -786,12 +883,12 @@ var subCategoryImageAddMethod = {
 
       var type = _ref6.type,
           id = _ref6.id,
-          selected = _ref6.selected,
+          data = _ref6.data,
           redirectRoute = _ref6.redirectRoute;
       this.$store.dispatch('subCategories/addSelectedImages', {
         type: type,
         id: id,
-        selected_images: selected
+        data: data
       }).then(function () {
         _this6.$router.push(redirectRoute);
 
@@ -809,18 +906,20 @@ var subCategoryImageAddMethod = {
 
 /***/ }),
 
-/***/ "./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue":
-/*!*****************************************************************************!*\
-  !*** ./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue ***!
-  \*****************************************************************************/
+/***/ "./resources/manager/js/pages/Dashboard/Textures/TextureList.vue":
+/*!***********************************************************************!*\
+  !*** ./resources/manager/js/pages/Dashboard/Textures/TextureList.vue ***!
+  \***********************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _PermissionList_vue_vue_type_template_id_588fa43a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PermissionList.vue?vue&type=template&id=588fa43a& */ "./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue?vue&type=template&id=588fa43a&");
-/* harmony import */ var _PermissionList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PermissionList.vue?vue&type=script&lang=js& */ "./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _TextureList_vue_vue_type_template_id_ae97b3f8_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TextureList.vue?vue&type=template&id=ae97b3f8&scoped=true& */ "./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=template&id=ae97b3f8&scoped=true&");
+/* harmony import */ var _TextureList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TextureList.vue?vue&type=script&lang=js& */ "./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _TextureList_vue_vue_type_style_index_0_id_ae97b3f8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TextureList.vue?vue&type=style&index=0&id=ae97b3f8&lang=scss&scoped=true& */ "./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=style&index=0&id=ae97b3f8&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -828,51 +927,67 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _PermissionList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _PermissionList_vue_vue_type_template_id_588fa43a___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _PermissionList_vue_vue_type_template_id_588fa43a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _TextureList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TextureList_vue_vue_type_template_id_ae97b3f8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TextureList_vue_vue_type_template_id_ae97b3f8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
-  null,
+  "ae97b3f8",
   null
   
 )
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue"
+component.options.__file = "resources/manager/js/pages/Dashboard/Textures/TextureList.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue?vue&type=script&lang=js&":
-/*!******************************************************************************************************!*\
-  !*** ./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue?vue&type=script&lang=js& ***!
-  \******************************************************************************************************/
+/***/ "./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************!*\
+  !*** ./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PermissionList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./PermissionList.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PermissionList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TextureList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./TextureList.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TextureList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue?vue&type=template&id=588fa43a&":
-/*!************************************************************************************************************!*\
-  !*** ./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue?vue&type=template&id=588fa43a& ***!
-  \************************************************************************************************************/
+/***/ "./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=style&index=0&id=ae97b3f8&lang=scss&scoped=true&":
+/*!*********************************************************************************************************************************!*\
+  !*** ./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=style&index=0&id=ae97b3f8&lang=scss&scoped=true& ***!
+  \*********************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_TextureList_vue_vue_type_style_index_0_id_ae97b3f8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/style-loader/dist/cjs.js!../../../../../../node_modules/css-loader!../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../node_modules/postcss-loader/src??ref--8-2!../../../../../../node_modules/sass-loader/dist/cjs.js??ref--8-3!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./TextureList.vue?vue&type=style&index=0&id=ae97b3f8&lang=scss&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=style&index=0&id=ae97b3f8&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_TextureList_vue_vue_type_style_index_0_id_ae97b3f8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_TextureList_vue_vue_type_style_index_0_id_ae97b3f8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_TextureList_vue_vue_type_style_index_0_id_ae97b3f8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_TextureList_vue_vue_type_style_index_0_id_ae97b3f8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_8_2_node_modules_sass_loader_dist_cjs_js_ref_8_3_node_modules_vue_loader_lib_index_js_vue_loader_options_TextureList_vue_vue_type_style_index_0_id_ae97b3f8_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=template&id=ae97b3f8&scoped=true&":
+/*!******************************************************************************************************************!*\
+  !*** ./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=template&id=ae97b3f8&scoped=true& ***!
+  \******************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PermissionList_vue_vue_type_template_id_588fa43a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./PermissionList.vue?vue&type=template&id=588fa43a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue?vue&type=template&id=588fa43a&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PermissionList_vue_vue_type_template_id_588fa43a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TextureList_vue_vue_type_template_id_ae97b3f8_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./TextureList.vue?vue&type=template&id=ae97b3f8&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Textures/TextureList.vue?vue&type=template&id=ae97b3f8&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TextureList_vue_vue_type_template_id_ae97b3f8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PermissionList_vue_vue_type_template_id_588fa43a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TextureList_vue_vue_type_template_id_ae97b3f8_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

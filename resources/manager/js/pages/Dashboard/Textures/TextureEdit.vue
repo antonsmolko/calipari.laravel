@@ -7,9 +7,9 @@
                         <router-button-link route="manager.textures" title="К списку материалов" />
                         <div>
                             <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
-                                <control-button @click="onUpdate('auto-close')" />
+                                <control-button @click="onUpdate" />
                             </slide-y-down-transition>
-                            <control-button title="Удалить" icon="delete" color="md-danger" @click="onDelete('auto-close')" />
+                            <control-button title="Удалить" icon="delete" color="md-danger" @click="onDelete" />
                         </div>
                     </md-card-content>
                 </md-card>

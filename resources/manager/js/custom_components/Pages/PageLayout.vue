@@ -14,7 +14,7 @@
                 </md-card>
                 <div>
                     <tabs
-                        :tab-name="['Основные настройки', 'SEO']"
+                        :tab-name="['Основные настройки', 'Модули', 'SEO']"
                         color-button="success">
                         <template slot="tab-pane-1">
                             <div class="md-layout md-gutter">
@@ -53,6 +53,9 @@
                             </div>
                         </template>
                         <template slot="tab-pane-2">
+                            <slot name="modules"/>
+                        </template>
+                        <template slot="tab-pane-3">
                             <v-input title="Описание"
                                      icon="description"
                                      name="description"

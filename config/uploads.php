@@ -13,11 +13,13 @@ return [
         'extensions' => [
             'jpeg',
             'jpg',
-            'png'
+            'png',
+            'webp',
         ],
         'mime' => [
             'image/jpeg',
-            'image/png'
+            'image/png',
+            'image/webp',
         ],
     ],
     'serviceImagesPath' => 'uploads/service-images',

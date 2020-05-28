@@ -254,8 +254,19 @@ const PagesPanel = resolve => {
     })
 };
 const HomePage = resolve => {
-    require.ensure(['@/pages/Dashboard/Pages/HomePage.vue'], () => {
-        resolve(require('@/pages/Dashboard/Pages/HomePage.vue'))
+    require.ensure(['@/pages/Dashboard/Pages/Home'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Home'))
+    })
+};
+const PurchaseStepCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepCreate.vue'))
+    })
+};
+
+const PurchaseStepEdit = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepEdit.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepEdit.vue'))
     })
 };
 
@@ -625,9 +636,20 @@ const managerMenuPages = {
     component: DashboardLayout,
     children: [
         {
-            path: 'nome',
+            path: 'home',
             name: 'manager.pages.home',
             component: HomePage
+        },
+        {
+            path: 'home/purchase-steps/create',
+            name: 'manager.pages.home.purchase-steps.create',
+            component: PurchaseStepCreate
+        },
+        {
+            path: 'home/purchase-steps/:id',
+            name: 'manager.pages.home.purchase-steps.edit',
+            component: PurchaseStepEdit,
+            props: true
         }
     ]
 };

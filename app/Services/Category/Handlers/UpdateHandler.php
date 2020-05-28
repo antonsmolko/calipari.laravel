@@ -22,21 +22,21 @@ class UpdateHandler
     }
 
     /**
-     * @param Category $category
+     * @param Category $item
      * @param array $updateData
      * @return mixed
      */
-    public function handle(Category $category, array $updateData)
+    public function handle(Category $item, array $updateData)
     {
         if(array_key_exists('image', $updateData) && !empty($updateData['image'])) {
-            $uploadArray = uploader()->change($updateData['image'], $category->image_path);
-            $updateData = Arr::add(Arr::except($updateData, ['image']), 'image_path', $uploadArray['path']);
+            $uploadAttributes = uploader()->change($updateData['image'], $item->image_path);
+            $updateData = Arr::add(Arr::except($updateData, ['image']), 'image_path', $uploadAttributes['path']);
         }
 
-        if (!$category->publishedImages()->count()) {
+        if (!$item->publishedImages()->count()) {
             $updateData['publish'] = 0;
         }
 
-        return $this->repository->update($category, $updateData);
+        return $this->repository->update($item, $updateData);
     }
 }

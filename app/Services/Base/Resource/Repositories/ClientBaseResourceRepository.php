@@ -18,7 +18,7 @@ abstract class ClientBaseResourceRepository
      */
     public function index(): Collection
     {
-        return $this->model::published()->get();
+        return $this->model::published()->orderBy('id', 'acs')->get();
     }
 
     /**

@@ -1,826 +1,1921 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=script&lang=js&":
-/*!***********************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=script&lang=js& ***!
-  \***********************************************************************************************************************************************************************************************/
+/***/ "./node_modules/fuse.js/dist/fuse.esm.js":
+/*!***********************************************!*\
+  !*** ./node_modules/fuse.js/dist/fuse.esm.js ***!
+  \***********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/components */ "./resources/manager/js/components/index.js");
-/* harmony import */ var fuse_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! fuse.js */ "./node_modules/fuse.js/dist/fuse.esm.js");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+/**
+ * Fuse.js v5.1.0 - Lightweight fuzzy-search (http://fusejs.io)
+ *
+ * Copyright (c) 2020 Kiro Risk (http://kiro.me)
+ * All Rights Reserved. Apache Software License 2.0
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ */
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function bitapScore(
+  pattern,
+  { errors = 0, currentLocation = 0, expectedLocation = 0, distance = 100 }
+) {
+  const accuracy = errors / pattern.length;
+  const proximity = Math.abs(expectedLocation - currentLocation);
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+  if (!distance) {
+    // Dodge divide by zero error.
+    return proximity ? 1.0 : accuracy
+  }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+  return accuracy + proximity / distance
+}
 
+function matchedIndiced(matchmask = [], minMatchCharLength = 1) {
+  let matchedIndices = [];
+  let start = -1;
+  let end = -1;
+  let i = 0;
 
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: "VExtendedTable",
-  props: {
-    items: {
-      type: [Array, Object],
-      "default": null
-    },
-    searchFields: {
-      type: Array,
-      "default": function _default() {
-        return ['id'];
+  for (let len = matchmask.length; i < len; i += 1) {
+    let match = matchmask[i];
+    if (match && start === -1) {
+      start = i;
+    } else if (!match && start !== -1) {
+      end = i - 1;
+      if (end - start + 1 >= minMatchCharLength) {
+        matchedIndices.push([start, end]);
       }
-    },
-    pagination: {
-      type: Object,
-      "default": function _default() {
-        return {
-          per_page: 20,
-          current_page: 1,
-          sort_by: 'id',
-          sort_order: 'asc'
-        };
-      }
-    },
-    perPageOptions: {
-      type: Array,
-      "default": function _default() {
-        return [20, 50, 100, 200];
-      }
-    },
-    serverPagination: {
-      type: Boolean,
-      "default": false
+      start = -1;
     }
-  },
-  components: {
-    Pagination: _components__WEBPACK_IMPORTED_MODULE_1__["Pagination"]
-  },
-  data: function data() {
-    return {
-      fuseSearch: null,
-      previousSortOrder: 'asc',
-      searchTmt: null
+  }
+
+  // (i-1 - start) + 1 => i - start
+  if (matchmask[i - 1] && i - start >= minMatchCharLength) {
+    matchedIndices.push([start, i - 1]);
+  }
+
+  return matchedIndices
+}
+
+function bitapSearch(
+  text,
+  pattern,
+  patternAlphabet,
+  {
+    location = 0,
+    distance = 100,
+    threshold = 0.6,
+    findAllMatches = false,
+    minMatchCharLength = 1,
+    includeMatches = false
+  }
+) {
+  const patternLen = pattern.length;
+  // Set starting location at beginning text and initialize the alphabet.
+  const textLen = text.length;
+  // Handle the case when location > text.length
+  const expectedLocation = Math.max(0, Math.min(location, textLen));
+  // Highest score beyond which we give up.
+  let currentThreshold = threshold;
+  // Is there a nearby exact match? (speedup)
+  let bestLocation = text.indexOf(pattern, expectedLocation);
+
+  // a mask of the matches
+  const matchMask = [];
+  for (let i = 0; i < textLen; i += 1) {
+    matchMask[i] = 0;
+  }
+
+  if (bestLocation !== -1) {
+    let score = bitapScore(pattern, {
+      errors: 0,
+      currentLocation: bestLocation,
+      expectedLocation,
+      distance
+    });
+    currentThreshold = Math.min(score, currentThreshold);
+
+    // What about in the other direction? (speed up)
+    bestLocation = text.lastIndexOf(pattern, expectedLocation + patternLen);
+
+    if (bestLocation !== -1) {
+      let score = bitapScore(pattern, {
+        errors: 0,
+        currentLocation: bestLocation,
+        expectedLocation,
+        distance
+      });
+      currentThreshold = Math.min(score, currentThreshold);
+    }
+  }
+
+  // Reset the best location
+  bestLocation = -1;
+
+  let lastBitArr = [];
+  let finalScore = 1;
+  let binMax = patternLen + textLen;
+
+  const mask = 1 << (patternLen <= 31 ? patternLen - 1 : 30);
+
+  for (let i = 0; i < patternLen; i += 1) {
+    // Scan for the best match; each iteration allows for one more error.
+    // Run a binary search to determine how far from the match location we can stray
+    // at this error level.
+    let binMin = 0;
+    let binMid = binMax;
+
+    while (binMin < binMid) {
+      const score = bitapScore(pattern, {
+        errors: i,
+        currentLocation: expectedLocation + binMid,
+        expectedLocation,
+        distance
+      });
+
+      if (score <= currentThreshold) {
+        binMin = binMid;
+      } else {
+        binMax = binMid;
+      }
+
+      binMid = Math.floor((binMax - binMin) / 2 + binMin);
+    }
+
+    // Use the result from this iteration as the maximum for the next.
+    binMax = binMid;
+
+    let start = Math.max(1, expectedLocation - binMid + 1);
+    let finish = findAllMatches
+      ? textLen
+      : Math.min(expectedLocation + binMid, textLen) + patternLen;
+
+    // Initialize the bit array
+    let bitArr = Array(finish + 2);
+
+    bitArr[finish + 1] = (1 << i) - 1;
+
+    for (let j = finish; j >= start; j -= 1) {
+      let currentLocation = j - 1;
+      let charMatch = patternAlphabet[text.charAt(currentLocation)];
+
+      if (charMatch) {
+        matchMask[currentLocation] = 1;
+      }
+
+      // First pass: exact match
+      bitArr[j] = ((bitArr[j + 1] << 1) | 1) & charMatch;
+
+      // Subsequent passes: fuzzy match
+      if (i !== 0) {
+        bitArr[j] |=
+          ((lastBitArr[j + 1] | lastBitArr[j]) << 1) | 1 | lastBitArr[j + 1];
+      }
+
+      if (bitArr[j] & mask) {
+        finalScore = bitapScore(pattern, {
+          errors: i,
+          currentLocation,
+          expectedLocation,
+          distance
+        });
+
+        // This match will almost certainly be better than any existing match.
+        // But check anyway.
+        if (finalScore <= currentThreshold) {
+          // Indeed it is
+          currentThreshold = finalScore;
+          bestLocation = currentLocation;
+
+          // Already passed `loc`, downhill from here on in.
+          if (bestLocation <= expectedLocation) {
+            break
+          }
+
+          // When passing `bestLocation`, don't exceed our current distance from `expectedLocation`.
+          start = Math.max(1, 2 * expectedLocation - bestLocation);
+        }
+      }
+    }
+
+    // No hope for a (better) match at greater error levels.
+    const score = bitapScore(pattern, {
+      errors: i + 1,
+      currentLocation: expectedLocation,
+      expectedLocation,
+      distance
+    });
+
+    if (score > currentThreshold) {
+      break
+    }
+
+    lastBitArr = bitArr;
+  }
+
+  let result = {
+    isMatch: bestLocation >= 0,
+    // Count exact matches (those with a score of 0) to be "almost" exact
+    score: !finalScore ? 0.001 : finalScore
+  };
+
+  if (includeMatches) {
+    result.matchedIndices = matchedIndiced(matchMask, minMatchCharLength);
+  }
+
+  return result
+}
+
+function patternAlphabet(pattern) {
+  let mask = {};
+  let len = pattern.length;
+
+  for (let i = 0; i < len; i += 1) {
+    mask[pattern.charAt(i)] = 0;
+  }
+
+  for (let i = 0; i < len; i += 1) {
+    mask[pattern.charAt(i)] |= 1 << (len - i - 1);
+  }
+
+  return mask
+}
+
+// Machine word size
+const MAX_BITS = 32;
+
+class BitapSearch {
+  constructor(
+    pattern,
+    {
+      // Approximately where in the text is the pattern expected to be found?
+      location = 0,
+      // Determines how close the match must be to the fuzzy location (specified above).
+      // An exact letter match which is 'distance' characters away from the fuzzy location
+      // would score as a complete mismatch. A distance of '0' requires the match be at
+      // the exact location specified, a threshold of '1000' would require a perfect match
+      // to be within 800 characters of the fuzzy location to be found using a 0.8 threshold.
+      distance = 100,
+      // At what point does the match algorithm give up. A threshold of '0.0' requires a perfect match
+      // (of both letters and location), a threshold of '1.0' would match anything.
+      threshold = 0.6,
+      // Indicates whether comparisons should be case sensitive.
+      isCaseSensitive = false,
+      // When true, the algorithm continues searching to the end of the input even if a perfect
+      // match is found before the end of the same input.
+      findAllMatches = false,
+      // Minimum number of characters that must be matched before a result is considered a match
+      minMatchCharLength = 1,
+
+      includeMatches = false
+    }
+  ) {
+    this.options = {
+      location,
+      distance,
+      threshold,
+      isCaseSensitive,
+      findAllMatches,
+      includeMatches,
+      minMatchCharLength
     };
-  },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['searchedData', 'searchQuery', 'loading']), {
-    queriedData: function queriedData() {
-      var result = this.items;
 
-      if (this.searchedData.length > 0) {
-        result = this.searchedData;
-      }
-
-      return result.slice(this.from, this.to);
-    },
-    to: function to() {
-      if (this.serverPagination) {
-        return this.items.length;
-      }
-
-      var highBound = this.from + this.pagination.per_page;
-
-      if (this.total < highBound) {
-        highBound = this.total;
-      }
-
-      return highBound;
-    },
-    from: function from() {
-      return this.serverPagination ? 0 : this.pagination.per_page * (this.pagination.current_page - 1);
-    },
-    total: function total() {
-      return this.pagination.total ? this.pagination.total : this.searchedData.length > 0 ? this.searchedData.length : this.items.length;
+    if (pattern.length > MAX_BITS) {
+      throw new Error(`Pattern length exceeds max of ${MAX_BITS}.`)
     }
-  }),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])({
-    setSearchedDataAction: 'setSearchedData',
-    setSearchQueryAction: 'setSearchQuery'
-  }), {
-    customSort: function customSort(value) {
-      if (this.previousSortOrder !== this.pagination.sort_order) {
-        this.$emit('sort', this.pagination.sort_order);
-        this.previousSortOrder = this.pagination.sort_order;
+
+    this.pattern = isCaseSensitive ? pattern : pattern.toLowerCase();
+    this.patternAlphabet = patternAlphabet(this.pattern);
+  }
+
+  searchIn(value) {
+    let text = value.$;
+    return this.searchInString(text)
+  }
+
+  searchInString(text) {
+    const { isCaseSensitive, includeMatches } = this.options;
+
+    if (!isCaseSensitive) {
+      text = text.toLowerCase();
+    }
+
+    // Exact match
+    if (this.pattern === text) {
+      let result = {
+        isMatch: true,
+        score: 0
+      };
+
+      if (includeMatches) {
+        result.matchedIndices = [[0, text.length - 1]];
       }
 
-      if (!this.serverPagination) {
-        return this.sort(value);
+      return result
+    }
+
+    // Otherwise, use Bitap algorithm
+    const {
+      location,
+      distance,
+      threshold,
+      findAllMatches,
+      minMatchCharLength
+    } = this.options;
+    return bitapSearch(text, this.pattern, this.patternAlphabet, {
+      location,
+      distance,
+      threshold,
+      findAllMatches,
+      minMatchCharLength,
+      includeMatches
+    })
+  }
+}
+
+// Token: 'file
+// Match type: exact-match
+// Description: Items that include `file`
+
+const isForPattern = (pattern) => pattern.charAt(0) == "'";
+
+const sanitize = (pattern) => pattern.substr(1);
+
+const match = (pattern, text) => {
+  const sanitizedPattern = sanitize(pattern);
+  const index = text.indexOf(sanitizedPattern);
+  const isMatch = index > -1;
+
+  return {
+    isMatch,
+    score: 0
+  }
+};
+
+var exactMatch = {
+  isForPattern,
+  sanitize,
+  match
+};
+
+// Token: !fire
+// Match type: inverse-exact-match
+// Description: Items that do not include `fire`
+
+const isForPattern$1 = (pattern) => pattern.charAt(0) == '!';
+
+const sanitize$1 = (pattern) => pattern.substr(1);
+
+const match$1 = (pattern, text) => {
+  const sanitizedPattern = sanitize$1(pattern);
+  const isMatch = text.indexOf(sanitizedPattern) === -1;
+
+  return {
+    isMatch,
+    score: 0
+  }
+};
+
+var inverseExactMatch = {
+  isForPattern: isForPattern$1,
+  sanitize: sanitize$1,
+  match: match$1
+};
+
+// Token: ^file
+// Match type: prefix-exact-match
+// Description: Items that start with `file`
+
+const isForPattern$2 = (pattern) => pattern.charAt(0) == '^';
+
+const sanitize$2 = (pattern) => pattern.substr(1);
+
+const match$2 = (pattern, text) => {
+  const sanitizedPattern = sanitize$2(pattern);
+  const isMatch = text.startsWith(sanitizedPattern);
+
+  return {
+    isMatch,
+    score: 0
+  }
+};
+
+var prefixExactMatch = {
+  isForPattern: isForPattern$2,
+  sanitize: sanitize$2,
+  match: match$2
+};
+
+// Token: !^fire
+// Match type: inverse-prefix-exact-match
+// Description: Items that do not start with `fire`
+
+const isForPattern$3 = (pattern) =>
+  pattern.charAt(0) == '!' && pattern.charAt(1) == '^';
+
+const sanitize$3 = (pattern) => pattern.substr(2);
+
+const match$3 = (pattern, text) => {
+  const sanitizedPattern = sanitize$3(pattern);
+  const isMatch = !text.startsWith(sanitizedPattern);
+
+  return {
+    isMatch,
+    score: 0
+  }
+};
+
+var inversePrefixExactMatch = {
+  isForPattern: isForPattern$3,
+  sanitize: sanitize$3,
+  match: match$3
+};
+
+// Token: .file$
+// Match type: suffix-exact-match
+// Description: Items that end with `.file`
+
+const isForPattern$4 = (pattern) => pattern.charAt(pattern.length - 1) == '$';
+
+const sanitize$4 = (pattern) => pattern.substr(0, pattern.length - 1);
+
+const match$4 = (pattern, text) => {
+  const sanitizedPattern = sanitize$4(pattern);
+  const isMatch = text.endsWith(sanitizedPattern);
+
+  return {
+    isMatch,
+    score: 0
+  }
+};
+
+var suffixExactMatch = {
+  isForPattern: isForPattern$4,
+  sanitize: sanitize$4,
+  match: match$4
+};
+
+// Token: !.file$
+// Match type: inverse-suffix-exact-match
+// Description: Items that do not end with `.file`
+
+const isForPattern$5 = (pattern) =>
+  pattern.charAt(0) == '!' && pattern.charAt(pattern.length - 1) == '$';
+
+const sanitize$5 = (pattern) => pattern.substring(1, pattern.length - 1);
+
+const match$5 = (pattern, text) => {
+  const sanitizedPattern = sanitize$5(pattern);
+  const isMatch = !text.endsWith(sanitizedPattern);
+
+  return {
+    isMatch,
+    score: 0
+  }
+};
+
+var inverseSuffixExactMatch = {
+  isForPattern: isForPattern$5,
+  sanitize: sanitize$5,
+  match: match$5
+};
+
+const INFINITY = 1 / 0;
+
+const isArray = (value) =>
+  !Array.isArray
+    ? Object.prototype.toString.call(value) === '[object Array]'
+    : Array.isArray(value);
+
+// Adapted from:
+// https://github.com/lodash/lodash/blob/f4ca396a796435422bd4fd41fadbd225edddf175/.internal/baseToString.js
+const baseToString = (value) => {
+  // Exit early for strings to avoid a performance hit in some environments.
+  if (typeof value == 'string') {
+    return value
+  }
+  let result = value + '';
+  return result == '0' && 1 / value == -INFINITY ? '-0' : result
+};
+
+const toString = (value) => (value == null ? '' : baseToString(value));
+
+const isString = (value) => typeof value === 'string';
+
+const isNumber = (value) => typeof value === 'number';
+
+const isDefined = (value) => value !== undefined && value !== null;
+
+// Return a 2D array representation of the query, for simpler parsing.
+// Example:
+// "^core go$ | rb$ | py$ xy$" => [["^core", "go$"], ["rb$"], ["py$", "xy$"]]
+const queryfy = (pattern) =>
+  pattern.split('|').map((item) => item.trim().split(/ +/g));
+
+/**
+ * Command-like searching
+ * ======================
+ *
+ * Given multiple search terms delimited by spaces.e.g. `^jscript .python$ ruby !java`,
+ * search in a given text.
+ *
+ * Search syntax:
+ *
+ * | Token       | Match type                 | Description                            |
+ * | ----------- | -------------------------- | -------------------------------------- |
+ * | `jscript`   | fuzzy-match                | Items that match `jscript`             |
+ * | `'python`   | exact-match                | Items that include `python`            |
+ * | `!ruby`     | inverse-exact-match        | Items that do not include `ruby`       |
+ * | `^java`     | prefix-exact-match         | Items that start with `java`           |
+ * | `!^earlang` | inverse-prefix-exact-match | Items that do not start with `earlang` |
+ * | `.js$`      | suffix-exact-match         | Items that end with `.js`              |
+ * | `!.go$`     | inverse-suffix-exact-match | Items that do not end with `.go`       |
+ *
+ * A single pipe character acts as an OR operator. For example, the following
+ * query matches entries that start with `core` and end with either`go`, `rb`,
+ * or`py`.
+ *
+ * ```
+ * ^core go$ | rb$ | py$
+ * ```
+ */
+class ExtendedSearch {
+  constructor(pattern, options) {
+    const { isCaseSensitive } = options;
+    this.query = null;
+    this.options = options;
+    // A <pattern>:<BitapSearch> key-value pair for optimizing searching
+    this._fuzzyCache = {};
+
+    if (isString(pattern) && pattern.trim().length > 0) {
+      this.pattern = isCaseSensitive ? pattern : pattern.toLowerCase();
+      this.query = queryfy(this.pattern);
+    }
+  }
+
+  searchIn(value) {
+    const query = this.query;
+
+    if (!this.query) {
+      return {
+        isMatch: false,
+        score: 1
       }
-    },
-    sort: function sort(value) {
-      var _this = this;
+    }
 
-      return value.sort(function (a, b) {
-        var sortBy = _this.pagination.sort_by;
-        var numberSort = typeof a[sortBy] === 'number' && typeof b[sortBy] === 'number';
+    let text = value.$;
 
-        if (_this.pagination.sort_order === 'asc') {
-          return numberSort ? a[sortBy] < b[sortBy] ? -1 : 1 : a[sortBy].localeCompare(b[sortBy]);
+    text = this.options.isCaseSensitive ? text : text.toLowerCase();
+
+    let matchFound = false;
+
+    for (let i = 0, qLen = query.length; i < qLen; i += 1) {
+      const parts = query[i];
+      let result = null;
+      matchFound = true;
+
+      for (let j = 0, pLen = parts.length; j < pLen; j += 1) {
+        let token = parts[j];
+        result = this._search(token, text);
+        if (!result.isMatch) {
+          // AND condition, short-circuit and move on to next part
+          matchFound = false;
+          break
+        }
+      }
+
+      // OR condition, so if TRUE, return
+      if (matchFound) {
+        return result
+      }
+    }
+
+    // Nothing was matched
+    return {
+      isMatch: false,
+      score: 1
+    }
+  }
+
+  _search(pattern, text) {
+    if (exactMatch.isForPattern(pattern)) {
+      return exactMatch.match(pattern, text)
+    } else if (prefixExactMatch.isForPattern(pattern)) {
+      return prefixExactMatch.match(pattern, text)
+    } else if (inversePrefixExactMatch.isForPattern(pattern)) {
+      return inversePrefixExactMatch.match(pattern, text)
+    } else if (inverseSuffixExactMatch.isForPattern(pattern)) {
+      return inverseSuffixExactMatch.match(pattern, text)
+    } else if (suffixExactMatch.isForPattern(pattern)) {
+      return suffixExactMatch.match(pattern, text)
+    } else if (inverseExactMatch.isForPattern(pattern)) {
+      return inverseExactMatch.match(pattern, text)
+    } else {
+      let searcher = this._fuzzyCache[pattern];
+      if (!searcher) {
+        searcher = new BitapSearch(pattern, this.options);
+        this._fuzzyCache[pattern] = searcher;
+      }
+      return searcher.searchInString(text)
+    }
+  }
+}
+
+const NGRAM_LEN = 3;
+
+function ngram(
+  text,
+  { n = NGRAM_LEN, pad = true, sort = false }
+) {
+  let nGrams = [];
+
+  if (text === null || text === undefined) {
+    return nGrams
+  }
+
+  text = text.toLowerCase();
+  if (pad) {
+    text = ` ${text} `;
+  }
+
+  let index = text.length - n + 1;
+  if (index < 1) {
+    return nGrams
+  }
+
+  while (index--) {
+    nGrams[index] = text.substr(index, n);
+  }
+
+  if (sort) {
+    nGrams.sort((a, b) => (a == b ? 0 : a < b ? -1 : 1));
+  }
+
+  return nGrams
+}
+
+// Assumes arrays are sorted
+function union (arr1, arr2) {
+  let result = [];
+  let i = 0;
+  let j = 0;
+
+  while (i < arr1.length && j < arr2.length) {
+    let item1 = arr1[i];
+    let item2 = arr2[j];
+
+    if (item1 < item2) {
+      result.push(item1);
+      i += 1;
+    } else if (item2 < item1) {
+      result.push(item2);
+      j += 1;
+    } else {
+      result.push(item2);
+      i += 1;
+      j += 1;
+    }
+  }
+
+  while (i < arr1.length) {
+    result.push(arr1[i]);
+    i += 1;
+  }
+
+  while (j < arr2.length) {
+    result.push(arr2[j]);
+    j += 1;
+  }
+
+  return result
+}
+
+// Assumes arrays are sorted
+function intersection(arr1, arr2) {
+  let result = [];
+  let i = 0;
+  let j = 0;
+
+  while (i < arr1.length && j < arr2.length) {
+    let item1 = arr1[i];
+    let item2 = arr2[j];
+
+    if (item1 == item2) {
+      result.push(item1);
+      i += 1;
+      j += 1;
+    } else if (item1 < item2) {
+      i += 1;
+    } else if (item1 > item2) {
+      j += 1;
+    } else {
+      i += 1;
+      j += 1;
+    }
+  }
+
+  return result
+}
+
+function jaccardDistance(nGram1, nGram2) {
+  let nGramUnion = union(nGram1, nGram2);
+  let nGramIntersection = intersection(nGram1, nGram2);
+
+  return 1 - nGramIntersection.length / nGramUnion.length
+}
+
+class NGramSearch {
+  constructor(pattern, options = { threshold: 0.6 }) {
+    // Create the ngram, and sort it
+    this.options = options;
+    this.patternNgram = ngram(pattern, { sort: true });
+  }
+  searchIn(value) {
+    let textNgram = value.ng;
+    if (!textNgram) {
+      textNgram = ngram(value.$, { sort: true });
+      value.ng = textNgram;
+    }
+
+    let jacardResult = jaccardDistance(this.patternNgram, textNgram);
+
+    const isMatch = jacardResult < this.options.threshold;
+
+    return {
+      score: isMatch ? jacardResult : 1,
+      isMatch
+    }
+  }
+}
+
+function get(obj, path) {
+  let list = [];
+  let arr = false;
+
+  const _get = (obj, path) => {
+    if (!path) {
+      // If there's no path left, we've gotten to the object we care about.
+      list.push(obj);
+    } else {
+      const dotIndex = path.indexOf('.');
+
+      let key = path;
+      let remaining = null;
+
+      if (dotIndex !== -1) {
+        key = path.slice(0, dotIndex);
+        remaining = path.slice(dotIndex + 1);
+      }
+
+      const value = obj[key];
+
+      if (isDefined(value)) {
+        if (!remaining && (isString(value) || isNumber(value))) {
+          list.push(toString(value));
+        } else if (isArray(value)) {
+          arr = true;
+          // Search each item in the array.
+          for (let i = 0, len = value.length; i < len; i += 1) {
+            _get(value[i], remaining);
+          }
+        } else if (remaining) {
+          // An object. Recurse further.
+          _get(value, remaining);
+        }
+      }
+    }
+  };
+
+  _get(obj, path);
+
+  if (arr) {
+    return list
+  }
+
+  return list[0]
+}
+
+function createIndex(
+  keys,
+  list,
+  { getFn = get, ngrams = false } = {}
+) {
+  let indexedList = [];
+
+  // List is Array<String>
+  if (isString(list[0])) {
+    // Iterate over every string in the list
+    for (let i = 0, len = list.length; i < len; i += 1) {
+      const value = list[i];
+
+      if (isDefined(value)) {
+        // if (!isCaseSensitive) {
+        //   value = value.toLowerCase()
+        // }
+
+        let record = {
+          $: value,
+          idx: i
+        };
+
+        if (ngrams) {
+          record.ng = ngram(value, { sort: true });
         }
 
-        return numberSort ? a[sortBy] > b[sortBy] ? -1 : 1 : b[sortBy].localeCompare(a[sortBy]);
-      });
-    },
-    setFuseSearch: function setFuseSearch() {
-      if (!this.serverPagination) {
-        this.initFuseSearch(this.searchFields);
+        indexedList.push(record);
       }
-    },
-    initFuseSearch: function initFuseSearch(keys) {
-      this.fuseSearch = new fuse_js__WEBPACK_IMPORTED_MODULE_2__["default"](this.items, {
-        keys: keys,
-        threshold: 0.3
-      });
-    },
-    changePage: function changePage(item) {
-      this.$emit('changePage', item);
-    },
-    changePerPage: function changePerPage(value) {
-      this.$emit('changePerPage', value);
-    },
-    searchOnServer: function searchOnServer(query) {
-      this.$emit('search', query);
-
-      if (!query) {
-        this.setSearchedDataAction([]);
-      }
-    },
-    search: function search(query) {
-      query ? this.setSearchedDataAction(this.fuseSearch.search(query).map(function (fuse) {
-        return fuse.item;
-      })) : this.setSearchedDataAction([]);
-    },
-    handleSearch: function handleSearch(query) {
-      this.serverPagination ? this.searchOnServer(query) : this.search(query);
     }
-  }),
-  watch: {
-    items: function items() {
-      this.setFuseSearch();
-    },
-    searchQuery: function searchQuery() {
-      var _this2 = this;
+  } else {
+    // List is Array<Object>
+    const keysLen = keys.length;
 
-      var query = this.searchQuery;
+    for (let i = 0, len = list.length; i < len; i += 1) {
+      let item = list[i];
 
-      if (!query) {
-        this.setSearchedDataAction([]);
-      }
+      let record = { idx: i, $: {} };
 
-      clearTimeout(this.searchTmt);
-      this.searchTmt = setTimeout(function () {
-        return _this2.serverPagination ? _this2.searchOnServer(query) : _this2.search(query);
-      }, 300);
-    }
-  },
-  created: function created() {
-    this.setSearchedDataAction([]);
-    this.setSearchQueryAction('');
-  },
-  mounted: function mounted() {
-    this.setFuseSearch();
-    this.previousSortOrder = this.pagination.sort_order;
-  },
-  beforeDestroy: function beforeDestroy() {
-    clearTimeout(this.searchTmt);
-    this.setSearchedDataAction([]);
-    this.setSearchQueryAction('');
-  }
-});
+      // Iterate over every key (i.e, path), and fetch the value at that key
+      for (let j = 0; j < keysLen; j += 1) {
+        let key = keys[j];
+        let value = getFn(item, key);
 
-/***/ }),
+        if (!isDefined(value)) {
+          continue
+        }
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css&":
-/*!******************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--7-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css& ***!
-  \******************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+        if (isArray(value)) {
+          let subRecords = [];
+          const stack = [{ arrayIndex: -1, value }];
 
-exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
-// imports
+          while (stack.length) {
+            const { arrayIndex, value } = stack.pop();
 
-
-// module
-exports.push([module.i, "\n.tm-palette {\n    width: 50px;\n    height: 50px;\n}\n.loading td {\n    opacity: 0;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css&":
-/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader??ref--7-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css& ***!
-  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var api = __webpack_require__(/*! ../../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
-            var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--7-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--7-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./VExtendedTable.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css&");
-
-            content = content.__esModule ? content.default : content;
-
-            if (typeof content === 'string') {
-              content = [[module.i, content, '']];
+            if (!isDefined(value)) {
+              continue
             }
 
-var options = {};
+            if (isString(value)) {
+              // if (!isCaseSensitive) {
+              //   v = v.toLowerCase()
+              // }
 
-options.insert = "head";
-options.singleton = false;
+              let subRecord = { $: value, idx: arrayIndex };
 
-var update = api(content, options);
-
-var exported = content.locals ? content.locals : {};
-
-
-
-module.exports = exported;
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=template&id=40d73892&":
-/*!***************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=template&id=40d73892& ***!
-  \***************************************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c(
-        "md-table",
-        {
-          staticClass: "paginated-table table-striped table-hover",
-          class: { loading: _vm.loading },
-          attrs: {
-            value: _vm.queriedData,
-            "md-sort": _vm.pagination.sort_by,
-            "md-sort-order": _vm.pagination.sort_order,
-            "md-sort-fn": _vm.customSort
-          },
-          on: {
-            "update:mdSort": function($event) {
-              return _vm.$set(_vm.pagination, "sort_by", $event)
-            },
-            "update:md-sort": function($event) {
-              return _vm.$set(_vm.pagination, "sort_by", $event)
-            },
-            "update:mdSortOrder": function($event) {
-              return _vm.$set(_vm.pagination, "sort_order", $event)
-            },
-            "update:md-sort-order": function($event) {
-              return _vm.$set(_vm.pagination, "sort_order", $event)
-            }
-          },
-          scopedSlots: _vm._u(
-            [
-              {
-                key: "md-table-row",
-                fn: function(ref) {
-                  var item = ref.item
-                  return _c(
-                    "md-table-row",
-                    {},
-                    [_vm._t("default", null, { item: item })],
-                    2
-                  )
-                }
+              if (ngrams) {
+                subRecord.ng = ngram(value, { sort: true });
               }
-            ],
-            null,
-            true
-          )
-        },
-        [
-          _c(
-            "md-table-toolbar",
-            { staticClass: "mb-3" },
-            [
-              _c(
-                "md-field",
-                [
-                  _c("label", { attrs: { for: "pages" } }, [
-                    _vm._v("На странице")
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "md-select",
-                    {
-                      attrs: { value: _vm.pagination.per_page, name: "pages" },
-                      on: { "md-selected": _vm.changePerPage }
-                    },
-                    _vm._l(_vm.perPageOptions, function(item) {
-                      return _c(
-                        "md-option",
-                        { key: item, attrs: { label: item, value: item } },
-                        [
-                          _vm._v(
-                            "\n                        " +
-                              _vm._s(item) +
-                              "\n                    "
-                          )
-                        ]
-                      )
-                    }),
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "md-field",
-                [
-                  _c("md-input", {
-                    staticStyle: { width: "200px" },
-                    attrs: {
-                      type: "search",
-                      clearable: "",
-                      placeholder: "Поиск",
-                      value: _vm.searchQuery
-                    },
-                    on: { input: _vm.setSearchQueryAction }
-                  })
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "md-card-actions",
-        { attrs: { "md-alignment": "space-between" } },
-        [
-          _c("div", {}, [
-            _vm.serverPagination
-              ? _c("p", { staticClass: "card-category" }, [
-                  _vm._v(
-                    _vm._s(_vm.pagination.from) +
-                      " - " +
-                      _vm._s(_vm.pagination.to) +
-                      " / " +
-                      _vm._s(_vm.total)
-                  )
-                ])
-              : _c("p", { staticClass: "card-category" }, [
-                  _vm._v(
-                    _vm._s(_vm.from + 1) +
-                      " - " +
-                      _vm._s(_vm.to) +
-                      " / " +
-                      _vm._s(_vm.total)
-                  )
-                ])
-          ]),
-          _vm._v(" "),
-          _c("pagination", {
-            staticClass: "pagination-no-border pagination-success",
-            attrs: { "per-page": _vm.pagination.per_page, total: _vm.total },
-            on: { input: _vm.changePage },
-            model: {
-              value: _vm.pagination.current_page,
-              callback: function($$v) {
-                _vm.$set(_vm.pagination, "current_page", $$v)
-              },
-              expression: "pagination.current_page"
+
+              subRecords.push(subRecord);
+            } else if (isArray(value)) {
+              for (let k = 0, arrLen = value.length; k < arrLen; k += 1) {
+                stack.push({
+                  arrayIndex: k,
+                  value: value[k]
+                });
+              }
             }
-          })
-        ],
-        1
-      )
-    ],
-    1
-  )
+          }
+          record.$[key] = subRecords;
+        } else {
+          // if (!isCaseSensitive) {
+          //   value = value.toLowerCase()
+          // }
+
+          let subRecord = { $: value };
+
+          if (ngrams) {
+            subRecord.ng = ngram(value, { sort: true });
+          }
+
+          record.$[key] = subRecord;
+        }
+      }
+
+      indexedList.push(record);
+    }
+  }
+
+  return indexedList
 }
-var staticRenderFns = []
-render._withStripped = true
 
+class KeyStore {
+  constructor(keys) {
+    this._keys = {};
+    this._keyNames = [];
+    this._length = keys.length;
 
+    // Iterate over every key
+    if (keys.length && isString(keys[0])) {
+      for (let i = 0; i < this._length; i += 1) {
+        const key = keys[i];
+        this._keys[key] = {
+          weight: 1
+        };
+        this._keyNames.push(key);
+      }
+    } else {
+      let totalWeight = 0;
 
-/***/ }),
+      for (let i = 0; i < this._length; i += 1) {
+        const key = keys[i];
 
-/***/ "./resources/manager/js/custom_components/Tables/VExtendedTable.vue":
-/*!**************************************************************************!*\
-  !*** ./resources/manager/js/custom_components/Tables/VExtendedTable.vue ***!
-  \**************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+        if (!Object.prototype.hasOwnProperty.call(key, 'name')) {
+          throw new Error('Missing "name" property in key object')
+        }
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _VExtendedTable_vue_vue_type_template_id_40d73892___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./VExtendedTable.vue?vue&type=template&id=40d73892& */ "./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=template&id=40d73892&");
-/* harmony import */ var _VExtendedTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./VExtendedTable.vue?vue&type=script&lang=js& */ "./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _VExtendedTable_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./VExtendedTable.vue?vue&type=style&index=0&lang=css& */ "./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+        const keyName = key.name;
+        this._keyNames.push(keyName);
 
+        if (!Object.prototype.hasOwnProperty.call(key, 'weight')) {
+          throw new Error('Missing "weight" property in key object')
+        }
 
+        const weight = key.weight;
 
+        if (weight <= 0 || weight >= 1) {
+          throw new Error(
+            '"weight" property in key must be in the range of (0, 1)'
+          )
+        }
 
+        this._keys[keyName] = {
+          weight
+        };
 
+        totalWeight += weight;
+      }
 
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _VExtendedTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _VExtendedTable_vue_vue_type_template_id_40d73892___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _VExtendedTable_vue_vue_type_template_id_40d73892___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/manager/js/custom_components/Tables/VExtendedTable.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************!*\
-  !*** ./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./VExtendedTable.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css&":
-/*!***********************************************************************************************************!*\
-  !*** ./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css& ***!
-  \***********************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/css-loader??ref--7-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--7-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./VExtendedTable.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
-
-/***/ }),
-
-/***/ "./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=template&id=40d73892&":
-/*!*********************************************************************************************************!*\
-  !*** ./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=template&id=40d73892& ***!
-  \*********************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_template_id_40d73892___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./VExtendedTable.vue?vue&type=template&id=40d73892& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=template&id=40d73892&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_template_id_40d73892___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_template_id_40d73892___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./resources/manager/js/mixins/crudMethods.js":
-/*!****************************************************!*\
-  !*** ./resources/manager/js/mixins/crudMethods.js ***!
-  \****************************************************/
-/*! exports provided: createMethod, updateMethod, deleteMethod, uploadMethod, imageAddMethod, subCategoryImageAddMethod */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createMethod", function() { return createMethod; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMethod", function() { return updateMethod; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteMethod", function() { return deleteMethod; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "uploadMethod", function() { return uploadMethod; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageAddMethod", function() { return imageAddMethod; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subCategoryImageAddMethod", function() { return subCategoryImageAddMethod; });
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_1__);
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-
-var createMethod = {
-  methods: {
-    create: function create(_ref) {
-      var _this = this;
-
-      var sendData = _ref.sendData,
-          title = _ref.title,
-          successText = _ref.successText,
-          redirectRoute = _ref.redirectRoute,
-          _ref$storeModule = _ref.storeModule,
-          storeModule = _ref$storeModule === void 0 ? null : _ref$storeModule;
-      var module = storeModule ? "".concat(storeModule, "/") : '';
-      return this.$store.dispatch("".concat(module, "store"), sendData).then(function () {
-        _this.$router.go(-1) ? _this.$router.go(-1) : _this.$router.push(redirectRoute);
-        return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
-          title: successText,
-          text: "\xAB".concat(title, "\xBB"),
-          timer: 2000,
-          showConfirmButton: false,
-          icon: 'success'
-        });
-      });
+      // Normalize weights so that their sum is equal to 1
+      for (let i = 0; i < this._length; i += 1) {
+        const keyName = this._keyNames[i];
+        const keyWeight = this._keys[keyName].weight;
+        this._keys[keyName].weight = keyWeight / totalWeight;
+      }
     }
   }
-};
-var updateMethod = {
-  methods: {
-    update: function update(_ref2) {
-      var _this2 = this;
+  get(key, name) {
+    return this._keys[key] ? this._keys[key][name] : -1
+  }
+  keys() {
+    return this._keyNames
+  }
+  count() {
+    return this._length
+  }
+  toJSON() {
+    return JSON.stringify(this._keys)
+  }
+}
 
-      var sendData = _ref2.sendData,
-          title = _ref2.title,
-          redirectRoute = _ref2.redirectRoute,
-          successText = _ref2.successText,
-          _ref2$storeModule = _ref2.storeModule,
-          storeModule = _ref2$storeModule === void 0 ? null : _ref2$storeModule;
-      var module = storeModule ? "".concat(storeModule, "/") : '';
-      return this.$store.dispatch("".concat(module, "update"), sendData).then(function () {
-        _this2.$router.go(-1) ? _this2.$router.go(-1) : _this2.$router.push(redirectRoute);
-        return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
-          title: successText,
-          text: "\xAB".concat(title, "\xBB"),
-          timer: 2000,
-          showConfirmButton: false,
-          icon: 'success'
-        });
-      });
+function transformMatches(result, data) {
+  const matches = result.matches;
+  data.matches = [];
+
+  if (!isDefined(matches)) {
+    return
+  }
+
+  for (let i = 0, len = matches.length; i < len; i += 1) {
+    let match = matches[i];
+
+    if (!isDefined(match.indices) || match.indices.length === 0) {
+      continue
+    }
+
+    let obj = {
+      indices: match.indices,
+      value: match.value
+    };
+
+    if (match.key) {
+      obj.key = match.key;
+    }
+
+    if (match.idx > -1) {
+      obj.refIndex = match.idx;
+    }
+
+    data.matches.push(obj);
+  }
+}
+
+function transformScore(result, data) {
+  data.score = result.score;
+}
+
+const BasicOptions = {
+  // When true, the algorithm continues searching to the end of the input even if a perfect
+  // match is found before the end of the same input.
+  isCaseSensitive: false,
+  // Minimum number of characters that must be matched before a result is considered a match
+  findAllMatches: false,
+  includeMatches: false,
+  includeScore: false,
+  // List of properties that will be searched. This also supports nested properties.
+  keys: [],
+  // Minimum number of characters that must be matched before a result is considered a match
+  minMatchCharLength: 1,
+  // Whether to sort the result list, by score
+  shouldSort: true,
+  // Default sort function
+  sortFn: (a, b) => a.score - b.score
+};
+
+const FuzzyOptions = {
+  // Approximately where in the text is the pattern expected to be found?
+  location: 0,
+  // At what point does the match algorithm give up. A threshold of '0.0' requires a perfect match
+  // (of both letters and location), a threshold of '1.0' would match anything.
+  threshold: 0.6,
+  // Determines how close the match must be to the fuzzy location (specified above).
+  // An exact letter match which is 'distance' characters away from the fuzzy location
+  // would score as a complete mismatch. A distance of '0' requires the match be at
+  // the exact location specified, a threshold of '1000' would require a perfect match
+  // to be within 800 characters of the fuzzy location to be found using a 0.8 threshold.
+  distance: 100
+};
+
+const AdvancedOptions = {
+  // Enabled extended-searching
+  useExtendedSearch: false,
+  // The get function to use when fetching an object's properties.
+  // The default will search nested paths *ie foo.bar.baz*
+  getFn: get
+};
+
+const defaultOptions = {
+  ...BasicOptions,
+  ...FuzzyOptions,
+  ...AdvancedOptions
+};
+
+class Fuse {
+  constructor(list, options = defaultOptions, index = null) {
+    this.options = { ...defaultOptions, ...options };
+    // `caseSensitive` is deprecated, use `isCaseSensitive` instead
+    this.options.isCaseSensitive = options.caseSensitive;
+    delete this.options.caseSensitive;
+
+    this._processKeys(this.options.keys);
+    this.setCollection(list, index);
+  }
+
+  setCollection(list, index = null) {
+    this.list = list;
+    this.listIsStringArray = isString(list[0]);
+
+    if (index) {
+      this.setIndex(index);
+    } else {
+      this.setIndex(this._createIndex());
     }
   }
-};
-var deleteMethod = {
-  methods: {
-    "delete": function _delete(_ref3) {
-      var _this3 = this;
 
-      var payload = _ref3.payload,
-          title = _ref3.title,
-          alertText = _ref3.alertText,
-          successText = _ref3.successText,
-          _ref3$storeModule = _ref3.storeModule,
-          storeModule = _ref3$storeModule === void 0 ? null : _ref3$storeModule,
-          _ref3$redirectRoute = _ref3.redirectRoute,
-          redirectRoute = _ref3$redirectRoute === void 0 ? null : _ref3$redirectRoute,
-          _ref3$categoryId = _ref3.categoryId,
-          categoryId = _ref3$categoryId === void 0 ? null : _ref3$categoryId,
-          _ref3$paginationData = _ref3.paginationData,
-          paginationData = _ref3$paginationData === void 0 ? null : _ref3$paginationData;
-      var module = storeModule ? "".concat(storeModule, "/") : '';
-      return deleteSwalFireConfirm(alertText).then(function (result) {
-        if (result.value) {
-          return _this3.$store.dispatch("".concat(module, "destroy"), payload).then(function () {
-            if (redirectRoute) {
-              _this3.$router.go(-1) ? _this3.$router.go(-1) : _this3.$router.push(redirectRoute);
+  setIndex(listIndex) {
+    this._indexedList = listIndex;
+  }
+
+  _processKeys(keys) {
+    this._keyStore = new KeyStore(keys);
+  }
+
+  _createIndex() {
+    return createIndex(this._keyStore.keys(), this.list, {
+      getFn: this.options.getFn
+    })
+  }
+
+  search(pattern, opts = { limit: false }) {
+    const { useExtendedSearch, shouldSort } = this.options;
+
+    let searcher = null;
+
+    if (useExtendedSearch) {
+      searcher = new ExtendedSearch(pattern, this.options);
+    } else if (pattern.length > MAX_BITS) {
+      searcher = new NGramSearch(pattern, this.options);
+    } else {
+      searcher = new BitapSearch(pattern, this.options);
+    }
+
+    let results = this._searchUsing(searcher);
+
+    this._computeScore(results);
+
+    if (shouldSort) {
+      this._sort(results);
+    }
+
+    if (opts.limit && isNumber(opts.limit)) {
+      results = results.slice(0, opts.limit);
+    }
+
+    return this._format(results)
+  }
+
+  _searchUsing(searcher) {
+    const list = this._indexedList;
+    const results = [];
+    const { includeMatches } = this.options;
+
+    // List is Array<String>
+    if (this.listIsStringArray) {
+      // Iterate over every string in the list
+      for (let i = 0, len = list.length; i < len; i += 1) {
+        let value = list[i];
+        let { $: text, idx } = value;
+
+        if (!isDefined(text)) {
+          continue
+        }
+
+        let searchResult = searcher.searchIn(value);
+
+        const { isMatch, score } = searchResult;
+
+        if (!isMatch) {
+          continue
+        }
+
+        let match = { score, value: text };
+
+        if (includeMatches) {
+          match.indices = searchResult.matchedIndices;
+        }
+
+        results.push({
+          item: text,
+          idx,
+          matches: [match]
+        });
+      }
+    } else {
+      // List is Array<Object>
+      const keyNames = this._keyStore.keys();
+      const keysLen = this._keyStore.count();
+
+      for (let i = 0, len = list.length; i < len; i += 1) {
+        let { $: item, idx } = list[i];
+
+        if (!isDefined(item)) {
+          continue
+        }
+
+        let matches = [];
+
+        // Iterate over every key (i.e, path), and fetch the value at that key
+        for (let j = 0; j < keysLen; j += 1) {
+          let key = keyNames[j];
+          let value = item[key];
+
+          if (!isDefined(value)) {
+            continue
+          }
+
+          if (isArray(value)) {
+            for (let k = 0, len = value.length; k < len; k += 1) {
+              let arrItem = value[k];
+              let text = arrItem.$;
+              let idx = arrItem.idx;
+
+              if (!isDefined(text)) {
+                continue
+              }
+
+              let searchResult = searcher.searchIn(arrItem);
+
+              const { isMatch, score } = searchResult;
+
+              if (!isMatch) {
+                continue
+              }
+
+              let match = { score, key, value: text, idx };
+
+              if (includeMatches) {
+                match.indices = searchResult.matchedIndices;
+              }
+
+              matches.push(match);
+            }
+          } else {
+            let text = value.$;
+            let searchResult = searcher.searchIn(value);
+
+            const { isMatch, score } = searchResult;
+
+            if (!isMatch) {
+              continue
             }
 
-            if (paginationData) {
-              categoryId ? _this3.$store.dispatch('categories/getImages', {
-                id: categoryId,
-                data: paginationData
-              }) : _this3.$store.dispatch('images/getItems', paginationData);
+            let match = { score, key, value: text };
+
+            if (includeMatches) {
+              match.indices = searchResult.matchedIndices;
             }
 
-            return deleteSwalFireAlert(successText, title);
+            matches.push(match);
+          }
+        }
+
+        if (matches.length) {
+          results.push({
+            idx,
+            item,
+            matches
           });
         }
-      });
+      }
+    }
+
+    return results
+  }
+
+  _computeScore(results) {
+    for (let i = 0, len = results.length; i < len; i += 1) {
+      const result = results[i];
+      const matches = result.matches;
+      const scoreLen = matches.length;
+
+      let totalWeightedScore = 1;
+
+      for (let j = 0; j < scoreLen; j += 1) {
+        const item = matches[j];
+        const key = item.key;
+        const keyWeight = this._keyStore.get(key, 'weight');
+        const weight = keyWeight > -1 ? keyWeight : 1;
+        const score =
+          item.score === 0 && keyWeight > -1 ? Number.EPSILON : item.score;
+
+        totalWeightedScore *= Math.pow(score, weight);
+      }
+
+      result.score = totalWeightedScore;
     }
   }
-};
 
-var deleteSwalFireConfirm = function deleteSwalFireConfirm(alertText) {
-  return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
-    title: 'Вы уверены?',
-    text: "\u0414\u0430\u043D\u043D\u043E\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0443\u0434\u0430\u043B\u0438\u0442 ".concat(alertText, " \u0431\u0435\u0437\u0432\u043E\u0437\u0432\u0440\u0430\u0442\u043D\u043E!"),
-    icon: 'warning',
-    showCancelButton: true,
-    customClass: {
-      confirmButton: 'md-button md-success btn-fill',
-      cancelButton: 'md-button md-danger btn-fill'
-    },
-    confirmButtonText: 'Удалить',
-    cancelButtonText: 'Отменить',
-    buttonsStyling: false
-  });
-};
+  _sort(results) {
+    results.sort(this.options.sortFn);
+  }
 
-var deleteSwalFireAlert = function deleteSwalFireAlert(successText, title) {
-  return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
-    title: successText,
-    text: "\xAB".concat(title, "\xBB"),
-    timer: 2000,
-    icon: 'success',
-    showConfirmButton: false
-  });
-};
+  _format(results) {
+    const finalOutput = [];
 
-var uploadMethod = {
-  methods: {
-    upload: function upload(_ref4) {
-      var _this4 = this;
+    const { includeMatches, includeScore } = this.options;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var uploadFiles, _ref4$type, type, _ref4$id, id, _ref4$storeModule, storeModule, paginationData, files, module;
+    let transformers = [];
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                uploadFiles = _ref4.uploadFiles, _ref4$type = _ref4.type, type = _ref4$type === void 0 ? null : _ref4$type, _ref4$id = _ref4.id, id = _ref4$id === void 0 ? null : _ref4$id, _ref4$storeModule = _ref4.storeModule, storeModule = _ref4$storeModule === void 0 ? null : _ref4$storeModule, paginationData = _ref4.paginationData;
-                files = Array.from(uploadFiles);
-                module = storeModule ? storeModule : 'categories';
+    if (includeMatches) transformers.push(transformMatches);
+    if (includeScore) transformers.push(transformScore);
 
-                if (!id) {
-                  _context.next = 8;
-                  break;
-                }
+    for (let i = 0, len = results.length; i < len; i += 1) {
+      const result = results[i];
+      const { idx } = result;
 
-                _context.next = 6;
-                return _this4.$store.dispatch("".concat(module, "/uploadImages"), {
-                  files: files,
-                  id: id,
-                  type: type,
-                  paginationData: paginationData
-                });
+      const data = {
+        item: this.list[idx],
+        refIndex: idx
+      };
 
-              case 6:
-                _context.next = 10;
-                break;
+      if (transformers.length) {
+        for (let j = 0, len = transformers.length; j < len; j += 1) {
+          transformers[j](result, data);
+        }
+      }
 
-              case 8:
-                _context.next = 10;
-                return _this4.$store.dispatch('images/store', {
-                  files: files,
-                  paginationData: paginationData
-                });
+      finalOutput.push(data);
+    }
 
-              case 10:
-                _context.next = 12;
-                return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
-                  title: 'Изображения загружены!',
-                  text: '',
-                  timer: 2000,
-                  showConfirmButton: false,
-                  icon: 'success'
-                });
+    return finalOutput
+  }
+}
 
-              case 12:
-                return _context.abrupt("return", _context.sent);
+Fuse.version = '5.1.0';
+Fuse.createIndex = createIndex;
+Fuse.defaultOptions = defaultOptions;
 
-              case 13:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }))();
+/* harmony default export */ __webpack_exports__["default"] = (Fuse);
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_Symbol.js":
+/*!****************************************!*\
+  !*** ./node_modules/lodash/_Symbol.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var root = __webpack_require__(/*! ./_root */ "./node_modules/lodash/_root.js");
+
+/** Built-in value references. */
+var Symbol = root.Symbol;
+
+module.exports = Symbol;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseGetTag.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_baseGetTag.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Symbol = __webpack_require__(/*! ./_Symbol */ "./node_modules/lodash/_Symbol.js"),
+    getRawTag = __webpack_require__(/*! ./_getRawTag */ "./node_modules/lodash/_getRawTag.js"),
+    objectToString = __webpack_require__(/*! ./_objectToString */ "./node_modules/lodash/_objectToString.js");
+
+/** `Object#toString` result references. */
+var nullTag = '[object Null]',
+    undefinedTag = '[object Undefined]';
+
+/** Built-in value references. */
+var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
+
+/**
+ * The base implementation of `getTag` without fallbacks for buggy environments.
+ *
+ * @private
+ * @param {*} value The value to query.
+ * @returns {string} Returns the `toStringTag`.
+ */
+function baseGetTag(value) {
+  if (value == null) {
+    return value === undefined ? undefinedTag : nullTag;
+  }
+  return (symToStringTag && symToStringTag in Object(value))
+    ? getRawTag(value)
+    : objectToString(value);
+}
+
+module.exports = baseGetTag;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_freeGlobal.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_freeGlobal.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */
+var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+module.exports = freeGlobal;
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_getRawTag.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_getRawTag.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Symbol = __webpack_require__(/*! ./_Symbol */ "./node_modules/lodash/_Symbol.js");
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var nativeObjectToString = objectProto.toString;
+
+/** Built-in value references. */
+var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
+
+/**
+ * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
+ *
+ * @private
+ * @param {*} value The value to query.
+ * @returns {string} Returns the raw `toStringTag`.
+ */
+function getRawTag(value) {
+  var isOwn = hasOwnProperty.call(value, symToStringTag),
+      tag = value[symToStringTag];
+
+  try {
+    value[symToStringTag] = undefined;
+    var unmasked = true;
+  } catch (e) {}
+
+  var result = nativeObjectToString.call(value);
+  if (unmasked) {
+    if (isOwn) {
+      value[symToStringTag] = tag;
+    } else {
+      delete value[symToStringTag];
     }
   }
-};
-var imageAddMethod = {
-  methods: {
-    addImages: function addImages(_ref5) {
-      var _this5 = this;
+  return result;
+}
 
-      var category = _ref5.category,
-          selected = _ref5.selected;
-      this.$store.dispatch('categories/addSelectedImages', {
-        category_id: category.id,
-        selected_images: selected
-      }).then(function () {
-        _this5.$router.push({
-          name: 'manager.catalog.categories.images',
-          params: {
-            id: category.id
-          }
-        });
+module.exports = getRawTag;
 
-        return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
-          title: 'Изображения добавлены!',
-          text: '',
-          timer: 2000,
-          showConfirmButton: false,
-          icon: 'success'
-        });
-      });
-    }
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_objectToString.js":
+/*!************************************************!*\
+  !*** ./node_modules/lodash/_objectToString.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var nativeObjectToString = objectProto.toString;
+
+/**
+ * Converts `value` to a string using `Object.prototype.toString`.
+ *
+ * @private
+ * @param {*} value The value to convert.
+ * @returns {string} Returns the converted string.
+ */
+function objectToString(value) {
+  return nativeObjectToString.call(value);
+}
+
+module.exports = objectToString;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_root.js":
+/*!**************************************!*\
+  !*** ./node_modules/lodash/_root.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var freeGlobal = __webpack_require__(/*! ./_freeGlobal */ "./node_modules/lodash/_freeGlobal.js");
+
+/** Detect free variable `self`. */
+var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+/** Used as a reference to the global object. */
+var root = freeGlobal || freeSelf || Function('return this')();
+
+module.exports = root;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/debounce.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/debounce.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__(/*! ./isObject */ "./node_modules/lodash/isObject.js"),
+    now = __webpack_require__(/*! ./now */ "./node_modules/lodash/now.js"),
+    toNumber = __webpack_require__(/*! ./toNumber */ "./node_modules/lodash/toNumber.js");
+
+/** Error message constants. */
+var FUNC_ERROR_TEXT = 'Expected a function';
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeMax = Math.max,
+    nativeMin = Math.min;
+
+/**
+ * Creates a debounced function that delays invoking `func` until after `wait`
+ * milliseconds have elapsed since the last time the debounced function was
+ * invoked. The debounced function comes with a `cancel` method to cancel
+ * delayed `func` invocations and a `flush` method to immediately invoke them.
+ * Provide `options` to indicate whether `func` should be invoked on the
+ * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
+ * with the last arguments provided to the debounced function. Subsequent
+ * calls to the debounced function return the result of the last `func`
+ * invocation.
+ *
+ * **Note:** If `leading` and `trailing` options are `true`, `func` is
+ * invoked on the trailing edge of the timeout only if the debounced function
+ * is invoked more than once during the `wait` timeout.
+ *
+ * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+ * until to the next tick, similar to `setTimeout` with a timeout of `0`.
+ *
+ * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
+ * for details over the differences between `_.debounce` and `_.throttle`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Function
+ * @param {Function} func The function to debounce.
+ * @param {number} [wait=0] The number of milliseconds to delay.
+ * @param {Object} [options={}] The options object.
+ * @param {boolean} [options.leading=false]
+ *  Specify invoking on the leading edge of the timeout.
+ * @param {number} [options.maxWait]
+ *  The maximum time `func` is allowed to be delayed before it's invoked.
+ * @param {boolean} [options.trailing=true]
+ *  Specify invoking on the trailing edge of the timeout.
+ * @returns {Function} Returns the new debounced function.
+ * @example
+ *
+ * // Avoid costly calculations while the window size is in flux.
+ * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
+ *
+ * // Invoke `sendMail` when clicked, debouncing subsequent calls.
+ * jQuery(element).on('click', _.debounce(sendMail, 300, {
+ *   'leading': true,
+ *   'trailing': false
+ * }));
+ *
+ * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
+ * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
+ * var source = new EventSource('/stream');
+ * jQuery(source).on('message', debounced);
+ *
+ * // Cancel the trailing debounced invocation.
+ * jQuery(window).on('popstate', debounced.cancel);
+ */
+function debounce(func, wait, options) {
+  var lastArgs,
+      lastThis,
+      maxWait,
+      result,
+      timerId,
+      lastCallTime,
+      lastInvokeTime = 0,
+      leading = false,
+      maxing = false,
+      trailing = true;
+
+  if (typeof func != 'function') {
+    throw new TypeError(FUNC_ERROR_TEXT);
   }
-};
-var subCategoryImageAddMethod = {
-  methods: {
-    addImages: function addImages(_ref6) {
-      var _this6 = this;
-
-      var type = _ref6.type,
-          id = _ref6.id,
-          selected = _ref6.selected,
-          redirectRoute = _ref6.redirectRoute;
-      this.$store.dispatch('subCategories/addSelectedImages', {
-        type: type,
-        id: id,
-        selected_images: selected
-      }).then(function () {
-        _this6.$router.push(redirectRoute);
-
-        return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
-          title: 'Изображения добавлены!',
-          text: '',
-          timer: 2000,
-          showConfirmButton: false,
-          icon: 'success'
-        });
-      });
-    }
+  wait = toNumber(wait) || 0;
+  if (isObject(options)) {
+    leading = !!options.leading;
+    maxing = 'maxWait' in options;
+    maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
+    trailing = 'trailing' in options ? !!options.trailing : trailing;
   }
+
+  function invokeFunc(time) {
+    var args = lastArgs,
+        thisArg = lastThis;
+
+    lastArgs = lastThis = undefined;
+    lastInvokeTime = time;
+    result = func.apply(thisArg, args);
+    return result;
+  }
+
+  function leadingEdge(time) {
+    // Reset any `maxWait` timer.
+    lastInvokeTime = time;
+    // Start the timer for the trailing edge.
+    timerId = setTimeout(timerExpired, wait);
+    // Invoke the leading edge.
+    return leading ? invokeFunc(time) : result;
+  }
+
+  function remainingWait(time) {
+    var timeSinceLastCall = time - lastCallTime,
+        timeSinceLastInvoke = time - lastInvokeTime,
+        timeWaiting = wait - timeSinceLastCall;
+
+    return maxing
+      ? nativeMin(timeWaiting, maxWait - timeSinceLastInvoke)
+      : timeWaiting;
+  }
+
+  function shouldInvoke(time) {
+    var timeSinceLastCall = time - lastCallTime,
+        timeSinceLastInvoke = time - lastInvokeTime;
+
+    // Either this is the first call, activity has stopped and we're at the
+    // trailing edge, the system time has gone backwards and we're treating
+    // it as the trailing edge, or we've hit the `maxWait` limit.
+    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
+      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
+  }
+
+  function timerExpired() {
+    var time = now();
+    if (shouldInvoke(time)) {
+      return trailingEdge(time);
+    }
+    // Restart the timer.
+    timerId = setTimeout(timerExpired, remainingWait(time));
+  }
+
+  function trailingEdge(time) {
+    timerId = undefined;
+
+    // Only invoke if we have `lastArgs` which means `func` has been
+    // debounced at least once.
+    if (trailing && lastArgs) {
+      return invokeFunc(time);
+    }
+    lastArgs = lastThis = undefined;
+    return result;
+  }
+
+  function cancel() {
+    if (timerId !== undefined) {
+      clearTimeout(timerId);
+    }
+    lastInvokeTime = 0;
+    lastArgs = lastCallTime = lastThis = timerId = undefined;
+  }
+
+  function flush() {
+    return timerId === undefined ? result : trailingEdge(now());
+  }
+
+  function debounced() {
+    var time = now(),
+        isInvoking = shouldInvoke(time);
+
+    lastArgs = arguments;
+    lastThis = this;
+    lastCallTime = time;
+
+    if (isInvoking) {
+      if (timerId === undefined) {
+        return leadingEdge(lastCallTime);
+      }
+      if (maxing) {
+        // Handle invocations in a tight loop.
+        clearTimeout(timerId);
+        timerId = setTimeout(timerExpired, wait);
+        return invokeFunc(lastCallTime);
+      }
+    }
+    if (timerId === undefined) {
+      timerId = setTimeout(timerExpired, wait);
+    }
+    return result;
+  }
+  debounced.cancel = cancel;
+  debounced.flush = flush;
+  return debounced;
+}
+
+module.exports = debounce;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isObject.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/isObject.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * Checks if `value` is the
+ * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+ * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(_.noop);
+ * // => true
+ *
+ * _.isObject(null);
+ * // => false
+ */
+function isObject(value) {
+  var type = typeof value;
+  return value != null && (type == 'object' || type == 'function');
+}
+
+module.exports = isObject;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isObjectLike.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/isObjectLike.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+function isObjectLike(value) {
+  return value != null && typeof value == 'object';
+}
+
+module.exports = isObjectLike;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isSymbol.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/isSymbol.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ "./node_modules/lodash/_baseGetTag.js"),
+    isObjectLike = __webpack_require__(/*! ./isObjectLike */ "./node_modules/lodash/isObjectLike.js");
+
+/** `Object#toString` result references. */
+var symbolTag = '[object Symbol]';
+
+/**
+ * Checks if `value` is classified as a `Symbol` primitive or object.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+ * @example
+ *
+ * _.isSymbol(Symbol.iterator);
+ * // => true
+ *
+ * _.isSymbol('abc');
+ * // => false
+ */
+function isSymbol(value) {
+  return typeof value == 'symbol' ||
+    (isObjectLike(value) && baseGetTag(value) == symbolTag);
+}
+
+module.exports = isSymbol;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/now.js":
+/*!************************************!*\
+  !*** ./node_modules/lodash/now.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var root = __webpack_require__(/*! ./_root */ "./node_modules/lodash/_root.js");
+
+/**
+ * Gets the timestamp of the number of milliseconds that have elapsed since
+ * the Unix epoch (1 January 1970 00:00:00 UTC).
+ *
+ * @static
+ * @memberOf _
+ * @since 2.4.0
+ * @category Date
+ * @returns {number} Returns the timestamp.
+ * @example
+ *
+ * _.defer(function(stamp) {
+ *   console.log(_.now() - stamp);
+ * }, _.now());
+ * // => Logs the number of milliseconds it took for the deferred invocation.
+ */
+var now = function() {
+  return root.Date.now();
 };
+
+module.exports = now;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/toNumber.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/toNumber.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__(/*! ./isObject */ "./node_modules/lodash/isObject.js"),
+    isSymbol = __webpack_require__(/*! ./isSymbol */ "./node_modules/lodash/isSymbol.js");
+
+/** Used as references for various `Number` constants. */
+var NAN = 0 / 0;
+
+/** Used to match leading and trailing whitespace. */
+var reTrim = /^\s+|\s+$/g;
+
+/** Used to detect bad signed hexadecimal string values. */
+var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+/** Used to detect binary string values. */
+var reIsBinary = /^0b[01]+$/i;
+
+/** Used to detect octal string values. */
+var reIsOctal = /^0o[0-7]+$/i;
+
+/** Built-in method references without a dependency on `root`. */
+var freeParseInt = parseInt;
+
+/**
+ * Converts `value` to a number.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to process.
+ * @returns {number} Returns the number.
+ * @example
+ *
+ * _.toNumber(3.2);
+ * // => 3.2
+ *
+ * _.toNumber(Number.MIN_VALUE);
+ * // => 5e-324
+ *
+ * _.toNumber(Infinity);
+ * // => Infinity
+ *
+ * _.toNumber('3.2');
+ * // => 3.2
+ */
+function toNumber(value) {
+  if (typeof value == 'number') {
+    return value;
+  }
+  if (isSymbol(value)) {
+    return NAN;
+  }
+  if (isObject(value)) {
+    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+    value = isObject(other) ? (other + '') : other;
+  }
+  if (typeof value != 'string') {
+    return value === 0 ? value : +value;
+  }
+  value = value.replace(reTrim, '');
+  var isBinary = reIsBinary.test(value);
+  return (isBinary || reIsOctal.test(value))
+    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
+    : (reIsBadHex.test(value) ? NAN : +value);
+}
+
+module.exports = toNumber;
+
 
 /***/ })
 

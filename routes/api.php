@@ -127,6 +127,11 @@ Route::group(['prefix' => 'carts'], function() {
     Route::post('add', 'Client\Cart\CartController@add')->middleware('jwt.auth');
 });
 
+/** Pages */
+
+/** HomeModules: PurchaseSteps */
+Route::get('purchase-steps', 'Client\PurchaseStep\PurchaseStepController');
+
 // Users
 Route::prefix('profile')
     ->middleware('jwt.auth')
@@ -356,4 +361,8 @@ Route::group(['prefix' => 'manager'], function() {
         Route::get('/{id}/delete-image', 'Cms\Page\PageController@deleteImage');
     });
     Route::apiResource('pages', 'Cms\Page\PageController')->except(['create', 'update', 'edit']);
+
+    Route::post('purchase-steps/{id}', 'Cms\PurchaseStep\PurchaseStepController@update')
+        ->where('id', '[0-9]+');
+    Route::apiResource('purchase-steps', 'Cms\PurchaseStep\PurchaseStepController')->except(['create', 'update', 'edit']);
 });
