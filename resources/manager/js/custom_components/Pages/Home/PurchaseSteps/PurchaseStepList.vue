@@ -3,7 +3,7 @@
         <div class="md-between">
             <h4>Список шагов покупки</h4>
             <router-button-link title="Создать шаг покупки" icon="add" color="md-success"
-                                route="manager.pages.home.purchase-steps.create" />
+                                :route="`manager.pages.home.${storeModule}.create`" />
         </div>
 
         <div>
@@ -28,7 +28,7 @@
                         <md-table-cell md-label="Действия">
 
                             <table-actions :item="item"
-                                           subPath="pages.home.purchase-steps"
+                                           :subPath="`pages.home.${storeModule}`"
                                            @delete="onDelete"/>
 
                         </md-table-cell>

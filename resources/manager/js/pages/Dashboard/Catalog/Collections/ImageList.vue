@@ -157,7 +157,6 @@
         methods: {
             ...mapActions({
                 publishAction: 'images/togglePublish',
-                removeImageAction: 'collections/removeImage',
                 getItemAction: 'collections/getItem',
                 getImagesAction: 'collections/getImages',
                 setMainImageAction: 'collections/setMainImage'
@@ -167,12 +166,8 @@
                     uploadFiles: event.target.files,
                     type: this.category_type,
                     id: this.id,
-                    storeModule: 'collections',
-                    paginationData: this.paginationData
+                    storeModule: 'collections'
                 });
-            },
-            onRemove (id) {
-                this.removeImageAction({ id: this.id, imageId: id });
             },
             onDelete (item) {
                 this.delete({

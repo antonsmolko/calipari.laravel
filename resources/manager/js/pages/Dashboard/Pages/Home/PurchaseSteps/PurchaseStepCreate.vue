@@ -4,7 +4,10 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link route="manager.pages.home" title="Назад" />
+                        <router-button-link
+                            :route="redirectRoute.name"
+                            :params="redirectRoute.params"
+                            title="Назад" />
                         <slide-y-down-transition v-show="!$v.$invalid">
                             <control-button @click="onCreate" />
                         </slide-y-down-transition>
@@ -60,7 +63,10 @@
             return {
                 storeModule: 'purchaseSteps',
                 responseData: false,
-                redirectRoute: { name: 'manager.pages.home' }
+                redirectRoute: {
+                    name: 'manager.pages.home',
+                    params: { activeTab: 'Модули' }
+                }
             }
         },
         validations: {

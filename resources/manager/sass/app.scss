@@ -116,11 +116,27 @@
 
 // Form Errors
 
-.md-field.md-has-textarea:not(.md-autogrow).md-error:before {
-    border-color: #f44336 !important;
-}
-.md-field.md-has-textarea:not(.md-autogrow).md-valid:before {
-    border-color: #4caf50 !important;
+.md-field {
+    &.md-has-textarea:not(.md-autogrow) {
+        &.md-error:before {
+            border-color: #f44336 !important;
+        }
+        &.md-valid:before {
+            border-color: #4caf50 !important;
+        }
+    }
+    &.md-datepicker {
+        &.md-valid {
+            .md-icon svg {
+                fill: #4caf50 !important;
+            }
+        }
+        &.md-error {
+            .md-icon svg {
+                fill: #f44336 !important;
+            }
+        }
+    }
 }
 
 // Notices

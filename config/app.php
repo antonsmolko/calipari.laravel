@@ -229,6 +229,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Gravatar' => Creativeorange\Gravatar\Facades\Gravatar::class,
+        'Date' => Jenssegers\Date\Date::class,
     ],
 
 ];

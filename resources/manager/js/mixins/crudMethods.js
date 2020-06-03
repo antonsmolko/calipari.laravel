@@ -7,7 +7,8 @@ export const createMethod = {
 
             return this.$store.dispatch(`${module}store`, sendData)
                 .then(() => {
-                    window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
+                    this.$router.push(redirectRoute);
+                    // window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
 
                     return swal.fire({
                         title: successText,
@@ -28,7 +29,8 @@ export const updateMethod = {
 
             return this.$store.dispatch(`${module}update`, sendData)
                 .then(() => {
-                    window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
+                    this.$router.push(redirectRoute);
+                    // window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
 
                     return swal.fire({
                         title: successText,
@@ -64,15 +66,35 @@ export const deleteMethod = {
                         return this.$store.dispatch(`${module}${method}`, { payload, tableMode })
                             .then(() => {
                                 if (redirectRoute) {
-                                    window.history.length > 1
-                                        ? this.$router.go(-1)
-                                        : this.$router.push(redirectRoute);
+                                    this.$router.push(redirectRoute);
+                                    // window.history.length > 1
+                                    //     ? this.$router.go(-1)
+                                    //     : this.$router.push(redirectRoute);
                                 }
 
                                 return deleteSwalFireAlert(successText, title);
                             });
                     }
             });
+        },
+    }
+}
+
+export const deleteImageByIndexMethod = {
+    methods: {
+        deleteImageByIndex({
+           id,
+           index,
+           alertText,
+           successText,
+           storeModule = null}) {
+            return deleteSwalFireConfirm(alertText)
+                .then((result) => {
+                    if (result.value) {
+                        return this.$store.dispatch(`${storeModule}/deleteImageByIndex`, { id, index })
+                            .then(() => deleteSwalFireAlert(successText, index));
+                    }
+                });
         },
     }
 }

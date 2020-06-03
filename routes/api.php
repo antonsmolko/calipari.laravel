@@ -129,8 +129,23 @@ Route::group(['prefix' => 'carts'], function() {
 
 /** Pages */
 
-/** HomeModules: PurchaseSteps */
+/** Get Page SEO Content */
+Route::get('pages/{page}', 'Client\Page\PageController@getItemByAlias');
+
+/** Home Module: PurchaseSteps */
 Route::get('purchase-steps', 'Client\PurchaseStep\PurchaseStepController');
+
+/** Portfolio Module: Work Examples */
+Route::post('work-examples/list', 'Client\WorkExample\WorkExampleController@getItems');
+
+/** Blog Module: Posts */
+Route::group(['prefix' => 'posts'], function () {
+    Route::get('types', 'Client\Post\PostController@getPublishedTypes');
+    Route::post('{type}/list', 'Client\Post\PostController@getItems');
+    Route::get('{post}', 'Client\Post\PostController@getItemByAlias')
+        ->where('id', '[0-9]+');
+});
+
 
 // Users
 Route::prefix('profile')
@@ -257,10 +272,11 @@ Route::group(['prefix' => 'manager'], function() {
         ->except(['create', 'edit', 'update']);
 
 
-    // Settings
+    /** Settings */
 
     Route::group(['prefix' => 'settings'], function() {
         Route::post('set-text', 'Cms\Setting\SettingController@setTextValue');
+        Route::get('entries', 'Cms\Setting\SettingController@getEntries');
         Route::post('set-image', 'Cms\Setting\SettingController@setImageValue');
         Route::post('{id}', 'Cms\Setting\SettingController@update')
             ->where('id', '[0-9]+');
@@ -338,9 +354,12 @@ Route::group(['prefix' => 'manager'], function() {
         // Orders
         Route::group(['prefix' => 'orders'], function() {
 //            Route::get('/', 'Cms\Order\OrderController@getItems');
-            Route::get('/{id}', 'Cms\Order\OrderController@getItem');
-            Route::get('/{id}/details', 'Cms\Order\OrderController@getItemDetails');
-            Route::post('/{id}/status', 'Cms\Order\OrderController@changeStatus');
+            Route::get('/{id}', 'Cms\Order\OrderController@getItem')
+                ->where('id', '[0-9]+');
+            Route::get('/{id}/details', 'Cms\Order\OrderController@getItemDetails')
+                ->where('id', '[0-9]+');
+            Route::post('/{id}/status', 'Cms\Order\OrderController@changeStatus')
+                ->where('id', '[0-9]+');
             Route::post('/current', 'Cms\Order\OrderController@getCurrentItems');
             Route::post('/completed', 'Cms\Order\OrderController@getCompletedItems');
         });
@@ -364,5 +383,37 @@ Route::group(['prefix' => 'manager'], function() {
 
     Route::post('purchase-steps/{id}', 'Cms\PurchaseStep\PurchaseStepController@update')
         ->where('id', '[0-9]+');
-    Route::apiResource('purchase-steps', 'Cms\PurchaseStep\PurchaseStepController')->except(['create', 'update', 'edit']);
+    Route::apiResource('purchase-steps', 'Cms\PurchaseStep\PurchaseStepController')
+        ->except(['create', 'update', 'edit']);
+
+    /** WorkExamples */
+    Route::group(['prefix' => 'work-examples'], function() {
+        Route::post('/list', 'Cms\WorkExample\WorkExampleController@getItems');
+        Route::post('/{id}', 'Cms\WorkExample\WorkExampleController@update')
+            ->where('id', '[0-9]+');
+        Route::post('/{id}/upload', 'Cms\WorkExample\WorkExampleController@upload')
+            ->where('id', '[0-9]+');
+        Route::get('/{id}/publish', 'Cms\WorkExample\WorkExampleController@publish')
+            ->where('id', '[0-9]+');
+        Route::get('/{id}/delete-image/{index}', 'Cms\WorkExample\WorkExampleController@deleteImage')
+            ->where(['id' => '[0-9]+', 'index' => '[0-9]+']);
+    });
+    Route::apiResource('work-examples', 'Cms\WorkExample\WorkExampleController')
+        ->except(['create', 'update', 'edit']);
+
+    /** Posts */
+    Route::group(['prefix' => 'posts'], function() {
+        Route::post('/{type}/list', 'Cms\Post\PostController@getItemsByType')
+            ->where('type', '[a-z]+');
+        Route::post('/{id}', 'Cms\Post\PostController@update')
+            ->where('id', '[0-9]+');
+        Route::post('/{id}/upload', 'Cms\Post\PostController@upload')
+            ->where('id', '[0-9]+');
+        Route::get('/{id}/publish', 'Cms\Post\PostController@publish')
+            ->where('id', '[0-9]+');
+        Route::get('/{id}/delete-image/{index}', 'Cms\Post\PostController@deleteImage')
+            ->where(['id' => '[0-9]+', 'index' => '[0-9]+']);
+    });
+    Route::apiResource('posts', 'Cms\Post\PostController')
+        ->except(['create', 'update', 'edit']);
 });

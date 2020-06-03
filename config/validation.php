@@ -9,7 +9,7 @@ return [
         'min' => 2,
         'max' => 100
     ],
-    'long_title' => [
+    'meta_title' => [
         'min' => 2,
         'max' => 150
     ],
@@ -50,13 +50,5 @@ return [
     ],
     'integer' => [
         'max' => 10
-    ],
-    'categories' => [
-        'types' => [
-            'topics',
-            'colors',
-            'tags',
-            'interiors'
-        ]
     ]
 ];

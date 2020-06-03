@@ -138,6 +138,14 @@
                     <card-icon-header icon="timeline" title="SEO" />
                     <md-card-content>
                         <div class="md-layout">
+                            <div class="md-layout-item md-size-100">
+                                <v-input title="Мета заголовок"
+                                         name="meta_title"
+                                         :value="metaTitle"
+                                         :vField="$v.metaTitle"
+                                         :maxlength="150"
+                                         :module="storeModule" />
+                            </div>
                             <div class="md-layout-item md-size-50 md-medium-size-100">
                                 <v-textarea name="description"
                                             :value="description"
@@ -194,7 +202,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty || !this.isUniqueTitleEdit
+                    return (value.trim() === '') && !this.$v.title.$dirty || this.isUniqueTitleEdit
                 },
             },
             alias: {
@@ -202,7 +210,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.alias.$dirty) || !this.isUniqueAliasEdit
+                    return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAliasEdit
                 },
                 testAlias (value) {
                     return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
@@ -230,6 +238,9 @@
             publish: {
                 touch: false
             },
+            metaTitle: {
+                touch: false
+            },
             description: {
                 touch: false
             },
@@ -249,6 +260,7 @@
                 owner: state => state.collections.fields.owner_id,
                 publish: state => state.collections.fields.publish,
                 hasPublishedImages: state => state.collections.fields.has_published_images,
+                metaTitle: state => state.collections.fields.meta_title,
                 description: state => state.collections.fields.description,
                 keywords: state => state.collections.fields.keywords,
                 ownerList: state => state.subCategories.itemsByType.owners,
@@ -266,10 +278,10 @@
                 return this.$store.getters['categories/getItemsByType']('tags');
             },
             isUniqueTitleEdit() {
-                return !!this.$store.getters['deliveries/isUniqueTitleEdit'](this.title, this.id);
+                return this.$store.getters['deliveries/isUniqueTitleEdit'](this.title, this.id);
             },
             isUniqueAliasEdit () {
-                return !!this.$store.getters['deliveries/isUniqueAliasEdit'](this.alias, this.id);
+                return this.$store.getters['deliveries/isUniqueAliasEdit'](this.alias, this.id);
             }
         },
         created() {
@@ -311,6 +323,7 @@
                             tags: this.tags,
                             owner_id: this.owner || '',
                             publish: +this.publish,
+                            meta_title: this.metaTitle,
                             description: this.description,
                             keywords: this.keywords
                         },

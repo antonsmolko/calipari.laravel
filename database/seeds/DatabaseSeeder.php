@@ -24,8 +24,10 @@ class DatabaseSeeder extends Seeder
             OrderStatusesTableSeeder::class,
             PagesTableSeeder::class,
             ImagesTableSeeder::class,
+            PostsTableSeeder::class,
             TexturesTableSeeder::class, // ! after ImagesTableSeeder::class
             CategoriesTableSeeder::class, // ! after ImagesTableSeeder::class
+            PurchaseStepsTableSeeder::class, // ! after ImagesTableSeeder::class
         ]);
     }
 }

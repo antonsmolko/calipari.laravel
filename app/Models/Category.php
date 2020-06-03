@@ -14,6 +14,8 @@ class Category extends Model
     use Searchable;
     use Filtered;
 
+    const TYPES = ['topics', 'colors', 'tags', 'interiors'];
+
     /**
      * @var array
      */

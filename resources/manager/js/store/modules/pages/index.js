@@ -1,5 +1,5 @@
 import { uniqueFieldEditMixin } from "../../mixins/getters";
-import { axiosAction, axiosPatch } from "../../mixins/actions";
+import { axiosAction } from "../../mixins/actions";
 
 const state = {
     fields: {

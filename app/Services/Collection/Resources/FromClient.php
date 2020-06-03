@@ -21,6 +21,7 @@ class FromClient extends JsonResource
             'alias' => $this->alias,
             'images' => FromCollectionResource::collection($this->images),
             'main_image_id' => $this->main_image_id,
+            'meta_title' => $this->meta_title,
             'description' => $this->description,
             'keywords' => $this->keywords
         ];

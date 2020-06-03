@@ -1,13 +1,13 @@
 export const uniqueFieldMixin = (items, fieldName, value) => {
-    return items ? !!items.find(item => item[fieldName].toLowerCase() === value.toLowerCase()) : true;
+    return !items.length || !items.some((item) => (
+        item[fieldName].toString().toLowerCase() === value.toString().toLowerCase())
+    );
 };
 
 export const uniqueFieldEditMixin = (items, fieldName, value, id) => {
-    return items
-        ? !!items.find(item => {
-            if(+item.id !== +id) {
-                return item[fieldName].toLowerCase() === value.toLowerCase();
-            }
-        })
-        : true;
-}
+    return !items.length || !items.some((item) => {
+        if (+item.id !== +id) {
+            return item[fieldName].toString().toLowerCase() === value.toString().toLowerCase();
+        }
+    });
+};

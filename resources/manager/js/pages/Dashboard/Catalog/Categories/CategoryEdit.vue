@@ -69,6 +69,12 @@
                 <md-card>
                     <card-icon-header icon="timeline" title="SEO" />
                     <md-card-content>
+                        <v-input title="Мета заголовок"
+                                 name="meta_title"
+                                 :value="metaTitle"
+                                 :maxlength="150"
+                                 :vField="$v.metaTitle"
+                                 :module="storeModule" />
 
                         <v-textarea name="description"
                                     :value="description"
@@ -125,7 +131,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.title.$dirty) || !this.isUniqueTitleEdit
+                    return ((value.trim() === '') && !this.$v.title.$dirty) || this.isUniqueTitleEdit
                 }
             },
             alias: {
@@ -133,7 +139,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.alias.$dirty) || !this.isUniqueAliasEdit
+                    return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAliasEdit
                 },
                 testAlias (value) {
                     return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
@@ -143,6 +149,9 @@
                 touch: false
             },
             publish: {
+                touch: false
+            },
+            metaTitle: {
                 touch: false
             },
             description: {
@@ -159,15 +168,16 @@
                 image: state => state.fields.image,
                 imagePath: state => state.fields.image_path,
                 publish: state => state.fields.publish,
+                metaTitle: state => state.fields.meta_title,
                 description: state => state.fields.description,
                 keywords: state => state.fields.keywords,
                 hasPublishedImages: state => state.fields.has_published_images
             }),
             isUniqueTitleEdit () {
-                return !!this.$store.getters['categories/isUniqueTitleEdit'](this.title, this.id);
+                return this.$store.getters['categories/isUniqueTitleEdit'](this.title, this.id);
             },
             isUniqueAliasEdit () {
-                return !!this.$store.getters['categories/isUniqueAliasEdit'](this.alias, this.id);
+                return this.$store.getters['categories/isUniqueAliasEdit'](this.alias, this.id);
             }
         },
         created() {
@@ -201,6 +211,7 @@
                             alias: this.alias,
                             image: this.image,
                             publish: +this.publish,
+                            meta_title: this.metaTitle,
                             description: this.description,
                             keywords: this.keywords
                         }

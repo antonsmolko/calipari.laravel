@@ -20,6 +20,7 @@ class FromEdit extends JsonResource
             'title' => $this->title,
             'alias' => $this->alias,
             'image_path' => $this->image_path,
+            'meta_title' => $this->meta_title,
             'description' => $this->description,
             'publish' => $this->publish,
             'keywords' => $this->keywords,

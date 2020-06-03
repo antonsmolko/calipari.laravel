@@ -15,6 +15,7 @@
                 <div>
                     <tabs
                         :tab-name="['Основные настройки', 'Модули', 'SEO']"
+                        :activeTab="activeTab"
                         color-button="success">
                         <template slot="tab-pane-1">
                             <div class="md-layout md-gutter">
@@ -28,14 +29,6 @@
                                              :differ="true"
                                              :module="storeModule"
                                              :vRules="{ required: true, unique: true, minLength: true }" />
-                                    <v-input title="Длиный заголовок"
-                                             icon="title"
-                                             name="long_title"
-                                             :value="fields.long_title"
-                                             :vField="$v.fields.long_title"
-                                             :differ="true"
-                                             :maxlength="150"
-                                             :module="storeModule" />
                                     <v-image name="image"
                                              :imgDefault="item.image_path"
                                              :vField="$v.fields.image"
@@ -56,6 +49,14 @@
                             <slot name="modules"/>
                         </template>
                         <template slot="tab-pane-3">
+                            <v-input title="Мета заголовок"
+                                     icon="title"
+                                     name="meta_title"
+                                     :value="fields.meta_title"
+                                     :vField="$v.fields.meta_title"
+                                     :differ="true"
+                                     :maxlength="150"
+                                     :module="storeModule" />
                             <v-input title="Описание"
                                      icon="description"
                                      name="description"
@@ -85,32 +86,31 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+import { required, minLength } from 'vuelidate/lib/validators'
 import Tabs from '@/custom_components/Tabs.vue'
 import TextEditor from '@/custom_components/Editors/TextEditor'
-import { required, minLength } from 'vuelidate/lib/validators'
-
+import { pageTitle } from '@/mixins/base'
 import { updateMethod } from '@/mixins/crudMethods'
 
 export default {
     name: "PageLayout",
     components: {
         Tabs,
-        'text-editor': TextEditor },
+        'text-editor': TextEditor
+    },
     mixins: [
-        updateMethod
+        updateMethod,
+        pageTitle
     ],
     props: {
-        item: {
-            type: Object,
-            required: true
-        },
-        fields: {
-            type: Object,
-            required: true
+        pageId: {
+            type: Number,
+            default: 1
         }
     },
     data: () => ({
+        activeTab: '',
         redirectRoute: '/manager/pages',
         responseData: false,
         storeModule: 'pages'
@@ -125,13 +125,13 @@ export default {
                     return (value.trim() === '') && !this.$v.fields.title.$dirty || !this.isUniqueTitle
                 }
             },
-            long_title: {
-                touch: false
-            },
             image: {
                 touch: false
             },
             intro: {
+                touch: false
+            },
+            meta_title: {
                 touch: false
             },
             description: {
@@ -144,16 +144,31 @@ export default {
 
     },
     computed: {
+        ...mapState({
+            fields: state => state.pages.fields,
+            item: state => state.pages.item
+        }),
         isUniqueTitle() {
             return this.$store.getters['pages/isUniqueTitle'](this.fields.title, this.item.id);
         }
     },
     created() {
-        this.getItemsAction()
-            .then(() => this.responseData = true);
+        if (this.$route.params.activeTab)
+            this.activeTab = this.$route.params.activeTab;
+
+        Promise.all([
+            this.getItemAction(this.pageId),
+            this.getItemsAction()
+        ])
+            .then(() => {
+                this.setPageTitle(this.fields.title)
+                this.responseData = true
+            })
+            .catch(() => this.$router.push(this.redirectRoute))
     },
     methods: {
         ...mapActions('pages', {
+            getItemAction: 'getItem',
             getItemsAction: 'getItems',
             deleteImageAction: 'deleteImage'
         }),
@@ -163,9 +178,9 @@ export default {
                     id: this.item.id,
                     formData: {
                         title: this.fields.title,
-                        long_title: this.fields.long_title,
                         intro: this.fields.intro,
                         image: this.fields.image,
+                        meta_title: this.fields.meta_title,
                         description: this.fields.description,
                         keywords: this.fields.keywords
                     }

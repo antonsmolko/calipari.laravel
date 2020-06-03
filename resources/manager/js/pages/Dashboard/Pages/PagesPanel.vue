@@ -8,6 +8,8 @@
             </md-card>
         </div>
         <panel-card-link route="manager.pages.home" icon="home" title="Главная страница" color="blue" />
+        <panel-card-link route="manager.pages.portfolio" icon="work" title="Портфолио" color="blue-grey" />
+        <panel-card-link route="manager.pages.blog" icon="article" title="Блог" color="light-green" />
     </div>
 </template>
 

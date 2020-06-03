@@ -35,7 +35,8 @@ class UpdateRequest extends FormRequest
             'tags' => 'bail|array|nullable',
             'owner_id' => 'bail|integer|exists:owners,id|nullable',
             'publish' => 'bail|required|integer',
-            'description' => 'max:' . config('validation.description.max'),
+            'meta_title' => 'bail|max:' . config('validation.meta_title.max'),
+            'description' => 'bail|max:' . config('validation.description.max'),
             'keywords' => 'max:' . config('validation.keywords.max')
         ];
     }

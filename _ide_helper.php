@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 7.8.1 on 2020-05-18 19:24:20.
+ * Generated for Laravel 7.8.1 on 2020-05-29 21:01:37.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -15978,6 +15978,18 @@ namespace Facade\Ignition\Facades {
  
 }
 
+namespace Jenssegers\Date { 
+
+    /**
+     * 
+     *
+     */ 
+    class Date {
+         
+    }
+ 
+}
+
 namespace Laravel\Socialite\Facades { 
 
     /**
@@ -20874,6 +20886,8 @@ namespace  {
     class Debugbar extends \Barryvdh\Debugbar\Facade {}
 
     class Flare extends \Facade\Ignition\Facades\Flare {}
+
+    class Date extends \Jenssegers\Date\Date {}
 
     class Socialite extends \Laravel\Socialite\Facades\Socialite {}
 

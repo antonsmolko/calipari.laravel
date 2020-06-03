@@ -6,7 +6,7 @@
                             color="md-success"
                             :disabled="editDisabled"
                             :route="`manager.${subPath}.edit`"
-                            :params="{ id: item.id }" />
+                            :params="{ id: item.id, ...restParams }" />
 
         <control-button title="Удалить"
                         icon="delete"
@@ -35,6 +35,10 @@
             editDisabled: {
                 type: Boolean,
                 default: false
+            },
+            restParams: {
+                type: Object,
+                default: () => ({})
             }
         },
         methods: {

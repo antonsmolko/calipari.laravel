@@ -12,16 +12,27 @@ abstract class BaseResourceController extends Controller
 {
     protected ClientBaseResourceService $service;
 
+    /**
+     * BaseResourceController constructor.
+     * @param ClientBaseResourceService $service
+     */
     public function __construct(ClientBaseResourceService $service) {
         $this->service = $service;
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function index(): JsonResponse
     {
         return response()->json($this->service->index());
     }
 
-    public function show(int $id): JsonResponse
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getItem(int $id): JsonResponse
     {
         return response()->json($this->service->getItem($id));
     }

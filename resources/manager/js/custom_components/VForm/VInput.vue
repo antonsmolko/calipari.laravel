@@ -107,13 +107,16 @@
         },
         data() {
             return {
-                valueReference: ''
+                referenceValue: ''
             }
         },
         computed: {
             storeModule() {
                 return this.module ? `${this.module}/` : '';
             }
+        },
+        created() {
+            this.referenceValue = this.value;
         },
         methods: {
             onInput(value) {
@@ -139,16 +142,13 @@
                 this.differ ? this.touchedDifferent(v, value) : v.$touch();
             },
             touchedDifferent(v, value) {
-                this.isDiffer(value, this.valueReference)
+                this.isDiffer(value, this.referenceValue)
                     ? v.$touch()
                     : v.$reset()
             },
             isDiffer(a, b) {
                 return a != b;
             }
-        },
-        created() {
-            this.valueReference = this.value;
         }
     }
 </script>

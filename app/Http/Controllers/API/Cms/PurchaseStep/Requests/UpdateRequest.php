@@ -27,7 +27,7 @@ class UpdateRequest extends FormRequest
 
         return [
             'title' => 'bail|required|min:' . config('validation.long_title.min') . '|max:' . config('validation.long_title.max'),
-            'image' => 'bail|file|image|mimes:' .  $mimeTypes . '|min:' . config('validation.upload.min_size.min') . '|max:' . config('validation.upload.max_size'),
+            'image' => 'bail|nullable|file|image|mimes:' .  $mimeTypes . '|min:' . config('validation.upload.min_size.min') . '|max:' . config('validation.upload.max_size'),
             'description' => 'max:' . config('validation.text.max')
         ];
     }

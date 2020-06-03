@@ -203,3 +203,22 @@ if (! function_exists('phoneFormat')) {
         return ($phone) ? trim(preg_replace($pattern, $format, $phone, 1)) : false;
     }
 }
+
+if (! function_exists('addImagesFromResource')) {
+    function addImagesFromResource(\App\Models\Model $item, array $files)
+    {
+        $images = json_decode($item->images, true) ?? [];
+        $lastIndex = !empty($images) ? last($images)['index'] : 0;
+
+        foreach ($files as $file) {
+            $imageAttributes = uploader()->upload($file);
+
+            array_push($images, [
+                'index' => ++$lastIndex,
+                'path' => $imageAttributes['path']
+            ]);
+        }
+
+        return $images;
+    }
+}

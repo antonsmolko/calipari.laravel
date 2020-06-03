@@ -13,6 +13,7 @@ const state = {
         owner_id: '',
         main_image_id: '',
         publish: '',
+        meta_title: '',
         description: '',
         keywords: '',
         has_published_images: ''
@@ -31,7 +32,7 @@ const mutations = {
         state.items = state.items.filter(item => item.id !== payload);
     },
     CLEAR_ITEM_FIELDS (state) {
-        for (const field of Object.keys(state.fields)) {
+        for(const field of Object.keys(state.fields)) {
             state.fields[field] = state.fields[field] instanceof Array ? [] : '';
         }
     },

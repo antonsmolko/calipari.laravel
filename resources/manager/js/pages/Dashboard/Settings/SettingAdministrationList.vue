@@ -146,6 +146,17 @@
                 settingGroups: state => state.settingGroups.items
             }),
         },
+        created() {
+            if (this.$route.params.activeTab)
+                this.activeTab = this.$route.params.activeTab;
+            this.getGroupsAction()
+                .then(() => this.getItemsWithGroupAction())
+                .then(() => {
+                    this.setPageTitle('Администрирование');
+                    this.responseData = true;
+                })
+                .catch(() => this.$router.push({ name: 'manager.settings' }));
+        },
         methods: {
             ...mapActions({
                 getItemsWithGroupAction: 'settings/getItemsWithGroup',
@@ -169,17 +180,6 @@
                     storeModule: 'settingGroups'
                 })
             },
-        },
-        created() {
-            if (this.$route.params.activeTab)
-                this.activeTab = this.$route.params.activeTab;
-            this.getGroupsAction()
-                .then(() => this.getItemsWithGroupAction())
-                .then(() => {
-                    this.setPageTitle('Администрирование');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push({ name: 'manager.settings' }));
         }
     }
 </script>

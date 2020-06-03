@@ -1,8 +1,7 @@
 <template>
     <div class="md-layout">
         <panel-card-link route="manager.images" icon="image" title="Изображения" :count="13434" color="danger" />
-        <panel-card-link route="manager.images.trashed" icon="delete" title="Корзина" :count="753" color="blue-grey" />
-        <panel-card-link route="manager.catalog" icon="category" title="Каталог" :count="23" color="rose" />
+        <panel-card-link route="manager.catalog" icon="category" title="Каталог" :count="23" color="blue-grey" />
         <panel-card-link route="manager.textures" icon="style" title="Фактуры" :count="6" color="primary" />
         <panel-card-link route="manager.settings" icon="settings" title="Конфигурация" :count="15" color="deep-purple" />
         <panel-card-link route="manager.store" icon="local_mall" title="Магазин" color="indigo"/>

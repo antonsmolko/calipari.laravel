@@ -18,7 +18,11 @@
                 <sidebar-item :link="{name: 'Панель управления', icon: 'dashboard', path: '/manager/dashboard'}" />
                 <sidebar-item :link="{name: 'Конфигурация', icon: 'settings', path: '/manager/settings'}" />
                 <sidebar-item :link="{name: 'Изображения', icon: 'image', path: '/manager/images'}" />
-                <sidebar-item :link="{name: 'Корзина', icon: 'delete', path: '/manager/images/trashed'}" />
+                <sidebar-item :link="{name: 'Страницы', icon: 'layers', path: '/manager/pages'}" >
+                    <sidebar-item :link="{name: 'Главная', icon: 'home', path: '/manager/pages/home'}" />
+                    <sidebar-item :link="{name: 'Портфолио', icon: 'work', path: '/manager/pages/portfolio'}" />
+                    <sidebar-item :link="{name: 'Блог', icon: 'article', path: '/manager/pages/blog'}" />
+                </sidebar-item>
                 <sidebar-item :link="{name: 'Магазин', icon: 'local_mall', path: '/manager/store'}">
                     <sidebar-item :link="{name: 'Доставка', icon: 'local_mall', path: '/manager/store/deliveries'}" />
                     <sidebar-item :link="{name: 'Статусы заказа', icon: 'update', path: '/manager/store/order-statuses'}" />

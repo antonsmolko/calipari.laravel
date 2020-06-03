@@ -27,10 +27,10 @@ class UpdateRequest extends FormRequest
 
         return [
             'title' => 'bail|required|unique:pages,title,' . $id . '|min:' . config('validation.title.min') . '|max:' . config('validation.title.max'),
-            'long_title' => 'bail|nullable|min:' . config('validation.long_title.min') . '|max:' . config('validation.long_title.max'),
+            'meta_title' => 'bail|nullable|max:' . config('validation.meta_title.max'),
             'image' => 'bail|nullable|file|image|mimes:' . config('validation.upload.mimes') . '|min:' . config('validation.upload.min_size') . '|max:' . config('validation.upload.max_size'),
             'image_to_delete' => 'bail|nullable|boolean',
-            'intro' => 'bail|nullable|max:' . config('validation.description.max'),
+            'intro' => 'bail|nullable|string',
             'description' => 'bail|nullable|max:' . config('validation.description.max'),
             'keywords' => 'nullable|max:' . config('validation.keywords.max')
         ];

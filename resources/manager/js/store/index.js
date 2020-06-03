@@ -18,6 +18,8 @@ import orderStatuses from './modules/order-statuses';
 import table from './modules/table';
 import pages from './modules/pages';
 import purchaseSteps from './modules/purchase-steps';
+import workExamples from './modules/work-examples';
+import posts from './modules/posts';
 
 Vue.use(Vuex);
 
@@ -121,6 +123,8 @@ export default new Vuex.Store({
         orderStatuses,
         table,
         pages,
-        purchaseSteps
+        purchaseSteps,
+        workExamples,
+        posts
     }
 });

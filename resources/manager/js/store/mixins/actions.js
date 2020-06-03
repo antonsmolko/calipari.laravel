@@ -13,7 +13,7 @@ export const axiosAction = (method, commit, { url, data = null, thenContent = nu
         })
         .catch(error => {
             commit('UPDATE_ERRORS', error.response, { root: true });
-            throw Error;
+            throw error;
         });
 }
 
@@ -32,6 +32,6 @@ export const axiosPatch = ({ commit, data, url, thenContent }) => {
         })
         .catch(error => {
             commit('UPDATE_ERRORS', error.response, { root: true });
-            throw Error;
+            throw error;
         });
 }

@@ -27,6 +27,7 @@ class FromEdit extends JsonResource
             'main_image_id' => $this->main_image_id,
             'owner_id' => $this->owner_id,
             'publish' => $this->publish,
+            'meta_title' => $this->meta_title,
             'description' => $this->description,
             'keywords' => $this->keywords
         ];

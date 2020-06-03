@@ -30,7 +30,8 @@ class UpdateRequest extends FormRequest
             'alias' => 'bail|required|unique:categories,alias,' . $id . '|min:' . config('validation.alias.min') . '|max:' . config('validation.alias.max') . '|regex:' . config('validation.alias.pattern'),
             'image' => 'bail|file|image|mimes:' . config('validation.upload.mimes') . '|min:' . config('validation.upload.min_size') . '|max:' . config('validation.upload.max_size'),
             'publish' => 'bail|integer',
-            'description' => 'max:' . config('validation.description.max'),
+            'meta_title' => 'bail|max:' . config('validation.meta_title.max'),
+            'description' => 'bail|max:' . config('validation.description.max'),
             'keywords' => 'max:' . config('validation.keywords.max')
         ];
     }

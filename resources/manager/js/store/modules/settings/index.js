@@ -9,7 +9,8 @@ const state = {
         group_id: ''
     },
     types: [],
-    items: []
+    items: [],
+    entries: {}
 };
 
 const mutations = {
@@ -34,15 +35,6 @@ const mutations = {
             state.fields[field] = '';
         }
     },
-    // SET_ITEM_FIELDS (state, id) {
-    //     for(let item of state.items) {
-    //         if(item.id === +id) {
-    //             for(const field of Object.keys(state.fields)) {
-    //                 state.fields[field] = item[field] === null ? '' : item[field];
-    //             }
-    //         }
-    //     }
-    // },
     SET_ITEM_FIELDS (state, payload) {
         for(let field of Object.keys(state.fields)) {
             state.fields[field] = payload[field] === null ? '' : payload[field];
@@ -50,6 +42,9 @@ const mutations = {
     },
     SET_TYPES (state, payload) {
         state.types = payload;
+    },
+    SET_FIELD (state, { field, value }) {
+        state[field] = value
     }
 };
 
@@ -81,6 +76,14 @@ const actions = {
             url: `/settings/${id}`,
             thenContent: response => {
                 commit('SET_ITEM_FIELDS', response.data);
+            }
+        })
+    },
+    getEntries ({ commit }) {
+        return axiosAction('get', commit, {
+            url: `/settings/entries`,
+            thenContent: response => {
+                commit('SET_FIELD', { field: 'entries', value: response.data });
             }
         })
     },

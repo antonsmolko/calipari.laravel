@@ -10,6 +10,7 @@ const state = {
         image: '',
         image_path: '',
         publish: '',
+        meta_title: '',
         description: '',
         keywords: '',
         has_published_images: ''

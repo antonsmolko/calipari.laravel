@@ -263,10 +263,45 @@ const PurchaseStepCreate = resolve => {
         resolve(require('@/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepCreate.vue'))
     })
 };
-
 const PurchaseStepEdit = resolve => {
     require.ensure(['@/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepEdit.vue'], () => {
         resolve(require('@/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepEdit.vue'))
+    })
+};
+
+const PortfolioPage = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Portfolio'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Portfolio'))
+    })
+};
+const WorkExampleCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleCreate.vue'))
+    })
+};
+const WorkExampleEdit = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleEdit.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleEdit.vue'))
+    })
+};
+const WorkExampleImageList = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Portfolio/WorkExamples/ImageList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Portfolio/WorkExamples/ImageList.vue'))
+    })
+};
+const BlogPage = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Blog'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Blog'))
+    })
+};
+const PostCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Blog/Posts/PostCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Blog/Posts/PostCreate.vue'))
+    })
+};
+const PostEdit = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Blog/Posts/PostEdit.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Blog/Posts/PostEdit.vue'))
     })
 };
 
@@ -642,15 +677,53 @@ const managerMenuPages = {
         },
         {
             path: 'home/purchase-steps/create',
-            name: 'manager.pages.home.purchase-steps.create',
+            name: 'manager.pages.home.purchaseSteps.create',
             component: PurchaseStepCreate
         },
         {
             path: 'home/purchase-steps/:id',
-            name: 'manager.pages.home.purchase-steps.edit',
+            name: 'manager.pages.home.purchaseSteps.edit',
             component: PurchaseStepEdit,
             props: true
-        }
+        },
+        {
+            path: 'portfolio',
+            name: 'manager.pages.portfolio',
+            component: PortfolioPage
+        },
+        {
+            path: 'portfolio/work-examples/create',
+            name: 'manager.pages.portfolio.workExamples.create',
+            component: WorkExampleCreate
+        },
+        {
+            path: 'portfolio/work-examples/:id',
+            name: 'manager.pages.portfolio.workExamples.edit',
+            component: WorkExampleEdit,
+            props: true
+        },
+        {
+            path: 'portfolio/work-examples/:id/images',
+            name: 'manager.pages.portfolio.workExamples.images',
+            component: WorkExampleImageList,
+            props: true
+        },
+        {
+            path: 'blog',
+            name: 'manager.pages.blog',
+            component: BlogPage
+        },
+        {
+            path: 'blog/posts/create',
+            name: 'manager.pages.blog.posts.create',
+            component: PostCreate
+        },
+        {
+            path: 'blog/posts/:id/edit',
+            name: 'manager.pages.blog.posts.edit',
+            component: PostEdit,
+            props: true
+        },
     ]
 };
 

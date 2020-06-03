@@ -87,6 +87,13 @@
                     <card-icon-header icon="timeline" title="SEO" />
                     <md-card-content>
                         <div class="md-layout">
+                            <div class="md-layout-item md-size-100">
+                                <v-input title="Мета заголовок"
+                                         name="meta_title"
+                                         :vField="$v.metaTitle"
+                                         :maxlength="150"
+                                         :module="storeModule" />
+                            </div>
                             <div class="md-layout-item md-size-50 md-medium-size-100">
                                 <v-textarea name="description"
                                             :vField="$v.description"
@@ -132,7 +139,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty || !this.isUniqueTitle
+                    return (value.trim() === '') && !this.$v.title.$dirty || this.isUniqueTitle
                 }
             },
             alias: {
@@ -143,8 +150,11 @@
                 },
                 minLength: minLength(2),
                 isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.alias.$dirty) || !this.isUniqueAlias
+                    return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAlias
                 },
+            },
+            metaTitle: {
+                touch: false
             },
             description: {
                 touch: false
@@ -161,6 +171,7 @@
                 interiors: state => state.collections.fields.interiors,
                 tags: state => state.collections.fields.tags,
                 owner: state => state.collections.fields.owner_id,
+                metaTitle: state => state.collections.fields.meta_title,
                 description: state => state.collections.fields.description,
                 keywords: state => state.collections.fields.keywords,
                 ownerList: state => state.subCategories.itemsByType.owners
@@ -178,10 +189,10 @@
                 return this.$store.getters['categories/getItemsByType']('tags');
             },
             isUniqueTitle() {
-                return !!this.$store.getters['collections/isUniqueTitle'](this.title);
+                return this.$store.getters['collections/isUniqueTitle'](this.title);
             },
             isUniqueAlias () {
-                return !!this.$store.getters['collections/isUniqueAlias'](this.alias);
+                return this.$store.getters['collections/isUniqueAlias'](this.alias);
             }
         },
         created() {
@@ -213,6 +224,7 @@
                         interiors: this.interiors,
                         tags: this.tags,
                         owner_id: this.owner || null,
+                        meta_title: this.metaTitle,
                         description: this.description,
                         keywords: this.keywords
                     },

@@ -21,6 +21,7 @@ class CreateCollectionsTable extends Migration
             $table->unsignedInteger('owner_id')->nullable();
             $table->unsignedSmallInteger('max_print_width')->nullable();
             $table->text('image_description')->nullable();
+            $table->string('meta_title')->nullable();
             $table->text('description')->nullable();
             $table->string('keywords')->nullable();
             $table->unsignedTinyInteger('publish')->default(0);
