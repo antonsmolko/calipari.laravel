@@ -13,16 +13,14 @@ class AuthService extends BaseAuthService
 {
     /**
      * @param Request $request
-     * @return array
+     * @return UserResource
      */
     public function index(Request $request)
     {
         $user = $request->user();
 
         if ($user && $user->isActive() && $user->isConfirmed()) {
-            return [
-                'data' => new UserResource($request->user())
-            ];
+            return new UserResource($request->user());
         }
 //        $this->logout();
     }
@@ -30,6 +28,14 @@ class AuthService extends BaseAuthService
     public function logout()
     {
         $this->auth->invalidate();
+    }
+
+    /**
+     * @return string
+     */
+    public function refresh()
+    {
+        return $this->auth->refresh();
     }
 
     /**

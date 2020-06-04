@@ -34,12 +34,10 @@ class AuthController extends BaseAuthController
     }
 
     /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function refresh()
+    public function refresh(): JsonResponse
     {
-        return auth()->refresh();
+        return response()->json($this->authService->refresh());
     }
 }
