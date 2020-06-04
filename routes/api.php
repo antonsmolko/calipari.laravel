@@ -43,8 +43,8 @@ Route::group(['prefix' => '/auth', ['middleware' => 'throttle:20,5']], function(
 
 Route::group(['prefix' => '/auth'], function() {
     Route::get('me', 'Auth\AuthController@me');
-//    Route::post('refresh', 'Auth\AuthController@refresh');
-    Route::get('/logout', 'Auth\AuthController@logout')->middleware('jwt.auth');
+    Route::post('refresh', 'Auth\AuthController@refresh');
+    Route::get('logout', 'Auth\AuthController@logout')->middleware('jwt.auth');
 });
 
 
