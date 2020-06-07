@@ -14,9 +14,9 @@ abstract class ClientBaseResourceRepository
     protected $model;
 
     /**
-     * @return Collection
+     * @return Collection|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index(): Collection
+    public function index()
     {
         return $this->model::published()->orderBy('id', 'acs')->get();
     }

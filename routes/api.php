@@ -132,8 +132,11 @@ Route::group(['prefix' => 'carts'], function() {
 /** Get Page SEO Content */
 Route::get('pages/{page}', 'Client\Page\PageController@getItemByAlias');
 
-/** Home Module: PurchaseSteps */
-Route::get('purchase-steps', 'Client\PurchaseStep\PurchaseStepController');
+/** Home: PurchaseSteps */
+Route::get('home-purchase-steps', 'Client\PurchaseStep\PurchaseStepController');
+
+/** Home: Interiors */
+Route::get('home-interiors', 'Client\HomeModuleInterior\HomeModuleInteriorController');
 
 /** Portfolio Module: Work Examples */
 Route::post('work-examples/list', 'Client\WorkExample\WorkExampleController@getItems');
@@ -374,17 +377,30 @@ Route::group(['prefix' => 'manager'], function() {
     });
 
 
-    // Pages
+    /** Pages */
     Route::group(['prefix' => 'pages'], function() {
         Route::post('/{id}', 'Cms\Page\PageController@update');
         Route::get('/{id}/delete-image', 'Cms\Page\PageController@deleteImage');
     });
     Route::apiResource('pages', 'Cms\Page\PageController')->except(['create', 'update', 'edit']);
 
-    Route::post('purchase-steps/{id}', 'Cms\PurchaseStep\PurchaseStepController@update')
+    /** Home: Purchase Steps */
+    Route::post('home-purchase-steps/{id}', 'Cms\PurchaseStep\PurchaseStepController@update')
         ->where('id', '[0-9]+');
-    Route::apiResource('purchase-steps', 'Cms\PurchaseStep\PurchaseStepController')
+    Route::apiResource('home-purchase-steps', 'Cms\PurchaseStep\PurchaseStepController')
         ->except(['create', 'update', 'edit']);
+
+    /** Home: Interiors */
+    Route::get('home-interiors/{id}/publish', 'Cms\HomeModuleInterior\HomeModuleInteriorController@publish')
+        ->where('id', '[0-9]+');
+    Route::get('home-interiors/{id}/slides', 'Cms\HomeModuleInterior\HomeModuleInteriorController@getItemSlides')
+        ->where('id', '[0-9]+');
+    Route::apiResource('home-interiors', 'Cms\HomeModuleInterior\HomeModuleInteriorController')
+        ->except(['create', 'store', 'edit']);
+    Route::post('home-interior-slides/{id}', 'Cms\HomeModuleInterior\HomeModuleInteriorSlideController@update')
+        ->where('id', '[0-9]+');
+    Route::apiResource('home-interior-slides', 'Cms\HomeModuleInterior\HomeModuleInteriorSlideController')
+        ->except(['create', 'edit']);
 
     /** WorkExamples */
     Route::group(['prefix' => 'work-examples'], function() {

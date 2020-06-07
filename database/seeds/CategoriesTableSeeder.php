@@ -36,6 +36,16 @@ class CategoriesTableSeeder extends Seeder
             $category->images()->attach($images, ['category_type' => 'interiors']);
             $category->publish = 1;
             $category->save();
+
+            $lastInterior = DB::table('home_module_interiors')
+                ->orderBy('id', 'desc')
+                ->first();
+
+            factory(App\Models\HomeModuleInterior::class)->create([
+                'title' => $category->title,
+                'interior_id' => $category->id,
+                'order' => $lastInterior ? $lastInterior->id + 1 : 1
+            ]);
         }
 
         foreach (config('seeds.categories.tags') as $category) {

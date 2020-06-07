@@ -185,6 +185,9 @@
 .md-flex {
     display: flex;
 }
+.md-flex-right {
+    justify-content: flex-end;
+}
 
 .md-justify-end {
     display: flex;
@@ -194,6 +197,10 @@
 .md-between {
     display: flex;
     justify-content: space-between;
+}
+
+.md-block {
+    display: block;
 }
 
 // Spinner

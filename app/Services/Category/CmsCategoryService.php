@@ -12,13 +12,11 @@ use App\Services\Category\Handlers\UpdateHandler;
 use App\Services\Image\CmsImageService;
 use App\Services\Image\Handlers\UploadHandler;
 use App\Services\Category\Repositories\CmsCategoryRepository;
-use Illuminate\Database\Eloquent\Collection;
 
 class CmsCategoryService extends CmsBaseCategoryService
 {
     private UpdateHandler $updateHandler;
     private StoreHandler $storeHandler;
-
     private DestroyHandler $destroyHandler;
 
     /**
@@ -29,6 +27,7 @@ class CmsCategoryService extends CmsBaseCategoryService
      * @param UploadHandler $uploadHandler
      * @param CmsImageService $imageService
      * @param UpdateHandler $updateHandler
+     * @param DestroyHandler $destroyHandler
      */
     public function __construct(
         CmsCategoryRepository $repository,
@@ -36,7 +35,8 @@ class CmsCategoryService extends CmsBaseCategoryService
         StoreHandler $storeHandler,
         UploadHandler $uploadHandler,
         CmsImageService $imageService,
-        UpdateHandler $updateHandler)
+        UpdateHandler $updateHandler,
+        DestroyHandler $destroyHandler)
     {
         parent::__construct(
             $repository,
@@ -45,6 +45,7 @@ class CmsCategoryService extends CmsBaseCategoryService
             $imageService);
         $this->storeHandler = $storeHandler;
         $this->updateHandler = $updateHandler;
+        $this->destroyHandler = $destroyHandler;
     }
 
     /**

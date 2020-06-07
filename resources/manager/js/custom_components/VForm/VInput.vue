@@ -4,7 +4,7 @@
         <div class="form-group">
             <md-field :class="[{ 'md-error': vField.$error }, { 'md-valid': !vField.$invalid }]">
                 <md-icon v-if="icon">{{ icon }}</md-icon>
-                <md-input :type="type" :name="name" @input="onInput" :value="value" :maxlength="maxlength" />
+                <md-input :type="type" :name="name" @input="onInput" :value="value" :min="min" :maxlength="maxlength" />
                 <slide-y-down-transition v-show="vField.$error">
                     <md-icon class="error">close</md-icon>
                 </slide-y-down-transition>

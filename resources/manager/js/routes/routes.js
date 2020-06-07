@@ -268,6 +268,16 @@ const PurchaseStepEdit = resolve => {
         resolve(require('@/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepEdit.vue'))
     })
 };
+const InteriorSlideCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Home/Interiors/SlideCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Home/Interiors/SlideCreate.vue'))
+    })
+};
+const InteriorSlideEdit = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Home/Interiors/SlideEdit.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Home/Interiors/SlideEdit.vue'))
+    })
+};
 
 const PortfolioPage = resolve => {
     require.ensure(['@/pages/Dashboard/Pages/Portfolio'], () => {
@@ -684,6 +694,18 @@ const managerMenuPages = {
             path: 'home/purchase-steps/:id',
             name: 'manager.pages.home.purchaseSteps.edit',
             component: PurchaseStepEdit,
+            props: true
+        },
+        {
+            path: 'home/interiors/:interiorId/slides/create',
+            name: 'manager.pages.home.interiorSlides.create',
+            component: InteriorSlideCreate,
+            props: true
+        },
+        {
+            path: 'home/interiors/slides/:id',
+            name: 'manager.pages.home.interiorSlides.edit',
+            component: InteriorSlideEdit,
             props: true
         },
         {

@@ -86,6 +86,14 @@ class Image extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function homeModuleInteriorSlide()
+    {
+        return $this->hasOne('App\Models\HomeModuleInteriorSlide');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function format()

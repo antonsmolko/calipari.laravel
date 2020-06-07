@@ -74,12 +74,11 @@
             id: {
                 type: [ Number, String ],
                 required: true
-            },
-            result: [],
+            }
         },
         data () {
             return {
-                storeModule: 'purchaseSteps',
+                storeModule: 'homePurchaseSteps',
                 responseData: false,
                 redirectRoute: {
                     name: 'manager.pages.home',
@@ -101,7 +100,7 @@
             }
         },
         computed: {
-            ...mapState('purchaseSteps', {
+            ...mapState('homePurchaseSteps', {
                 title: state => state.fields.title,
                 imagePath: state => state.fields.image_path,
                 image: state => state.fields.image,
@@ -118,7 +117,7 @@
                 .catch(() => this.$router.push(this.redirectRoute));
         },
         methods: {
-            ...mapActions('purchaseSteps', {
+            ...mapActions('homePurchaseSteps', {
                 getItemAction: 'getItem',
                 clearFieldsAction: 'clearItemFields'
             }),

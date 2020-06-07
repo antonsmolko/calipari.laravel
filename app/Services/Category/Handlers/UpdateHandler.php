@@ -6,19 +6,27 @@ namespace App\Services\Category\Handlers;
 
 use App\Models\Category;
 use App\Services\Category\Repositories\CmsCategoryRepository;
+use App\Services\HomeModuleInterior\CmsHomeModuleInteriorService;
+use App\Services\HomeModuleInterior\Repositories\CmsHomeModuleInteriorRepository;
 use Illuminate\Support\Arr;
 
 class UpdateHandler
 {
     private CmsCategoryRepository $repository;
+    private CmsHomeModuleInteriorRepository $homeModuleInteriorRepository;
 
     /**
      * UpdateHandler constructor.
      * @param CmsCategoryRepository $repository
+     * @param CmsHomeModuleInteriorRepository $homeModuleInteriorRepository
      */
-    public function __construct(CmsCategoryRepository $repository)
+    public function __construct(
+        CmsCategoryRepository $repository,
+        CmsHomeModuleInteriorRepository $homeModuleInteriorRepository
+    )
     {
         $this->repository = $repository;
+        $this->homeModuleInteriorRepository = $homeModuleInteriorRepository;
     }
 
     /**
@@ -37,6 +45,14 @@ class UpdateHandler
             $updateData['publish'] = 0;
         }
 
-        return $this->repository->update($item, $updateData);
+        $category = $this->repository->update($item, $updateData);
+
+        if ($category['type'] === 'interiors') {
+            $moduleInteriorItem = $this->homeModuleInteriorRepository->getItemByInteriorId($category->id);
+            $this->homeModuleInteriorRepository
+                ->update($moduleInteriorItem, ['title' => $category['title']]);
+        }
+
+        return $category;
     }
 }

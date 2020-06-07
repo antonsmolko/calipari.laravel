@@ -67,6 +67,7 @@ const actions = {
     },
     update ({ commit }, { id, data }) {
         return axiosPatch({
+            method: 'PUT',
             url: `/catalog/collections/${id}`,
             commit,
             data

@@ -5,19 +5,26 @@ namespace App\Services\Image\Handlers;
 
 
 use App\Models\Image;
+use App\Services\HomeModuleInterior\Handlers\InteriorSlideDestroyHandler;
 use App\Services\Image\Repositories\CmsImageRepository;
 
 class DeleteImageHandler
 {
     private CmsImageRepository $repository;
+    private InteriorSlideDestroyHandler $homeModuleInteriorSlideDestroyHandler;
 
     /**
      * DeleteImageHandler constructor.
      * @param CmsImageRepository $repository
+     * @param InteriorSlideDestroyHandler $homeModuleInteriorSlideDestroyHandler
      */
-    public function __construct(CmsImageRepository $repository)
+    public function __construct(
+        CmsImageRepository $repository,
+        InteriorSlideDestroyHandler $homeModuleInteriorSlideDestroyHandler
+    )
     {
         $this->repository = $repository;
+        $this->homeModuleInteriorSlideDestroyHandler = $homeModuleInteriorSlideDestroyHandler;
     }
 
     /**
@@ -29,6 +36,10 @@ class DeleteImageHandler
         $collection = $image->collection;
         if (!$collection || $collection->main_image_id !== $image->id) {
 //            uploader()->remove($image->path);
+            if ($image->homeModuleInteriorSlide) {
+                $this->homeModuleInteriorSlideDestroyHandler->handle($image->homeModuleInteriorSlide);
+            }
+
             return $this->repository->destroy($image);
         }
 

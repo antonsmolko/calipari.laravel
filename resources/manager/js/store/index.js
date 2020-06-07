@@ -17,7 +17,8 @@ import orders from './modules/orders';
 import orderStatuses from './modules/order-statuses';
 import table from './modules/table';
 import pages from './modules/pages';
-import purchaseSteps from './modules/purchase-steps';
+import homePurchaseSteps from './modules/home/purchase-steps';
+import homeInteriors from './modules/home/interiors';
 import workExamples from './modules/work-examples';
 import posts from './modules/posts';
 
@@ -123,7 +124,8 @@ export default new Vuex.Store({
         orderStatuses,
         table,
         pages,
-        purchaseSteps,
+        homePurchaseSteps,
+        homeInteriors,
         workExamples,
         posts
     }

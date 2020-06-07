@@ -1,7 +1,8 @@
 <template>
     <page-layout :pageId="$config.pagesIds.home">
         <template #modules>
-            <h3>Как купить фотообои</h3>
+            <interior-list />
+            <div class="space-30"></div>
             <purchase-step-list />
         </template>
     </page-layout>
@@ -10,12 +11,14 @@
 <script>
 import PageLayout from "@/custom_components/Pages/PageLayout";
 import PurchaseStepList from "@/custom_components/Pages/Home/PurchaseSteps/PurchaseStepList";
+import InteriorList from "@/custom_components/Pages/Home/Interiors/InteriorList";
 
 export default {
     name: "HomePage",
     components: {
         PageLayout,
-        PurchaseStepList
+        PurchaseStepList,
+        InteriorList
     }
 }
 </script>

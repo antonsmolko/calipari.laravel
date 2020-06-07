@@ -31,11 +31,11 @@ class AuthService extends BaseAuthService
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function refresh()
+    public function refresh(): array
     {
-        return $this->auth->refresh();
+        return $this->respondWithRefreshToken(auth()->refresh());
     }
 
     /**
@@ -91,6 +91,35 @@ class AuthService extends BaseAuthService
         return [
             'message' => __('auth.send_activation_code', ['email' => $email]),
             'status' => 'primary'
+        ];
+    }
+
+    /**
+     * @param $user
+     * @param string $token
+     * @return array
+     */
+    public function respondWithToken($user, string $token): array
+    {
+        return [
+            'message' => __('auth.welcome_message', ['name' => $user->name]),
+            'status' => 'success',
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => $this->auth->factory()->getTTL() * 60
+        ];
+    }
+
+    /**
+     * @param string $token
+     * @return array
+     */
+    public function respondWithRefreshToken(string $token)
+    {
+        return [
+            'refresh_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => $this->auth->factory()->getTTL() * 60
         ];
     }
 }

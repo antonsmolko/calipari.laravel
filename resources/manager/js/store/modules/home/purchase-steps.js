@@ -1,4 +1,3 @@
-import { uniqueFieldEditMixin, uniqueFieldMixin } from "../../mixins/getters";
 import { axiosAction } from "../../mixins/actions";
 
 const state = {
@@ -36,13 +35,13 @@ const mutations = {
 const actions = {
     getItems ({ commit }) {
         return axiosAction('get', commit, {
-            url: '/purchase-steps',
+            url: '/home-purchase-steps',
             thenContent: response => commit('SET_ITEMS', response.data)
         })
     },
     getItem ({ commit }, id) {
         return axiosAction('get', commit, {
-            url: `/purchase-steps/${id}`,
+            url: `/home-purchase-steps/${id}`,
             thenContent: response => commit('SET_ITEM_FIELDS', response.data)
         })
     },
@@ -52,7 +51,7 @@ const actions = {
             data.append(field, value);
         }
         return axiosAction('post', commit, {
-            url: '/purchase-steps',
+            url: '/home-purchase-steps',
             data
         })
     },
@@ -64,13 +63,13 @@ const actions = {
             }
         }
         return axiosAction('post', commit, {
-            url: `/purchase-steps/${id}`,
+            url: `/home-purchase-steps/${id}`,
             data
         })
     },
     delete ({ commit }, { payload }) {
         return axiosAction('delete', commit, {
-            url: `/purchase-steps/${payload}`,
+            url: `/home-purchase-steps/${payload}`,
             thenContent: response => commit('DELETE_ITEM', payload)
         })
     },

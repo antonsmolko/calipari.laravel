@@ -122,7 +122,7 @@ export default {
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.fields.title.$dirty || !this.isUniqueTitle
+                    return (value.trim() === '') && !this.$v.fields.title.$dirty || this.isUniqueTitle
                 }
             },
             image: {

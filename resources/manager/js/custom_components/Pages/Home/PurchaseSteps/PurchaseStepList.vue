@@ -1,9 +1,10 @@
 <template>
     <div v-if="responseData">
+        <h3>Как купить фотообои</h3>
         <div class="md-between">
             <h4>Список шагов покупки</h4>
             <router-button-link title="Создать шаг покупки" icon="add" color="md-success"
-                                :route="`manager.pages.home.${storeModule}.create`" />
+                                route="manager.pages.home.purchaseSteps.create" />
         </div>
 
         <div>
@@ -16,9 +17,7 @@
                         </md-table-cell>
 
                         <md-table-cell md-label="Превью">
-                            <img class="md-table-thumb img-raised rounded"
-                                 :src="`/image/widen/300/${item.image_path}`"
-                                 :alt="item.title">
+                            <thumb-table-cell :path="item.image_path" :width="150" />
                         </md-table-cell>
 
                         <md-table-cell md-label="Заголовок">
@@ -28,7 +27,7 @@
                         <md-table-cell md-label="Действия">
 
                             <table-actions :item="item"
-                                           :subPath="`pages.home.${storeModule}`"
+                                           subPath="pages.home.purchaseSteps"
                                            @delete="onDelete"/>
 
                         </md-table-cell>
@@ -48,27 +47,27 @@
 
 <script>
     import { mapState, mapActions } from 'vuex'
+    import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
     import TableActions from "@/custom_components/Tables/TableActions";
     import { deleteMethod } from '@/mixins/crudMethods'
 
     export default {
         name: 'PurchaseStepList',
+        components: { ThumbTableCell, TableActions },
+        mixins: [ deleteMethod ],
         data () {
             return {
-                storeModule: 'purchaseSteps',
-                responsive: false,
+                storeModule: 'homePurchaseSteps',
                 responseData: false
             }
         },
-        components: { TableActions },
-        mixins: [ deleteMethod ],
         computed: {
-            ...mapState('purchaseSteps', {
+            ...mapState('homePurchaseSteps', {
                 items: state => state.items
             })
         },
         methods: {
-            ...mapActions('purchaseSteps', {
+            ...mapActions('homePurchaseSteps', {
                 getItemsAction: 'getItems'
             }),
             onPublishChange(id) {
@@ -90,11 +89,3 @@
         }
     }
 </script>
-
-<style lang="scss" scoped>
-    .md-table-thumb {
-        object-fit: cover;
-        width: 200px;
-        height: 100px;
-    }
-</style>

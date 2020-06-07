@@ -17,9 +17,9 @@ export const axiosAction = (method, commit, { url, data = null, thenContent = nu
         });
 }
 
-export const axiosPatch = ({ commit, data, url, thenContent }) => {
+export const axiosPatch = ({ commit, data, url, thenContent, method = 'PATCH' }) => {
     const request = axios.create({
-        method: 'PATCH',
+        method,
         baseURL: config.baseUrl
     });
 
