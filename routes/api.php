@@ -29,7 +29,6 @@ Route::post('/payment/notifications', 'Payment\PaymentController@notify');
 
 Route::group(['prefix' => '/auth', ['middleware' => 'throttle:20,5']], function() {
     Route::post('/register', 'Auth\RegisterController@register');
-
     Route::post('/login', 'Auth\LoginController@login')->middleware('auth.valid');
 
     Route::get('/login/{service}', 'Auth\SocialLoginController@redirect');
@@ -42,9 +41,9 @@ Route::group(['prefix' => '/auth', ['middleware' => 'throttle:20,5']], function(
 });
 
 Route::group(['prefix' => '/auth'], function() {
-    Route::get('me', 'Auth\AuthController@me');
+    Route::post('me', 'Auth\AuthController@me');
     Route::post('refresh', 'Auth\AuthController@refresh');
-    Route::get('logout', 'Auth\AuthController@logout')->middleware('jwt.auth');
+    Route::post('logout', 'Auth\AuthController@logout')->middleware('jwt.auth');
 });
 
 

@@ -25,6 +25,8 @@ class ClientHomeModuleInteriorRepository extends ClientBaseResourceRepository
      */
     public function index()
     {
-        return InteriorResource::collection($this->model::has('publishSlides')->get()->load('slides'));
+        return InteriorResource::collection($this->model::has('publishSlides')
+            ->orderBy('order')
+            ->get()->load('slides'));
     }
 }

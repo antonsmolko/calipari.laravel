@@ -104,6 +104,6 @@ class SocialLoginController extends BaseLoginController
         return $this->getUserStatusResponse(
             $user,
             $this->auth->fromUser($user),
-            $this->auth->factory()->getTTL() * 60);
+            $this->expiresIn);
     }
 }

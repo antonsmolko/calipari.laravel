@@ -35,7 +35,7 @@ class AuthService extends BaseAuthService
      */
     public function refresh(): array
     {
-        return $this->respondWithRefreshToken(auth()->refresh());
+        return $this->respondWithRefreshToken(auth()->refresh(true, true));
     }
 
     /**
@@ -106,7 +106,7 @@ class AuthService extends BaseAuthService
             'status' => 'success',
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => $this->auth->factory()->getTTL() * 60
+            'expires_in' => $this->expiresIn
         ];
     }
 
@@ -117,9 +117,9 @@ class AuthService extends BaseAuthService
     public function respondWithRefreshToken(string $token)
     {
         return [
-            'refresh_token' => $token,
+            'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => $this->auth->factory()->getTTL() * 60
+            'expires_in' => $this->expiresIn
         ];
     }
 }
