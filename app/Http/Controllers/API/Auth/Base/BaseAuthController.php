@@ -10,8 +10,8 @@ use Tymon\JWTAuth\JWTAuth;
 abstract class BaseAuthController extends Controller
 {
     protected JWTAuth $auth;
-
     protected AuthService $authService;
+    protected int $expiresIn;
 
     /**
      * BaseAuthController constructor.
@@ -22,5 +22,6 @@ abstract class BaseAuthController extends Controller
     {
         $this->auth = $auth;
         $this->authService = $authService;
+        $this->expiresIn = $authService->expiresIn;
     }
 }

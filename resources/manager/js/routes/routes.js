@@ -17,6 +17,11 @@ const ImageEdit = resolve => {
         resolve(require('@/pages/Dashboard/Images/ImageEdit.vue'))
     })
 };
+const ImageTrashedList = resolve => {
+    require.ensure(['@/pages/Dashboard/Images/ImageTrashedList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Images/ImageTrashedList.vue'))
+    })
+};
 
 // Category pages
 const CatalogPanel = resolve => {
@@ -64,6 +69,28 @@ const SubCategoryImageList = resolve => {
 const SubCategoryExcludedImageList = resolve => {
     require.ensure(['@/pages/Dashboard/Catalog/SubCategories/ExcludedImageList.vue'], () => {
         resolve(require('@/pages/Dashboard/Catalog/SubCategories/ExcludedImageList.vue'))
+    })
+};
+
+// Category pages
+const CollectionList = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/Collections/CollectionList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/Collections/CollectionList.vue'))
+    })
+};
+const CollectionCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/Collections/CollectionCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/Collections/CollectionCreate.vue'))
+    })
+};
+const CollectionEdit = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/Collections/CollectionEdit.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/Collections/CollectionEdit.vue'))
+    })
+};
+const CollectionImageList = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/Collections/ImageList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/Collections/ImageList.vue'))
     })
 };
 
@@ -220,6 +247,74 @@ const Order = resolve => {
     })
 };
 
+// Pages
+const PagesPanel = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/PagesPanel.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/PagesPanel.vue'))
+    })
+};
+const HomePage = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Home'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Home'))
+    })
+};
+const PurchaseStepCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepCreate.vue'))
+    })
+};
+const PurchaseStepEdit = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepEdit.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepEdit.vue'))
+    })
+};
+const InteriorSlideCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Home/Interiors/SlideCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Home/Interiors/SlideCreate.vue'))
+    })
+};
+const InteriorSlideEdit = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Home/Interiors/SlideEdit.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Home/Interiors/SlideEdit.vue'))
+    })
+};
+
+const PortfolioPage = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Portfolio'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Portfolio'))
+    })
+};
+const WorkExampleCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleCreate.vue'))
+    })
+};
+const WorkExampleEdit = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleEdit.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleEdit.vue'))
+    })
+};
+const WorkExampleImageList = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Portfolio/WorkExamples/ImageList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Portfolio/WorkExamples/ImageList.vue'))
+    })
+};
+const BlogPage = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Blog'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Blog'))
+    })
+};
+const PostCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Blog/Posts/PostCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Blog/Posts/PostCreate.vue'))
+    })
+};
+const PostEdit = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Blog/Posts/PostEdit.vue'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Blog/Posts/PostEdit.vue'))
+    })
+};
+
 // Error pages
 const Error404 = resolve => {
     require.ensure(['@/pages/Dashboard/Errors/404.vue'], () => {
@@ -249,6 +344,11 @@ const managerImagePages = [
             to.params.category_type = 'images';
             next();
         }
+    },
+    {
+        path: 'images/trashed',
+        name: 'manager.images.trashed',
+        component: ImageTrashedList
     },
     {
         path: 'images/:id',
@@ -382,6 +482,14 @@ const managerStorePanel = [
     }
 ];
 
+const managerMenuPagesPanel = [
+    {
+        path: 'pages',
+        name: 'manager.pages',
+        component: PagesPanel
+    }
+];
+
 const managerPages = {
     path: '/manager',
     component: DashboardLayout,
@@ -395,7 +503,8 @@ const managerPages = {
         ...managerUsersPages,
         ...managerRolesPages,
         ...managerPermissionsPages,
-        ...managerStorePanel
+        ...managerStorePanel,
+        ...managerMenuPagesPanel
     ]
 };
 
@@ -473,6 +582,36 @@ const managerSubCategoriesPages = {
     ]
 };
 
+const managerCollectionsPages = {
+    path: '/manager/catalog',
+    component: DashboardLayout,
+    children: [
+        {
+            path: 'collections',
+            name: 'manager.catalog.collections',
+            component: CollectionList,
+            props: true
+        },
+        {
+            path: 'collections/create',
+            name: 'manager.catalog.collections.create',
+            component: CollectionCreate
+        },
+        {
+            path: 'collections/:id',
+            name: 'manager.catalog.collections.edit',
+            component: CollectionEdit,
+            props: true
+        },
+        {
+            path: 'collections/:id/images',
+            name: 'manager.catalog.collections.images',
+            component: CollectionImageList,
+            props: true
+        }
+    ]
+};
+
 const managerDeliveriesPages = {
     path: '/manager/store',
     component: DashboardLayout,
@@ -537,6 +676,79 @@ const managerOrderPages = {
     ]
 };
 
+const managerMenuPages = {
+    path: '/manager/pages',
+    component: DashboardLayout,
+    children: [
+        {
+            path: 'home',
+            name: 'manager.pages.home',
+            component: HomePage
+        },
+        {
+            path: 'home/purchase-steps/create',
+            name: 'manager.pages.home.purchaseSteps.create',
+            component: PurchaseStepCreate
+        },
+        {
+            path: 'home/purchase-steps/:id',
+            name: 'manager.pages.home.purchaseSteps.edit',
+            component: PurchaseStepEdit,
+            props: true
+        },
+        {
+            path: 'home/interiors/:interiorId/slides/create',
+            name: 'manager.pages.home.interiorSlides.create',
+            component: InteriorSlideCreate,
+            props: true
+        },
+        {
+            path: 'home/interiors/slides/:id',
+            name: 'manager.pages.home.interiorSlides.edit',
+            component: InteriorSlideEdit,
+            props: true
+        },
+        {
+            path: 'portfolio',
+            name: 'manager.pages.portfolio',
+            component: PortfolioPage
+        },
+        {
+            path: 'portfolio/work-examples/create',
+            name: 'manager.pages.portfolio.workExamples.create',
+            component: WorkExampleCreate
+        },
+        {
+            path: 'portfolio/work-examples/:id',
+            name: 'manager.pages.portfolio.workExamples.edit',
+            component: WorkExampleEdit,
+            props: true
+        },
+        {
+            path: 'portfolio/work-examples/:id/images',
+            name: 'manager.pages.portfolio.workExamples.images',
+            component: WorkExampleImageList,
+            props: true
+        },
+        {
+            path: 'blog',
+            name: 'manager.pages.blog',
+            component: BlogPage
+        },
+        {
+            path: 'blog/posts/create',
+            name: 'manager.pages.blog.posts.create',
+            component: PostCreate
+        },
+        {
+            path: 'blog/posts/:id/edit',
+            name: 'manager.pages.blog.posts.edit',
+            component: PostEdit,
+            props: true
+        },
+    ]
+};
+
 const managerErrorPages = {
     path: '/manager/errors',
     component: ErrorsLayout,
@@ -553,9 +765,11 @@ const routes = [
     managerPages,
     managerCategoriesPages,
     managerSubCategoriesPages,
+    managerCollectionsPages,
     managerDeliveriesPages,
     managerOrderPages,
     managerOrderStatusPages,
+    managerMenuPages,
     managerErrorPages,
     {
         path: '*',

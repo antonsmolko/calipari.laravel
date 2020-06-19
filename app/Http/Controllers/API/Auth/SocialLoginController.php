@@ -101,6 +101,9 @@ class SocialLoginController extends BaseLoginController
      */
     private function getStatusResponse(User $user)
     {
-        return $this->getUserStatusResponse($user, $this->auth->fromUser($user));
+        return $this->getUserStatusResponse(
+            $user,
+            $this->auth->fromUser($user),
+            $this->expiresIn);
     }
 }

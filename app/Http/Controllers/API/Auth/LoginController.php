@@ -4,7 +4,10 @@ namespace App\Http\Controllers\API\Auth;
 
 use App\Http\Controllers\API\Auth\Base\BaseLoginController;
 use App\Http\Controllers\API\Client\User\Requests\LoginRequest;
+use App\Services\Auth\AuthService;
+use App\Services\User\ClientUserService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Tymon\JWTAuth\JWTAuth;
 
 
 class LoginController extends BaseLoginController
@@ -47,10 +50,8 @@ class LoginController extends BaseLoginController
         $token = $this->auth->attempt($request->only('email', 'password'));
 
         return $token
-            ? response()->json([
-                'message' => __('auth.welcome_message', ['name' => $request->user()->name]),
-                'status' => 'success',
-                'token' => $token])
+            ? response()
+                ->json($this->authService->respondWithToken($request->user(), $token))
             : response()->json([
                 'message' => __('auth.wrong_login_pass'),
                 'status' => 'danger'], 401);

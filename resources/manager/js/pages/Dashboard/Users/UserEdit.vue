@@ -41,7 +41,7 @@
                                  :differ="true"
                                  :vDelay="true"
                                  :module="storeModule"
-                                 :vRules="{ required: true, unique: true, email: true, minLength: true }" />
+                                 :vRules="{ required: true, email: true, minLength: true }" />
 
                         <v-switch title="Активен"
                                   :value="publish"
@@ -115,7 +115,6 @@
 
 <script>
     import {mapActions, mapState} from 'vuex'
-
     import { required, minLength, sameAs, requiredIf, email } from 'vuelidate/lib/validators'
 
     import VSelect from '@/custom_components/VForm/VSelect'
@@ -156,12 +155,7 @@
             email: {
                 email,
                 required,
-                touch: false,
-                isUnique (value) {
-                    return (value.trim() === '') && !this.$v.email.$dirty
-                        ? true
-                        : !this.isUniqueEmailEdit
-                }
+                touch: false
             },
             publish: {
                 touch: false
@@ -202,19 +196,14 @@
                 passwordConfirmation: state => state.users.fields.password_confirmation,
                 roles: state => state.roles.items
             }),
-            isUniqueEmailEdit() {
-                return !!this.$store.getters['users/isUniqueEmailEdit'](this.email, this.id);
-            },
             isPasswordChange() {
                 return this.changePassword;
             }
         },
         methods: {
             ...mapActions({
-                getItemsAction: 'users/getItems',
                 getItemAction: 'users/getItem',
-                getRolesAction: 'roles/getItems',
-                updateField: 'users/updateField'
+                getRolesAction: 'roles/getItems'
             }),
             onChangePassword() {
                 this.changePassword = true;
@@ -264,9 +253,10 @@
             }
         },
         created() {
-            this.getItemsAction()
-                .then(() => this.getRolesAction())
-                .then(() => this.getItemAction(this.id))
+            Promise.all([
+                this.getRolesAction(),
+                this.getItemAction(this.id)
+            ])
                 .then(() => {
                     this.setPageTitle(this.name);
                     this.selectedRole = this.role;

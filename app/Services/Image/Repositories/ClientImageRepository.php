@@ -4,12 +4,14 @@
 namespace App\Services\Image\Repositories;
 
 
+use App\Models\Category;
 use App\Models\Image;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
-use App\Services\Image\Resources\ImageToClient as ImageToClientResource;
-use App\Services\Image\Resources\ImageToClientCollection;
-use App\Services\Image\Resources\ImageToEditor as ImageToEditorResource;
+use App\Services\Image\Resources\FromEditorClient as ImageFromEditorResource;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ClientImageRepository extends ClientBaseResourceRepository
 {
@@ -24,42 +26,77 @@ class ClientImageRepository extends ClientBaseResourceRepository
 
     /**
      * @param int $id
-     * @return ImageToEditorResource
+     * @return ImageFromEditorResource
      */
-    public function getResourceItem(int $id): ImageToEditorResource
+    public function getResourceItem(int $id): ImageFromEditorResource
     {
-        return new ImageToEditorResource($this->model::findOrFail($id));
+        return new ImageFromEditorResource($this->model::findOrFail($id));
     }
 
-//    /**
-//     * @param array $pagination
-//     * @return Collection
-//     */
-//    public function getItems(array $pagination): Collection
-//    {
-//        return ImageToClientResource::collection($this->model
-//            ->load('likes')
-//            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page'])
-//            ->published())
-//            ->orderBy('id', $pagination['sort_order'] ?? 'asc');
-//    }
+    /**
+     * @param Request $request
+     * @param bool $collectionRestriction
+     * @return \Illuminate\Database\Concerns\BuildsQueries|mixed|QueryBuilder
+     */
+    public function getItems(Request $request, bool $collectionRestriction = true)
+    {
+        $pagination = $request->pagination;
+
+        return QueryBuilder::for(Image::class)
+            ->when($collectionRestriction, fn ($query) => $query
+                ->whereDoesntHave('collection')
+                ->orWhereHas('collection', fn ($query) => $query->whereColumn('main_image_id', 'images.id'))
+            )
+            ->defaultSort('-id')
+            ->allowedFilters([
+                AllowedFilter::scope('restrictive_category', 'whereCategory'),
+                AllowedFilter::scope('restrictive_collection', 'whereCollection'),
+                AllowedFilter::scope('restrictive_keys', 'whereKeys'),
+                AllowedFilter::scope('formats', 'whereFormats'),
+                AllowedFilter::scope('tags', 'whereTags'),
+                AllowedFilter::scope('topics', 'whereTopics'),
+                AllowedFilter::scope('colors', 'whereColors'),
+                AllowedFilter::scope('interiors', 'whereInteriors')
+            ])
+            ->when(
+                $pagination,
+                fn ($query, $pagination) => $query
+                    ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']),
+                fn ($query) => $query->get()
+            );
+    }
 
     /**
-     * @param array $ids
-     * @param array $pagination
-     * @param array|null $filter
-     * @return ImageToClientCollection
+     * @param Request $request
+     * @param bool $collectionRestriction
+     * @return array
      */
-    public function getWishListItems(array $ids, array $pagination, array $filter = null): ImageToClientCollection
+    public function getModelKeys(Request $request, bool $collectionRestriction = false): array
     {
-        return new ImageToClientCollection($this->model
-            ->whereIn('id', $ids)
-            ->published()
-            ->when($filter, function ($query, $filter) {
-                return $query->filtered($filter);
-            })
-            ->orderBy('id', $pagination['sort_order'] ?? 'asc')
-            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page'])
-        );
+        $images = $this->getItems($request, $collectionRestriction);
+
+        return $images->modelKeys();
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Database\Eloquent\Builder[]|Collection|\Illuminate\Support\Collection|QueryBuilder[]
+     */
+    public function getItemsByTag(Request $request)
+    {
+        $pagination = $request->pagination;
+
+        return QueryBuilder::for(Image::class)
+            ->defaultSort('-id')
+            ->allowedFilters([
+                AllowedFilter::scope('tags', 'whereTags')
+            ])
+            ->when(
+                $pagination,
+                fn ($query) => $query
+                    ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']),
+                fn ($query) => $query
+                    ->get()
+            );
     }
 }

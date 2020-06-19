@@ -19,12 +19,13 @@ class User extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'role' => $this->roles->modelKeys()[0] ?? null,
-//            'orders_count' => $this->orders()->count(),
+            'role' => $this->roles->modelKeys()[0],
+            'role_name' => $this->roles[0]->display_name,
+            'orders_count' => $this->orders()->count(),
             'publish' => $this->publish,
             'gravatar_small' => Gravatar::get($this->email, 'small-secure'),
             'gravatar_medium' => Gravatar::get($this->email, 'medium'),
-            'created_at' => date('d-m-Y', strtotime($this->created_at))
+            'created_at' => $this->created_at->format('d.m.Y')
         ];
     }
 }

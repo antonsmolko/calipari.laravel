@@ -17,6 +17,7 @@ class ClientOrder extends JsonResource
         return [
             'date' => $this->created_at->format('d.m.Y'),
             'number' => $this->number,
+            'hash_number' => $this->hash_number,
             'user_id' => $this->user_id,
             'items' => json_decode($this->items, true),
             'delivery' => json_decode($this->delivery, true),

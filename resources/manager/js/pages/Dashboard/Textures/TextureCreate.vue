@@ -6,7 +6,7 @@
                     <md-card-content class="md-between">
                         <router-button-link route="manager.textures" title="К списку фактур" />
                         <slide-y-down-transition v-show="!$v.$invalid">
-                            <control-button @click="onCreate()" />
+                            <control-button @click="onCreate" />
                         </slide-y-down-transition>
                     </md-card-content>
                 </md-card>
@@ -46,13 +46,6 @@
                             </div>
                         </div>
                         <div class="md-layout md-gutter mt-2">
-                            <div class="md-layout-item">
-                                <v-image title="Миниатюра"
-                                         name="thumb"
-                                         :vField="$v.thumb"
-                                         :vRules="{ required: true }"
-                                         :module="storeModule" />
-                            </div>
                             <div class="md-layout-item">
                                 <v-image title="Образец"
                                          name="sample"
@@ -115,9 +108,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.name.$dirty
-                        ? true
-                        : !this.isUniqueName
+                    return (value.trim() === '') && !this.$v.name.$dirty || !this.isUniqueName
                 }
             },
             price: {
@@ -128,10 +119,6 @@
             width: {
                 required,
                 numeric,
-                touch: false
-            },
-            thumb: {
-                required,
                 touch: false
             },
             sample: {
@@ -148,7 +135,6 @@
                 name: state => state.fields.name,
                 price: state => state.fields.price,
                 width: state => state.fields.width,
-                thumb: state => state.fields.thumb,
                 sample: state => state.fields.sample,
                 background: state => state.fields.background,
                 publish: state => state.fields.publish,
@@ -161,7 +147,7 @@
         methods: {
             ...mapActions('textures', {
                 getItemsAction: 'getItems',
-                clearFieldsAction: 'clearFields'
+                clearFieldsAction: 'clearItemFields'
             }),
             onCreate() {
                 return this.create({
@@ -169,7 +155,6 @@
                         name: this.name,
                         price: this.price,
                         width: this.width,
-                        thumb: this.thumb,
                         sample: this.sample,
                         background: this.background,
                         description: this.description,

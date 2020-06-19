@@ -6,7 +6,8 @@ namespace App\Services\Category\Repositories;
 
 use App\Models\Category;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
-use App\Services\Image\Resources\ImageToClientCollection;
+use App\Services\Category\Resources\FromSearchClient as FromSearchResource;
+use App\Services\Image\Resources\FromClientCollection;
 use Illuminate\Database\Eloquent\Collection;
 
 class ClientCategoryRepository extends ClientBaseResourceRepository
@@ -48,11 +49,11 @@ class ClientCategoryRepository extends ClientBaseResourceRepository
      * @param Category $category
      * @param array $pagination
      * @param array|null $filter
-     * @return ImageToClientCollection
+     * @return FromClientCollection
      */
     public function getImages(Category $category, array $pagination, array $filter = null)
     {
-        return new ImageToClientCollection(
+        return new FromClientCollection(
             $category->images()
                 ->published()
                 ->when($filter, function ($query, $filter) {
@@ -63,27 +64,31 @@ class ClientCategoryRepository extends ClientBaseResourceRepository
         );
     }
 
-    /**
-     * @param int $categoryId
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function getFilters(int $categoryId)
+    public function getItemTags(int $id)
     {
-        return $this->model::select(['id', 'title', 'alias', 'image_path', 'type'])
-                            ->getFilters($categoryId)
-                            ->withImageCountWhereCategoryId($categoryId)
-                            ->published()
-                            ->get();
+        return $this->model::getTagsById($id);
     }
 
     /**
-     * WishList Filters
-     * @param array $ids
+     * @param array $keys
      * @return mixed
      */
-    public function getFiltersByImageIds(array $ids)
+    public function getTagsByImageKeys(array $keys)
     {
-        return $this->model::select(['id', 'title', 'alias', 'image_path', 'type'])
-            ->getFiltersByImageIds($ids);
+        return $this->model::where('type', 'tags')
+            ->published()
+            ->whereHas('images', fn ($query) => $query->whereIn('id', $keys))
+            ->get();
+    }
+
+    /**
+     * @param string $search
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getSearchedItems(string $search)
+    {
+        return FromSearchResource::collection($this->model::search($search)
+            ->where('publish', $this->model::PUBLISHED)
+            ->get());
     }
 }

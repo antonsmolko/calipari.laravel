@@ -13,11 +13,9 @@
             <md-card>
                 <card-icon-header title="Список Ролей" icon="assignment" />
                 <md-card-content>
-                    <v-extended-table v-if="items.length"
-                                      :items="items"
-                                      :searchFields="[ 'title', 'alias' ]" >
+                    <md-table v-if="items.length" :value="items" class="paginated-table table-striped table-hover">
 
-                        <template slot-scope="{ item }">
+                        <md-table-row slot="md-table-row" slot-scope="{ item }">
 
                             <md-table-cell md-label="#" style="width: 50px">{{ item.id }}</md-table-cell>
 
@@ -45,9 +43,9 @@
 
                             </md-table-cell>
 
-                        </template>
+                        </md-table-row>
 
-                    </v-extended-table>
+                    </md-table>
                     <template v-else>
                         <div class="alert alert-info">
                             <span><h3>У Вас еще нет ролей!</h3></span>

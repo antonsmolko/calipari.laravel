@@ -7,7 +7,8 @@ export const createMethod = {
 
             return this.$store.dispatch(`${module}store`, sendData)
                 .then(() => {
-                    this.$router.go(-1) ? this.$router.go(-1) : this.$router.push(redirectRoute);
+                    this.$router.push(redirectRoute);
+                    // window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
 
                     return swal.fire({
                         title: successText,
@@ -28,7 +29,8 @@ export const updateMethod = {
 
             return this.$store.dispatch(`${module}update`, sendData)
                 .then(() => {
-                    this.$router.go(-1) ? this.$router.go(-1) : this.$router.push(redirectRoute);
+                    this.$router.push(redirectRoute);
+                    // window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
 
                     return swal.fire({
                         title: successText,
@@ -52,36 +54,47 @@ export const deleteMethod = {
             successText,
             storeModule = null,
             redirectRoute = null,
-            categoryId = null,
-            paginationData = null,
-
+            tableMode = false,
+            force = false
         }) {
             const module = storeModule ? `${storeModule}/` : '';
+            const method = force ? 'forceDelete' : 'delete';
 
             return deleteSwalFireConfirm(alertText)
                 .then((result) => {
                     if (result.value) {
-                        return this.$store.dispatch(`${module}destroy`, payload)
+                        return this.$store.dispatch(`${module}${method}`, { payload, tableMode })
                             .then(() => {
                                 if (redirectRoute) {
-                                    this.$router.go(-1)
-                                        ? this.$router.go(-1)
-                                        : this.$router.push(redirectRoute);
-                                }
-
-                                if (paginationData) {
-                                    categoryId
-                                        ? this.$store.dispatch('categories/getImages', {
-                                            id: categoryId,
-                                            data: paginationData
-                                        })
-                                        : this.$store.dispatch('images/getItems', paginationData);
+                                    this.$router.push(redirectRoute);
+                                    // window.history.length > 1
+                                    //     ? this.$router.go(-1)
+                                    //     : this.$router.push(redirectRoute);
                                 }
 
                                 return deleteSwalFireAlert(successText, title);
                             });
                     }
             });
+        },
+    }
+}
+
+export const deleteImageByIndexMethod = {
+    methods: {
+        deleteImageByIndex({
+           id,
+           index,
+           alertText,
+           successText,
+           storeModule = null}) {
+            return deleteSwalFireConfirm(alertText)
+                .then((result) => {
+                    if (result.value) {
+                        return this.$store.dispatch(`${storeModule}/deleteImageByIndex`, { id, index })
+                            .then(() => deleteSwalFireAlert(successText, index));
+                    }
+                });
         },
     }
 }
@@ -114,13 +127,13 @@ const deleteSwalFireAlert = (successText, title) => {
 
 export const uploadMethod = {
     methods: {
-        async upload ({ uploadFiles, type = null, id = null, storeModule = null, paginationData }) {
+        async upload ({ uploadFiles, type = null, id = null, storeModule = null }) {
             const files = Array.from(uploadFiles);
             const module = storeModule ? storeModule : 'categories';
 
             id
-                ? await this.$store.dispatch(`${module}/uploadImages`, { files, id, type, paginationData })
-                : await this.$store.dispatch('images/store', { files, paginationData });
+                ? await this.$store.dispatch(`${module}/uploadImages`, { files, id, type })
+                : await this.$store.dispatch('images/store', files);
 
             return await swal.fire({
                 title: 'Изображения загружены!',
@@ -135,10 +148,10 @@ export const uploadMethod = {
 
 export const imageAddMethod = {
     methods: {
-        addImages ({ category, selected }) {
-            this.$store.dispatch('categories/addSelectedImages',{ category_id: category.id, selected_images: selected })
+        addImages ({ id, data }) {
+            this.$store.dispatch('categories/addSelectedImages',{ id, data })
                 .then(() => {
-                    this.$router.push({ name: 'manager.catalog.categories.images', params: { id: category.id } });
+                    this.$router.push({ name: 'manager.catalog.categories.images', params: { id } });
 
                     return swal.fire({
                         title: 'Изображения добавлены!',
@@ -154,8 +167,8 @@ export const imageAddMethod = {
 
 export const subCategoryImageAddMethod = {
     methods: {
-        addImages ({ type, id, selected, redirectRoute }) {
-            this.$store.dispatch('subCategories/addSelectedImages', { type, id, selected_images: selected })
+        addImages ({ type, id, data, redirectRoute }) {
+            this.$store.dispatch('subCategories/addSelectedImages', { type, id, data })
                 .then(() => {
                     this.$router.push(redirectRoute);
 

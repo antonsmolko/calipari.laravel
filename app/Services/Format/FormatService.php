@@ -4,18 +4,18 @@
 namespace App\Services\Format;
 
 
-use App\Services\Format\Repositories\FormatRepository;
+use App\Services\Format\Repositories\CmsFormatRepository;
 use Illuminate\Database\Eloquent\Collection;
 
 class FormatService
 {
-    private FormatRepository $repository;
+    private CmsFormatRepository $repository;
 
     /**
      * FormatService constructor.
-     * @param FormatRepository $repository
+     * @param CmsFormatRepository $repository
      */
-    public function __construct(FormatRepository $repository)
+    public function __construct(CmsFormatRepository $repository)
     {
         $this->repository = $repository;
     }

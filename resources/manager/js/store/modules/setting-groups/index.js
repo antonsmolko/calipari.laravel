@@ -11,39 +11,39 @@ const state = {
 };
 
 const mutations = {
-    UPDATE_FIELD(state, { field, value }) {
+    SET_ITEM_FIELD (state, { field, value }) {
         state.fields[field] = value;
     },
-    UPDATE_ITEMS(state, payload) {
+    SET_ITEMS (state, payload) {
         state.items = payload;
     },
-    DELETE_ITEM(state, payload) {
+    DELETE_ITEM (state, payload) {
         state.items = state.items.filter(item => item.id !== payload);
     },
-    CLEAR_FIELDS(state) {
+    CLEAR_ITEM_FIELDS (state) {
         for(let field of Object.keys(state.fields)) {
             state.fields[field] = '';
         }
     },
-    SET_ITEM_FIELDS(state, payload) {
-        for(let item of state.items) {
-            if(item.id === +payload) {
-                for(let field in state.fields) {
-                    state.fields[field] = item[field] === null ? '' : item[field];
-                }
-            }
-        }
-    },
-    UPDATE_FIELDS(state, payload) {
+    // SET_ITEM_FIELDS (state, id) {
+    //     for(let item of state.items) {
+    //         if(item.id === +id) {
+    //             for(const field of Object.keys(state.fields)) {
+    //                 state.fields[field] = item[field] === null ? '' : item[field];
+    //             }
+    //         }
+    //     }
+    // },
+    SET_ITEM_FIELDS (state, payload) {
         for(let field of Object.keys(state.fields)) {
             state.fields[field] = payload[field] === null ? '' : payload[field];
         }
     },
-    UPDATE_SETTING_VALUE(state, payload) {
+    SET_SETTING_VALUE (state, { key_name, group, value }) {
         state.items.map(item => {
-            item[payload.group].map(setting => {
-                if (setting.key_name === payload.key_name) {
-                    setting.value = payload.value;
+            item[group].map(setting => {
+                if (setting.key_name === key_name) {
+                    setting.value = value;
                 }
             })
         })
@@ -51,58 +51,58 @@ const mutations = {
 };
 
 const actions = {
-    getItems(context) {
-        return axiosAction('get', context, {
-            url: '/api/manager/setting-groups',
-            thenContent: response => context.commit('UPDATE_ITEMS', response.data)
+    getItems ({ commit }) {
+        return axiosAction('get', commit, {
+            url: '/setting-groups',
+            thenContent: response => commit('SET_ITEMS', response.data)
         })
     },
-    getItemsWithSettings(context) {
-        return axiosAction('get', context, {
-            url: '/api/manager/setting-groups/with-settings',
-            thenContent: response => context.commit('UPDATE_ITEMS', response.data)
+    getItemsWithSettings ({ commit }) {
+        return axiosAction('get', commit, {
+            url: '/setting-groups/with-settings',
+            thenContent: response => commit('SET_ITEMS', response.data)
         })
     },
-    getItem(context, id) {
-        return axiosAction('get', context, {
-            url: `/api/manager/setting-groups/${id}`,
-            thenContent: response => context.commit('UPDATE_FIELDS', response.data)
+    getItem ({ commit }, id) {
+        return axiosAction('get', commit, {
+            url: `/setting-groups/${id}`,
+            thenContent: response => commit('SET_ITEM_FIELDS', response.data)
         })
     },
-    store(context, payload) {
-        const form = new FormData();
+    store ({ commit }, payload) {
+        const data = new FormData();
         for(const [field, value] of Object.entries(payload)) {
-            form.append(field, value);
+            data.append(field, value);
         }
-        return axiosAction('post', context, {
-            url: '/api/manager/setting-groups',
-            data: form
+        return axiosAction('post', commit, {
+            url: '/setting-groups',
+            data
         })
     },
-    update(context, payload) {
-        const form = new FormData();
-        for(const [field, value] of Object.entries(payload.formData)) {
-            form.append(field, value);
+    update ({ commit }, { id, formData }) {
+        const data = new FormData();
+        for(const [field, value] of Object.entries(formData)) {
+            data.append(field, value);
         }
-        return axiosAction('post', context, {
-            url: `/api/manager/setting-groups/${payload.id}`,
-            data: form
+        return axiosAction('post', commit, {
+            url: `/setting-groups/${id}`,
+            data
         })
     },
-    destroy(context, id) {
-        return axiosAction('delete', context, {
-            url: `/api/manager/setting-groups/${id}`,
-            thenContent: response => context.commit('DELETE_ITEM', id)
+    delete ({ commit }, { payload }) {
+        return axiosAction('delete', commit, {
+            url: `/setting-groups/${payload}`,
+            thenContent: response => commit('DELETE_ITEM', payload)
         })
     },
-    setItemFields(context, itemId) {
-        return context.commit('SET_ITEM_FIELDS', itemId);
+    setItemFields ({ commit }, id) {
+        return commit('SET_ITEM_FIELDS', id);
     },
-    updateField(context, payload) {
-        context.commit('UPDATE_FIELD', payload);
+    setItemField({ commit }, payload) {
+        commit('SET_ITEM_FIELD', payload);
     },
-    clearFields(context) {
-        context.commit('CLEAR_FIELDS');
+    clearItemFields ({ commit }) {
+        commit('CLEAR_ITEM_FIELDS');
     }
 };
 

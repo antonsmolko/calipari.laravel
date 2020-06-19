@@ -19,9 +19,9 @@ class CreateOrderItemsTable extends Migration
             $table->unsignedBigInteger('image_id');
             $table->string('image_crop', 100);
             $table->unsignedInteger('texture_id');
-            $table->smallInteger('width')->unsigned();
-            $table->smallInteger('height')->unsigned();
-            $table->smallInteger('cost')->unsigned();
+            $table->unsignedSmallInteger('width');
+            $table->unsignedSmallInteger('height');
+            $table->unsignedSmallInteger('cost');
             $table->timestamps();
         });
 

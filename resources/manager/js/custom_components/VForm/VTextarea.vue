@@ -1,13 +1,16 @@
 <template>
     <div>
         <h4 class="card-title">{{ title }}</h4>
-        <div class="form-group">
-            <md-field :class="[{'md-valid': vField.$dirty}]">
-                <md-textarea @input="onInput" :value="value" :maxlength="maxlength" />
-                <slide-y-down-transition v-show="vField.$dirty">
-                    <md-icon class="success">done</md-icon>
-                </slide-y-down-transition>
-            </md-field>
+        <div class="md-field mt-0" :class="[{'md-valid': !vField.$invalid}]">
+            <div class="form-group width-100">
+                <md-icon v-if="icon">{{ icon }}</md-icon>
+                <md-field class="mt-0" :class="[{'md-valid': !vField.$invalid}]">
+                    <md-textarea @input="onInput" :value="value" :maxlength="maxlength" />
+                    <slide-y-down-transition v-show="vField.$dirty && !vField.$invalid">
+                        <md-icon class="success">done</md-icon>
+                    </slide-y-down-transition>
+                </md-field>
+            </div>
         </div>
     </div>
 </template>
@@ -43,6 +46,10 @@
             differ: {
                 type: Boolean,
                 default: false
+            },
+            icon: {
+                type: String,
+                default: null
             }
         },
         data() {
@@ -60,7 +67,7 @@
                 if (this.vField)
                     this.touched(this.vField, value);
 
-                this.$store.dispatch(`${this.storeModule}updateField`, {
+                this.$store.dispatch(`${this.storeModule}setItemField`, {
                     field: this.name,
                     value: value.trim()
                 });

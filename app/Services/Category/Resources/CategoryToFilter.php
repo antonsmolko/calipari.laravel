@@ -20,7 +20,7 @@ class CategoryToFilter extends JsonResource
             'title' => $this->title,
             'alias' => $this->alias,
             'image_path' => $this->image_path,
-            'image_count' => $this->images->count()
+            'images_count' => $this->images->count()
         ];
     }
 }

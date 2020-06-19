@@ -1,6 +1,7 @@
 import { uniqueFieldEditMixin, uniqueFieldMixin } from "../../mixins/getters";
-
 import { axiosAction } from "../../mixins/actions";
+
+import config from "../../../config";
 
 const state = {
     fields: {
@@ -13,95 +14,90 @@ const state = {
 };
 
 const mutations = {
-    UPDATE_ITEMS(state, payload) {
+    SET_ITEMS (state, payload) {
         state.items = payload;
     },
-    UPDATE_FIELD(state, payload) {
-        state.fields[payload.field] = payload.value;
+    SET_ITEM_FIELD (state, { field, value }) {
+        state.fields[field] = value;
     },
-    DELETE_ITEM(state, payload) {
+    DELETE_ITEM (state, payload) {
         state.items = state.items.filter(item => item.id !== payload);
     },
-    CLEAR_FIELDS(state) {
-        for(let field in state.fields) {
-            if (state.fields[field] instanceof Array) {
-                state.fields[field] = [];
-            } else {
-                state.fields[field] = '';
-            }
+    CLEAR_ITEM_FIELDS (state) {
+        state.fields = {
+            name: '',
+            display_name: '',
+            description: '',
+            permissions: []
         }
     },
-    UPDATE_FIELDS(state, payload) {
-        for(let field in state.fields) {
-            if (payload[field]) {
-                if (state.fields[field] instanceof Array && payload[field] instanceof Array) {
-                    payload[field].forEach(fieldItem => {
-                        state.fields[field].push(fieldItem);
-                    });
-                } else {
-                    state.fields[field] = payload[field];
-                }
+    SET_ITEM_FIELDS (state, payload) {
+        for(const field of Object.keys(state.fields)) {
+            if (Object.hasOwnProperty.call(payload, field)) {
+                state.fields[field] = payload[field];
             }
         }
-    },
+    }
 };
 
 const actions = {
-    getItems(context) {
-        return axiosAction('get', context, {
-            url: '/api/manager/roles',
-            thenContent: response => context.commit('UPDATE_ITEMS', response.data)
+    getItems ({ commit }) {
+        return axiosAction('get', commit, {
+            url: '/roles',
+            thenContent: response => commit('SET_ITEMS', response.data)
         })
     },
-    getItem(context, id) {
-        return axiosAction('get', context, {
-            url: `/api/manager/roles/${id}`,
-            thenContent: response => context.commit('UPDATE_FIELDS', response.data)
+    getItem ({ commit }, id) {
+        return axiosAction('get', commit, {
+            url: `/roles/${id}`,
+            thenContent: response => commit('SET_ITEM_FIELDS', response.data)
         })
     },
-    store(context, payload) {
-        const form = new FormData();
-        for(let item in payload) {
-            if (payload[item] instanceof Array) {
-                for(let data of payload[item]) {
-                    form.append(`${item}[]`, data);
+    store ({ commit }, payload) {
+        const data = new FormData();
+        for(const [field, value] of Object.entries(payload)) {
+            if (value instanceof Array) {
+                for (const item of value) {
+                    data.append(`${field}[]`, item);
                 }
             } else {
-                form.append(item, payload[item]);
+                data.append(field, value);
             }
         }
-        return axiosAction('post', context, {
-            url: '/api/manager/roles',
-            data: form
+
+        return axiosAction('post', commit, {
+            url: '/roles',
+            data
         })
     },
-    update(context, payload) {
-        const form = new FormData();
-        for(let item in payload.formData) {
-            if (payload.formData[item] instanceof Array) {
-                for(let data of payload.formData[item]) {
-                    form.append(`${item}[]`, data);
+    update ({ commit }, { id, formData}) {
+        const data = new FormData();
+        for(const [field, value] of Object.entries(formData)) {
+            if (value instanceof Array) {
+                for (const item of value) {
+                    data.append(`${field}[]`, item);
                 }
             } else {
-                form.append(item, payload.formData[item]);
+                data.append(field, value);
             }
         }
-        return axiosAction('post', context, {
-            url: `/api/manager/roles/${payload.id}`,
-            data: form
+
+        return axiosAction('post', commit, {
+            url: `/roles/${id}`,
+            data
         })
     },
-    destroy(context, id) {
-        return axiosAction('delete', context, {
-            url: `/api/manager/roles/${id}`,
-            thenContent: response => context.commit('DELETE_ITEM', id)
+    delete ({ commit }, { payload }) {
+        return axiosAction('delete', commit, {
+            url: `/roles/${payload}`,
+            thenContent: response => commit('DELETE_ITEM', payload)
         })
     },
-    updateField(context, payload) {
-        context.commit('UPDATE_FIELD', payload);
+    setItemField ({ commit }, payload) {
+        commit('SET_ITEM_FIELD', payload);
     },
-    clearFields(context) {
-        context.commit('CLEAR_FIELDS');
+    clearItemFields ({ commit }) {
+        commit('CLEAR_ITEM_FIELDS');
     },
 };
 
@@ -109,7 +105,9 @@ const getters = {
     isUniqueName: state => value => uniqueFieldMixin(state.items, 'name', value),
     isUniqueNameEdit: state => (value, id) => uniqueFieldEditMixin(state.items, 'name', value, id),
     isUniqueDisplayName: state => value => uniqueFieldMixin(state.items, 'display_name', value),
-    isUniqueDisplayNameEdit: state => (value, id) => uniqueFieldEditMixin(state.items, 'display_name', value, id)
+    isUniqueDisplayNameEdit: state => (value, id) => uniqueFieldEditMixin(state.items, 'display_name', value, id),
+    defaultRole: state => state.items.find(item => item.name === config.DEFAULT_ROLE).id,
+    itemName: state => id => state.items.find(item => item.id === id).name
 };
 
 export default {

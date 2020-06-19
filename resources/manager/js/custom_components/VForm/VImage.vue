@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4 class="card-title">{{ title }}</h4>
+        <h4 class="card-title" v-if="title">{{ title }}</h4>
         <div class="form-group">
             <div class="file-input">
                 <div v-if="!imageData">
@@ -24,6 +24,12 @@
                         </template>
                         <input type="file" @change="onFileChange($event)">
                     </md-button>
+                    <md-button class="md-danger md-just-icon"
+                               @click="onFileChange($event, 'delete')"
+                               v-if="imgDefault && withDelete">
+                        <md-icon>close</md-icon>
+                        <md-tooltip md-direction="top">Удалить</md-tooltip>
+                    </md-button>
                 </div>
             </div>
             <div class="under-input-notice" v-if="vField && vRules && vField.$error">
@@ -43,7 +49,7 @@
         },
         props: {
             title: {
-                type: String,
+                type: [String, Boolean],
                 default: 'Изображение'
             },
             name: {
@@ -65,12 +71,16 @@
             module: {
                 type: String,
                 default: null
+            },
+            withDelete: {
+                type: Boolean,
+                default: false
             }
         },
         data() {
             return {
                 imageData: '',
-                imagePlaceholder: '/img/image_placeholder.jpg'
+                imagePlaceholder: this.$config.imagePlaceholder
             }
         },
         computed: {
@@ -87,6 +97,11 @@
 
                     case 'remove':
                         this.removeImage();
+                        break;
+
+                    case 'delete':
+                        this.removeImage();
+                        this.deleteImage();
                         break;
 
                     default:
@@ -111,10 +126,14 @@
             removeImage () {
                 this.imageData = '';
 
-                if (this.vField && this.imgDefault)
+                if (this.vField)
                     this.vField.$reset();
 
                 this.fileAction('');
+            },
+
+            deleteImage () {
+                this.$emit('delete');
             },
 
             createImage (file) {
@@ -129,7 +148,7 @@
             },
 
             fileAction (value) {
-                this.$store.dispatch(`${this.storeModule}updateField`, { field: this.name, value });
+                this.$store.dispatch(`${this.storeModule}setItemField`, { field: this.name, value });
             }
         }
     }

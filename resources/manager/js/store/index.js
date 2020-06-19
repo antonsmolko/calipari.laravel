@@ -5,6 +5,7 @@ import images from './modules/images';
 
 import categories from './modules/categories';
 import subCategories from './modules/sub-categories';
+import collections from './modules/collections';
 import textures from './modules/textures';
 import users from './modules/users';
 import roles from './modules/roles';
@@ -14,6 +15,12 @@ import settingGroups from './modules/setting-groups';
 import deliveries from './modules/deliveries';
 import orders from './modules/orders';
 import orderStatuses from './modules/order-statuses';
+import table from './modules/table';
+import pages from './modules/pages';
+import homePurchaseSteps from './modules/home/purchase-steps';
+import homeInteriors from './modules/home/interiors';
+import workExamples from './modules/work-examples';
+import posts from './modules/posts';
 
 Vue.use(Vuex);
 
@@ -33,15 +40,16 @@ const mutations = {
     },
     UPDATE_ERRORS(state, payload) {
         state.serverErrors = [];
-        let error = payload;
+        const error = payload;
         switch (error.status) {
             case 404:
                 state.serverErrors.push(errors.ERROR_NOTFOUND);
                 break;
+            case 400:
             case 422:
                 if (error.data.errors) {
-                    for (let errorKey in error.data.errors) {
-                        error.data.errors[errorKey].forEach(errorMessage => state.serverErrors.push(errorMessage));
+                    for (const errors of Object.values(error.data.errors)) {
+                        errors.forEach(errorMessage => state.serverErrors.push(errorMessage));
                     }
                 } else {
                     state.serverErrors.push(error.data.message);
@@ -104,6 +112,7 @@ export default new Vuex.Store({
         images,
         categories,
         subCategories,
+        collections,
         users,
         roles,
         permissions,
@@ -112,6 +121,12 @@ export default new Vuex.Store({
         settingGroups,
         deliveries,
         orders,
-        orderStatuses
+        orderStatuses,
+        table,
+        pages,
+        homePurchaseSteps,
+        homeInteriors,
+        workExamples,
+        posts
     }
 });

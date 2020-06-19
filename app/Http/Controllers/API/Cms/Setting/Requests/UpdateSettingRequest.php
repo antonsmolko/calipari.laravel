@@ -29,7 +29,7 @@ class UpdateSettingRequest extends FormRequest
             'key_name' => 'bail|required|unique:settings,key_name,' . $id . '|min:' . config('validation.setting.min') . '|max:' . config('validation.setting.max') . '|regex:' . config('validation.setting.pattern'),
             'display_name' => 'bail|required|unique:settings,display_name,' . $id . '|min:' . config('validation.name.min') . '|max:' . config('validation.name.max'),
 //            'type' => 'bail|required|string|max:' . config('validation.name.max'),
-            'group_id' => 'integer'
+            'group_id' => 'integer|nullable'
         ];
     }
 }

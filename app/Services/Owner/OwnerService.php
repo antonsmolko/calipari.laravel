@@ -4,13 +4,11 @@
 namespace App\Services\Owner;
 
 
-use App\Services\Base\Category\Handlers\GetExcludedImagesHandler;
-use App\Services\Base\Category\Handlers\GetImagesHandler;
-use App\Services\Base\Category\Handlers\UploadHandler;
+use App\Services\Image\Handlers\UploadHandler;
 use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Image\CmsImageService;
 use App\Services\Owner\Repositories\OwnerRepository;
 use App\Services\SubCategory\SubCategoryService;
-use Illuminate\Support\Arr;
 
 class OwnerService extends SubCategoryService
 {
@@ -19,23 +17,20 @@ class OwnerService extends SubCategoryService
      * @param OwnerRepository $repository
      * @param ClearCacheByTagHandler $clearCacheByTagHandler
      * @param UploadHandler $uploadHandler
-     * @param GetImagesHandler $showImagesHandler
-     * @param GetExcludedImagesHandler $showExcludedImagesHandler
+     * @param CmsImageService $imageService
      */
     public function __construct(
         OwnerRepository $repository,
         ClearCacheByTagHandler $clearCacheByTagHandler,
         UploadHandler $uploadHandler,
-        GetImagesHandler $showImagesHandler,
-        GetExcludedImagesHandler $showExcludedImagesHandler
+        CmsImageService $imageService
     )
     {
         parent::__construct(
             $repository,
             $clearCacheByTagHandler,
             $uploadHandler,
-            $showImagesHandler,
-            $showExcludedImagesHandler
+            $imageService
         );
     }
 
@@ -46,49 +41,17 @@ class OwnerService extends SubCategoryService
      */
     public function upload(array $requestData, int $id)
     {
-        $category = $this->repository->getItem($id);
+        $uploadedKeys = $this->uploadHandler->handle($requestData['images']);
 
-        $uploadImages = $requestData['images'];
-        $pagination = Arr::except($requestData, ['images']);
-
-        $this->uploadHandler->handle($id, $uploadImages, $this->repository);
-
-        return $this->repository->getImages($category, $pagination);
-    }
-
-    /**
-     * @param array $images
-     * @param int $id
-     */
-    public function associateWithImages(array $images, int $id)
-    {
-        array_map(function ($image) use ($images, $id) {
-            $image->owner_id = $id;
-            $image->save();
-        }, $images);
+        return $this->repository->addImages($id, $uploadedKeys);
     }
 
     /**
      * @param int $id
-     * @param array $images
+     * @param array $imageKeys
      */
-    public function addImages(int $id, array $images)
+    public function addImages(int $id, array $imageKeys)
     {
-        $this->repository->addImages($id, $images);
-    }
-
-    /**
-     * @param int $categoryId
-     * @param int $imageId
-     * @param array $pagination
-     * @return mixed|void
-     */
-    public function removeImage(int $categoryId, int $imageId, array $pagination)
-    {
-        $category = $this->repository->getItem($categoryId);
-
-        return !!$this->repository->removeImage(null, $imageId)
-            ? $this->getImagesHandler->handle($category, $pagination)
-            : abort(500);
+        $this->repository->addImages($id, $imageKeys);
     }
 }

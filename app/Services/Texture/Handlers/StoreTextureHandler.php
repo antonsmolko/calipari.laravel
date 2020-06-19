@@ -23,14 +23,12 @@ class StoreTextureHandler
      */
     public function handle(array $storeData): Texture
     {
-        $thumbAttributes = uploader()->upload($storeData['thumb']);
         $sampleAttributes = uploader()->upload($storeData['sample']);
         $backgroundAttributes = uploader()->upload($storeData['background']);
 
         $storeData = Arr::collapse([
-            Arr::except($storeData, ['thumb', 'sample', 'background']),
+            Arr::except($storeData, ['sample', 'background']),
             [
-                'thumb_path' => $thumbAttributes['path'],
                 'sample_path' => $sampleAttributes['path'],
                 'background_path' => $backgroundAttributes['path'],
             ]

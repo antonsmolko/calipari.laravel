@@ -9,6 +9,10 @@ return [
         'min' => 2,
         'max' => 100
     ],
+    'meta_title' => [
+        'min' => 2,
+        'max' => 150
+    ],
     'description' => [
         'max' => 250
     ],
@@ -26,6 +30,9 @@ return [
         'min_size' => 3,
         'max_size' => 5120,
         'mimes' => 'jpeg,png'
+    ],
+    'images' => [
+        'max_print_width' => 5000
     ],
     'alias' => [
         'min' => 2,

@@ -1,12 +1,8 @@
 <template>
-    <v-extended-table v-if="items.length"
-                      :items="items"
-                      :pagination="pagination"
-                      :serverPagination="true"
-                      @search="search"
-                      @sort="changeSort"
-                      @changePage="changePage"
-                      @changePerPage="changePerPage" >
+    <v-extended-table :serverPagination="true"
+                      :resourceUrl="resourceUrl"
+                      defaultSortOrder="desc"
+                      emptyContent="Пока нет изображений!">
 
         <template slot-scope="{ item }">
 
@@ -38,6 +34,21 @@
                 </span>
             </md-table-cell>
 
+            <md-table-cell md-label="Коллекция">
+                <template v-if="item.collection">
+                    <md-badge
+                        v-if="item.id === item.collection.main_image_id"
+                        md-content="М">
+                        <span class="md-category-tag">
+                            {{ item.collection.title }}
+                        </span>
+                    </md-badge>
+                    <span v-else class="md-category-tag">
+                        {{ item.collection.title }}
+                    </span>
+                </template>
+            </md-table-cell>
+
             <md-table-cell md-label="Формат">
                 <span v-if="item.format">
                     <md-icon>{{ item.format.icon }}</md-icon>
@@ -61,12 +72,11 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from "vuex";
-
     import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
     import TagsTableCell from "@/custom_components/Tables/TagsTableCell";
     import PaletteTableCell from "@/custom_components/Tables/PaletteTableCell";
     import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
+    import { Badge } from '@/components'
 
     export default {
         name: "ImageListTable",
@@ -74,40 +84,18 @@
             VExtendedTable,
             TagsTableCell,
             PaletteTableCell,
-            ThumbTableCell
+            ThumbTableCell,
+            Badge
         },
         props: {
-            items: {
-                type: [ Array, Object ],
-                default: null
-            }
-        },
-        computed: {
-            ...mapState('images', {
-                pagination: state => state.pagination
-            }),
-            descPage () {
-                return this.pagination
+            resourceUrl: {
+                type: String,
+                required: true
             }
         },
         methods: {
-            ...mapActions('images', {
-                updatePaginationAction: 'updatePaginationFields'
-            }),
             onPublish (id) {
                 this.$emit('publish', id);
-            },
-            changePage (item) {
-                this.$emit('changePage', item);
-            },
-            changePerPage (value) {
-                this.updatePaginationAction({ per_page: value });
-            },
-            changeSort (sortOrder) {
-                this.$emit('changeSort', sortOrder);
-            },
-            search (query) {
-                this.$emit('search', query);
             }
         }
     }

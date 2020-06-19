@@ -9,12 +9,12 @@ trait ResponseUserStatusStrategy
     /**
      * Determines which message to return to the user.
      *
-     * @param mixed $user
-     * @param string $token
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @param $user
+     * @param $token
+     * @param int $expiresIn
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function getUserStatusResponse($user, $token)
+    public function getUserStatusResponse($user, $token, int $expiresIn)
     {
         if (!$user->isActive()) {
             return $this->getLockedOut();
@@ -25,7 +25,7 @@ trait ResponseUserStatusStrategy
             return $this->getNotConfirmed($user->email);
         }
 
-        return $this->getAllRights($user->name, $token);
+        return $this->getAllRights($user->name, $token, $expiresIn);
     }
 
     /**
@@ -47,10 +47,10 @@ trait ResponseUserStatusStrategy
     /**
      * Notifies that the user is auth.
      *
-     * @params string $email
+     * @param string $name
      * @param string $token
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @param int $expiresIn
+     * @return mixed
      */
-    abstract public function getAllRights($name, $token);
+    abstract public function getAllRights(string $name, string $token, int $expiresIn);
 }

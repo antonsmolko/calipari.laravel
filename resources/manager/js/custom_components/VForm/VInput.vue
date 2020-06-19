@@ -4,7 +4,7 @@
         <div class="form-group">
             <md-field :class="[{ 'md-error': vField.$error }, { 'md-valid': !vField.$invalid }]">
                 <md-icon v-if="icon">{{ icon }}</md-icon>
-                <md-input :type="type" :name="name" @input="onInput" :value="value" :maxlength="maxlength" />
+                <md-input :type="type" :name="name" @input="onInput" :value="value" :min="min" :maxlength="maxlength" />
                 <slide-y-down-transition v-show="vField.$error">
                     <md-icon class="error">close</md-icon>
                 </slide-y-down-transition>
@@ -89,7 +89,8 @@
                 default: 30
             },
             icon: {
-                type: String
+                type: String,
+                default: null
             },
             type: {
                 type: String,
@@ -106,13 +107,16 @@
         },
         data() {
             return {
-                valueReference: ''
+                referenceValue: ''
             }
         },
         computed: {
             storeModule() {
                 return this.module ? `${this.module}/` : '';
             }
+        },
+        created() {
+            this.referenceValue = this.value;
         },
         methods: {
             onInput(value) {
@@ -122,7 +126,7 @@
                     this.touched(this.vField, value);
                 }
 
-                this.$store.dispatch(`${this.storeModule}updateField`, {
+                this.$store.dispatch(`${this.storeModule}setItemField`, {
                     field: this.name,
                     value: value.trim()
                 });
@@ -138,16 +142,13 @@
                 this.differ ? this.touchedDifferent(v, value) : v.$touch();
             },
             touchedDifferent(v, value) {
-                this.isDiffer(value, this.valueReference)
+                this.isDiffer(value, this.referenceValue)
                     ? v.$touch()
                     : v.$reset()
             },
             isDiffer(a, b) {
                 return a != b;
             }
-        },
-        created() {
-            this.valueReference = this.value;
         }
     }
 </script>

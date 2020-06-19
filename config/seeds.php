@@ -1,6 +1,73 @@
 <?php
 
 return [
+    'purchase-steps' => [
+        '1' => [
+            'title' => 'Выберите изображение из каталога',
+            'description' => 'Для удобства изображения разделены по категориям, пользуйтесь фильтрами и <a class="uk-link" href="/search">поиском сайта</a>.',
+            'image_key' => '1'
+        ],
+        '2' => [
+            'title' => 'Укажите размеры, выберите фактуру',
+            'description' => 'Измерьте поверхность, на которую вы собираетесь наклеить фотообои.',
+            'image_key' => '2'
+        ],
+        '3' => [
+            'title' => 'Оформите заказ',
+            'description' => 'Укажите свои данные. Если есть тонкости или нюансы, можете их указать в комментарии к заказу.',
+            'image_key' => '3'
+        ],
+        '4' => [
+            'title' => 'Согласовываем макет',
+            'description' => 'Мы подготовим изображение и отправим Вам на почту для согласования, перед печатью. ',
+            'image_key' => '4'
+        ],
+        '5' => [
+            'title' => 'Оплата',
+            'description' => 'После утверждения макета произведите оплату заказа. ',
+            'image_key' => '5'
+        ],
+        '6' => [
+            'title' => 'Изготавливаем, упаковываем, отправляем',
+            'description' => 'Мы запускаем производство Вашего заказа, затем тщательно его проверяем и упаковываем. Доставляем заказ по всей России до ближайшего к вам пункта самовывоза транспортной компании или курьером по адресу прямо в руки. Для жителей Брянска доступна доставка в торговых точках города.',
+            'image_key' => '6'
+        ],
+        '7' => [
+            'title' => 'Монтаж',
+            'description' => 'Украшаете интерьер авторской фреской.',
+            'image_key' => '7'
+        ],
+    ],
+    'pages' => [
+        '1' => [
+            'title' => 'Главная',
+            'alias' => 'home'
+        ],
+        '2' => [
+            'title' => 'Каталог',
+            'alias' => 'catalog'
+        ],
+        '3' => [
+            'title' => 'Текстуры',
+            'alias' => 'textures'
+        ],
+        '4' => [
+            'title' => 'Контакты',
+            'alias' => 'contacts'
+        ],
+        '5' => [
+            'title' => 'Портфолио',
+            'alias' => 'portfolio'
+        ],
+        '6' => [
+            'title' => 'Блог',
+            'alias' => 'blog'
+        ],
+        '7' => [
+            'title' => 'Политика конфиденциальности',
+            'alias' => 'policy'
+        ]
+    ],
     'formats' => [
         '1' => [
             'title' => 'Портрет',
@@ -82,6 +149,12 @@ return [
         ],
     ],
     'settings' => [
+        [
+            'display_name' => 'App Url',
+            'key_name' => 'app_url',
+            'value' => env('APP_URL'),
+            'type' => 'text'
+        ],
         [
             'display_name' => 'Название сайта',
             'key_name' => 'site_name',
@@ -214,142 +287,115 @@ return [
     'owners' => [
         [
             'title' => 'Shutterstock',
-            'description' => 'https://shutterstock.com/ru/',
-            'publish' => 1
+            'description' => 'https://shutterstock.com/ru/'
         ],
         [
             'title' => 'Depositphotos',
-            'description' => 'https://ru.depositphotos.com/',
-            'publish' => 1
+            'description' => 'https://ru.depositphotos.com/'
         ],
         [
             'title' => 'Эдуард',
-            'description' => '',
-            'publish' => 1
+            'description' => ''
         ],
     ],
-    'tags' => [
-        [
-            'title' => 'Праздники',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Машинки',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Мультики',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Мстители',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Железный человек',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Халк',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Звездные войны',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Дарт Вейдер',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Чубака',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Футбол',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Месси',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Роналду',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Леброн Джеймс',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Баскетбол',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Майкл Джордан',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Стефен Карри',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Формула 1',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Ferrari',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Lamborghini',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Aston Martin',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Mercedes Benz',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'BMV',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'Audi',
-            'description' => '',
-            'publish' => 1
-        ],
-        [
-            'title' => 'McLaren',
-            'description' => '',
-            'publish' => 1
-        ]
-    ],
+//    'tags' => [
+//        [
+//            'title' => 'Праздники',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Машинки',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Мультики',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Мстители',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Железный человек',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Халк',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Звездные войны',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Дарт Вейдер',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Чубака',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Футбол',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Месси',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Роналду',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Леброн Джеймс',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Баскетбол',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Майкл Джордан',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Стефен Карри',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Формула 1',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Ferrari',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Lamborghini',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Aston Martin',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Mercedes Benz',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'BMV',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'Audi',
+//            'description' => '',
+//        ],
+//        [
+//            'title' => 'McLaren',
+//            'description' => '',
+//        ]
+//    ],
     'seeds_uploads_path' => 'seed_data/',
     'seeds_path' => 'storage/uploads/seed_uploads/',
     'categories' => [
@@ -359,136 +405,119 @@ return [
                 'title' => 'Абстракция',
                 'alias' => 'abstraction',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Архитектура',
                 'alias' => 'architecture',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Геометрия',
                 'alias' => 'geometry',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Живопись',
                 'alias' => 'painting',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Животные',
                 'alias' => 'animals',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Замки',
                 'alias' => 'castles',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Карты',
                 'alias' => 'maps',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Корабли',
                 'alias' => 'ships',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Космос',
                 'alias' => 'space',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Мегаполис',
                 'alias' => 'megalopolis',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Природа',
                 'alias' => 'nature',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Ретро',
                 'alias' => 'retro',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Текстуры',
                 'alias' => 'textures',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Улицы, улочки, дома',
                 'alias' => 'streets-houses',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Флористика',
                 'alias' => 'floristics',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Фоны',
                 'alias' => 'backgrounds',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ],
             [
                 'type' => 'topics',
                 'title' => 'Цветы и растения',
                 'alias' => 'flowers-plants',
                 'description' => '',
-                'keywords' => '',
-                'publish' => 1
+                'keywords' => ''
             ]
         ],
         'colors' => [
@@ -497,48 +526,42 @@ return [
                 'title' => 'Белый',
                 'alias' => 'white',
                 'description' => 'Изображения преимущественно белого цвета',
-                'keywords' => 'белый, white',
-                'publish' => 1
+                'keywords' => 'белый, white'
             ],
             [
                 'type' => 'colors',
                 'title' => 'Черный',
                 'alias' => 'black',
                 'description' => 'Изображения преимущественно черного цвета',
-                'keywords' => 'черный, black',
-                'publish' => 1
+                'keywords' => 'черный, black'
             ],
             [
                 'type' => 'colors',
                 'title' => 'Красный',
                 'alias' => 'tomato',
                 'description' => 'Изображения преимущественно красного цвета',
-                'keywords' => 'красный, red',
-                'publish' => 1
+                'keywords' => 'красный, red'
             ],
             [
                 'type' => 'colors',
                 'title' => 'Зеленый',
                 'alias' => 'limegreen',
                 'description' => 'Изображения преимущественно зеленого цвета',
-                'keywords' => 'зеленый, green',
-                'publish' => 1
+                'keywords' => 'зеленый, green'
             ],
             [
                 'type' => 'colors',
                 'title' => 'Синий',
                 'alias' => 'dodgerblue',
                 'description' => 'Изображения преимущественно синего цвета',
-                'keywords' => 'синий, blue, голубой',
-                'publish' => 1
+                'keywords' => 'синий, blue, голубой'
             ],
             [
                 'type' => 'colors',
                 'title' => 'Фиолетовый',
                 'alias' => 'darkviolet',
                 'description' => 'Изображения преимущественно фиолетового цвета',
-                'keywords' => 'фиолетовый, violet',
-                'publish' => 1
+                'keywords' => 'фиолетовый, violet'
             ]
         ],
         'interiors' => [
@@ -547,50 +570,214 @@ return [
                 'title' => 'Гостиная',
                 'alias' => 'living-room',
                 'description' => 'Изображения для гостиной',
-                'keywords' => 'гостиная, living room',
-                'publish' => 1
+                'keywords' => 'гостиная, living room'
             ],
             [
                 'type' => 'interiors',
                 'title' => 'Спальня',
                 'alias' => 'bad-room',
                 'description' => 'Изображения для спальной',
-                'keywords' => 'спальня, bad room',
-                'publish' => 1
+                'keywords' => 'спальня, bad room'
             ],
             [
                 'type' => 'interiors',
                 'title' => 'Кухня',
                 'alias' => 'kitchen',
                 'description' => 'Изображения для кухни',
-                'keywords' => 'кухня, kitchen',
-                'publish' => 1
+                'keywords' => 'кухня, kitchen'
             ],
             [
                 'type' => 'interiors',
                 'title' => 'Детская',
                 'alias' => 'child-room',
                 'description' => 'Изображения для детской',
-                'keywords' => 'детская, child room',
-                'publish' => 1
+                'keywords' => 'детская, child room'
             ],
             [
                 'type' => 'interiors',
                 'title' => 'Прихожая',
                 'alias' => 'hallway',
                 'description' => 'Изображения для коридора',
-                'keywords' => 'прихожая, hallway',
-                'publish' => 1
+                'keywords' => 'прихожая, hallway'
             ],
             [
                 'type' => 'interiors',
                 'title' => 'Офис',
                 'alias' => 'office',
                 'description' => 'Изображения для офиса',
-                'keywords' => 'офис, office',
-                'publish' => 1
+                'keywords' => 'офис, office'
             ]
-        ]
+        ],
+        'tags' => [
+            [
+                'title' => 'Праздники',
+                'alias' => 'holidays',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Машинки',
+                'alias' => 'cars',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Мультики',
+                'alias' => 'cartoons',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Мстители',
+                'alias' => 'avengers',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Железный человек',
+                'alias' => 'iron-man',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Халк',
+                'alias' => 'hulk',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Звездные войны',
+                'alias' => 'star-wars',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Дарт Вейдер',
+                'alias' => 'dart-weider',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Чубака',
+                'alias' => 'chewbuck',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Футбол',
+                'alias' => 'football',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Месси',
+                'alias' => 'messi',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Роналду',
+                'alias' => 'ronaldu',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Леброн Джеймс',
+                'alias' => 'lebron',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Баскетбол',
+                'alias' => 'basketball',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Майкл Джордан',
+                'alias' => 'mj',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Стефен Карри',
+                'alias' => 'stef',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Формула 1',
+                'alias' => 'f1',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Ferrari',
+                'alias' => 'ferrari',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Lamborghini',
+                'alias' => 'lamborghini',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Aston Martin',
+                'alias' => 'aston-martin',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Mercedes Benz',
+                'alias' => 'mercedes-benz',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'BMV',
+                'alias' => 'bmv',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'Audi',
+                'alias' => 'audi',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ],
+            [
+                'title' => 'McLaren',
+                'alias' => 'mclaren',
+                'type' => 'tags',
+                'keywords' => '',
+                'description' => '',
+            ]
+        ],
     ],
     'textures' => [
         [

@@ -31,7 +31,7 @@ class CmsSettingRepository extends CmsBaseResourceRepository
      */
     public function getItemsWithGroup(): Collection
     {
-        return $this->model::with('group')->get();
+        return $this->model::with('group')->orderBy('id')->get();
     }
 
     /**
@@ -60,5 +60,17 @@ class CmsSettingRepository extends CmsBaseResourceRepository
     {
         $item->value = $value;
         $item->save();
+    }
+
+    /**
+     * @param Setting $item
+     * @return Setting
+     */
+    public function dissociateGroup (Setting $item): Setting
+    {
+        $item->group()->dissociate();
+        $item->save();
+
+        return $item;
     }
 }

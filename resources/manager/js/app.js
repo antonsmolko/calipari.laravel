@@ -25,6 +25,7 @@ import CKEditor from '@ckeditor/ckeditor5-vue';
 
 import langLibrary from './lib/Validations';
 import config from "@/config";
+import helpers from "@/helpers";
 
 // router setup
 import routes from "./routes/routes";
@@ -37,6 +38,7 @@ Vue.use(CKEditor);
 
 Vue.prototype.$langLib = langLibrary;
 Vue.prototype.$config = config;
+Vue.prototype.$helpers = helpers;
 
 // configure router
 const router = new VueRouter({

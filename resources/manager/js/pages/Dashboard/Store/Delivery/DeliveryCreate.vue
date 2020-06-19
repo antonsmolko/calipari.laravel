@@ -97,16 +97,14 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty
-                        ? true
-                        : !this.isUniqueTitle
+                    return (value.trim() === '') && !this.$v.title.$dirty || !this.isUniqueTitle
                 }
             },
             alias: {
                 required,
                 touch: false,
                 testAlias (value) {
-                    return value.trim() === '' || (/^([a-z0-9]+[-]?)+[a-z0-9]$/).test(value);
+                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
                 },
                 minLength: minLength(2),
                 isUnique (value) {
@@ -144,7 +142,7 @@
         methods: {
             ...mapActions('deliveries', {
                 getItemsAction: 'getItems',
-                clearFieldsAction: 'clearFields',
+                clearFieldsAction: 'clearItemFields',
             }),
             onCreate() {
                 return this.create({

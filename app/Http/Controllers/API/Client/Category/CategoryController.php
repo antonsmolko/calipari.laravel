@@ -29,6 +29,15 @@ class CategoryController extends BaseResourceController
     }
 
     /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getItemTags(int $id)
+    {
+        return response()->json($this->service->getItemTags($id));
+    }
+
+    /**
      * @param FormRequest $request
      * @param int $id
      * @return JsonResponse
@@ -36,24 +45,5 @@ class CategoryController extends BaseResourceController
     public function getImages(FormRequest $request, int $id): JsonResponse
     {
         return response()->json($this->service->getImages($id, $request->all()));
-    }
-
-    /**
-     * @param int $categoryId
-     * @return JsonResponse
-     */
-    public function getFilters(int $categoryId): JsonResponse
-    {
-        return response()->json($this->service->getFilters($categoryId));
-    }
-
-    /**
-     * WishList Filters
-     * @param FormRequest $request
-     * @return JsonResponse
-     */
-    public function getFiltersByImageIds(FormRequest $request): JsonResponse
-    {
-        return response()->json($this->service->getFiltersByImageIds($request->all()));
     }
 }

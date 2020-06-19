@@ -19,8 +19,8 @@ export default function (opt = null) {
         MIN_FILE: `Размер файла в поле «${opt.field_name}» не может быть менее ${opt.min} Кб.`,
         MIN_NUMERIC: `Значени поля «${opt.field_name}» не может быть менее ${opt.min}.`,
         MIN_STRING: `Поле «${opt.field_name}» должно содержать не менее ${opt.min} символов.`,
-        NUM: `Поле «${opt.field_name} должно содержать только целые цифры.`,
-        NUM_DOT: `Поле «${opt.field_name} должно содержать только цифры и точку-разделитель.`,
+        NUM: `Поле «${opt.field_name}» должно содержать только целые цифры.`,
+        NUM_DOT: `Поле «${opt.field_name}» должно содержать только цифры и точку-разделитель.`,
         REQUIRED: `Поле «${opt.field_name}» обязательно для заполнения.`,
         SAME_AS_PASSWORD: 'Поле «Подтверждение пароля» должно совпадать с полем «Пароль».',
         UNIQUE: `Поле «${opt.field_name}» с таким значение уже существует.`

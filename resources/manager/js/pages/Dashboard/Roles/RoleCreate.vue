@@ -50,11 +50,14 @@
                         <md-switch v-for="permission in permissionList"
                                    :key="permission.id"
                                    :value="permission.id"
-                                   v-model="selectedPermissions"
+                                   v-model="permissions"
+                                   @change="onPermissionsChange"
                         >
                             {{ permission.display_name }}
                         </md-switch>
+                        <input-notification-require v-if="$v.permissions.$error" name="Привелегии" />
                     </md-card-content>
+                    <div class="space-30"></div>
                 </md-card>
             </div>
         </div>
@@ -62,22 +65,22 @@
 </template>
 
 <script>
-    import { mapActions, mapState } from 'vuex'
-
-    import { required, minLength } from 'vuelidate/lib/validators'
-
-    import { pageTitle } from '@/mixins/base'
-    import { createMethod } from '@/mixins/crudMethods'
+    import { mapActions, mapState } from 'vuex';
+    import { required, minLength } from 'vuelidate/lib/validators';
+    import { InputNotificationRequire } from '@/custom_components/InputNotifications';
+    import { pageTitle } from '@/mixins/base';
+    import { createMethod } from '@/mixins/crudMethods';
 
     export default {
         name: 'RoleCreate',
+        components: { InputNotificationRequire },
         mixins: [ pageTitle, createMethod ],
         data() {
             return {
                 responseData: false,
                 redirectRoute: { name: 'manager.roles' },
                 storeModule: 'roles',
-                selectedPermissions: []
+                permissions: []
             }
         },
         validations: {
@@ -86,14 +89,10 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.name.$dirty
-                        ? true
-                        : !this.isUniqueName
+                    return (value.trim() === '') && !this.$v.name.$dirty || !this.isUniqueName
                 },
                 testAlias (value) {
-                    return value.trim() === ''
-                        ? true
-                        : (/^([a-z0-9]+[-]?)+[a-z0-9]$/).test(value);
+                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
                 }
             },
             displayName: {
@@ -101,15 +100,14 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.displayName.$dirty
-                        ? true
-                        : !this.isUniqueDisplayName
+                    return (value.trim() === '') && !this.$v.displayName.$dirty || !this.isUniqueDisplayName
                 }
             },
             description: {
                 touch: false
             },
             permissions: {
+                required,
                 touch: false
             }
         },
@@ -127,19 +125,34 @@
                 return !!this.$store.getters['roles/isUniqueDisplayName'](this.displayName);
             }
         },
+        created() {
+            this.clearFieldsAction();
+            Promise.all([
+                this.getItemsAction(),
+                this.getPermissionsAction()
+            ])
+                .then(() => {
+                    this.setPageTitle('Новая Роль');
+                    this.responseData = true;
+                })
+                .catch(() => this.$router.push(this.redirectRoute));
+        },
         methods: {
             ...mapActions({
                 getItemsAction: 'roles/getItems',
-                clearFieldsAction: 'roles/clearFields',
+                clearFieldsAction: 'roles/clearItemFields',
                 getPermissionsAction: 'permissions/getItems'
             }),
+            onPermissionsChange () {
+              this.$v.permissions.$touch();
+            },
             onCreate() {
                 return this.create({
                     sendData: {
                         name: this.name,
                         display_name: this.displayName,
                         description: this.description,
-                        permissions: this.selectedPermissions
+                        permissions: this.permissions
                     },
                     title: this.displayName,
                     successText: 'Роль создана!',
@@ -147,16 +160,6 @@
                     redirectRoute: this.redirectRoute
                 })
             }
-        },
-        created() {
-            this.getItemsAction()
-                .then(() => this.getPermissionsAction())
-                .then(() => {
-                    this.setPageTitle('Новая Роль');
-                    this.clearFieldsAction();
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
         }
     }
 </script>

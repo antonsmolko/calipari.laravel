@@ -148,7 +148,7 @@
 
 <script>
     import { mapActions, mapState } from 'vuex';
-    import last from 'lodash/last';
+    import first from 'lodash/first';
     import { getFormatPrice, getArticle } from "@/helpers";
 
     import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
@@ -184,7 +184,7 @@
                 return this.$store.getters['orderStatuses/getRestItems'](this.currentStatus.order);
             },
             currentStatus () {
-                return last([...this.order.statuses]);
+                return first([...this.order.statuses]);
             },
             baseTableData () {
                 return [

@@ -7,28 +7,54 @@ namespace App\Services\Image;
 use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Cache\Tag;
 use App\Services\Cache\TTL;
+use App\Services\Category\Repositories\ClientCategoryRepository;
+use App\Services\Collection\ClientCollectionService;
+use App\Services\Image\Handlers\DefineRestrictionsForCollectionsHandler;
 use App\Services\Image\Repositories\ClientImageRepository;
-use Illuminate\Support\Arr;
+use App\Services\Image\Resources\FromClientCollection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class ClientImageService
 {
     private ClientImageRepository $repository;
-
+    private ClientCategoryRepository $categoryRepository;
+    private ClientCollectionService $collectionService;
     private CacheKeyManager $cacheKeyManager;
+    private DefineRestrictionsForCollectionsHandler $defineRestrictionsForCollectionsHandler;
 
     /**
      * ClientImageService constructor.
      * @param ClientImageRepository $repository
+     * @param ClientCategoryRepository $categoryRepository
+     * @param ClientCollectionService $collectionService
      * @param CacheKeyManager $cacheKeyManager
+     * @param DefineRestrictionsForCollectionsHandler $defineRestrictionsForCollectionsHandler
      */
     public function __construct(
         ClientImageRepository $repository,
-        CacheKeyManager $cacheKeyManager
+        ClientCategoryRepository $categoryRepository,
+        ClientCollectionService $collectionService,
+        CacheKeyManager $cacheKeyManager,
+        DefineRestrictionsForCollectionsHandler $defineRestrictionsForCollectionsHandler
     )
     {
         $this->repository = $repository;
+        $this->categoryRepository = $categoryRepository;
+        $this->collectionService = $collectionService;
         $this->cacheKeyManager = $cacheKeyManager;
+        $this->defineRestrictionsForCollectionsHandler = $defineRestrictionsForCollectionsHandler;
+    }
+
+    /**
+     * @param Request $request
+     * @return FromClientCollection
+     */
+    public function getItems(Request $request): FromClientCollection
+    {
+        $isRestrictedForCollection = $this->defineRestrictionsForCollectionsHandler->handle($request);
+
+        return new FromClientCollection($this->repository->getItems($request, $isRestrictedForCollection));
     }
 
     /**
@@ -46,63 +72,23 @@ class ClientImageService
             });
     }
 
-//    /**
-//     * @param array $requestData
-//     * @return mixed
-//     */
-//    public function getItems(array $requestData)
-//    {
-//        list(
-//            'key' => $id,
-//            'filter' => $filter,
-//            'pagination' => $pagination) = $requestData;
-//
-//        $key = $this->cacheKeyManager
-//            ->getImagesKey(
-//                Arr::collapse([['client', 'published'],
-//                    Arr::flatten($filter),
-//                    Arr::flatten($pagination)])
-//            );
-//
-//        return Cache::tags(Tag::IMAGES_TAG)
-//            ->remember($key, TTL::IMAGES_TTL, function () use ($pagination) {
-//            return $this->repository->getItems($pagination);
-//        });
-//    }
-
     /**
-     * @param array $requestData
-     * @return mixed
+     * @param int $id
+     * @return array
      */
-    public function getWishListItems(array $requestData)
+    public function getItemFromEditor(int $id): array
     {
-        list(
-            'key' => $ids,
-            'filter' => $filter,
-            'pagination' => $pagination) = $requestData;
+        $item = $this->repository->getResourceItem($id);
+        $collectionId = $item->collection_id;
 
-        $paginateData = $this->repository->getWishListItems($ids, $pagination, $filter);
+        return $collectionId !== null
+            ? ['item' => $item,
+               'collection' => $this->collectionService->getItemImagesFromEditor($collectionId, $id)]
+            : ['item' => $item];
+    }
 
-        $filtersKey = [];
-
-        if ($filter !== null) {
-            foreach($filter as $key => $field) {
-                $filtersKey[$key] = ($key . '_' . implode('_', $field));
-            }
-        }
-
-        $key = $this->cacheKeyManager
-            ->getImagesKey(
-                Arr::collapse([
-                    ['client', 'published', 'wishList'],
-                    Arr::flatten($ids),
-                    Arr::flatten($pagination),
-                    Arr::flatten($filtersKey)
-            ]));
-
-        return Cache::tags(Tag::IMAGES_TAG)
-            ->remember($key, TTL::IMAGES_TTL, function () use ($paginateData) {
-                return $paginateData;
-            });
+    public function getWishListTags(array $keys)
+    {
+        return $this->categoryRepository->getTagsByImageKeys($keys);
     }
 }

@@ -27,7 +27,6 @@ class CreateTextureRequest extends FormRequest
             'name' => 'bail|required|unique:textures,name|min:' . config('validation.name.min') . '|max:' . config('validation.name.max'),
             'price' => 'bail|required|numeric',
             'width' => 'bail|required|numeric',
-            'thumb' => 'bail|required|file|image|mimes:jpeg,png|min:' . config('validation.upload.min_size.min') . '|max:' . config('validation.upload.max_size'),
             'sample' => 'bail|required|file|image|mimes:jpeg,png|min:' . config('validation.upload.min_size.min') . '|max:' . config('validation.upload.max_size'),
             'background' => 'bail|required|file|image|mimes:jpeg,png|min:' . config('validation.upload.min_size.min') . '|max:' . config('validation.upload.max_size'),
             'description' => 'max:' . config('validation.text.max')

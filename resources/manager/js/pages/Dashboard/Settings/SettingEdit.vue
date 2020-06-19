@@ -44,7 +44,7 @@
 
                         <v-select v-if="settingGroups.length" title="Группа" placeholder="Выберите группу настройки"
                                   name="group_id"
-                                  :value="group"
+                                  :value="+group"
                                   :vField="$v.group"
                                   :differ="true"
                                   :options="settingGroups"
@@ -99,9 +99,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.displayName.$dirty
-                        ? true
-                        : !this.isUniqueDisplayNameEdit
+                    return (value.trim() === '') && !this.$v.displayName.$dirty || !this.isUniqueDisplayNameEdit
                 }
             },
             keyName: {
@@ -109,14 +107,10 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.keyName.$dirty
-                        ? true
-                        : !this.isUniqueKeyNameEdit
+                    return (value.trim() === '') && !this.$v.keyName.$dirty || !this.isUniqueKeyNameEdit
                 },
                 testKey (value) {
-                    return value.trim() === ''
-                        ? true
-                        : (/^([a-z0-9]+[_]?)+[a-z0-9]$/).test(value);
+                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
                 }
             },
             group: {
@@ -129,7 +123,6 @@
                 displayName: state => state.settings.fields.display_name,
                 type: state => state.settings.fields.type,
                 group: state => state.settings.fields.group_id,
-                types: state => state.settings.types,
                 settingGroups: state => state.settingGroups.items
             }),
             isUniqueKeyNameEdit() {
@@ -141,7 +134,6 @@
         },
         methods: {
             ...mapActions({
-                getItemsWithTypesAction: 'settings/getItemsWithTypes',
                 getItemAction: 'settings/getItem',
                 getGroupsAction: 'settingGroups/getItems'
             }),
@@ -174,9 +166,10 @@
             },
         },
         created() {
-            this.getItemsWithTypesAction()
-                .then(() => this.getItemAction(this.id))
-                .then(() => this.getGroupsAction())
+            Promise.all([
+                this.getItemAction(this.id),
+                this.getGroupsAction()
+            ])
                 .then(() => {
                     if(!this.settingGroups.length) this.$router.push(this.redirectRoute);
                     this.setPageTitle(this.displayName);

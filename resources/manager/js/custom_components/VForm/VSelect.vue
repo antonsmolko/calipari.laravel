@@ -83,7 +83,7 @@
                 if (this.vField)
                     this.touched(this.vField, value);
 
-                this.$store.dispatch(`${this.storeModule}updateField`, { field: this.name, value });
+                this.$store.dispatch(`${this.storeModule}setItemField`, { field: this.name, value });
             },
             isDiffer(a, b) {
                 return this.multiple

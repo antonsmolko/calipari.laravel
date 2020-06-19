@@ -47,10 +47,6 @@
                                  :vRules="{ required: true }"
                                  :module="storeModule" />
 
-                        <v-switch :vField="$v.publish"
-                                  :value="publish"
-                                  :module="storeModule" />
-
                     </md-card-content>
                 </md-card>
             </div>
@@ -58,6 +54,11 @@
                 <md-card>
                     <card-icon-header icon="timeline" title="SEO" />
                     <md-card-content>
+                        <v-input title="Мета заголовок"
+                                 name="meta_title"
+                                 :vField="$v.metaTitle"
+                                 :maxlength="150"
+                                 :module="storeModule" />
 
                         <v-textarea name="description"
                                     :vField="$v.description"
@@ -109,22 +110,25 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.title.$dirty) || !this.isUniqueTitle
+                    return ((value.trim() === '') && !this.$v.title.$dirty) || this.isUniqueTitle
                 }
             },
             alias: {
                 required,
                 touch: false,
                 testAlias (value) {
-                    return value.trim() === '' || (/^([a-z0-9]+[-]?)+[a-z0-9]$/).test(value);
+                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
                 },
                 minLength: minLength(2),
                 isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.alias.$dirty) || !this.isUniqueAlias
+                    return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAlias
                 },
             },
             image: {
                 required,
+                touch: false
+            },
+            metaTitle: {
                 touch: false
             },
             description: {
@@ -140,15 +144,28 @@
                 alias: state => state.fields.alias,
                 image: state => state.fields.image,
                 publish: state => state.fields.publish,
+                metaTitle: state => state.fields.meta_title,
                 description: state => state.fields.description,
                 keywords: state => state.fields.keywords
             }),
             isUniqueTitle () {
-                return !!this.$store.getters['categories/isUniqueTitle'](this.title);
+                return this.$store.getters['categories/isUniqueTitle'](this.title);
             },
             isUniqueAlias () {
-                return !!this.$store.getters['categories/isUniqueAlias'](this.alias);
+                return this.$store.getters['categories/isUniqueAlias'](this.alias);
             }
+        },
+        created () {
+            this.getItemsAction()
+                .then(() => {
+                    this.setPageTitle(this.pageProps[this.category_type].CREATE_PAGE_TITLE);
+                    this.clearFieldsAction();
+                    this.responseData = true;
+                })
+                .catch(() => this.$router.push(this.redirectRoute));
+        },
+        beforeDestroy () {
+            this.clearFieldsAction();
         },
         methods: {
             ...mapActions('categories', {
@@ -163,6 +180,7 @@
                         alias: this.alias,
                         image: this.image,
                         publish: +this.publish,
+                        meta_title: this.metaTitle,
                         description: this.description,
                         keywords: this.keywords
                     },
@@ -172,15 +190,6 @@
                     redirectRoute: this.redirectRoute
                 })
             }
-        },
-        created () {
-            this.getItemsAction()
-                .then(() => {
-                    this.setPageTitle(this.pageProps[this.category_type].CREATE_PAGE_TITLE);
-                    this.clearFieldsAction();
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
         }
     }
 </script>

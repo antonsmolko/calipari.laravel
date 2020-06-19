@@ -52,6 +52,7 @@ class StoreHandler
 
         $orderData = [
             'number' => $number,
+            'hash_number' => encrypt($number),
             'user_id' => $requestData['userId'],
             'items' => json_encode($items, true),
             'delivery' => json_encode($delivery, true),

@@ -43,7 +43,7 @@ class Order extends Model
      */
     public function statuses() {
         return $this->belongsToMany('App\Models\OrderStatus', 'order_order_status', 'order_id', 'status_id')
-            ->withPivot('created_at');
+            ->withTimestamps();
     }
 
     /**

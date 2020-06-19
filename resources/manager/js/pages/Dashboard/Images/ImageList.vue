@@ -1,6 +1,5 @@
 <template>
-    <div v-if="responseData">
-
+    <div>
         <div class="md-layout">
             <div class="md-layout-item">
                 <md-card class="mt-0">
@@ -34,30 +33,19 @@
                 <md-card>
                     <card-icon-header title="Каталог изображений" icon="image" />
                     <md-card-content>
-                        <image-list-table v-if="items.length"
-                                          :items="items"
-                                          @search="handleSearch"
-                                          @changePage="changePage"
-                                          @changeSort="changeSort"
-                                          @publish="onPublishChange">
+                        <image-list-table :resourceUrl="resourceUrl"
+                                          @publish="togglePublish">
 
                             <template #actions-column="{ item }">
                                 <md-table-cell v-if="item" md-label="Действия">
                                     <image-table-actions :item="item"
                                                          :remove="isCategoryPage"
-                                                         :page="pagination.current_page"
                                                          @remove="onRemove"
                                                          @delete="onDelete"/>
                                 </md-table-cell>
                             </template>
 
                         </image-list-table>
-
-                        <template v-else>
-                            <div class="alert alert-info">
-                                <span><h3>Пока нет изображений!</h3></span>
-                            </div>
-                        </template>
                     </md-card-content>
                 </md-card>
             </div>
@@ -98,177 +86,66 @@
         },
         data () {
             return {
-                responseData: false,
                 storeModule: 'images'
             }
         },
         computed: {
             ...mapState({
-                searchQuery: state => state.searchQuery,
-                searchedData: state => state.searchedData,
                 category: state => state.categories.item,
-                items: state => state.images.items,
-                fileProgress: state => state.images.fileProgress,
-                pagination: state => state.images.pagination,
-                previousPage: state => state.images.previousPage
+                fileProgress: state => state.images.fileProgress
             }),
+            resourceUrl () {
+                return this.isCategoryPage ? `/catalog/categories/${this.id}/images` : '/images/paginate'
+            },
             isCategoryPage() {
                 return this.category_type !== 'images';
-            },
-            paginationData () {
-                return {
-                    current_page: this.pagination.current_page,
-                    per_page: this.pagination.per_page,
-                    sort_by: this.pagination.sort_by,
-                    sort_order: this.pagination.sort_order
-                }
             }
+        },
+        created () {
+            this.init(this.category_type);
+        },
+        beforeDestroy () {
+
         },
         methods: {
             ...mapActions({
-                getItemsAction: 'images/getItems',
-                resetPagination: 'images/resetPagination',
-                publishAction: 'images/publish',
-                updatePaginationAction: 'images/updatePaginationFields',
-                setPreviousPageAction: 'images/setPreviousPage',
-                removeImageAction: 'categories/removeImage',
-                getCategoryWithImagesAction: 'categories/getItemWithImages',
-                getImagesAction: 'categories/getImages'
+                getCategoryAction: 'categories/getItem',
+                togglePublishAction: 'table/togglePublish',
+                removeImageAction: 'categories/removeImage'
             }),
-            async init () {
-                return this.category_type === 'images'
-                    ? await this.imageInit()
-                    : await this.categoryInit();
-            },
-            imageInit () {
-                this.getItemsAction(this.paginationData)
-                    .then(() => {
-                        this.setPageTitle('Изображения');
-                        this.responseData = true;
-                    })
-                    .catch(() => this.$router.push({ name: 'manager.dashboard' }));
-            },
-            categoryInit () {
-                this.getCategoryWithImagesAction({ id: this.id, paginationData: this.paginationData })
-                    .then(() => {
-                        this.setPageTitle(`Изображения категории «${this.category.title}»`);
-                        this.responseData = true;
-                    })
-                    .catch(() => this.$router.push({
-                        name: 'manager.catalog.categories.list',
-                        params: { category_type: this.category_type }
-                    }));
+            async init (categoryType) {
+                if (categoryType !== 'images') {
+                    await this.getCategoryAction(this.id)
+                }
+                const pageTitle = categoryType === 'images'
+                    ? 'Изображения'
+                    : `Изображения категории «${this.category.title}»`;
+                await this.setPageTitle(pageTitle);
+
             },
             fileInputChange (event) {
                 this.upload({
                     uploadFiles: event.target.files,
                     type: this.category_type,
-                    id: this.id,
-                    paginationData: this.paginationData
+                    id: this.id
                 });
             },
             onRemove (id) {
-                const paginationData = this.preparePaginationData();
-
-                this.removeImageAction({
-                    category_id: this.id,
-                    image_id: id,
-                    paginationData
-                })
-                    .then(() => this.checkGoToPreviousPage()
-                        ? this.goToPreviousPage()
-                        : this.rebootImageList(true));
+                this.removeImageAction({ categoryId: this.id, imageId: id });
             },
             onDelete (item) {
-                const paginationData = this.preparePaginationData();
-
                 this.delete({
                     payload: item.id,
                     title: item.id,
                     alertText: `изображение «${item.id}»`,
                     successText: 'Изображение удалено!',
                     storeModule: this.storeModule,
-                    categoryId: this.id || null,
-                    paginationData
+                    tableMode: 'table'
                 })
-                    .then(() => this.checkGoToPreviousPage()
-                        ? this.goToPreviousPage()
-                        : this.rebootImageList(true));
             },
-            onPublishChange (id) {
-                this.publishAction(id);
-            },
-            changePage (item) {
-                this.changePaginationSetting({ current_page: item });
-            },
-            changeSort (sortOrder) {
-                this.changePaginationSetting({ sort_order: sortOrder });
-            },
-            changePaginationSetting (settingObject) {
-                this.updatePaginationAction(settingObject);
-                !!this.searchQuery && this.searchedData.length
-                    ? this.search(this.searchQuery)
-                    : this.rebootImageList();
-            },
-            search (query, currentPageFirst = false) {
-                const paginationData = Object.assign({ query }, this.paginationData);
-
-                if (currentPageFirst) {
-                    paginationData.current_page = 1;
-                }
-
-                this.category_type !== 'images'
-                    ? this.getImagesAction({ id: this.id, paginationData })
-                    : this.getItemsAction(paginationData);
-            },
-            handleSearch (query) {
-                query
-                    ? this.search(query, true)
-                    : this.rebootImageList(true)
-            },
-            rebootImageList (currentPageFirst = false) {
-                const paginationData = Object.assign({}, this.paginationData);
-
-                if (currentPageFirst) {
-                    paginationData.current_page = 1;
-                }
-
-                return this.category_type === 'images'
-                    ? this.getItemsAction(paginationData)
-                    : this.getImagesAction({ id: this.id, paginationData });
-            },
-            preparePaginationData () {
-                return this.searchQuery
-                    ? Object.assign({ query: this.searchQuery}, this.paginationData)
-                    : Object.assign({}, this.paginationData);
-            },
-            paginationReset() {
-                this.resetPagination();
-
-                if (this.previousPage) {
-                    this.updatePaginationAction({ current_page: this.previousPage });
-                }
-            },
-            checkGoToPreviousPage () {
-                return this.checkItemsLength() ? this.pagination.current_page > 1 : false;
-            },
-            checkItemsLength () {
-                return !this.items.length || this.isSearchDataEmpty;
-            },
-            goToPreviousPage () {
-                this.changePaginationSetting({ current_page: this.pagination.current_page - 1 })
-            },
-            isSearchDataEmpty () {
-                return !!this.searchQuery && !this.searchedData.length;
+            togglePublish (id) {
+                this.togglePublishAction(`/images/${id}/publish`);
             }
-        },
-        created () {
-            this.paginationReset();
-            this.init()
-                .then(() => this.setPreviousPageAction(null));
-        },
-        beforeDestroy() {
-            this.paginationReset();
         }
     }
 </script>

@@ -1,1304 +1,1143 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
 
-/***/ "./node_modules/fuse.js/dist/fuse.esm.js":
-/*!***********************************************!*\
-  !*** ./node_modules/fuse.js/dist/fuse.esm.js ***!
-  \***********************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/**
- * Fuse.js v5.1.0 - Lightweight fuzzy-search (http://fusejs.io)
- *
- * Copyright (c) 2020 Kiro Risk (http://kiro.me)
- * All Rights Reserved. Apache Software License 2.0
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- */
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var fuse_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! fuse.js */ "./node_modules/fuse.js/dist/fuse.esm.js");
+/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash/debounce */ "./node_modules/lodash/debounce.js");
+/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash_debounce__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/components */ "./resources/manager/js/components/index.js");
 
-function bitapScore(
-  pattern,
-  { errors = 0, currentLocation = 0, expectedLocation = 0, distance = 100 }
-) {
-  const accuracy = errors / pattern.length;
-  const proximity = Math.abs(expectedLocation - currentLocation);
 
-  if (!distance) {
-    // Dodge divide by zero error.
-    return proximity ? 1.0 : accuracy
-  }
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
-  return accuracy + proximity / distance
-}
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-function matchedIndiced(matchmask = [], minMatchCharLength = 1) {
-  let matchedIndices = [];
-  let start = -1;
-  let end = -1;
-  let i = 0;
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-  for (let len = matchmask.length; i < len; i += 1) {
-    let match = matchmask[i];
-    if (match && start === -1) {
-      start = i;
-    } else if (!match && start !== -1) {
-      end = i - 1;
-      if (end - start + 1 >= minMatchCharLength) {
-        matchedIndices.push([start, end]);
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+var _debounce = lodash_debounce__WEBPACK_IMPORTED_MODULE_3___default()(function (f) {
+  return f();
+}, 300);
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "VExtendedTable",
+  components: {
+    Pagination: _components__WEBPACK_IMPORTED_MODULE_4__["Pagination"]
+  },
+  props: {
+    searchFields: {
+      type: Array,
+      "default": function _default() {
+        return ['id'];
       }
-      start = -1;
-    }
-  }
-
-  // (i-1 - start) + 1 => i - start
-  if (matchmask[i - 1] && i - start >= minMatchCharLength) {
-    matchedIndices.push([start, i - 1]);
-  }
-
-  return matchedIndices
-}
-
-function bitapSearch(
-  text,
-  pattern,
-  patternAlphabet,
-  {
-    location = 0,
-    distance = 100,
-    threshold = 0.6,
-    findAllMatches = false,
-    minMatchCharLength = 1,
-    includeMatches = false
-  }
-) {
-  const patternLen = pattern.length;
-  // Set starting location at beginning text and initialize the alphabet.
-  const textLen = text.length;
-  // Handle the case when location > text.length
-  const expectedLocation = Math.max(0, Math.min(location, textLen));
-  // Highest score beyond which we give up.
-  let currentThreshold = threshold;
-  // Is there a nearby exact match? (speedup)
-  let bestLocation = text.indexOf(pattern, expectedLocation);
-
-  // a mask of the matches
-  const matchMask = [];
-  for (let i = 0; i < textLen; i += 1) {
-    matchMask[i] = 0;
-  }
-
-  if (bestLocation !== -1) {
-    let score = bitapScore(pattern, {
-      errors: 0,
-      currentLocation: bestLocation,
-      expectedLocation,
-      distance
-    });
-    currentThreshold = Math.min(score, currentThreshold);
-
-    // What about in the other direction? (speed up)
-    bestLocation = text.lastIndexOf(pattern, expectedLocation + patternLen);
-
-    if (bestLocation !== -1) {
-      let score = bitapScore(pattern, {
-        errors: 0,
-        currentLocation: bestLocation,
-        expectedLocation,
-        distance
-      });
-      currentThreshold = Math.min(score, currentThreshold);
-    }
-  }
-
-  // Reset the best location
-  bestLocation = -1;
-
-  let lastBitArr = [];
-  let finalScore = 1;
-  let binMax = patternLen + textLen;
-
-  const mask = 1 << (patternLen <= 31 ? patternLen - 1 : 30);
-
-  for (let i = 0; i < patternLen; i += 1) {
-    // Scan for the best match; each iteration allows for one more error.
-    // Run a binary search to determine how far from the match location we can stray
-    // at this error level.
-    let binMin = 0;
-    let binMid = binMax;
-
-    while (binMin < binMid) {
-      const score = bitapScore(pattern, {
-        errors: i,
-        currentLocation: expectedLocation + binMid,
-        expectedLocation,
-        distance
-      });
-
-      if (score <= currentThreshold) {
-        binMin = binMid;
-      } else {
-        binMax = binMid;
+    },
+    perPageOptions: {
+      type: Array,
+      "default": function _default() {
+        return [20, 50, 100, 200];
       }
-
-      binMid = Math.floor((binMax - binMin) / 2 + binMin);
+    },
+    serverPagination: {
+      type: Boolean,
+      "default": false
+    },
+    resourceUrl: {
+      type: String,
+      required: true
+    },
+    defaultSortOrder: {
+      type: String,
+      "default": 'asc'
+    },
+    emptyContent: {
+      type: String,
+      "default": 'Ресурсы отсутствуют!'
+    },
+    editItemPathName: {
+      type: String,
+      "default": 'manager.images.edit'
     }
-
-    // Use the result from this iteration as the maximum for the next.
-    binMax = binMid;
-
-    let start = Math.max(1, expectedLocation - binMid + 1);
-    let finish = findAllMatches
-      ? textLen
-      : Math.min(expectedLocation + binMid, textLen) + patternLen;
-
-    // Initialize the bit array
-    let bitArr = Array(finish + 2);
-
-    bitArr[finish + 1] = (1 << i) - 1;
-
-    for (let j = finish; j >= start; j -= 1) {
-      let currentLocation = j - 1;
-      let charMatch = patternAlphabet[text.charAt(currentLocation)];
-
-      if (charMatch) {
-        matchMask[currentLocation] = 1;
-      }
-
-      // First pass: exact match
-      bitArr[j] = ((bitArr[j + 1] << 1) | 1) & charMatch;
-
-      // Subsequent passes: fuzzy match
-      if (i !== 0) {
-        bitArr[j] |=
-          ((lastBitArr[j + 1] | lastBitArr[j]) << 1) | 1 | lastBitArr[j + 1];
-      }
-
-      if (bitArr[j] & mask) {
-        finalScore = bitapScore(pattern, {
-          errors: i,
-          currentLocation,
-          expectedLocation,
-          distance
-        });
-
-        // This match will almost certainly be better than any existing match.
-        // But check anyway.
-        if (finalScore <= currentThreshold) {
-          // Indeed it is
-          currentThreshold = finalScore;
-          bestLocation = currentLocation;
-
-          // Already passed `loc`, downhill from here on in.
-          if (bestLocation <= expectedLocation) {
-            break
-          }
-
-          // When passing `bestLocation`, don't exceed our current distance from `expectedLocation`.
-          start = Math.max(1, 2 * expectedLocation - bestLocation);
-        }
-      }
-    }
-
-    // No hope for a (better) match at greater error levels.
-    const score = bitapScore(pattern, {
-      errors: i + 1,
-      currentLocation: expectedLocation,
-      expectedLocation,
-      distance
-    });
-
-    if (score > currentThreshold) {
-      break
-    }
-
-    lastBitArr = bitArr;
-  }
-
-  let result = {
-    isMatch: bestLocation >= 0,
-    // Count exact matches (those with a score of 0) to be "almost" exact
-    score: !finalScore ? 0.001 : finalScore
-  };
-
-  if (includeMatches) {
-    result.matchedIndices = matchedIndiced(matchMask, minMatchCharLength);
-  }
-
-  return result
-}
-
-function patternAlphabet(pattern) {
-  let mask = {};
-  let len = pattern.length;
-
-  for (let i = 0; i < len; i += 1) {
-    mask[pattern.charAt(i)] = 0;
-  }
-
-  for (let i = 0; i < len; i += 1) {
-    mask[pattern.charAt(i)] |= 1 << (len - i - 1);
-  }
-
-  return mask
-}
-
-// Machine word size
-const MAX_BITS = 32;
-
-class BitapSearch {
-  constructor(
-    pattern,
-    {
-      // Approximately where in the text is the pattern expected to be found?
-      location = 0,
-      // Determines how close the match must be to the fuzzy location (specified above).
-      // An exact letter match which is 'distance' characters away from the fuzzy location
-      // would score as a complete mismatch. A distance of '0' requires the match be at
-      // the exact location specified, a threshold of '1000' would require a perfect match
-      // to be within 800 characters of the fuzzy location to be found using a 0.8 threshold.
-      distance = 100,
-      // At what point does the match algorithm give up. A threshold of '0.0' requires a perfect match
-      // (of both letters and location), a threshold of '1.0' would match anything.
-      threshold = 0.6,
-      // Indicates whether comparisons should be case sensitive.
-      isCaseSensitive = false,
-      // When true, the algorithm continues searching to the end of the input even if a perfect
-      // match is found before the end of the same input.
-      findAllMatches = false,
-      // Minimum number of characters that must be matched before a result is considered a match
-      minMatchCharLength = 1,
-
-      includeMatches = false
-    }
-  ) {
-    this.options = {
-      location,
-      distance,
-      threshold,
-      isCaseSensitive,
-      findAllMatches,
-      includeMatches,
-      minMatchCharLength
+  },
+  data: function data() {
+    return {
+      currentSort: 'id',
+      fuseSearch: null
     };
-
-    if (pattern.length > MAX_BITS) {
-      throw new Error(`Pattern length exceeds max of ${MAX_BITS}.`)
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])('table', {
+    sortInit: function sortInit(state) {
+      return state.sortInit;
+    },
+    items: function items(state) {
+      return state.items;
+    },
+    searchedItems: function searchedItems(state) {
+      return state.searchedItems;
+    },
+    searchQuery: function searchQuery(state) {
+      return state.searchQuery;
+    },
+    pagination: function pagination(state) {
+      return state.pagination;
+    },
+    loading: function loading(state) {
+      return state.loading;
+    },
+    routeDetector: function routeDetector(state) {
+      return state.routeDetector;
     }
+  }), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])('table', ['itemsQty', 'searchedQty', 'checkReturnToPreviousPage', 'checkReturnToSearchedPreviousPage', 'isSearchedEmpty', 'totalPages']), {
+    queriedData: function queriedData() {
+      var items = !this.serverPagination && this.searchQuery ? this.searchedItems : this.items;
+      return items.slice(this.from, this.to);
+    },
+    to: function to() {
+      var highBound = this.from + this.pagination.per_page;
 
-    this.pattern = isCaseSensitive ? pattern : pattern.toLowerCase();
-    this.patternAlphabet = patternAlphabet(this.pattern);
-  }
-
-  searchIn(value) {
-    let text = value.$;
-    return this.searchInString(text)
-  }
-
-  searchInString(text) {
-    const { isCaseSensitive, includeMatches } = this.options;
-
-    if (!isCaseSensitive) {
-      text = text.toLowerCase();
-    }
-
-    // Exact match
-    if (this.pattern === text) {
-      let result = {
-        isMatch: true,
-        score: 0
-      };
-
-      if (includeMatches) {
-        result.matchedIndices = [[0, text.length - 1]];
+      if (this.total < highBound) {
+        highBound = this.total;
       }
 
-      return result
+      return highBound;
+    },
+    from: function from() {
+      return this.serverPagination ? 0 : this.pagination.per_page * (this.pagination.current_page - 1);
+    },
+    total: function total() {
+      return this.pagination.total ? this.pagination.total : this.searchedQty ? this.searchedItems.length : this.items.length;
+    },
+    fromEditItemPage: function fromEditItemPage() {
+      return this.$route.name === this.routeDetector.to && this.editItemPathName === this.routeDetector.from;
+    }
+  }),
+  watch: {
+    items: function items() {
+      this.initFuseSearch(this.searchFields);
+    },
+    itemsQty: function itemsQty() {
+      this.returnToPreviousPage();
+    },
+    searchedQty: function searchedQty() {
+      this.returnToPreviousPage();
+    }
+  },
+  created: function created() {
+    if (!this.fromEditItemPage) {
+      this.resetRouteDetector();
+      this.setState();
     }
 
-    // Otherwise, use Bitap algorithm
-    const {
-      location,
-      distance,
-      threshold,
-      findAllMatches,
-      minMatchCharLength
-    } = this.options;
-    return bitapSearch(text, this.pattern, this.patternAlphabet, {
-      location,
-      distance,
-      threshold,
-      findAllMatches,
-      minMatchCharLength,
-      includeMatches
-    })
-  }
-}
-
-// Token: 'file
-// Match type: exact-match
-// Description: Items that include `file`
-
-const isForPattern = (pattern) => pattern.charAt(0) == "'";
-
-const sanitize = (pattern) => pattern.substr(1);
-
-const match = (pattern, text) => {
-  const sanitizedPattern = sanitize(pattern);
-  const index = text.indexOf(sanitizedPattern);
-  const isMatch = index > -1;
-
-  return {
-    isMatch,
-    score: 0
-  }
-};
-
-var exactMatch = {
-  isForPattern,
-  sanitize,
-  match
-};
-
-// Token: !fire
-// Match type: inverse-exact-match
-// Description: Items that do not include `fire`
-
-const isForPattern$1 = (pattern) => pattern.charAt(0) == '!';
-
-const sanitize$1 = (pattern) => pattern.substr(1);
-
-const match$1 = (pattern, text) => {
-  const sanitizedPattern = sanitize$1(pattern);
-  const isMatch = text.indexOf(sanitizedPattern) === -1;
-
-  return {
-    isMatch,
-    score: 0
-  }
-};
-
-var inverseExactMatch = {
-  isForPattern: isForPattern$1,
-  sanitize: sanitize$1,
-  match: match$1
-};
-
-// Token: ^file
-// Match type: prefix-exact-match
-// Description: Items that start with `file`
-
-const isForPattern$2 = (pattern) => pattern.charAt(0) == '^';
-
-const sanitize$2 = (pattern) => pattern.substr(1);
-
-const match$2 = (pattern, text) => {
-  const sanitizedPattern = sanitize$2(pattern);
-  const isMatch = text.startsWith(sanitizedPattern);
-
-  return {
-    isMatch,
-    score: 0
-  }
-};
-
-var prefixExactMatch = {
-  isForPattern: isForPattern$2,
-  sanitize: sanitize$2,
-  match: match$2
-};
-
-// Token: !^fire
-// Match type: inverse-prefix-exact-match
-// Description: Items that do not start with `fire`
-
-const isForPattern$3 = (pattern) =>
-  pattern.charAt(0) == '!' && pattern.charAt(1) == '^';
-
-const sanitize$3 = (pattern) => pattern.substr(2);
-
-const match$3 = (pattern, text) => {
-  const sanitizedPattern = sanitize$3(pattern);
-  const isMatch = !text.startsWith(sanitizedPattern);
-
-  return {
-    isMatch,
-    score: 0
-  }
-};
-
-var inversePrefixExactMatch = {
-  isForPattern: isForPattern$3,
-  sanitize: sanitize$3,
-  match: match$3
-};
-
-// Token: .file$
-// Match type: suffix-exact-match
-// Description: Items that end with `.file`
-
-const isForPattern$4 = (pattern) => pattern.charAt(pattern.length - 1) == '$';
-
-const sanitize$4 = (pattern) => pattern.substr(0, pattern.length - 1);
-
-const match$4 = (pattern, text) => {
-  const sanitizedPattern = sanitize$4(pattern);
-  const isMatch = text.endsWith(sanitizedPattern);
-
-  return {
-    isMatch,
-    score: 0
-  }
-};
-
-var suffixExactMatch = {
-  isForPattern: isForPattern$4,
-  sanitize: sanitize$4,
-  match: match$4
-};
-
-// Token: !.file$
-// Match type: inverse-suffix-exact-match
-// Description: Items that do not end with `.file`
-
-const isForPattern$5 = (pattern) =>
-  pattern.charAt(0) == '!' && pattern.charAt(pattern.length - 1) == '$';
-
-const sanitize$5 = (pattern) => pattern.substring(1, pattern.length - 1);
-
-const match$5 = (pattern, text) => {
-  const sanitizedPattern = sanitize$5(pattern);
-  const isMatch = !text.endsWith(sanitizedPattern);
-
-  return {
-    isMatch,
-    score: 0
-  }
-};
-
-var inverseSuffixExactMatch = {
-  isForPattern: isForPattern$5,
-  sanitize: sanitize$5,
-  match: match$5
-};
-
-const INFINITY = 1 / 0;
-
-const isArray = (value) =>
-  !Array.isArray
-    ? Object.prototype.toString.call(value) === '[object Array]'
-    : Array.isArray(value);
-
-// Adapted from:
-// https://github.com/lodash/lodash/blob/f4ca396a796435422bd4fd41fadbd225edddf175/.internal/baseToString.js
-const baseToString = (value) => {
-  // Exit early for strings to avoid a performance hit in some environments.
-  if (typeof value == 'string') {
-    return value
-  }
-  let result = value + '';
-  return result == '0' && 1 / value == -INFINITY ? '-0' : result
-};
-
-const toString = (value) => (value == null ? '' : baseToString(value));
-
-const isString = (value) => typeof value === 'string';
-
-const isNumber = (value) => typeof value === 'number';
-
-const isDefined = (value) => value !== undefined && value !== null;
-
-// Return a 2D array representation of the query, for simpler parsing.
-// Example:
-// "^core go$ | rb$ | py$ xy$" => [["^core", "go$"], ["rb$"], ["py$", "xy$"]]
-const queryfy = (pattern) =>
-  pattern.split('|').map((item) => item.trim().split(/ +/g));
-
-/**
- * Command-like searching
- * ======================
- *
- * Given multiple search terms delimited by spaces.e.g. `^jscript .python$ ruby !java`,
- * search in a given text.
- *
- * Search syntax:
- *
- * | Token       | Match type                 | Description                            |
- * | ----------- | -------------------------- | -------------------------------------- |
- * | `jscript`   | fuzzy-match                | Items that match `jscript`             |
- * | `'python`   | exact-match                | Items that include `python`            |
- * | `!ruby`     | inverse-exact-match        | Items that do not include `ruby`       |
- * | `^java`     | prefix-exact-match         | Items that start with `java`           |
- * | `!^earlang` | inverse-prefix-exact-match | Items that do not start with `earlang` |
- * | `.js$`      | suffix-exact-match         | Items that end with `.js`              |
- * | `!.go$`     | inverse-suffix-exact-match | Items that do not end with `.go`       |
- *
- * A single pipe character acts as an OR operator. For example, the following
- * query matches entries that start with `core` and end with either`go`, `rb`,
- * or`py`.
- *
- * ```
- * ^core go$ | rb$ | py$
- * ```
- */
-class ExtendedSearch {
-  constructor(pattern, options) {
-    const { isCaseSensitive } = options;
-    this.query = null;
-    this.options = options;
-    // A <pattern>:<BitapSearch> key-value pair for optimizing searching
-    this._fuzzyCache = {};
-
-    if (isString(pattern) && pattern.trim().length > 0) {
-      this.pattern = isCaseSensitive ? pattern : pattern.toLowerCase();
-      this.query = queryfy(this.pattern);
-    }
-  }
-
-  searchIn(value) {
-    const query = this.query;
-
-    if (!this.query) {
-      return {
-        isMatch: false,
-        score: 1
-      }
-    }
-
-    let text = value.$;
-
-    text = this.options.isCaseSensitive ? text : text.toLowerCase();
-
-    let matchFound = false;
-
-    for (let i = 0, qLen = query.length; i < qLen; i += 1) {
-      const parts = query[i];
-      let result = null;
-      matchFound = true;
-
-      for (let j = 0, pLen = parts.length; j < pLen; j += 1) {
-        let token = parts[j];
-        result = this._search(token, text);
-        if (!result.isMatch) {
-          // AND condition, short-circuit and move on to next part
-          matchFound = false;
-          break
-        }
-      }
-
-      // OR condition, so if TRUE, return
-      if (matchFound) {
-        return result
-      }
-    }
-
-    // Nothing was matched
-    return {
-      isMatch: false,
-      score: 1
-    }
-  }
-
-  _search(pattern, text) {
-    if (exactMatch.isForPattern(pattern)) {
-      return exactMatch.match(pattern, text)
-    } else if (prefixExactMatch.isForPattern(pattern)) {
-      return prefixExactMatch.match(pattern, text)
-    } else if (inversePrefixExactMatch.isForPattern(pattern)) {
-      return inversePrefixExactMatch.match(pattern, text)
-    } else if (inverseSuffixExactMatch.isForPattern(pattern)) {
-      return inverseSuffixExactMatch.match(pattern, text)
-    } else if (suffixExactMatch.isForPattern(pattern)) {
-      return suffixExactMatch.match(pattern, text)
-    } else if (inverseExactMatch.isForPattern(pattern)) {
-      return inverseExactMatch.match(pattern, text)
-    } else {
-      let searcher = this._fuzzyCache[pattern];
-      if (!searcher) {
-        searcher = new BitapSearch(pattern, this.options);
-        this._fuzzyCache[pattern] = searcher;
-      }
-      return searcher.searchInString(text)
-    }
-  }
-}
-
-const NGRAM_LEN = 3;
-
-function ngram(
-  text,
-  { n = NGRAM_LEN, pad = true, sort = false }
-) {
-  let nGrams = [];
-
-  if (text === null || text === undefined) {
-    return nGrams
-  }
-
-  text = text.toLowerCase();
-  if (pad) {
-    text = ` ${text} `;
-  }
-
-  let index = text.length - n + 1;
-  if (index < 1) {
-    return nGrams
-  }
-
-  while (index--) {
-    nGrams[index] = text.substr(index, n);
-  }
-
-  if (sort) {
-    nGrams.sort((a, b) => (a == b ? 0 : a < b ? -1 : 1));
-  }
-
-  return nGrams
-}
-
-// Assumes arrays are sorted
-function union (arr1, arr2) {
-  let result = [];
-  let i = 0;
-  let j = 0;
-
-  while (i < arr1.length && j < arr2.length) {
-    let item1 = arr1[i];
-    let item2 = arr2[j];
-
-    if (item1 < item2) {
-      result.push(item1);
-      i += 1;
-    } else if (item2 < item1) {
-      result.push(item2);
-      j += 1;
-    } else {
-      result.push(item2);
-      i += 1;
-      j += 1;
-    }
-  }
-
-  while (i < arr1.length) {
-    result.push(arr1[i]);
-    i += 1;
-  }
-
-  while (j < arr2.length) {
-    result.push(arr2[j]);
-    j += 1;
-  }
-
-  return result
-}
-
-// Assumes arrays are sorted
-function intersection(arr1, arr2) {
-  let result = [];
-  let i = 0;
-  let j = 0;
-
-  while (i < arr1.length && j < arr2.length) {
-    let item1 = arr1[i];
-    let item2 = arr2[j];
-
-    if (item1 == item2) {
-      result.push(item1);
-      i += 1;
-      j += 1;
-    } else if (item1 < item2) {
-      i += 1;
-    } else if (item1 > item2) {
-      j += 1;
-    } else {
-      i += 1;
-      j += 1;
-    }
-  }
-
-  return result
-}
-
-function jaccardDistance(nGram1, nGram2) {
-  let nGramUnion = union(nGram1, nGram2);
-  let nGramIntersection = intersection(nGram1, nGram2);
-
-  return 1 - nGramIntersection.length / nGramUnion.length
-}
-
-class NGramSearch {
-  constructor(pattern, options = { threshold: 0.6 }) {
-    // Create the ngram, and sort it
-    this.options = options;
-    this.patternNgram = ngram(pattern, { sort: true });
-  }
-  searchIn(value) {
-    let textNgram = value.ng;
-    if (!textNgram) {
-      textNgram = ngram(value.$, { sort: true });
-      value.ng = textNgram;
-    }
-
-    let jacardResult = jaccardDistance(this.patternNgram, textNgram);
-
-    const isMatch = jacardResult < this.options.threshold;
-
-    return {
-      score: isMatch ? jacardResult : 1,
-      isMatch
-    }
-  }
-}
-
-function get(obj, path) {
-  let list = [];
-  let arr = false;
-
-  const _get = (obj, path) => {
-    if (!path) {
-      // If there's no path left, we've gotten to the object we care about.
-      list.push(obj);
-    } else {
-      const dotIndex = path.indexOf('.');
-
-      let key = path;
-      let remaining = null;
-
-      if (dotIndex !== -1) {
-        key = path.slice(0, dotIndex);
-        remaining = path.slice(dotIndex + 1);
-      }
-
-      const value = obj[key];
-
-      if (isDefined(value)) {
-        if (!remaining && (isString(value) || isNumber(value))) {
-          list.push(toString(value));
-        } else if (isArray(value)) {
-          arr = true;
-          // Search each item in the array.
-          for (let i = 0, len = value.length; i < len; i += 1) {
-            _get(value[i], remaining);
-          }
-        } else if (remaining) {
-          // An object. Recurse further.
-          _get(value, remaining);
-        }
-      }
-    }
-  };
-
-  _get(obj, path);
-
-  if (arr) {
-    return list
-  }
-
-  return list[0]
-}
-
-function createIndex(
-  keys,
-  list,
-  { getFn = get, ngrams = false } = {}
-) {
-  let indexedList = [];
-
-  // List is Array<String>
-  if (isString(list[0])) {
-    // Iterate over every string in the list
-    for (let i = 0, len = list.length; i < len; i += 1) {
-      const value = list[i];
-
-      if (isDefined(value)) {
-        // if (!isCaseSensitive) {
-        //   value = value.toLowerCase()
-        // }
-
-        let record = {
-          $: value,
-          idx: i
-        };
-
-        if (ngrams) {
-          record.ng = ngram(value, { sort: true });
-        }
-
-        indexedList.push(record);
-      }
-    }
-  } else {
-    // List is Array<Object>
-    const keysLen = keys.length;
-
-    for (let i = 0, len = list.length; i < len; i += 1) {
-      let item = list[i];
-
-      let record = { idx: i, $: {} };
-
-      // Iterate over every key (i.e, path), and fetch the value at that key
-      for (let j = 0; j < keysLen; j += 1) {
-        let key = keys[j];
-        let value = getFn(item, key);
-
-        if (!isDefined(value)) {
-          continue
-        }
-
-        if (isArray(value)) {
-          let subRecords = [];
-          const stack = [{ arrayIndex: -1, value }];
-
-          while (stack.length) {
-            const { arrayIndex, value } = stack.pop();
-
-            if (!isDefined(value)) {
-              continue
+    this.returnToPreviousPage();
+    this.requestItems();
+  },
+  mounted: function mounted() {
+    window.scrollTo(0, 0);
+    this.initFuseSearch(this.searchFields);
+  },
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('table', {
+    clearStateAction: 'clearState',
+    getRequestItemsAction: 'getItemsGet',
+    postRequestItemsAction: 'getItemsPost',
+    setFieldAction: 'setField',
+    setFieldsAction: 'setFields',
+    setPaginationFieldAction: 'setPaginationField',
+    resetPaginationAction: 'resetPagination',
+    setRouteDetectorFieldAction: 'setRouteDetectorField'
+  }), {
+    requestItems: function requestItems() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (!_this.serverPagination) {
+                  _context.next = 5;
+                  break;
+                }
+
+                _context.next = 3;
+                return _this.postRequestItemsAction();
+
+              case 3:
+                _context.next = 7;
+                break;
+
+              case 5:
+                _context.next = 7;
+                return _this.getRequestItemsAction();
+
+              case 7:
+              case "end":
+                return _context.stop();
             }
+          }
+        }, _callee);
+      }))();
+    },
+    customSort: function customSort() {
+      var _this2 = this;
 
-            if (isString(value)) {
-              // if (!isCaseSensitive) {
-              //   v = v.toLowerCase()
-              // }
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var sortOrder;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!(_this2.sortInit && !_this2.loading && _this2.items.length && !_this2.fromEditItemPage)) {
+                  _context2.next = 12;
+                  break;
+                }
 
-              let subRecord = { $: value, idx: arrayIndex };
+                sortOrder = _this2.pagination.sort_order === 'asc' ? 'desc' : 'asc';
+                _context2.next = 4;
+                return Promise.all([_this2.setPaginationFieldAction({
+                  field: 'sort_order',
+                  value: sortOrder
+                }), _this2.setPaginationFieldAction({
+                  field: 'sort_by',
+                  value: _this2.currentSort
+                })]);
 
-              if (ngrams) {
-                subRecord.ng = ngram(value, { sort: true });
-              }
+              case 4:
+                if (!_this2.serverPagination) {
+                  _context2.next = 10;
+                  break;
+                }
 
-              subRecords.push(subRecord);
-            } else if (isArray(value)) {
-              for (let k = 0, arrLen = value.length; k < arrLen; k += 1) {
-                stack.push({
-                  arrayIndex: k,
-                  value: value[k]
+                _context2.next = 7;
+                return _this2.postRequestItemsAction();
+
+              case 7:
+                _context2.t0 = _context2.sent;
+                _context2.next = 11;
+                break;
+
+              case 10:
+                _context2.t0 = _this2.sort(_this2.items);
+
+              case 11:
+                return _context2.abrupt("return", _context2.t0);
+
+              case 12:
+                _this2.resetRouteDetector();
+
+                _this2.setFieldAction({
+                  field: 'sortInit',
+                  value: true
                 });
-              }
+
+              case 14:
+              case "end":
+                return _context2.stop();
             }
           }
-          record.$[key] = subRecords;
-        } else {
-          // if (!isCaseSensitive) {
-          //   value = value.toLowerCase()
-          // }
+        }, _callee2);
+      }))();
+    },
+    sort: function sort(value) {
+      var _this3 = this;
 
-          let subRecord = { $: value };
+      return value.sort(function (a, b) {
+        var sortBy = _this3.pagination.sort_by;
+        return _this3.pagination.sort_order === 'asc' ? _this3.getSort(a, b, sortBy) : _this3.getSort(b, a, sortBy);
+      });
+    },
+    getSort: function getSort(a, b, sortBy) {
+      var numberSort = typeof a[sortBy] === 'number' && typeof b[sortBy] === 'number';
+      return numberSort ? a[sortBy] < b[sortBy] ? -1 : 1 : a[sortBy].localeCompare(b[sortBy]);
+    },
+    search: function search(query) {
+      var _this4 = this;
 
-          if (ngrams) {
-            subRecord.ng = ngram(value, { sort: true });
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        var value;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                value = query.trim();
+                _context3.next = 3;
+                return Promise.all([_this4.setFieldAction({
+                  field: 'searchQuery',
+                  value: value
+                }), _this4.setDefaultPage()]);
+
+              case 3:
+                if (!value) {
+                  _this4.clearSearchedItems();
+                }
+
+                _this4.handleSearch();
+
+              case 5:
+              case "end":
+                return _context3.stop();
+            }
           }
-
-          record.$[key] = subRecord;
-        }
-      }
-
-      indexedList.push(record);
-    }
-  }
-
-  return indexedList
-}
-
-class KeyStore {
-  constructor(keys) {
-    this._keys = {};
-    this._keyNames = [];
-    this._length = keys.length;
-
-    // Iterate over every key
-    if (keys.length && isString(keys[0])) {
-      for (let i = 0; i < this._length; i += 1) {
-        const key = keys[i];
-        this._keys[key] = {
-          weight: 1
-        };
-        this._keyNames.push(key);
-      }
-    } else {
-      let totalWeight = 0;
-
-      for (let i = 0; i < this._length; i += 1) {
-        const key = keys[i];
-
-        if (!Object.prototype.hasOwnProperty.call(key, 'name')) {
-          throw new Error('Missing "name" property in key object')
-        }
-
-        const keyName = key.name;
-        this._keyNames.push(keyName);
-
-        if (!Object.prototype.hasOwnProperty.call(key, 'weight')) {
-          throw new Error('Missing "weight" property in key object')
-        }
-
-        const weight = key.weight;
-
-        if (weight <= 0 || weight >= 1) {
-          throw new Error(
-            '"weight" property in key must be in the range of (0, 1)'
-          )
-        }
-
-        this._keys[keyName] = {
-          weight
-        };
-
-        totalWeight += weight;
-      }
-
-      // Normalize weights so that their sum is equal to 1
-      for (let i = 0; i < this._length; i += 1) {
-        const keyName = this._keyNames[i];
-        const keyWeight = this._keys[keyName].weight;
-        this._keys[keyName].weight = keyWeight / totalWeight;
-      }
-    }
-  }
-  get(key, name) {
-    return this._keys[key] ? this._keys[key][name] : -1
-  }
-  keys() {
-    return this._keyNames
-  }
-  count() {
-    return this._length
-  }
-  toJSON() {
-    return JSON.stringify(this._keys)
-  }
-}
-
-function transformMatches(result, data) {
-  const matches = result.matches;
-  data.matches = [];
-
-  if (!isDefined(matches)) {
-    return
-  }
-
-  for (let i = 0, len = matches.length; i < len; i += 1) {
-    let match = matches[i];
-
-    if (!isDefined(match.indices) || match.indices.length === 0) {
-      continue
-    }
-
-    let obj = {
-      indices: match.indices,
-      value: match.value
-    };
-
-    if (match.key) {
-      obj.key = match.key;
-    }
-
-    if (match.idx > -1) {
-      obj.refIndex = match.idx;
-    }
-
-    data.matches.push(obj);
-  }
-}
-
-function transformScore(result, data) {
-  data.score = result.score;
-}
-
-const BasicOptions = {
-  // When true, the algorithm continues searching to the end of the input even if a perfect
-  // match is found before the end of the same input.
-  isCaseSensitive: false,
-  // Minimum number of characters that must be matched before a result is considered a match
-  findAllMatches: false,
-  includeMatches: false,
-  includeScore: false,
-  // List of properties that will be searched. This also supports nested properties.
-  keys: [],
-  // Minimum number of characters that must be matched before a result is considered a match
-  minMatchCharLength: 1,
-  // Whether to sort the result list, by score
-  shouldSort: true,
-  // Default sort function
-  sortFn: (a, b) => a.score - b.score
-};
-
-const FuzzyOptions = {
-  // Approximately where in the text is the pattern expected to be found?
-  location: 0,
-  // At what point does the match algorithm give up. A threshold of '0.0' requires a perfect match
-  // (of both letters and location), a threshold of '1.0' would match anything.
-  threshold: 0.6,
-  // Determines how close the match must be to the fuzzy location (specified above).
-  // An exact letter match which is 'distance' characters away from the fuzzy location
-  // would score as a complete mismatch. A distance of '0' requires the match be at
-  // the exact location specified, a threshold of '1000' would require a perfect match
-  // to be within 800 characters of the fuzzy location to be found using a 0.8 threshold.
-  distance: 100
-};
-
-const AdvancedOptions = {
-  // Enabled extended-searching
-  useExtendedSearch: false,
-  // The get function to use when fetching an object's properties.
-  // The default will search nested paths *ie foo.bar.baz*
-  getFn: get
-};
-
-const defaultOptions = {
-  ...BasicOptions,
-  ...FuzzyOptions,
-  ...AdvancedOptions
-};
-
-class Fuse {
-  constructor(list, options = defaultOptions, index = null) {
-    this.options = { ...defaultOptions, ...options };
-    // `caseSensitive` is deprecated, use `isCaseSensitive` instead
-    this.options.isCaseSensitive = options.caseSensitive;
-    delete this.options.caseSensitive;
-
-    this._processKeys(this.options.keys);
-    this.setCollection(list, index);
-  }
-
-  setCollection(list, index = null) {
-    this.list = list;
-    this.listIsStringArray = isString(list[0]);
-
-    if (index) {
-      this.setIndex(index);
-    } else {
-      this.setIndex(this._createIndex());
-    }
-  }
-
-  setIndex(listIndex) {
-    this._indexedList = listIndex;
-  }
-
-  _processKeys(keys) {
-    this._keyStore = new KeyStore(keys);
-  }
-
-  _createIndex() {
-    return createIndex(this._keyStore.keys(), this.list, {
-      getFn: this.options.getFn
-    })
-  }
-
-  search(pattern, opts = { limit: false }) {
-    const { useExtendedSearch, shouldSort } = this.options;
-
-    let searcher = null;
-
-    if (useExtendedSearch) {
-      searcher = new ExtendedSearch(pattern, this.options);
-    } else if (pattern.length > MAX_BITS) {
-      searcher = new NGramSearch(pattern, this.options);
-    } else {
-      searcher = new BitapSearch(pattern, this.options);
-    }
-
-    let results = this._searchUsing(searcher);
-
-    this._computeScore(results);
-
-    if (shouldSort) {
-      this._sort(results);
-    }
-
-    if (opts.limit && isNumber(opts.limit)) {
-      results = results.slice(0, opts.limit);
-    }
-
-    return this._format(results)
-  }
-
-  _searchUsing(searcher) {
-    const list = this._indexedList;
-    const results = [];
-    const { includeMatches } = this.options;
-
-    // List is Array<String>
-    if (this.listIsStringArray) {
-      // Iterate over every string in the list
-      for (let i = 0, len = list.length; i < len; i += 1) {
-        let value = list[i];
-        let { $: text, idx } = value;
-
-        if (!isDefined(text)) {
-          continue
-        }
-
-        let searchResult = searcher.searchIn(value);
-
-        const { isMatch, score } = searchResult;
-
-        if (!isMatch) {
-          continue
-        }
-
-        let match = { score, value: text };
-
-        if (includeMatches) {
-          match.indices = searchResult.matchedIndices;
-        }
-
-        results.push({
-          item: text,
-          idx,
-          matches: [match]
+        }, _callee3);
+      }))();
+    },
+    handleSearch: function handleSearch() {
+      this.serverPagination ? _debounce(this.postRequestItemsAction) : this.setSearchedItems();
+    },
+    initFuseSearch: function initFuseSearch(keys) {
+      if (!this.serverPagination) {
+        this.fuseSearch = new fuse_js__WEBPACK_IMPORTED_MODULE_2__["default"](this.items.slice(), {
+          keys: keys,
+          threshold: 0.3
         });
       }
-    } else {
-      // List is Array<Object>
-      const keyNames = this._keyStore.keys();
-      const keysLen = this._keyStore.count();
+    },
+    changePage: function changePage(value) {
+      var _this5 = this;
 
-      for (let i = 0, len = list.length; i < len; i += 1) {
-        let { $: item, idx } = list[i];
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.next = 2;
+                return _this5.setPaginationFieldAction({
+                  field: 'current_page',
+                  value: value
+                });
 
-        if (!isDefined(item)) {
-          continue
-        }
+              case 2:
+                if (!_this5.serverPagination) {
+                  _context4.next = 6;
+                  break;
+                }
 
-        let matches = [];
+                console.log('changepage');
+                _context4.next = 6;
+                return _this5.postRequestItemsAction();
 
-        // Iterate over every key (i.e, path), and fetch the value at that key
-        for (let j = 0; j < keysLen; j += 1) {
-          let key = keyNames[j];
-          let value = item[key];
+              case 6:
+                window.scrollTo(0, 0);
 
-          if (!isDefined(value)) {
-            continue
+              case 7:
+              case "end":
+                return _context4.stop();
+            }
           }
+        }, _callee4);
+      }))();
+    },
+    changePerPage: function changePerPage(value) {
+      var _this6 = this;
 
-          if (isArray(value)) {
-            for (let k = 0, len = value.length; k < len; k += 1) {
-              let arrItem = value[k];
-              let text = arrItem.$;
-              let idx = arrItem.idx;
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.next = 2;
+                return _this6.setPaginationFieldAction({
+                  field: 'per_page',
+                  value: value
+                });
 
-              if (!isDefined(text)) {
-                continue
-              }
+              case 2:
+                _context5.next = 4;
+                return _this6.setDefaultPage();
 
-              let searchResult = searcher.searchIn(arrItem);
-
-              const { isMatch, score } = searchResult;
-
-              if (!isMatch) {
-                continue
-              }
-
-              let match = { score, key, value: text, idx };
-
-              if (includeMatches) {
-                match.indices = searchResult.matchedIndices;
-              }
-
-              matches.push(match);
+              case 4:
+              case "end":
+                return _context5.stop();
             }
-          } else {
-            let text = value.$;
-            let searchResult = searcher.searchIn(value);
-
-            const { isMatch, score } = searchResult;
-
-            if (!isMatch) {
-              continue
-            }
-
-            let match = { score, key, value: text };
-
-            if (includeMatches) {
-              match.indices = searchResult.matchedIndices;
-            }
-
-            matches.push(match);
           }
-        }
+        }, _callee5);
+      }))();
+    },
+    setSearchedItems: function setSearchedItems() {
+      var searchResult = this.fuseSearch.search(this.searchQuery).map(function (fuse) {
+        return fuse.item;
+      });
+      this.setFieldAction({
+        field: 'searchedItems',
+        value: searchResult
+      });
+    },
+    setDefaultPage: function setDefaultPage() {
+      this.setPaginationFieldAction({
+        field: 'current_page',
+        value: 1
+      });
+    },
+    clearSearchedItems: function clearSearchedItems() {
+      this.setFieldAction({
+        field: 'searchedItems',
+        value: []
+      });
+    },
+    setState: function setState() {
+      this.resetPaginationAction();
+      this.clearStateAction();
+      this.setFieldAction({
+        field: 'resourceUrl',
+        value: this.resourceUrl
+      });
+      this.setPaginationFieldAction({
+        field: 'sort_order',
+        value: this.defaultSortOrder
+      });
+      this.setPaginationFieldAction({
+        field: 'per_page',
+        value: this.perPageOptions[0]
+      });
+    },
+    returnToPreviousPage: function returnToPreviousPage() {
+      this.serverPagination ? this.checkGoPrevWithServerPagination() : this.checkGoPrev();
+    },
+    checkGoPrevWithServerPagination: function checkGoPrevWithServerPagination() {
+      var _this7 = this;
 
-        if (matches.length) {
-          results.push({
-            idx,
-            item,
-            matches
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                if (!_this7.checkReturnToPreviousPage) {
+                  _context6.next = 5;
+                  break;
+                }
+
+                _context6.next = 3;
+                return _this7.setPaginationFieldAction({
+                  field: 'current_page',
+                  value: _this7.pagination.current_page - 1
+                });
+
+              case 3:
+                _context6.next = 5;
+                return _this7.postRequestItemsAction();
+
+              case 5:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6);
+      }))();
+    },
+    checkGoPrev: function checkGoPrev() {
+      if (this.pagination.current_page > this.totalPages) {
+        this.setPaginationFieldAction({
+          field: 'current_page',
+          value: this.totalPages
+        });
+      }
+    },
+    resetRouteDetector: function resetRouteDetector() {
+      this.setRouteDetectorFieldAction({
+        field: 'from',
+        value: null
+      });
+      this.setRouteDetectorFieldAction({
+        field: 'to',
+        value: null
+      });
+    }
+  })
+});
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css&":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--7-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.loading td {\n    opacity: 0;\n}\n.progress-bar__container {\n    height: 4px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader??ref--7-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var api = __webpack_require__(/*! ../../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+            var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--7-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--7-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./VExtendedTable.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css&");
+
+            content = content.__esModule ? content.default : content;
+
+            if (typeof content === 'string') {
+              content = [[module.i, content, '']];
+            }
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = api(content, options);
+
+var exported = content.locals ? content.locals : {};
+
+
+
+module.exports = exported;
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=template&id=40d73892&":
+/*!***************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=template&id=40d73892& ***!
+  \***************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c(
+        "div",
+        { staticClass: "progress-bar__container" },
+        [
+          _c("md-progress-bar", {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.loading,
+                expression: "loading"
+              }
+            ],
+            attrs: { "md-mode": "indeterminate" }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _vm.items
+        ? _c(
+            "div",
+            [
+              _c(
+                "md-table",
+                {
+                  staticClass: "paginated-table table-striped table-hover",
+                  class: { loading: _vm.loading },
+                  attrs: {
+                    value: _vm.queriedData,
+                    "md-sort": _vm.currentSort,
+                    "md-sort-fn": _vm.customSort
+                  },
+                  on: {
+                    "update:mdSort": function($event) {
+                      _vm.currentSort = $event
+                    },
+                    "update:md-sort": function($event) {
+                      _vm.currentSort = $event
+                    }
+                  },
+                  scopedSlots: _vm._u(
+                    [
+                      {
+                        key: "md-table-row",
+                        fn: function(ref) {
+                          var item = ref.item
+                          return _c(
+                            "md-table-row",
+                            {},
+                            [_vm._t("default", null, { item: item })],
+                            2
+                          )
+                        }
+                      }
+                    ],
+                    null,
+                    true
+                  )
+                },
+                [
+                  _c(
+                    "md-table-toolbar",
+                    { staticClass: "mb-3" },
+                    [
+                      _c(
+                        "md-field",
+                        [
+                          _c("label", { attrs: { for: "pages" } }, [
+                            _vm._v("На странице")
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "md-select",
+                            {
+                              attrs: {
+                                value: _vm.pagination.per_page,
+                                name: "pages"
+                              },
+                              on: { "md-selected": _vm.changePerPage }
+                            },
+                            _vm._l(_vm.perPageOptions, function(item) {
+                              return _c(
+                                "md-option",
+                                {
+                                  key: item,
+                                  attrs: { label: item, value: item }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(item) +
+                                      "\n                        "
+                                  )
+                                ]
+                              )
+                            }),
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "md-field",
+                        [
+                          _c("md-input", {
+                            staticStyle: { width: "200px" },
+                            attrs: {
+                              type: "search",
+                              clearable: "",
+                              placeholder: "Поиск",
+                              value: _vm.searchQuery
+                            },
+                            on: { input: _vm.search }
+                          })
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _vm._v(" "),
+                  _vm.isSearchedEmpty && !_vm.loading
+                    ? _c("div", { staticClass: "alert alert-info mt-2" }, [
+                        _c("h3", [
+                          _vm._v(
+                            "Нет данных соответствующих поисковому запросу!"
+                          )
+                        ])
+                      ])
+                    : _vm._e()
+                ],
+                1
+              ),
+              _vm._v(" "),
+              !_vm.loading
+                ? _c(
+                    "md-card-actions",
+                    { attrs: { "md-alignment": "space-between" } },
+                    [
+                      _c("div", [
+                        _vm.serverPagination
+                          ? _c("p", { staticClass: "card-category" }, [
+                              _vm._v(
+                                _vm._s(_vm.pagination.from) +
+                                  " - " +
+                                  _vm._s(_vm.pagination.to) +
+                                  " / " +
+                                  _vm._s(_vm.total)
+                              )
+                            ])
+                          : _c("p", { staticClass: "card-category" }, [
+                              _vm._v(
+                                _vm._s(_vm.from + 1) +
+                                  " - " +
+                                  _vm._s(_vm.to) +
+                                  " / " +
+                                  _vm._s(_vm.total)
+                              )
+                            ])
+                      ]),
+                      _vm._v(" "),
+                      _c("pagination", {
+                        staticClass: "pagination-no-border pagination-success",
+                        attrs: {
+                          "per-page": _vm.pagination.per_page,
+                          total: _vm.total,
+                          value: _vm.pagination.current_page
+                        },
+                        on: { input: _vm.changePage }
+                      })
+                    ],
+                    1
+                  )
+                : _vm._e()
+            ],
+            1
+          )
+        : !_vm.loading
+        ? [
+            _c("div", { staticClass: "alert alert-info mt-2" }, [
+              _c("h3", [_vm._v(_vm._s(_vm.emptyContent))])
+            ])
+          ]
+        : _vm._e()
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./resources/manager/js/custom_components/Tables/VExtendedTable.vue":
+/*!**************************************************************************!*\
+  !*** ./resources/manager/js/custom_components/Tables/VExtendedTable.vue ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _VExtendedTable_vue_vue_type_template_id_40d73892___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./VExtendedTable.vue?vue&type=template&id=40d73892& */ "./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=template&id=40d73892&");
+/* harmony import */ var _VExtendedTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./VExtendedTable.vue?vue&type=script&lang=js& */ "./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _VExtendedTable_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./VExtendedTable.vue?vue&type=style&index=0&lang=css& */ "./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _VExtendedTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _VExtendedTable_vue_vue_type_template_id_40d73892___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _VExtendedTable_vue_vue_type_template_id_40d73892___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/manager/js/custom_components/Tables/VExtendedTable.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./VExtendedTable.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css&":
+/*!***********************************************************************************************************!*\
+  !*** ./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css& ***!
+  \***********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/css-loader??ref--7-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--7-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./VExtendedTable.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_dist_cjs_js_node_modules_css_loader_index_js_ref_7_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=template&id=40d73892&":
+/*!*********************************************************************************************************!*\
+  !*** ./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=template&id=40d73892& ***!
+  \*********************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_template_id_40d73892___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./VExtendedTable.vue?vue&type=template&id=40d73892& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/Tables/VExtendedTable.vue?vue&type=template&id=40d73892&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_template_id_40d73892___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VExtendedTable_vue_vue_type_template_id_40d73892___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/manager/js/mixins/crudMethods.js":
+/*!****************************************************!*\
+  !*** ./resources/manager/js/mixins/crudMethods.js ***!
+  \****************************************************/
+/*! exports provided: createMethod, updateMethod, deleteMethod, uploadMethod, imageAddMethod, subCategoryImageAddMethod */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createMethod", function() { return createMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMethod", function() { return updateMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteMethod", function() { return deleteMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "uploadMethod", function() { return uploadMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageAddMethod", function() { return imageAddMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subCategoryImageAddMethod", function() { return subCategoryImageAddMethod; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+var createMethod = {
+  methods: {
+    create: function create(_ref) {
+      var _this = this;
+
+      var sendData = _ref.sendData,
+          title = _ref.title,
+          successText = _ref.successText,
+          redirectRoute = _ref.redirectRoute,
+          _ref$storeModule = _ref.storeModule,
+          storeModule = _ref$storeModule === void 0 ? null : _ref$storeModule;
+      var module = storeModule ? "".concat(storeModule, "/") : '';
+      return this.$store.dispatch("".concat(module, "store"), sendData).then(function () {
+        window.history.length > 1 ? _this.$router.go(-1) : _this.$router.push(redirectRoute);
+        return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+          title: successText,
+          text: "\xAB".concat(title, "\xBB"),
+          timer: 2000,
+          showConfirmButton: false,
+          icon: 'success'
+        });
+      });
+    }
+  }
+};
+var updateMethod = {
+  methods: {
+    update: function update(_ref2) {
+      var _this2 = this;
+
+      var sendData = _ref2.sendData,
+          title = _ref2.title,
+          redirectRoute = _ref2.redirectRoute,
+          successText = _ref2.successText,
+          _ref2$storeModule = _ref2.storeModule,
+          storeModule = _ref2$storeModule === void 0 ? null : _ref2$storeModule;
+      var module = storeModule ? "".concat(storeModule, "/") : '';
+      return this.$store.dispatch("".concat(module, "update"), sendData).then(function () {
+        window.history.length > 1 ? _this2.$router.go(-1) : _this2.$router.push(redirectRoute);
+        return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+          title: successText,
+          text: "\xAB".concat(title, "\xBB"),
+          timer: 2000,
+          showConfirmButton: false,
+          icon: 'success'
+        });
+      });
+    }
+  }
+};
+var deleteMethod = {
+  methods: {
+    "delete": function _delete(_ref3) {
+      var _this3 = this;
+
+      var payload = _ref3.payload,
+          title = _ref3.title,
+          alertText = _ref3.alertText,
+          successText = _ref3.successText,
+          _ref3$storeModule = _ref3.storeModule,
+          storeModule = _ref3$storeModule === void 0 ? null : _ref3$storeModule,
+          _ref3$redirectRoute = _ref3.redirectRoute,
+          redirectRoute = _ref3$redirectRoute === void 0 ? null : _ref3$redirectRoute,
+          _ref3$tableMode = _ref3.tableMode,
+          tableMode = _ref3$tableMode === void 0 ? false : _ref3$tableMode,
+          _ref3$force = _ref3.force,
+          force = _ref3$force === void 0 ? false : _ref3$force;
+      var module = storeModule ? "".concat(storeModule, "/") : '';
+      var method = force ? 'forceDelete' : 'delete';
+      return deleteSwalFireConfirm(alertText).then(function (result) {
+        if (result.value) {
+          return _this3.$store.dispatch("".concat(module).concat(method), {
+            payload: payload,
+            tableMode: tableMode
+          }).then(function () {
+            if (redirectRoute) {
+              window.history.length > 1 ? _this3.$router.go(-1) : _this3.$router.push(redirectRoute);
+            }
+
+            return deleteSwalFireAlert(successText, title);
           });
         }
-      }
-    }
-
-    return results
-  }
-
-  _computeScore(results) {
-    for (let i = 0, len = results.length; i < len; i += 1) {
-      const result = results[i];
-      const matches = result.matches;
-      const scoreLen = matches.length;
-
-      let totalWeightedScore = 1;
-
-      for (let j = 0; j < scoreLen; j += 1) {
-        const item = matches[j];
-        const key = item.key;
-        const keyWeight = this._keyStore.get(key, 'weight');
-        const weight = keyWeight > -1 ? keyWeight : 1;
-        const score =
-          item.score === 0 && keyWeight > -1 ? Number.EPSILON : item.score;
-
-        totalWeightedScore *= Math.pow(score, weight);
-      }
-
-      result.score = totalWeightedScore;
+      });
     }
   }
+};
 
-  _sort(results) {
-    results.sort(this.options.sortFn);
-  }
+var deleteSwalFireConfirm = function deleteSwalFireConfirm(alertText) {
+  return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+    title: 'Вы уверены?',
+    text: "\u0414\u0430\u043D\u043D\u043E\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0443\u0434\u0430\u043B\u0438\u0442 ".concat(alertText, " \u0431\u0435\u0437\u0432\u043E\u0437\u0432\u0440\u0430\u0442\u043D\u043E!"),
+    icon: 'warning',
+    showCancelButton: true,
+    customClass: {
+      confirmButton: 'md-button md-success btn-fill',
+      cancelButton: 'md-button md-danger btn-fill'
+    },
+    confirmButtonText: 'Удалить',
+    cancelButtonText: 'Отменить',
+    buttonsStyling: false
+  });
+};
 
-  _format(results) {
-    const finalOutput = [];
+var deleteSwalFireAlert = function deleteSwalFireAlert(successText, title) {
+  return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+    title: successText,
+    text: "\xAB".concat(title, "\xBB"),
+    timer: 2000,
+    icon: 'success',
+    showConfirmButton: false
+  });
+};
 
-    const { includeMatches, includeScore } = this.options;
+var uploadMethod = {
+  methods: {
+    upload: function upload(_ref4) {
+      var _this4 = this;
 
-    let transformers = [];
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var uploadFiles, _ref4$type, type, _ref4$id, id, _ref4$storeModule, storeModule, files, module;
 
-    if (includeMatches) transformers.push(transformMatches);
-    if (includeScore) transformers.push(transformScore);
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                uploadFiles = _ref4.uploadFiles, _ref4$type = _ref4.type, type = _ref4$type === void 0 ? null : _ref4$type, _ref4$id = _ref4.id, id = _ref4$id === void 0 ? null : _ref4$id, _ref4$storeModule = _ref4.storeModule, storeModule = _ref4$storeModule === void 0 ? null : _ref4$storeModule;
+                files = Array.from(uploadFiles);
+                module = storeModule ? storeModule : 'categories';
 
-    for (let i = 0, len = results.length; i < len; i += 1) {
-      const result = results[i];
-      const { idx } = result;
+                if (!id) {
+                  _context.next = 8;
+                  break;
+                }
 
-      const data = {
-        item: this.list[idx],
-        refIndex: idx
-      };
+                _context.next = 6;
+                return _this4.$store.dispatch("".concat(module, "/uploadImages"), {
+                  files: files,
+                  id: id,
+                  type: type
+                });
 
-      if (transformers.length) {
-        for (let j = 0, len = transformers.length; j < len; j += 1) {
-          transformers[j](result, data);
-        }
-      }
+              case 6:
+                _context.next = 10;
+                break;
 
-      finalOutput.push(data);
+              case 8:
+                _context.next = 10;
+                return _this4.$store.dispatch('images/store', files);
+
+              case 10:
+                _context.next = 12;
+                return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+                  title: 'Изображения загружены!',
+                  text: '',
+                  timer: 2000,
+                  showConfirmButton: false,
+                  icon: 'success'
+                });
+
+              case 12:
+                return _context.abrupt("return", _context.sent);
+
+              case 13:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
     }
-
-    return finalOutput
   }
-}
+};
+var imageAddMethod = {
+  methods: {
+    addImages: function addImages(_ref5) {
+      var _this5 = this;
 
-Fuse.version = '5.1.0';
-Fuse.createIndex = createIndex;
-Fuse.defaultOptions = defaultOptions;
+      var id = _ref5.id,
+          data = _ref5.data;
+      this.$store.dispatch('categories/addSelectedImages', {
+        id: id,
+        data: data
+      }).then(function () {
+        _this5.$router.push({
+          name: 'manager.catalog.categories.images',
+          params: {
+            id: id
+          }
+        });
 
-/* harmony default export */ __webpack_exports__["default"] = (Fuse);
+        return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+          title: 'Изображения добавлены!',
+          text: '',
+          timer: 2000,
+          showConfirmButton: false,
+          icon: 'success'
+        });
+      });
+    }
+  }
+};
+var subCategoryImageAddMethod = {
+  methods: {
+    addImages: function addImages(_ref6) {
+      var _this6 = this;
 
+      var type = _ref6.type,
+          id = _ref6.id,
+          data = _ref6.data,
+          redirectRoute = _ref6.redirectRoute;
+      this.$store.dispatch('subCategories/addSelectedImages', {
+        type: type,
+        id: id,
+        data: data
+      }).then(function () {
+        _this6.$router.push(redirectRoute);
+
+        return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+          title: 'Изображения добавлены!',
+          text: '',
+          timer: 2000,
+          showConfirmButton: false,
+          icon: 'success'
+        });
+      });
+    }
+  }
+};
 
 /***/ })
 

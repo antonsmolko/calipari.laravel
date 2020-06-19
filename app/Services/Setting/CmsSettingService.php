@@ -10,6 +10,7 @@ use App\Services\Setting\Handlers\SetImageSettingValueHandler;
 use App\Services\Setting\Repositories\CmsSettingRepository;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 
 class CmsSettingService extends CmsBaseResourceService
 {
@@ -53,7 +54,7 @@ class CmsSettingService extends CmsBaseResourceService
     {
         $items = $this->repository->index();
 
-        return [ 'items' => $items, 'types' => $this->types ];
+        return ['items' => $items, 'types' => $this->types];
     }
 
     /**
@@ -72,7 +73,7 @@ class CmsSettingService extends CmsBaseResourceService
     {
         $item = $this->repository->getItem($id);
 
-        return [ 'item' => $item, 'types' => $this->types ];
+        return ['item' => $item, 'types' => $this->types];
     }
 
     /**
@@ -83,6 +84,11 @@ class CmsSettingService extends CmsBaseResourceService
     public function update(int $id, array $updateData): Setting
     {
         $item = $this->repository->getItem($id);
+
+        if ((int)$updateData['group_id'] === 0) {
+            $item = $this->repository->dissociateGroup($item);
+            $updateData = Arr::except($updateData, ['group_id']);
+        }
 
         return $this->repository->update($item, $updateData);
     }
@@ -113,5 +119,15 @@ class CmsSettingService extends CmsBaseResourceService
         $item = $this->repository->getItemByKey($key);
 
         return $item->value;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEntries()
+    {
+        $items = $this->repository->index()->pluck('value', 'key_name');
+
+        return $items->all();
     }
 }

@@ -38,14 +38,17 @@ class EventServiceProvider extends ServiceProvider
 
         \App\Events\Models\Image\ImageSaved::class => [
             \App\Listeners\Cache\Image\ImageClearByTag::class,
+            \App\Listeners\Image\CheckImagesCount::class,
         ],
 
         \App\Events\Models\Image\ImageUpdated::class => [
             \App\Listeners\Cache\Image\ImageClearByTag::class,
+            \App\Listeners\Image\CheckImagesCount::class,
         ],
 
         \App\Events\Models\Image\ImageDeleted::class => [
             \App\Listeners\Cache\Image\ImageClearByTag::class,
+            \App\Listeners\Image\CheckImagesCount::class,
         ],
 
         \App\Events\Models\Delivery\DeliverySaved::class => [

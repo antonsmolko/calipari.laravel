@@ -68,11 +68,9 @@
             SettingImage
         },
         mixins: [ pageTitle ],
-        data() {
-            return {
-                responseData: false
-            }
-        },
+        data: () => ({
+            responseData: false
+        }),
         computed: {
             ...mapState('settingGroups', {
                 settingGroups: state => state.items
@@ -85,14 +83,14 @@
                 updateImageValueAction: 'settings/setImageValue'
             }),
 
-            onSaveText(payload) {
+            onSaveText (payload) {
                 this.updateTextValueAction(payload);
             },
-            onSaveImage(payload) {
+            onSaveImage (payload) {
                 this.updateImageValueAction(payload);
             },
         },
-        created() {
+        created () {
             this.getItemsWithSettingsAction()
                 .then(() => {
                     this.setPageTitle('Конфигурация');

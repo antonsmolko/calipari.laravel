@@ -71,4 +71,12 @@ class SettingController extends BaseResourceController
     {
         $this->service->setImageValue($request->all());
     }
+
+    /**
+     * @return JsonResponse
+     */
+    public function getEntries(): JsonResponse
+    {
+        return response()->json($this->service->getEntries());
+    }
 }

@@ -5,8 +5,9 @@ namespace App\Services\User\Repositories;
 
 use App\Models\User;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
-use Illuminate\Database\Eloquent\Collection;
+use App\Services\User\Resources\UserCollection;
 use App\Services\User\Resources\User as UserResource;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
@@ -31,6 +32,20 @@ class CmsUserRepository extends CmsBaseResourceRepository
         return $this->model::with('roles')
             ->withCount('orders')
             ->get();
+    }
+
+    /**
+     * @param array $requestData
+     * @return UserCollection
+     */
+    public function getItems(array $requestData)
+    {
+        return new UserCollection(
+            $this->model::when(!empty($requestData['query']), fn ($query) => $query
+                ->where('name', 'like', $requestData['query'] . '%')
+                ->orWhere('email', 'like', $requestData['query'] . '%'))
+            ->orderBy($requestData['sort_by'], $requestData['sort_order'])
+            ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']));
     }
 
     /**

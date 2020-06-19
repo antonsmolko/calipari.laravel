@@ -19,7 +19,7 @@ class OrderStatusWithPivotDate extends JsonResource
             'title' => $this->title,
             'alias' => $this->alias,
             'order' => $this->order,
-            'date' => $this->pivot ? $this->pivot->created_at->format('d.m.Y - H:i:s') : null
+            'date' => $this->pivot ? $this->pivot->created_at->format('d.m.Y - H:i:s') : null,
         ];
     }
 }

@@ -1,7 +1,11 @@
 <template>
     <div>
         <h4 class="card-title">{{ title }}</h4>
-        <md-switch :value="!value" @change="onChange" />
+        <md-switch :value="!value" :disabled="disabled" @change="onChange" >
+            <template>
+                <slot></slot>
+            </template>
+        </md-switch>
     </div>
 </template>
 
@@ -30,6 +34,10 @@
                 default: ''
             },
             differ: {
+                type: Boolean,
+                default: false
+            },
+            disabled: {
                 type: Boolean,
                 default: false
             }

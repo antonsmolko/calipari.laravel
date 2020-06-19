@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Cms\User;
 use App\Http\Controllers\API\Cms\Base\BaseResourceController;
 use App\Http\Controllers\API\Cms\User\Requests\CreateRequest;
 use App\Http\Controllers\API\Cms\User\Requests\UpdateRequest;
+use App\Http\Requests\FormRequest;
 use App\Services\User\CmsUserService;
 use Illuminate\Http\JsonResponse;
 
@@ -17,6 +18,15 @@ class UserController extends BaseResourceController
     public function __construct(CmsUserService $service)
     {
         parent::__construct($service);
+    }
+
+    /**
+     * @param FormRequest $request
+     * @return JsonResponse
+     */
+    public function getItems(FormRequest $request): JsonResponse
+    {
+        return response()->json($this->service->getItems($request->all()));
     }
 
     /**

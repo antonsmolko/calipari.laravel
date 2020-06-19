@@ -1,5 +1,5 @@
 <template>
-    <div class="md-layout" v-if="responseData">
+    <div class="md-layout">
         <div class="md-layout-item">
             <md-card class="mt-0">
                 <md-card-content>
@@ -12,8 +12,10 @@
                 :activeTab="activeTab"
                 color-button="success">
                 <template slot="tab-pane-1">
-                <v-extended-table v-if="notCompletedItems.length"
-                                  :items="notCompletedItems"
+                <v-extended-table :serverPagination="true"
+                                  :resourceUrl="currentResourceUrl"
+                                  defaultSortOrder="desc"
+                                  emptyContent="У Вас еще нет текущих заказов!"
                                   :searchFields="[ 'number', 'date' ]" >
 
                     <template slot-scope="{ item }">
@@ -76,15 +78,12 @@
 
                         </template>>
                     </v-extended-table>
-                    <template v-else>
-                        <div class="alert alert-info">
-                            <span><h3>У Вас пока нет текущих заказов!</h3></span>
-                        </div>
-                    </template>
                 </template>
                 <template slot="tab-pane-2">
-                    <v-extended-table v-if="completedItems.length"
-                                      :items="completedItems"
+                    <v-extended-table :serverPagination="true"
+                                      :resourceUrl="completedResourceUrl"
+                                      defaultSortOrder="desc"
+                                      emptyContent="У Вас еще нет выполненных заказов!"
                                       :searchFields="[ 'number', 'date' ]" >
                         <template slot-scope="{ item }">
 
@@ -136,11 +135,7 @@
 
                         </template>
                     </v-extended-table>
-                    <template v-else>
-                        <div class="alert alert-info">
-                            <span><h3>У Вас пока нет выполненных заказов!</h3></span>
-                        </div>
-                    </template>
+
                 </template>
             </tabs>
         </div>
@@ -148,9 +143,9 @@
 </template>
 
 <script>
-    import { mapActions, mapGetters } from 'vuex'
+    import { mapActions } from 'vuex'
 
-    import last from 'lodash/last'
+    import first from 'lodash/first'
     import { pageTitle } from '@/mixins/base'
     import { deleteMethod } from '@/mixins/crudMethods'
     import Tabs from '@/custom_components/Tabs.vue'
@@ -165,22 +160,15 @@
         data() {
             return {
                 activeTab: '',
+                currentResourceUrl: '/store/orders/current',
+                completedResourceUrl: '/store/orders/completed',
                 responseData: false,
                 redirectRoute: { name: 'manager.store' },
                 storeModule: 'orders'
             }
         },
-        computed: {
-            ...mapGetters('orders', [
-                'completedItems',
-                'notCompletedItems'
-            ])
-        },
         created() {
-            Promise.all([
-                this.getStatusesAction(),
-                this.getItemsAction()
-            ])
+            this.getStatusesAction()
                 .then(() => {
                     this.setPageTitle('Заказы');
                     this.responseData = true;
@@ -190,7 +178,6 @@
         methods: {
             ...mapActions({
                 getStatusesAction: 'orderStatuses/getItems',
-                getItemsAction: 'orders/getItems',
                 changeStatusAction: 'orders/changeStatus'
             }),
             onStatusChange (value, item) {
@@ -233,7 +220,8 @@
                     title: item.number,
                     alertText: `заказ «${item.number}»`,
                     storeModule: this.storeModule,
-                    successText: 'Заказ удален!'
+                    successText: 'Заказ удален!',
+                    tableMode: 'table'
                 })
             },
             getStatusById (id) {
@@ -244,7 +232,7 @@
                 return this.$store.getters['orderStatuses/getRestItems'](currentStatus.order);
             },
             getCurrentStatus (item) {
-                return last([...item.statuses])
+                return first([...item.statuses])
             }
         }
     }

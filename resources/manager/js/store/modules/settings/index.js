@@ -1,5 +1,4 @@
 import { uniqueFieldEditMixin, uniqueFieldMixin } from "../../mixins/getters";
-
 import { axiosAction } from "../../mixins/actions";
 
 const state = {
@@ -10,153 +9,154 @@ const state = {
         group_id: ''
     },
     types: [],
-    items: []
+    items: [],
+    entries: {}
 };
 
 const mutations = {
-    UPDATE_ITEMS(state, payload) {
+    SET_ITEMS (state, payload) {
         state.items = payload;
     },
-    UPDATE_ITEM(state, payload) {
+    SET_ITEM (state, { key_name, value }) {
         state.items.forEach((item) => {
-            if (item.key_name === payload.key_name) {
-                item.value = payload.value;
+            if (item.key_name === key_name) {
+                item.value = value;
             }
         })
     },
-    DELETE_ITEM(state, payload) {
+    DELETE_ITEM (state, payload) {
         state.items = state.items.filter(item => item.id !== payload);
     },
-    UPDATE_FIELD(state, payload) {
-        state.fields[payload.field] = payload.value;
+    SET_ITEM_FIELD (state, { field, value }) {
+        state.fields[field] = value;
     },
-    CLEAR_FIELDS(state) {
-        for(let field in state.fields) {
+    CLEAR_ITEM_FIELDS (state) {
+        for(const field of Object.keys(state.fields)) {
             state.fields[field] = '';
         }
     },
-    SET_ITEM_FIELDS(state, payload) {
-        for(let item of state.items) {
-            if(item.id == payload) {
-                for(let field in state.fields) {
-                    state.fields[field] = item[field] === null ? '' : item[field];
-                }
-            }
-        }
-    },
-    UPDATE_FIELDS(state, payload) {
-        for(let field in state.fields) {
+    SET_ITEM_FIELDS (state, payload) {
+        for(let field of Object.keys(state.fields)) {
             state.fields[field] = payload[field] === null ? '' : payload[field];
         }
     },
-    UPDATE_TYPES(state, payload) {
+    SET_TYPES (state, payload) {
         state.types = payload;
+    },
+    SET_FIELD (state, { field, value }) {
+        state[field] = value
     }
 };
 
 const actions = {
-    getItems(context) {
-        return axiosAction('get', context, {
-            url: '/api/manager/settings',
-            thenContent: response => context.commit('UPDATE_ITEMS', response.data)
+    getItems ({ commit }) {
+        return axiosAction('get', commit, {
+            url: '/settings',
+            thenContent: response => commit('SET_ITEMS', response.data)
         })
     },
-    getItemsWithGroup(context) {
-        return axiosAction('get', context, {
-            url: '/api/manager/settings/with-group',
-            thenContent: response => context.commit('UPDATE_ITEMS', response.data)
+    getItemsWithGroup ({ commit }) {
+        return axiosAction('get', commit, {
+            url: '/settings/with-group',
+            thenContent: response => commit('SET_ITEMS', response.data)
         })
     },
-    getItemsWithTypes(context) {
-        return axiosAction('get', context, {
-            url: '/api/manager/settings/with-types',
+    getItemsWithTypes ({ commit }) {
+        return axiosAction('get', commit, {
+            url: '/settings/with-types',
             thenContent: response => {
-                context.commit('UPDATE_ITEMS', response.data.items);
-                context.commit('UPDATE_TYPES', response.data.types);
-                context.commit('UPDATE_FIELD', { field: 'type', value: response.data.types[0].name });
+                commit('SET_ITEMS', response.data.items);
+                commit('SET_TYPES', response.data.types);
+                commit('SET_ITEM_FIELD', { field: 'type', value: response.data.types[0].name });
             }
         })
     },
-    getItem(context, id) {
-        return axiosAction('get', context, {
-            url: `/api/manager/settings/${id}`,
+    getItem ({ commit }, id) {
+        return axiosAction('get', commit, {
+            url: `/settings/${id}`,
             thenContent: response => {
-                context.commit('UPDATE_FIELDS', response.data.item);
-                context.commit('UPDATE_TYPES', response.data.types);
+                commit('SET_ITEM_FIELDS', response.data);
             }
         })
     },
-    store(context, payload) {
-        const form = new FormData();
-        for(let field in payload) {
-            form.append(field, payload[field]);
-        }
-        return axiosAction('post', context, {
-            url: '/api/manager/settings',
-            data: form
+    getEntries ({ commit }) {
+        return axiosAction('get', commit, {
+            url: `/settings/entries`,
+            thenContent: response => {
+                commit('SET_FIELD', { field: 'entries', value: response.data });
+            }
         })
     },
-    update(context, payload) {
-        const form = new FormData();
-        for(let field in payload.formData) {
-            form.append(field, payload.formData[field]);
+    store ({ commit }, payload) {
+        const data = new FormData();
+        for(const [field, value] of Object.entries(payload)) {
+            data.append(field, value);
         }
-        return axiosAction('post', context, {
-            url: `/api/manager/settings/${payload.id}`,
-            data: form
+        return axiosAction('post', commit, {
+            url: '/settings',
+            data
         })
     },
-    set(context, payload) {
-        const form = new FormData();
-        for(let field in payload) {
-            form.append(field, payload[field]);
+    update ({ commit }, { id, formData}) {
+        const data = new FormData();
+        for(const [field, value] of Object.entries(formData)) {
+            data.append(field, value);
         }
-        return axios.post('/api/manager/settings/set', form)
-            .then(() => {
-                context.commit('UPDATE_ITEM', payload);
-                context.commit('CLEAR_ERRORS', null, {root: true});
-            })
-            .catch(error => {
-                context.commit('UPDATE_ERRORS', error.response, {root: true});
-                throw Error;
-            });
-    },
-    destroy(context, id) {
-        return axiosAction('delete', context, {
-            url: `/api/manager/settings/${id}`,
-            thenContent: response => context.commit('DELETE_ITEM', id)
+        return axiosAction('post', commit, {
+            url: `/settings/${id}`,
+            data
         })
     },
-    setItemFields(context, itemId) {
-        return context.commit('SET_ITEM_FIELDS', itemId);
-    },
-    setImageValue(context, payload) {
-        const form = new FormData();
-        for(let field in payload) {
-            form.append(field, payload[field]);
+    set ({ commit }, payload) {
+        const data = new FormData();
+        for(const [field, value] of Object.entries(payload)) {
+            data.append(field, value);
         }
-
-        return axiosAction('post', context, {
-            url: `/api/manager/settings/set-image`,
-            data: form
+        return axiosAction('post', commit, {
+            url: `/settings/set`,
+            data,
+            thenContent: (response) => {
+                commit('SET_ITEM', payload);
+                commit('CLEAR_ERRORS', null, {root: true});
+            }
         })
     },
-    setTextValue(context, payload) {
-        const form = new FormData();
-        for(let field in payload) {
-            form.append(field, payload[field]);
+    delete ({ commit }, { payload }) {
+        return axiosAction('delete', commit, {
+            url: `/settings/${payload}`,
+            thenContent: response => commit('DELETE_ITEM', payload)
+        })
+    },
+    setItemFields ({ commit }, id) {
+        return commit('SET_ITEM_FIELDS', id);
+    },
+    setImageValue ({ commit }, payload) {
+        const data = new FormData();
+        for(const [field, value] of Object.entries(payload)) {
+            data.append(field, value);
         }
 
-        return axiosAction('post', context, {
-            url: `/api/manager/settings/set-text`,
-            data: form
+        return axiosAction('post', commit, {
+            url: `/settings/set-image`,
+            data
         })
     },
-    updateField(context, payload) {
-        context.commit('UPDATE_FIELD', payload);
+    setTextValue ({ commit }, payload) {
+        const data = new FormData();
+        for(const [field, value] of Object.entries(payload)) {
+            data.append(field, value);
+        }
+
+        return axiosAction('post', commit, {
+            url: `/settings/set-text`,
+            data
+        })
     },
-    clearFields(context) {
-        context.commit('CLEAR_FIELDS');
+    setItemField ({ commit }, payload) {
+        commit('SET_ITEM_FIELD', payload);
+    },
+    clearItemFields({ commit }) {
+        commit('CLEAR_ITEM_FIELDS');
     }
 };
 

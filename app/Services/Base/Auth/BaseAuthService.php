@@ -10,8 +10,8 @@ use Tymon\JWTAuth\JWTAuth;
 abstract class BaseAuthService
 {
     protected JWTAuth $auth;
-
     protected ClientUserRepository $repository;
+    public int $expiresIn;
 
     /**
      * BaseAuthService constructor.
@@ -22,5 +22,6 @@ abstract class BaseAuthService
     {
         $this->auth = $auth;
         $this->repository = $repository;
+        $this->expiresIn = auth()->factory()->getTTL() * 60;
     }
 }

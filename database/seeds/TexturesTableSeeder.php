@@ -30,7 +30,6 @@ class TexturesTableSeeder extends Seeder
         foreach (config('seeds.textures') as $texture) {
             DB::table('textures')->insert([
                 'name' => $texture['name'],
-                'thumb_path' => $this->getTextureImagePath($images, 'thumb', $texture['image_key']),
                 'sample_path' => $this->getTextureImagePath($images, 'sample', $texture['image_key']),
                 'background_path' => $this->getTextureImagePath($images, 'background', $texture['image_key']),
                 'width' => $texture['width'],

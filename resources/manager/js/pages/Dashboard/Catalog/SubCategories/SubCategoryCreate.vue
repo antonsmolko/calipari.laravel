@@ -29,10 +29,7 @@
                                     :vField="$v.description"
                                     :module="storeModule" />
 
-                        <div class="space-10"></div>
-
-                        <v-switch :vField="$v.publish"
-                                  :module="storeModule" />
+                        <div class="space-30"></div>
 
                     </md-card-content>
                 </md-card>
@@ -70,9 +67,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty
-                        ? true
-                        : !this.isUniqueTitle
+                    return (value.trim() === '') && !this.$v.title.$dirty || !this.isUniqueTitle
                 }
             },
             description: {
@@ -82,7 +77,7 @@
         computed: {
             ...mapState('subCategories', {
                 title: state => state.fields.title,
-                publish: state => state.fields.publish,
+                // publish: state => state.fields.publish,
                 description: state => state.fields.description
             }),
             isUniqueTitle () {
@@ -92,15 +87,14 @@
         methods: {
             ...mapActions('subCategories', {
                 getItemsAction: 'getItems',
-                clearFieldsAction: 'clearFields'
+                clearFieldsAction: 'clearItemFields'
             }),
             onCreate () {
                 return this.create({
                     sendData: {
                         type: this.category_type,
-                        formData: {
+                        data: {
                             title: this.title,
-                            publish: +this.publish,
                             description: this.description
                         }
                     },
@@ -112,10 +106,10 @@
             }
         },
         created () {
+            this.clearFieldsAction();
             this.getItemsAction(this.category_type)
                 .then(() => {
                     this.setPageTitle(this.pageProps[this.category_type].CREATE_PAGE_TITLE);
-                    this.clearFieldsAction();
                     this.responseData = true;
                 })
                 .catch(() => this.$router.push(this.redirectRoute));

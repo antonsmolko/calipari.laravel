@@ -25,7 +25,7 @@
                                     </md-table-cell>
 
                                     <md-table-cell md-label="Превью">
-                                        <img class="md-table-thumb img-raised rounded" :src="`/image/widen/300/${item.thumb_path}`" :alt="item.name">
+                                        <img class="md-table-thumb img-raised rounded" :src="`/image/crop/300/300/${item.sample_path}`" :alt="item.name">
                                     </md-table-cell>
 
                                     <md-table-cell md-label="Название">

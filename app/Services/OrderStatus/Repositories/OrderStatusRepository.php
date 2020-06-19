@@ -20,11 +20,11 @@ class OrderStatusRepository extends CmsBaseResourceRepository
     }
 
     /**
-     * @return ResourceCollection
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Contracts\Pagination\Paginator|\Illuminate\Database\Eloquent\Collection|ResourceCollection
      */
-    public function index(): ResourceCollection
+    public function index()
     {
-        return OrderStatusWithPivotDate::collection($this->model::all());
+        return $this->model::orderBy('id')->get();
     }
 
     /**

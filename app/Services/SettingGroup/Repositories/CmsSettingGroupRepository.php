@@ -23,7 +23,7 @@ class CmsSettingGroupRepository extends CmsBaseResourceRepository
      */
     public function index(): Collection
     {
-        return $this->model::withCount('settings')->get();
+        return $this->model::withCount('settings')->orderBy('id')->get();
     }
 
     /**
@@ -32,7 +32,7 @@ class CmsSettingGroupRepository extends CmsBaseResourceRepository
     public function getItemsWithSettings(): Collection
     {
         return $this->model::has('settings')
-            ->with('settings')
+            ->with(['settings' => fn ($query) => $query->orderBy('id')])
             ->get();
     }
 }

@@ -3,20 +3,15 @@
 namespace App\Http\Controllers\API\Cms\Owner;
 
 use App\Http\Controllers\API\Cms\SubCategory\SubCategoryController;
-use App\Http\Requests\FormRequest;
 use App\Services\Image\CmsImageService;
 use App\Services\Owner\OwnerService;
-use App\Http\Controllers\API\Cms\Owner\Requests\CreateOwnerRequest;
-use App\Http\Controllers\API\Cms\Owner\Requests\UpdateOwnerRequest;
+use App\Http\Controllers\API\Cms\Owner\Requests\StoreRequest;
+use App\Http\Controllers\API\Cms\Owner\Requests\UpdateRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Response;
 
 class OwnerController extends SubCategoryController
 {
-    /**
-     * @var CmsImageService
-     */
-    private $imageService;
+    private CmsImageService $imageService;
 
     /**
      * OwnerController constructor.
@@ -33,20 +28,21 @@ class OwnerController extends SubCategoryController
     }
 
     /**
-     * @param CreateOwnerRequest $request
+     * @param StoreRequest $request
      * @return JsonResponse
      */
-    public function store(CreateOwnerRequest $request): JsonResponse
+    public function store(StoreRequest $request): JsonResponse
     {
-        return Response::Json($this->service->store($request->all()));
+        return response()->json($this->service->store($request->all()));
     }
 
     /**
-     * @param UpdateOwnerRequest $request
+     * @param UpdateRequest $request
      * @param int $id
+     * @return mixed
      */
-    public function update(UpdateOwnerRequest $request, int $id)
+    public function update(UpdateRequest $request, int $id)
     {
-        $this->service->update($id, $request->all());
+        return $this->service->update($id, $request->all());
     }
 }

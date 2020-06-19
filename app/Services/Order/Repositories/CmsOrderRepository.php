@@ -6,6 +6,7 @@ namespace App\Services\Order\Repositories;
 use App\Models\Order;
 use App\Services\Order\Resources\CmsOrder as OrderResource;
 use App\Services\Order\Resources\CmsOrderFromList as OrderFromListResource;
+use App\Services\Order\Resources\CmsOrderFromListCollection as OrderFromListCollection;
 
 class CmsOrderRepository
 {
@@ -25,6 +26,34 @@ class CmsOrderRepository
     public function getItems()
     {
         return OrderFromListResource::collection($this->model::orderBy('id', 'desc')->get());
+    }
+
+    /**
+     * @param array $requestData
+     * @return OrderFromListCollection
+     */
+    public function getCurrentItems(array $requestData)
+    {
+        return new OrderFromListCollection(
+            $this->model::whereDoesntHave('statuses', fn ($query) => $query->where('alias', 'completed'))
+                ->when(!empty($requestData['query']),
+                    fn ($query) => $query->where('number', 'like', $requestData['query'] . '%'))
+                ->orderBy($requestData['sort_by'], $requestData['sort_order'])
+                ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']));
+    }
+
+    /**
+     * @param array $requestData
+     * @return OrderFromListCollection
+     */
+    public function getCompletedItems(array $requestData)
+    {
+        return new OrderFromListCollection($this->model::orderBy('id', 'desc')
+            ->whereHas('statuses', fn ($query) => $query->where('alias', 'completed'))
+            ->when(!empty($requestData['query']),
+                fn ($query) => $query->where('number', 'like', $requestData['query'] . '%'))
+            ->orderBy($requestData['sort_by'], $requestData['sort_order'])
+            ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']));
     }
 
     /**

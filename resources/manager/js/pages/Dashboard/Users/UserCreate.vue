@@ -34,7 +34,7 @@
                                  :vField="$v.email"
                                  :vDelay="true"
                                  :module="storeModule"
-                                 :vRules="{ required: true, unique: true, email: true, minLength: true }" />
+                                 :vRules="{ required: true, email: true, minLength: true }" />
 
                         <v-input title="Пароль"
                                  icon="lock"
@@ -66,12 +66,12 @@
                         <md-card-content>
 
                             <v-select v-if="roleList.length" title="Роль" placeholder="Выберите роль"
-                                      name="roles"
-                                      :value="roles"
-                                      :vField="$v.roles"
+                                      name="role"
+                                      :value="role"
+                                      :vField="$v.role"
                                       :options="roleList"
                                       nameField="display_name"
-                                      indexName="name"
+                                      indexName="id"
                                       :module="storeModule" />
                         </md-card-content>
                     </md-card>
@@ -83,15 +83,11 @@
 
 <script>
     import { mapActions, mapState } from 'vuex'
-
     import { required, sameAs, minLength, email } from 'vuelidate/lib/validators'
 
     import VSelect from '@/custom_components/VForm/VSelect'
-
     import { pageTitle } from '@/mixins/base'
     import { createMethod } from '@/mixins/crudMethods'
-
-    import config from '@/config'
 
     export default {
         name: 'UserCreate',
@@ -101,8 +97,7 @@
             return {
                 responseData: false,
                 redirectRoute: { name: 'manager.users' },
-                storeModule: 'users',
-                defaultRole: config.DEFAULT_ROLE
+                storeModule: 'users'
             }
         },
         validations: {
@@ -115,11 +110,9 @@
                 required,
                 email,
                 touch: false,
-                isUnique (value) {
-                    return (value.trim() === '') && !this.$v.email.$dirty
-                        ? true
-                        : !this.isUniqueEmail
-                }
+                // isUnique (value) {
+                //     return (value.trim() === '') && !this.$v.email.$dirty || !this.isUniqueEmail
+                // }
             },
             password: {
                 required,
@@ -131,7 +124,7 @@
                 sameAsPassword: sameAs('password'),
                 touch: false
             },
-            roles: {
+            role: {
                 required,
                 touch: false
             }
@@ -141,21 +134,23 @@
                 name: state => state.users.fields.name,
                 email: state => state.users.fields.email,
                 publish: state => state.users.fields.publish,
-                roles: state => state.users.fields.roles,
+                role: state => state.users.fields.role,
                 password: state => state.users.fields.password,
                 passwordConfirmation: state => state.users.fields.password_confirmation,
                 roleList: state => state.roles.items
             }),
             isUniqueEmail() {
                 return !!this.$store.getters['users/isUniqueEmail'](this.email);
+            },
+            defaultRole () {
+                return this.$store.getters['roles/defaultRole'];
             }
         },
         methods: {
             ...mapActions({
-                getItemsAction: 'users/getItems',
-                clearFieldsAction: 'users/clearFields',
+                clearFieldsAction: 'users/clearItemFields',
                 getRolesAction: 'roles/getItems',
-                updateFieldAction: 'users/updateField'
+                setFieldAction: 'users/setItemField'
             }),
             onCreate() {
                 return this.create({
@@ -165,7 +160,7 @@
                         password: this.password,
                         password_confirmation: this.passwordConfirmation,
                         publish: this.publish,
-                        roles: this.roles
+                        role: this.role
                     },
                     title: this.name,
                     successText: 'Пользователь создан!',
@@ -176,10 +171,9 @@
         },
         created() {
             this.clearFieldsAction();
-            this.getItemsAction()
-                .then(() => this.getRolesAction())
+            this.getRolesAction()
                 .then(() => {
-                    this.updateFieldAction({ field: 'roles', value: this.defaultRole})
+                    this.setFieldAction({ field: 'role', value: this.defaultRole})
                     this.setPageTitle('Новый Пользователь');
                     this.responseData = true;
                 })

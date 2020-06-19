@@ -3,6 +3,7 @@
 namespace App\Services\Base\Resource\Repositories;
 
 
+use App\Models\Image;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -19,15 +20,17 @@ abstract class CmsBaseResourceRepository
     /**
      * @return LengthAwarePaginator|Paginator|Collection|ResourceCollection
      */
-    public function index() {
-        return $this->model::all();
+    public function index()
+    {
+        return $this->model::orderBy('id')->get();
     }
 
     /**
      * @param int $id
      * @return mixed
      */
-    public function getItem(int $id) {
+    public function getItem(int $id)
+    {
         return $this->model::findOrFail($id);
     }
 
@@ -35,7 +38,8 @@ abstract class CmsBaseResourceRepository
      * @param array $storeData
      * @return mixed
      */
-    public function store(array $storeData) {
+    public function store(array $storeData)
+    {
         return $this->model::create($storeData);
     }
 
@@ -44,7 +48,8 @@ abstract class CmsBaseResourceRepository
      * @param array $updateData
      * @return mixed
      */
-    public function update($item, array $updateData) {
+    public function update($item, array $updateData)
+    {
         $item->update($updateData);
 
         return $item;
@@ -54,7 +59,8 @@ abstract class CmsBaseResourceRepository
      * @param $item
      * @return int
      */
-    public function destroy($item): int {
+    public function destroy($item): int
+    {
         return $item->delete();
     }
 
@@ -62,8 +68,21 @@ abstract class CmsBaseResourceRepository
      * @param $item
      * @return mixed
      */
-    public function publish($item) {
+    public function publish($item)
+    {
         $item->publish = +!$item->publish;
+        $item->save();
+
+        return $item;
+    }
+
+    /**
+     * @param $item
+     * @return mixed
+     */
+    public function unpublish($item)
+    {
+        $item->publish = 0;
         $item->save();
 
         return $item;

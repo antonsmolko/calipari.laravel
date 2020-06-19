@@ -92,9 +92,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty
-                        ? true
-                        : !this.isUniqueTitleEdit
+                    return (value.trim() === '') && !this.$v.title.$dirty || !this.isUniqueTitleEdit
                 },
             },
             alias: {
@@ -105,7 +103,7 @@
                     return ((value.trim() === '') && !this.$v.alias.$dirty) || !this.isUniqueAliasEdit
                 },
                 testAlias (value) {
-                    return value.trim() === '' || (/^([a-z0-9]+[-]?)+[a-z0-9]$/).test(value);
+                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
                 }
             },
             description: {
@@ -124,6 +122,21 @@
             isUniqueAliasEdit () {
                 return !!this.$store.getters['settingGroups/isUniqueAliasEdit'](this.alias, this.id);
             }
+        },
+        created() {
+            Promise.all([
+                this.getItemsAction(),
+                this.getItemAction(this.id)
+            ])
+                .then(() => {
+                    this.setPageTitle(`Группа «${this.title}»`);
+                    this.responseData = true;
+                })
+                .then(() => {
+                    this.$v.$reset();
+                    this.controlSaveVisibilities = true;
+                })
+                .catch(() => this.$router.push(this.redirectRoute));
         },
         methods: {
             ...mapActions('settingGroups', {
@@ -156,19 +169,6 @@
                     redirectRoute: this.redirectRoute
                 })
             },
-        },
-        created() {
-            this.getItemsAction()
-                .then(() => this.getItemAction(this.id))
-                .then(() => {
-                    this.setPageTitle(`Группа «${this.title}»`);
-                    this.responseData = true;
-                })
-                .then(() => {
-                    this.$v.$reset();
-                    this.controlSaveVisibilities = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
         }
     }
 </script>

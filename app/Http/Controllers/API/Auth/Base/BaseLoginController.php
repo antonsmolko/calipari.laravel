@@ -17,7 +17,11 @@ abstract class BaseLoginController extends BaseAuthController
      * @param AuthService $authService
      * @param ClientUserService $userService
      */
-    public function __construct(JWTAuth $auth, AuthService $authService, ClientUserService $userService)
+    public function __construct(
+        JWTAuth $auth,
+        AuthService $authService,
+        ClientUserService $userService
+    )
     {
         parent::__construct($auth, $authService);
         $this->userService = $userService;

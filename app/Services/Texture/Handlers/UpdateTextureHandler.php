@@ -28,21 +28,21 @@ class UpdateTextureHandler
      */
     public function handle(Texture $item, array $updateData): Texture
     {
-        if (isset($updateData['thumb'])) {
-            $thumbAttributes = uploader()->refresh($item['thumb_path'], $updateData['thumb']);
-            $updateData['thumb_path'] = $thumbAttributes['path'];
+        if(array_key_exists('image', $updateData) && !empty($updateData['image'])) {
+            $uploadAttributes = uploader()->change($updateData['image'], $item->image_path);
+            $updateData = Arr::add(Arr::except($updateData, ['image']), 'image_path', $uploadAttributes['path']);
         }
 
-        if (isset($updateData['sample'])) {
-            $sampleAttributes = uploader()->refresh($item['sample_path'], $updateData['sample']);
+        if (array_key_exists('sample', $updateData) && !empty($updateData['sample'])) {
+            $sampleAttributes = uploader()->change($updateData['sample'], $item->image_path);
             $updateData['sample_path'] = $sampleAttributes['path'];
         }
 
-        if (isset($updateData['background'])) {
-            $backgroundAttributes = uploader()->refresh($item['background_path'], $updateData['background']);
-            $updateData['background_path'] = $backgroundAttributes['path'];
+        if (array_key_exists('background', $updateData) && !empty($updateData['background'])) {
+            $backgroundAttributes = uploader()->change($updateData['background'], $item->image_path);
+            $updateData['sample_path'] = $backgroundAttributes['path'];
         }
 
-        return $this->repository->update($item, Arr::except($updateData, ['thumb', 'sample', 'background']));
+        return $this->repository->update($item, Arr::except($updateData, ['sample', 'background']));
     }
 }

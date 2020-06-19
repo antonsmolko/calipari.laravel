@@ -91,7 +91,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     onSelect: function onSelect(value) {
       if (this.vField) this.touched(this.vField, value);
-      this.$store.dispatch("".concat(this.storeModule, "updateField"), {
+      this.$store.dispatch("".concat(this.storeModule, "setItemField"), {
         field: this.name,
         value: value
       });
@@ -295,7 +295,7 @@ var createMethod = {
           storeModule = _ref$storeModule === void 0 ? null : _ref$storeModule;
       var module = storeModule ? "".concat(storeModule, "/") : '';
       return this.$store.dispatch("".concat(module, "store"), sendData).then(function () {
-        _this.$router.go(-1) ? _this.$router.go(-1) : _this.$router.push(redirectRoute);
+        window.history.length > 1 ? _this.$router.go(-1) : _this.$router.push(redirectRoute);
         return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
           title: successText,
           text: "\xAB".concat(title, "\xBB"),
@@ -320,7 +320,7 @@ var updateMethod = {
           storeModule = _ref2$storeModule === void 0 ? null : _ref2$storeModule;
       var module = storeModule ? "".concat(storeModule, "/") : '';
       return this.$store.dispatch("".concat(module, "update"), sendData).then(function () {
-        _this2.$router.go(-1) ? _this2.$router.go(-1) : _this2.$router.push(redirectRoute);
+        window.history.length > 1 ? _this2.$router.go(-1) : _this2.$router.push(redirectRoute);
         return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
           title: successText,
           text: "\xAB".concat(title, "\xBB"),
@@ -345,23 +345,20 @@ var deleteMethod = {
           storeModule = _ref3$storeModule === void 0 ? null : _ref3$storeModule,
           _ref3$redirectRoute = _ref3.redirectRoute,
           redirectRoute = _ref3$redirectRoute === void 0 ? null : _ref3$redirectRoute,
-          _ref3$categoryId = _ref3.categoryId,
-          categoryId = _ref3$categoryId === void 0 ? null : _ref3$categoryId,
-          _ref3$paginationData = _ref3.paginationData,
-          paginationData = _ref3$paginationData === void 0 ? null : _ref3$paginationData;
+          _ref3$tableMode = _ref3.tableMode,
+          tableMode = _ref3$tableMode === void 0 ? false : _ref3$tableMode,
+          _ref3$force = _ref3.force,
+          force = _ref3$force === void 0 ? false : _ref3$force;
       var module = storeModule ? "".concat(storeModule, "/") : '';
+      var method = force ? 'forceDelete' : 'delete';
       return deleteSwalFireConfirm(alertText).then(function (result) {
         if (result.value) {
-          return _this3.$store.dispatch("".concat(module, "destroy"), payload).then(function () {
+          return _this3.$store.dispatch("".concat(module).concat(method), {
+            payload: payload,
+            tableMode: tableMode
+          }).then(function () {
             if (redirectRoute) {
-              _this3.$router.go(-1) ? _this3.$router.go(-1) : _this3.$router.push(redirectRoute);
-            }
-
-            if (paginationData) {
-              categoryId ? _this3.$store.dispatch('categories/getImages', {
-                id: categoryId,
-                data: paginationData
-              }) : _this3.$store.dispatch('images/getItems', paginationData);
+              window.history.length > 1 ? _this3.$router.go(-1) : _this3.$router.push(redirectRoute);
             }
 
             return deleteSwalFireAlert(successText, title);
@@ -404,13 +401,13 @@ var uploadMethod = {
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var uploadFiles, _ref4$type, type, _ref4$id, id, _ref4$storeModule, storeModule, paginationData, files, module;
+        var uploadFiles, _ref4$type, type, _ref4$id, id, _ref4$storeModule, storeModule, files, module;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                uploadFiles = _ref4.uploadFiles, _ref4$type = _ref4.type, type = _ref4$type === void 0 ? null : _ref4$type, _ref4$id = _ref4.id, id = _ref4$id === void 0 ? null : _ref4$id, _ref4$storeModule = _ref4.storeModule, storeModule = _ref4$storeModule === void 0 ? null : _ref4$storeModule, paginationData = _ref4.paginationData;
+                uploadFiles = _ref4.uploadFiles, _ref4$type = _ref4.type, type = _ref4$type === void 0 ? null : _ref4$type, _ref4$id = _ref4.id, id = _ref4$id === void 0 ? null : _ref4$id, _ref4$storeModule = _ref4.storeModule, storeModule = _ref4$storeModule === void 0 ? null : _ref4$storeModule;
                 files = Array.from(uploadFiles);
                 module = storeModule ? storeModule : 'categories';
 
@@ -423,8 +420,7 @@ var uploadMethod = {
                 return _this4.$store.dispatch("".concat(module, "/uploadImages"), {
                   files: files,
                   id: id,
-                  type: type,
-                  paginationData: paginationData
+                  type: type
                 });
 
               case 6:
@@ -433,10 +429,7 @@ var uploadMethod = {
 
               case 8:
                 _context.next = 10;
-                return _this4.$store.dispatch('images/store', {
-                  files: files,
-                  paginationData: paginationData
-                });
+                return _this4.$store.dispatch('images/store', files);
 
               case 10:
                 _context.next = 12;
@@ -466,16 +459,16 @@ var imageAddMethod = {
     addImages: function addImages(_ref5) {
       var _this5 = this;
 
-      var category = _ref5.category,
-          selected = _ref5.selected;
+      var id = _ref5.id,
+          data = _ref5.data;
       this.$store.dispatch('categories/addSelectedImages', {
-        category_id: category.id,
-        selected_images: selected
+        id: id,
+        data: data
       }).then(function () {
         _this5.$router.push({
           name: 'manager.catalog.categories.images',
           params: {
-            id: category.id
+            id: id
           }
         });
 
@@ -497,12 +490,12 @@ var subCategoryImageAddMethod = {
 
       var type = _ref6.type,
           id = _ref6.id,
-          selected = _ref6.selected,
+          data = _ref6.data,
           redirectRoute = _ref6.redirectRoute;
       this.$store.dispatch('subCategories/addSelectedImages', {
         type: type,
         id: id,
-        selected_images: selected
+        data: data
       }).then(function () {
         _this6.$router.push(redirectRoute);
 

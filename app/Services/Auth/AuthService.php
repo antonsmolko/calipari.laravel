@@ -13,16 +13,14 @@ class AuthService extends BaseAuthService
 {
     /**
      * @param Request $request
-     * @return array
+     * @return UserResource
      */
     public function index(Request $request)
     {
         $user = $request->user();
 
         if ($user && $user->isActive() && $user->isConfirmed()) {
-            return [
-                'data' => new UserResource($request->user())
-            ];
+            return new UserResource($request->user());
         }
 //        $this->logout();
     }
@@ -30,6 +28,14 @@ class AuthService extends BaseAuthService
     public function logout()
     {
         $this->auth->invalidate();
+    }
+
+    /**
+     * @return array
+     */
+    public function refresh(): array
+    {
+        return $this->respondWithRefreshToken(auth()->refresh(true, true));
     }
 
     /**
@@ -85,6 +91,35 @@ class AuthService extends BaseAuthService
         return [
             'message' => __('auth.send_activation_code', ['email' => $email]),
             'status' => 'primary'
+        ];
+    }
+
+    /**
+     * @param $user
+     * @param string $token
+     * @return array
+     */
+    public function respondWithToken($user, string $token): array
+    {
+        return [
+            'message' => __('auth.welcome_message', ['name' => $user->name]),
+            'status' => 'success',
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => $this->expiresIn
+        ];
+    }
+
+    /**
+     * @param string $token
+     * @return array
+     */
+    public function respondWithRefreshToken(string $token)
+    {
+        return [
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => $this->expiresIn
         ];
     }
 }

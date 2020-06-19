@@ -7,7 +7,7 @@ namespace App\Services\Image\Repositories;
 use App\Models\Image;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
 use Illuminate\Contracts\Pagination\Paginator;
-use App\Services\Image\Resources\ImageToEdit as ImageToEditResource;
+use App\Services\Image\Resources\FromEditCms as ImageToEditResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CmsImageRepository extends CmsBaseResourceRepository
@@ -31,49 +31,92 @@ class CmsImageRepository extends CmsBaseResourceRepository
     }
 
     /**
-     * @param array $pagination
+     * @param array $requestData
      * @return Paginator
      */
-    public function getItems(array $pagination)
+    public function getTrashedItems(array $requestData)
+    {
+        return $this->model::onlyTrashed()
+            ->with(config('query_builder.image'))
+            ->when(!empty($requestData['query']),
+                fn ($query) => $query->where('id', 'like', $requestData['query'] . '%'))
+            ->orderBy($requestData['sort_by'], $requestData['sort_order'])
+            ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']);
+    }
+
+    /**
+     * @param array $requestData
+     * @return Paginator
+     */
+    public function getItems(array $requestData)
     {
         return $this->model::with(config('query_builder.image'))
-            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
+            ->when(!empty($requestData['query']),
+                fn ($query) => $query->where('id', 'like', $requestData['query'] . '%'))
+            ->orderBy($requestData['sort_by'], $requestData['sort_order'])
+            ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']);
     }
 
     /**
-     * @param array $pagination
+     * @param Image $item
+     * @param array $syncData
+     * @return array
+     */
+    public function syncCategories(Image $item, array $syncData)
+    {
+        return $item->categories()->sync($syncData);
+    }
+
+    /**
+     * @param Image $item
+     * @param array $syncData
+     * @return array
+     */
+    public function syncNonColorCategories(Image $item, array $syncData)
+    {
+        return $item->nonColorCategories()->sync($syncData);
+    }
+
+    /**
+     * @param $item
+     * @param array $updateData
      * @return mixed
      */
-    public function getQueryItems(array $pagination)
+    public function update($item, array $updateData)
     {
-//        ->when($sortBy, function ($query, $sortBy) {
-//            return $query->orderBy($sortBy);
-//        }, function ($query) {
-//            return $query->orderBy('name');
-//        })
-        return $this->model::where('id', 'like', $pagination['query'] . '%')
-            ->with(config('query_builder.image'))
-            ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-            ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page']);
+        return $item->update($updateData);
     }
 
     /**
-     * @param Image $image
-     * @param string $relation
-     * @param $syncData
+     * @param Image $item
+     * @return mixed
      */
-    public function syncAssociations(Image $image, string $relation, $syncData)
+    public function removeOwner(Image $item)
     {
-        $image->$relation()->sync($syncData);
+        $item->owner()->dissociate();
+
+        return $item->save();
     }
 
     /**
-     * @param Image $image
-     * @param array $fillData
+     * @param int $id
+     * @return bool|mixed|null
      */
-    public function fillAttributesFromArray(Image $image, array $fillData)
+    public function forceDelete(int $id)
     {
-        $image->fill($fillData)->save();
+        return $this->model::onlyTrashed()
+            ->where('id', $id)
+            ->forceDelete();
+    }
+
+    /**
+     * @param int $id
+     * @return bool|null
+     */
+    public function restore(int $id)
+    {
+        return $this->model::onlyTrashed()
+            ->where('id', $id)
+            ->restore();
     }
 }

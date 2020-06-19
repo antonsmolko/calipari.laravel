@@ -7,11 +7,11 @@ use App\Events\Models\Image\ImageDeleted;
 use App\Events\Models\Image\ImageSaved;
 use App\Events\Models\Image\ImageUpdated;
 use Illuminate\Database\Eloquent\Builder;
-use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Image extends Model
 {
-    use Searchable;
+    use SoftDeletes;
 
     /**
      * @var array
@@ -53,6 +53,15 @@ class Image extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
+    public function nonColorCategories()
+    {
+        return $this->belongsToMany('App\Models\Category')
+            ->wherePivot('category_type', '<>', 'colors');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function interiors()
     {
         return $this->belongsToMany('App\Models\Category')
@@ -64,7 +73,8 @@ class Image extends Model
      */
     public function tags()
     {
-        return $this->belongsToMany('App\Models\Tag');
+        return $this->belongsToMany('App\Models\Category')
+            ->wherePivot('category_type', 'tags');
     }
 
     /**
@@ -76,6 +86,14 @@ class Image extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function homeModuleInteriorSlide()
+    {
+        return $this->hasOne('App\Models\HomeModuleInteriorSlide');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function format()
@@ -84,12 +102,20 @@ class Image extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function orders()
+    public function collection()
     {
-        return $this->hasMany('App\Models\OrderItem', 'order_id');
+        return $this->belongsTo('App\Models\Collection');
     }
+
+//    /**
+//     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+//     */
+//    public function orders()
+//    {
+//        return $this->hasMany('App\Models\OrderItem', 'order_id');
+//    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -100,20 +126,91 @@ class Image extends Model
     }
 
     /**
-     * @param $query
-     * @param array $filter
-     * @return mixed
+     * @return float|int
      */
-    public function scopeFiltered($query, array $filter)
+    public function getRatioAttribute()
     {
-        list('categories' => $categories, 'tags' => $tags) = $filter;
+        return $this->width / $this->height;
+    }
+
+    public function getArticleAttribute()
+    {
+        return str_pad($this->id, config('settings.image_article_length'), "0", STR_PAD_LEFT);
+    }
+
+    public function scopeWhereCategory($query, int $id)
+    {
+        return $query
+            ->published()
+            ->whereHas('categories', fn (Builder $query) => $query
+                ->where('id', $id));
+    }
+
+//    public function scopeWhereTag($query, int $id)
+//    {
+//        return $query
+//            ->published()
+//            ->whereHas('tags', fn (Builder $query) => $query
+//                ->where('id', $id));
+//    }
+    public function scopeWhereCollection($query, int $id)
+    {
+        return $query
+            ->whereHas('collection', fn (Builder $query) => $query
+                ->where('id', $id));
+    }
+
+    public function scopeWhereKeys($query, string $value)
+    {
+        $ids = explode(';', $value);
 
         return $query
-            ->whereHas('tags', function (Builder $query) use ($tags) {
-                $query->whereIn('id', $tags);
-            })
-            ->orWhereHas('categories', function (Builder $query) use ($categories) {
-                $query->whereIn('id', $categories);
-            });
+            ->published()
+            ->whereIn('id', $ids);
+    }
+
+    public function scopeWhereFormats($query, string $value)
+    {
+        $ids = explode(';', $value);
+
+        return $query
+            ->whereHas('format', fn (Builder $query) => $query
+                ->whereIn('id', $ids));
+    }
+
+    public function scopeWhereTags($query, string $value)
+    {
+        $ids = explode(';', $value);
+
+        return $query
+            ->whereHas('tags', fn (Builder $query) => $query
+                ->whereIn('id', $ids));
+    }
+
+    public function scopeWhereTopics($query, string $value)
+    {
+        $ids = explode(';', $value);
+
+        return $query
+            ->whereHas('topics', fn (Builder $query) => $query
+                ->whereIn('id', $ids));
+    }
+
+    public function scopeWhereColors($query, string $value)
+    {
+        $ids = explode(';', $value);
+
+        return $query
+            ->whereHas('colors', fn (Builder $query) => $query
+                ->whereIn('id', $ids));
+    }
+
+    public function scopeWhereInteriors($query, string $value)
+    {
+        $ids = explode(';', $value);
+
+        return $query
+            ->whereHas('interiors', fn (Builder $query) => $query
+                ->whereIn('id', $ids));
     }
 }
