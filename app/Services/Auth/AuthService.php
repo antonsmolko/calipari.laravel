@@ -7,22 +7,16 @@ namespace App\Services\Auth;
 use App\Models\User;
 use App\Services\Base\Auth\BaseAuthService;
 use App\Services\User\Resources\User as UserResource;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthService extends BaseAuthService
 {
     /**
-     * @param Request $request
      * @return UserResource
      */
-    public function index(Request $request)
+    public function me()
     {
-        $user = $request->user();
-
-        if ($user && $user->isActive() && $user->isConfirmed()) {
-            return new UserResource($request->user());
-        }
-//        $this->logout();
+        return new UserResource($this->guard()->user());
     }
 
     public function logout()
@@ -121,5 +115,15 @@ class AuthService extends BaseAuthService
             'token_type' => 'bearer',
             'expires_in' => $this->expiresIn
         ];
+    }
+
+    /**
+     * Get the guard to be used during authentication.
+     *
+     * @return \Illuminate\Contracts\Auth\Guard
+     */
+    public function guard()
+    {
+        return Auth::guard();
     }
 }

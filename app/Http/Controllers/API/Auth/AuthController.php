@@ -11,12 +11,11 @@ use Illuminate\Http\Request;
 class AuthController extends BaseAuthController
 {
     /**
-     * @param Request $request
      * @return JsonResponse
      */
-    public function me(Request $request): JsonResponse
+    public function me(): JsonResponse
     {
-        return response()->json($this->authService->index($request));
+        return response()->json($this->authService->me());
     }
 
     public function logout()
