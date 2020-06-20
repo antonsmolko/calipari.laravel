@@ -1,7 +1,7 @@
 FROM php:7.4-fpm
 
 ENV APP_ROOT /app
-ENV APP_ENV=production
+ENV APP_ENV=dev
 
 ADD . ${APP_ROOT}
 
@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
-    php-memcached \
+    php7-memcached \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd
 
