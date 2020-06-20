@@ -1,9 +1,126 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[38],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/VForm/VSelect.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/custom_components/VForm/VSelect.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "VSelect",
+  props: {
+    title: {
+      type: String
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    vField: {
+      type: Object,
+      "default": null
+    },
+    placeholder: {
+      type: String
+    },
+    options: {
+      type: Array,
+      required: true
+    },
+    value: {
+      type: [Array, Number, String],
+      "default": null
+    },
+    multiple: {
+      type: Boolean,
+      "default": false
+    },
+    defaultValue: {
+      type: [Array, Number, String, Object],
+      "default": null
+    },
+    defaultTitle: {
+      type: String,
+      "default": 'Нет'
+    },
+    nameField: {
+      type: String,
+      "default": 'title'
+    },
+    indexName: {
+      type: [String, Number],
+      "default": 'id'
+    },
+    module: {
+      type: String,
+      "default": null
+    },
+    differ: {
+      type: Boolean,
+      "default": false
+    }
+  },
+  data: function data() {
+    return {
+      valueReference: null
+    };
+  },
+  computed: {
+    storeModule: function storeModule() {
+      return this.module ? "".concat(this.module, "/") : '';
+    }
+  },
+  methods: {
+    onSelect: function onSelect(value) {
+      if (this.vField) this.touched(this.vField, value);
+      this.$store.dispatch("".concat(this.storeModule, "setItemField"), {
+        field: this.name,
+        value: value
+      });
+    },
+    isDiffer: function isDiffer(a, b) {
+      return this.multiple ? !!a.filter(function (i) {
+        return !b.includes(i);
+      }).concat(b.filter(function (i) {
+        return !a.includes(i);
+      })).length : a != b;
+    },
+    touchedDifferent: function touchedDifferent(v, value) {
+      this.isDiffer(value, this.valueReference) ? v.$touch() : v.$reset();
+    },
+    touched: function touched(v, value) {
+      this.differ ? this.touchedDifferent(v, value) : v.$touch();
+    }
+  },
+  created: function created() {
+    this.valueReference = this.value instanceof Array ? this.value.slice(0) : this.value;
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -12,8 +129,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _mixins_base__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/mixins/base */ "./resources/manager/js/mixins/base.js");
-/* harmony import */ var _mixins_crudMethods__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/mixins/crudMethods */ "./resources/manager/js/mixins/crudMethods.js");
+/* harmony import */ var _custom_components_VForm_VSelect__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/custom_components/VForm/VSelect */ "./resources/manager/js/custom_components/VForm/VSelect.vue");
+/* harmony import */ var _mixins_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/mixins/base */ "./resources/manager/js/mixins/base.js");
+/* harmony import */ var _mixins_crudMethods__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/mixins/crudMethods */ "./resources/manager/js/mixins/crudMethods.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -71,80 +189,124 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'SettingGroupCreate',
-  mixins: [_mixins_base__WEBPACK_IMPORTED_MODULE_2__["pageTitle"], _mixins_crudMethods__WEBPACK_IMPORTED_MODULE_3__["createMethod"]],
+  name: 'SettingEdit',
+  components: {
+    VSelect: _custom_components_VForm_VSelect__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  mixins: [_mixins_base__WEBPACK_IMPORTED_MODULE_3__["pageTitle"], _mixins_crudMethods__WEBPACK_IMPORTED_MODULE_4__["updateMethod"], _mixins_crudMethods__WEBPACK_IMPORTED_MODULE_4__["deleteMethod"]],
+  props: {
+    id: {
+      type: [Number, String],
+      required: true
+    }
+  },
   data: function data() {
     return {
+      defaultGroup: {
+        title: 'Нет группы',
+        value: 0
+      },
+      storeModule: 'settings',
       responseData: false,
-      storeModule: 'settingGroups',
+      controlSaveVisibilities: false,
       redirectRoute: {
-        name: 'manager.settings.administration',
-        params: {
-          activeTab: 'Группы'
-        }
+        name: 'manager.settings.administration'
       }
     };
   },
   validations: {
-    title: {
+    displayName: {
       required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
       touch: false,
       minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(2),
       isUnique: function isUnique(value) {
-        return value.trim() === '' && !this.$v.title.$dirty || !this.isUniqueTitle;
+        return value.trim() === '' && !this.$v.displayName.$dirty || !this.isUniqueDisplayNameEdit;
       }
     },
-    alias: {
+    keyName: {
       required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
       touch: false,
-      testAlias: function testAlias(value) {
-        return value.trim() === '' || this.$config.ALIAS_REGEXP.test(value);
+      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(2),
+      isUnique: function isUnique(value) {
+        return value.trim() === '' && !this.$v.keyName.$dirty || !this.isUniqueKeyNameEdit;
       },
-      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(2),
-      isUnique: function isUnique(value) {
-        return value.trim() === '' && !this.$v.alias.$dirty || !this.isUniqueAlias;
+      testKey: function testKey(value) {
+        return value.trim() === '' || this.$config.ALIAS_REGEXP.test(value);
       }
     },
-    description: {
+    group: {
       touch: false
     }
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('settingGroups', {
-    title: function title(state) {
-      return state.fields.title;
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
+    keyName: function keyName(state) {
+      return state.settings.fields.key_name;
     },
-    alias: function alias(state) {
-      return state.fields.alias;
+    displayName: function displayName(state) {
+      return state.settings.fields.display_name;
     },
-    description: function description(state) {
-      return state.fields.description;
+    type: function type(state) {
+      return state.settings.fields.type;
+    },
+    group: function group(state) {
+      return state.settings.fields.group_id;
+    },
+    settingGroups: function settingGroups(state) {
+      return state.settingGroups.items;
     }
   }), {
-    isUniqueTitle: function isUniqueTitle() {
-      return !!this.$store.getters['settingGroups/isUniqueTitle'](this.title);
+    isUniqueKeyNameEdit: function isUniqueKeyNameEdit() {
+      return !!this.$store.getters['settings/isUniqueKeyNameEdit'](this.keyName, this.id);
     },
-    isUniqueAlias: function isUniqueAlias() {
-      return !!this.$store.getters['settingGroups/isUniqueAlias'](this.alias);
+    isUniqueDisplayNameEdit: function isUniqueDisplayNameEdit() {
+      return !!this.$store.getters['settings/isUniqueDisplayNameEdit'](this.displayName, this.id);
     }
   }),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settingGroups', {
-    getItemsAction: 'getItems',
-    clearFieldsAction: 'clearItemFields'
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])({
+    getItemAction: 'settings/getItem',
+    getGroupsAction: 'settingGroups/getItems'
   }), {
-    onCreate: function onCreate() {
-      return this.create({
+    onUpdate: function onUpdate() {
+      return this.update({
         sendData: {
-          title: this.title,
-          alias: this.alias,
-          description: this.description
+          formData: {
+            key_name: this.keyName,
+            display_name: this.displayName,
+            group_id: this.group
+          },
+          id: this.id
         },
-        title: this.title,
-        successText: 'Группа создана!',
+        title: this.displayName,
+        successText: 'Настройка обновлена!',
+        storeModule: this.storeModule,
+        redirectRoute: this.redirectRoute
+      });
+    },
+    onDelete: function onDelete() {
+      return this["delete"]({
+        payload: this.id,
+        title: this.displayName,
+        alertText: "\u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0443 \xAB".concat(this.name, "\xBB"),
+        successText: 'Настройка удалена!',
         storeModule: this.storeModule,
         redirectRoute: this.redirectRoute
       });
@@ -153,11 +315,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   created: function created() {
     var _this = this;
 
-    this.clearFieldsAction();
-    this.getItemsAction().then(function () {
-      _this.setPageTitle('Новая группа');
+    Promise.all([this.getItemAction(this.id), this.getGroupsAction()]).then(function () {
+      if (!_this.settingGroups.length) _this.$router.push(_this.redirectRoute);
+
+      _this.setPageTitle(_this.displayName);
 
       _this.responseData = true;
+    }).then(function () {
+      _this.$v.$reset();
+
+      _this.controlSaveVisibilities = true;
     })["catch"](function () {
       return _this.$router.push(_this.redirectRoute);
     });
@@ -166,10 +333,80 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue?vue&type=template&id=07c61f76&":
-/*!*******************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue?vue&type=template&id=07c61f76& ***!
-  \*******************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/VForm/VSelect.vue?vue&type=template&id=31494f86&":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/custom_components/VForm/VSelect.vue?vue&type=template&id=31494f86& ***!
+  \*******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _vm.title
+        ? _c("h4", { staticClass: "card-title" }, [_vm._v(_vm._s(_vm.title))])
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "md-field",
+        [
+          _c("label", [_vm._v(_vm._s(_vm.placeholder))]),
+          _vm._v(" "),
+          _c(
+            "md-select",
+            {
+              attrs: { value: _vm.value, multiple: _vm.multiple },
+              on: { "md-selected": _vm.onSelect }
+            },
+            [
+              _vm.defaultValue !== null
+                ? _c("md-option", { attrs: { value: _vm.defaultValue } }, [
+                    _vm._v(_vm._s(_vm.defaultTitle))
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm._l(_vm.options, function(item, index) {
+                return _c(
+                  "md-option",
+                  { key: index, attrs: { value: item[_vm.indexName] } },
+                  [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(item[_vm.nameField]) +
+                        "\n            "
+                    )
+                  ]
+                )
+              })
+            ],
+            2
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue?vue&type=template&id=618b3910&":
+/*!************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue?vue&type=template&id=618b3910& ***!
+  \************************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -190,6 +427,7 @@ var render = function() {
             [
               _c(
                 "md-card",
+                { staticClass: "mt-0" },
                 [
                   _c(
                     "md-card-content",
@@ -198,28 +436,44 @@ var render = function() {
                       _c("router-button-link", {
                         attrs: {
                           title: "В администрирование",
-                          route: _vm.redirectRoute.name,
-                          params: _vm.redirectRoute.params
+                          route: _vm.redirectRoute.name
                         }
                       }),
                       _vm._v(" "),
                       _c(
-                        "slide-y-down-transition",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: !_vm.$v.$invalid,
-                              expression: "!$v.$invalid"
-                            }
-                          ]
-                        },
+                        "div",
                         [
+                          _c(
+                            "slide-y-down-transition",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value:
+                                    _vm.controlSaveVisibilities &&
+                                    _vm.$v.$anyDirty &&
+                                    !_vm.$v.$invalid,
+                                  expression:
+                                    "controlSaveVisibilities && $v.$anyDirty && !$v.$invalid"
+                                }
+                              ]
+                            },
+                            [
+                              _c("control-button", {
+                                attrs: { title: "Сохранить" },
+                                on: { click: _vm.onUpdate }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
                           _c("control-button", {
+                            staticClass: "md-danger",
+                            attrs: { title: "Удалить", icon: "delete" },
                             on: {
                               click: function($event) {
-                                return _vm.onCreate("auto-close")
+                                return _vm.onDelete()
                               }
                             }
                           })
@@ -252,10 +506,12 @@ var render = function() {
                     [
                       _c("v-input", {
                         attrs: {
-                          title: "Заголовок",
+                          title: "Наименование",
                           icon: "title",
-                          name: "title",
-                          vField: _vm.$v.title,
+                          name: "display_name",
+                          value: _vm.displayName,
+                          vField: _vm.$v.displayName,
+                          differ: true,
                           module: _vm.storeModule,
                           vRules: {
                             required: true,
@@ -267,30 +523,47 @@ var render = function() {
                       _vm._v(" "),
                       _c("v-input", {
                         attrs: {
-                          title: "Алиас",
+                          title: "Ключ",
                           icon: "code",
-                          name: "alias",
+                          name: "key_name",
+                          value: _vm.keyName,
+                          vField: _vm.$v.keyName,
                           vDelay: true,
-                          vField: _vm.$v.alias,
+                          differ: true,
                           module: _vm.storeModule,
                           vRules: {
                             required: true,
                             unique: true,
-                            minLength: true,
-                            alias: true
+                            key: true,
+                            minLength: true
                           }
                         }
                       }),
                       _vm._v(" "),
-                      _c("v-textarea", {
-                        attrs: {
-                          name: "description",
-                          vField: _vm.$v.description,
-                          module: _vm.storeModule
-                        }
-                      }),
+                      _vm.settingGroups.length
+                        ? _c("v-select", {
+                            attrs: {
+                              title: "Группа",
+                              placeholder: "Выберите группу настройки",
+                              name: "group_id",
+                              value: +_vm.group,
+                              vField: _vm.$v.group,
+                              differ: true,
+                              options: _vm.settingGroups,
+                              defaultTitle: _vm.defaultGroup.title,
+                              defaultValue: _vm.defaultGroup.value,
+                              module: _vm.storeModule
+                            }
+                          })
+                        : _vm._e(),
                       _vm._v(" "),
-                      _c("div", { staticClass: "space-30" })
+                      _c("h4", { staticClass: "card-title mb-0" }, [
+                        _vm._v("Тип")
+                      ]),
+                      _vm._v(" "),
+                      _c("h3", { staticClass: "mt-0" }, [
+                        _c("small", [_vm._v(_vm._s(_vm.type))])
+                      ])
                     ],
                     1
                   )
@@ -311,11 +584,80 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./resources/manager/js/custom_components/VForm/VSelect.vue":
+/*!******************************************************************!*\
+  !*** ./resources/manager/js/custom_components/VForm/VSelect.vue ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _VSelect_vue_vue_type_template_id_31494f86___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./VSelect.vue?vue&type=template&id=31494f86& */ "./resources/manager/js/custom_components/VForm/VSelect.vue?vue&type=template&id=31494f86&");
+/* harmony import */ var _VSelect_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./VSelect.vue?vue&type=script&lang=js& */ "./resources/manager/js/custom_components/VForm/VSelect.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _VSelect_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _VSelect_vue_vue_type_template_id_31494f86___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _VSelect_vue_vue_type_template_id_31494f86___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/manager/js/custom_components/VForm/VSelect.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/manager/js/custom_components/VForm/VSelect.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/manager/js/custom_components/VForm/VSelect.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_VSelect_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./VSelect.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/VForm/VSelect.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_VSelect_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/manager/js/custom_components/VForm/VSelect.vue?vue&type=template&id=31494f86&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/manager/js/custom_components/VForm/VSelect.vue?vue&type=template&id=31494f86& ***!
+  \*************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VSelect_vue_vue_type_template_id_31494f86___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./VSelect.vue?vue&type=template&id=31494f86& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/custom_components/VForm/VSelect.vue?vue&type=template&id=31494f86&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VSelect_vue_vue_type_template_id_31494f86___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_VSelect_vue_vue_type_template_id_31494f86___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/manager/js/mixins/crudMethods.js":
 /*!****************************************************!*\
   !*** ./resources/manager/js/mixins/crudMethods.js ***!
   \****************************************************/
-/*! exports provided: createMethod, updateMethod, deleteMethod, uploadMethod, imageAddMethod, subCategoryImageAddMethod */
+/*! exports provided: createMethod, updateMethod, deleteMethod, deleteImageByIndexMethod, uploadMethod, imageAddMethod, subCategoryImageAddMethod */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -323,6 +665,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createMethod", function() { return createMethod; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMethod", function() { return updateMethod; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteMethod", function() { return deleteMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteImageByIndexMethod", function() { return deleteImageByIndexMethod; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "uploadMethod", function() { return uploadMethod; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageAddMethod", function() { return imageAddMethod; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subCategoryImageAddMethod", function() { return subCategoryImageAddMethod; });
@@ -350,7 +693,9 @@ var createMethod = {
           storeModule = _ref$storeModule === void 0 ? null : _ref$storeModule;
       var module = storeModule ? "".concat(storeModule, "/") : '';
       return this.$store.dispatch("".concat(module, "store"), sendData).then(function () {
-        window.history.length > 1 ? _this.$router.go(-1) : _this.$router.push(redirectRoute);
+        _this.$router.push(redirectRoute); // window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
+
+
         return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
           title: successText,
           text: "\xAB".concat(title, "\xBB"),
@@ -375,7 +720,9 @@ var updateMethod = {
           storeModule = _ref2$storeModule === void 0 ? null : _ref2$storeModule;
       var module = storeModule ? "".concat(storeModule, "/") : '';
       return this.$store.dispatch("".concat(module, "update"), sendData).then(function () {
-        window.history.length > 1 ? _this2.$router.go(-1) : _this2.$router.push(redirectRoute);
+        _this2.$router.push(redirectRoute); // window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
+
+
         return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
           title: successText,
           text: "\xAB".concat(title, "\xBB"),
@@ -413,10 +760,37 @@ var deleteMethod = {
             tableMode: tableMode
           }).then(function () {
             if (redirectRoute) {
-              window.history.length > 1 ? _this3.$router.go(-1) : _this3.$router.push(redirectRoute);
+              _this3.$router.push(redirectRoute); // window.history.length > 1
+              //     ? this.$router.go(-1)
+              //     : this.$router.push(redirectRoute);
+
             }
 
             return deleteSwalFireAlert(successText, title);
+          });
+        }
+      });
+    }
+  }
+};
+var deleteImageByIndexMethod = {
+  methods: {
+    deleteImageByIndex: function deleteImageByIndex(_ref4) {
+      var _this4 = this;
+
+      var id = _ref4.id,
+          index = _ref4.index,
+          alertText = _ref4.alertText,
+          successText = _ref4.successText,
+          _ref4$storeModule = _ref4.storeModule,
+          storeModule = _ref4$storeModule === void 0 ? null : _ref4$storeModule;
+      return deleteSwalFireConfirm(alertText).then(function (result) {
+        if (result.value) {
+          return _this4.$store.dispatch("".concat(storeModule, "/deleteImageByIndex"), {
+            id: id,
+            index: index
+          }).then(function () {
+            return deleteSwalFireAlert(successText, index);
           });
         }
       });
@@ -452,17 +826,17 @@ var deleteSwalFireAlert = function deleteSwalFireAlert(successText, title) {
 
 var uploadMethod = {
   methods: {
-    upload: function upload(_ref4) {
-      var _this4 = this;
+    upload: function upload(_ref5) {
+      var _this5 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var uploadFiles, _ref4$type, type, _ref4$id, id, _ref4$storeModule, storeModule, files, module;
+        var uploadFiles, _ref5$type, type, _ref5$id, id, _ref5$storeModule, storeModule, files, module;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                uploadFiles = _ref4.uploadFiles, _ref4$type = _ref4.type, type = _ref4$type === void 0 ? null : _ref4$type, _ref4$id = _ref4.id, id = _ref4$id === void 0 ? null : _ref4$id, _ref4$storeModule = _ref4.storeModule, storeModule = _ref4$storeModule === void 0 ? null : _ref4$storeModule;
+                uploadFiles = _ref5.uploadFiles, _ref5$type = _ref5.type, type = _ref5$type === void 0 ? null : _ref5$type, _ref5$id = _ref5.id, id = _ref5$id === void 0 ? null : _ref5$id, _ref5$storeModule = _ref5.storeModule, storeModule = _ref5$storeModule === void 0 ? null : _ref5$storeModule;
                 files = Array.from(uploadFiles);
                 module = storeModule ? storeModule : 'categories';
 
@@ -472,7 +846,7 @@ var uploadMethod = {
                 }
 
                 _context.next = 6;
-                return _this4.$store.dispatch("".concat(module, "/uploadImages"), {
+                return _this5.$store.dispatch("".concat(module, "/uploadImages"), {
                   files: files,
                   id: id,
                   type: type
@@ -484,7 +858,7 @@ var uploadMethod = {
 
               case 8:
                 _context.next = 10;
-                return _this4.$store.dispatch('images/store', files);
+                return _this5.$store.dispatch('images/store', files);
 
               case 10:
                 _context.next = 12;
@@ -511,16 +885,16 @@ var uploadMethod = {
 };
 var imageAddMethod = {
   methods: {
-    addImages: function addImages(_ref5) {
-      var _this5 = this;
+    addImages: function addImages(_ref6) {
+      var _this6 = this;
 
-      var id = _ref5.id,
-          data = _ref5.data;
+      var id = _ref6.id,
+          data = _ref6.data;
       this.$store.dispatch('categories/addSelectedImages', {
         id: id,
         data: data
       }).then(function () {
-        _this5.$router.push({
+        _this6.$router.push({
           name: 'manager.catalog.categories.images',
           params: {
             id: id
@@ -540,19 +914,19 @@ var imageAddMethod = {
 };
 var subCategoryImageAddMethod = {
   methods: {
-    addImages: function addImages(_ref6) {
-      var _this6 = this;
+    addImages: function addImages(_ref7) {
+      var _this7 = this;
 
-      var type = _ref6.type,
-          id = _ref6.id,
-          data = _ref6.data,
-          redirectRoute = _ref6.redirectRoute;
+      var type = _ref7.type,
+          id = _ref7.id,
+          data = _ref7.data,
+          redirectRoute = _ref7.redirectRoute;
       this.$store.dispatch('subCategories/addSelectedImages', {
         type: type,
         id: id,
         data: data
       }).then(function () {
-        _this6.$router.push(redirectRoute);
+        _this7.$router.push(redirectRoute);
 
         return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
           title: 'Изображения добавлены!',
@@ -568,17 +942,17 @@ var subCategoryImageAddMethod = {
 
 /***/ }),
 
-/***/ "./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue":
-/*!******************************************************************************!*\
-  !*** ./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue ***!
-  \******************************************************************************/
+/***/ "./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue":
+/*!***********************************************************************!*\
+  !*** ./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue ***!
+  \***********************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _SettingGroupCreate_vue_vue_type_template_id_07c61f76___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SettingGroupCreate.vue?vue&type=template&id=07c61f76& */ "./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue?vue&type=template&id=07c61f76&");
-/* harmony import */ var _SettingGroupCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SettingGroupCreate.vue?vue&type=script&lang=js& */ "./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue?vue&type=script&lang=js&");
+/* harmony import */ var _SettingEdit_vue_vue_type_template_id_618b3910___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SettingEdit.vue?vue&type=template&id=618b3910& */ "./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue?vue&type=template&id=618b3910&");
+/* harmony import */ var _SettingEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SettingEdit.vue?vue&type=script&lang=js& */ "./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -588,9 +962,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _SettingGroupCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _SettingGroupCreate_vue_vue_type_template_id_07c61f76___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _SettingGroupCreate_vue_vue_type_template_id_07c61f76___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _SettingEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SettingEdit_vue_vue_type_template_id_618b3910___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SettingEdit_vue_vue_type_template_id_618b3910___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -600,38 +974,38 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue"
+component.options.__file = "resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue?vue&type=script&lang=js&":
-/*!*******************************************************************************************************!*\
-  !*** ./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue?vue&type=script&lang=js& ***!
-  \*******************************************************************************************************/
+/***/ "./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************!*\
+  !*** ./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingGroupCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./SettingGroupCreate.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingGroupCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./SettingEdit.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue?vue&type=template&id=07c61f76&":
-/*!*************************************************************************************************************!*\
-  !*** ./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue?vue&type=template&id=07c61f76& ***!
-  \*************************************************************************************************************/
+/***/ "./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue?vue&type=template&id=618b3910&":
+/*!******************************************************************************************************!*\
+  !*** ./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue?vue&type=template&id=618b3910& ***!
+  \******************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingGroupCreate_vue_vue_type_template_id_07c61f76___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./SettingGroupCreate.vue?vue&type=template&id=07c61f76& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue?vue&type=template&id=07c61f76&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingGroupCreate_vue_vue_type_template_id_07c61f76___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingEdit_vue_vue_type_template_id_618b3910___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./SettingEdit.vue?vue&type=template&id=618b3910& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue?vue&type=template&id=618b3910&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingEdit_vue_vue_type_template_id_618b3910___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingGroupCreate_vue_vue_type_template_id_07c61f76___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingEdit_vue_vue_type_template_id_618b3910___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

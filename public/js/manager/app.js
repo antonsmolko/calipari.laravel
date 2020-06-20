@@ -5379,7 +5379,7 @@ __webpack_require__.r(__webpack_exports__);
    */
 var WorldMap = function WorldMap() {
   return {
-    component: Promise.all(/*! import() */[__webpack_require__.e(62), __webpack_require__.e(46)]).then(__webpack_require__.bind(null, /*! ./WorldMap.vue */ "./resources/manager/js/components/WorldMap/WorldMap.vue")),
+    component: Promise.all(/*! import() */[__webpack_require__.e(72), __webpack_require__.e(64)]).then(__webpack_require__.bind(null, /*! ./WorldMap.vue */ "./resources/manager/js/components/WorldMap/WorldMap.vue")),
     delay: 200
   };
 };
@@ -6123,13 +6123,16 @@ var touchMap = new WeakMap();
   },
   data: function data() {
     return {
-      valueReference: ''
+      referenceValue: ''
     };
   },
   computed: {
     storeModule: function storeModule() {
       return this.module ? "".concat(this.module, "/") : '';
     }
+  },
+  created: function created() {
+    this.referenceValue = this.value;
   },
   methods: {
     onInput: function onInput(value) {
@@ -6161,14 +6164,11 @@ var touchMap = new WeakMap();
       this.differ ? this.touchedDifferent(v, value) : v.$touch();
     },
     touchedDifferent: function touchedDifferent(v, value) {
-      this.isDiffer(value, this.valueReference) ? v.$touch() : v.$reset();
+      this.isDiffer(value, this.referenceValue) ? v.$touch() : v.$reset();
     },
     isDiffer: function isDiffer(a, b) {
       return a != b;
     }
-  },
-  created: function created() {
-    this.valueReference = this.value;
   }
 });
 
@@ -6385,7 +6385,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 // import AsyncWorldMap from "@/components/WorldMap/AsyncWorldMap.vue";
 
 
@@ -6493,6 +6492,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FixedPlugin_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../FixedPlugin.vue */ "./resources/manager/js/pages/FixedPlugin.vue");
 /* harmony import */ var _Extra_UserMenu_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Extra/UserMenu.vue */ "./resources/manager/js/pages/Dashboard/Layout/Extra/UserMenu.vue");
 /* harmony import */ var vue2_transitions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue2-transitions */ "./node_modules/vue2-transitions/dist/vue2-transitions.m.js");
+//
+//
+//
+//
 //
 //
 //
@@ -21758,6 +21761,7 @@ var render = function() {
                 type: _vm.type,
                 name: _vm.name,
                 value: _vm.value,
+                min: _vm.min,
                 maxlength: _vm.maxlength
               },
               on: { input: _vm.onInput }
@@ -21994,21 +21998,11 @@ var render = function() {
       _vm._v(" "),
       _c("panel-card-link", {
         attrs: {
-          route: "manager.images.trashed",
-          icon: "delete",
-          title: "Корзина",
-          count: 753,
-          color: "blue-grey"
-        }
-      }),
-      _vm._v(" "),
-      _c("panel-card-link", {
-        attrs: {
           route: "manager.catalog",
           icon: "category",
           title: "Каталог",
           count: 23,
-          color: "rose"
+          color: "blue-grey"
         }
       }),
       _vm._v(" "),
@@ -22265,15 +22259,50 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
-              _c("sidebar-item", {
-                attrs: {
-                  link: {
-                    name: "Корзина",
-                    icon: "delete",
-                    path: "/manager/images/trashed"
+              _c(
+                "sidebar-item",
+                {
+                  attrs: {
+                    link: {
+                      name: "Страницы",
+                      icon: "layers",
+                      path: "/manager/pages"
+                    }
                   }
-                }
-              }),
+                },
+                [
+                  _c("sidebar-item", {
+                    attrs: {
+                      link: {
+                        name: "Главная",
+                        icon: "home",
+                        path: "/manager/pages/home"
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("sidebar-item", {
+                    attrs: {
+                      link: {
+                        name: "Портфолио",
+                        icon: "work",
+                        path: "/manager/pages/portfolio"
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("sidebar-item", {
+                    attrs: {
+                      link: {
+                        name: "Блог",
+                        icon: "article",
+                        path: "/manager/pages/blog"
+                      }
+                    }
+                  })
+                ],
+                1
+              ),
               _vm._v(" "),
               _c(
                 "sidebar-item",
@@ -73745,7 +73774,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ckeditor_ckeditor5_vue__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_ckeditor_ckeditor5_vue__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _lib_Validations__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./lib/Validations */ "./resources/manager/js/lib/Validations/index.js");
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/config */ "./resources/manager/js/config/index.js");
-/* harmony import */ var _routes_routes__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./routes/routes */ "./resources/manager/js/routes/routes.js");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/helpers */ "./resources/manager/js/helpers/index.js");
+/* harmony import */ var _routes_routes__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./routes/routes */ "./resources/manager/js/routes/routes.js");
 // =========================================================
 // * Vue Material Dashboard PRO - v1.3.1
 // =========================================================
@@ -73768,6 +73798,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
  // router setup
 
  // plugin setup
@@ -73777,11 +73808,12 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(_material_dashboard__WEBPACK_IMPO
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuelidate__WEBPACK_IMPORTED_MODULE_4___default.a);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(_ckeditor_ckeditor5_vue__WEBPACK_IMPORTED_MODULE_7___default.a);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.prototype.$langLib = _lib_Validations__WEBPACK_IMPORTED_MODULE_8__["default"];
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.prototype.$config = _config__WEBPACK_IMPORTED_MODULE_9__["default"]; // configure router
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.prototype.$config = _config__WEBPACK_IMPORTED_MODULE_9__["default"];
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.prototype.$helpers = _helpers__WEBPACK_IMPORTED_MODULE_10__["default"]; // configure router
 
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   mode: 'history',
-  routes: _routes_routes__WEBPACK_IMPORTED_MODULE_10__["default"],
+  routes: _routes_routes__WEBPACK_IMPORTED_MODULE_11__["default"],
   // short for routes: routes
   scrollBehavior: function scrollBehavior(to) {
     if (to.hash) {
@@ -76233,6 +76265,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
+  appUrl: 'https://manager.calipari.ru',
   baseUrl: '/api/manager',
   imagePlaceholder: '/img/image_placeholder.jpg',
   DEFAULT_ROLE: 'user',
@@ -76241,7 +76274,27 @@ __webpack_require__.r(__webpack_exports__);
     home: 1,
     catalog: 2,
     textures: 3,
-    contacts: 4
+    contacts: 4,
+    portfolio: 5,
+    blog: 6,
+    policy: 7
+  },
+  postTypes: [{
+    index: 'guide',
+    title: 'Гид'
+  }, {
+    index: 'news',
+    title: 'Новости'
+  }, {
+    index: 'stocks',
+    title: 'Акции'
+  }, {
+    index: 'events',
+    title: 'События'
+  }],
+  defaultPostType: {
+    index: 'guide',
+    title: 'Гид'
   }
 });
 
@@ -77632,6 +77685,42 @@ var GlobalDirectives = {
 
 /***/ }),
 
+/***/ "./resources/manager/js/helpers/index.js":
+/*!***********************************************!*\
+  !*** ./resources/manager/js/helpers/index.js ***!
+  \***********************************************/
+/*! exports provided: getFormatPrice, getArticle, getFormatDate, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFormatPrice", function() { return getFormatPrice; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getArticle", function() { return getArticle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFormatDate", function() { return getFormatDate; });
+var getFormatPrice = function getFormatPrice(price) {
+  return typeof price === 'number' && price > 0 ? price.toLocaleString('ru-Ru', {
+    style: 'currency',
+    currency: 'RUB',
+    minimumFractionDigits: 0
+  }) : price;
+};
+var getArticle = function getArticle(id) {
+  return id.toString().padStart(5, 0);
+};
+var getFormatDate = function getFormatDate(milliseconds) {
+  var delimiter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '.';
+  var date = new Date();
+  var formatDate = [date.getDay().toString().padStart(2, '0'), date.getMonth().toString().padStart(2, '0'), date.getFullYear()];
+  return formatDate.join(delimiter);
+};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  getFormatPrice: getFormatPrice,
+  getArticle: getArticle,
+  getFormatDate: getFormatDate
+});
+
+/***/ }),
+
 /***/ "./resources/manager/js/lib/Validations/index.js":
 /*!*******************************************************!*\
   !*** ./resources/manager/js/lib/Validations/index.js ***!
@@ -78313,315 +78402,369 @@ __webpack_require__.r(__webpack_exports__);
  // Image pages
 
 var ImageList = function ImageList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(7), __webpack_require__.e(19)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(8), __webpack_require__.e(25)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Images/ImageList.vue */ "./resources/manager/js/pages/Dashboard/Images/ImageList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var ExcludedImageList = function ExcludedImageList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(7), __webpack_require__.e(27)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(8), __webpack_require__.e(44)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Images/ExcludedImageList.vue */ "./resources/manager/js/pages/Dashboard/Images/ExcludedImageList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var ImageEdit = function ImageEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(4), __webpack_require__.e(32)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(32)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Images/ImageEdit.vue */ "./resources/manager/js/pages/Dashboard/Images/ImageEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var ImageTrashedList = function ImageTrashedList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(10)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(11)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Images/ImageTrashedList.vue */ "./resources/manager/js/pages/Dashboard/Images/ImageTrashedList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Category pages
 
 
 var CatalogPanel = function CatalogPanel(resolve) {
-  __webpack_require__.e(/*! require.ensure */ 47).then((function () {
+  __webpack_require__.e(/*! require.ensure */ 65).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/CatalogPanel.vue */ "./resources/manager/js/pages/Dashboard/Catalog/CatalogPanel.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var CategoryList = function CategoryList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(9), __webpack_require__.e(28)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(17)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/Categories/CategoryList.vue */ "./resources/manager/js/pages/Dashboard/Catalog/Categories/CategoryList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var CategoryCreate = function CategoryCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(25)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(41)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/Categories/CategoryCreate.vue */ "./resources/manager/js/pages/Dashboard/Catalog/Categories/CategoryCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var CategoryEdit = function CategoryEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(26)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(42)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/Categories/CategoryEdit.vue */ "./resources/manager/js/pages/Dashboard/Catalog/Categories/CategoryEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // SubCategories
 
 
 var SubCategoryList = function SubCategoryList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(9), __webpack_require__.e(50)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(22)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/SubCategories/SubCategoryList.vue */ "./resources/manager/js/pages/Dashboard/Catalog/SubCategories/SubCategoryList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SubCategoryCreate = function SubCategoryCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(29)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(45)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/SubCategories/SubCategoryCreate.vue */ "./resources/manager/js/pages/Dashboard/Catalog/SubCategories/SubCategoryCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SubCategoryEdit = function SubCategoryEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(30)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(46)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/SubCategories/SubCategoryEdit.vue */ "./resources/manager/js/pages/Dashboard/Catalog/SubCategories/SubCategoryEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SubCategoryImageList = function SubCategoryImageList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(7), __webpack_require__.e(18)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(8), __webpack_require__.e(24)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/SubCategories/ImageList.vue */ "./resources/manager/js/pages/Dashboard/Catalog/SubCategories/ImageList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SubCategoryExcludedImageList = function SubCategoryExcludedImageList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(7), __webpack_require__.e(17)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(8), __webpack_require__.e(23)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/SubCategories/ExcludedImageList.vue */ "./resources/manager/js/pages/Dashboard/Catalog/SubCategories/ExcludedImageList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Category pages
 
 
 var CollectionList = function CollectionList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(12)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(16)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/Collections/CollectionList.vue */ "./resources/manager/js/pages/Dashboard/Catalog/Collections/CollectionList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var CollectionCreate = function CollectionCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(4), __webpack_require__.e(48)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(35)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/Collections/CollectionCreate.vue */ "./resources/manager/js/pages/Dashboard/Catalog/Collections/CollectionCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var CollectionEdit = function CollectionEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(4), __webpack_require__.e(49)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(36)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/Collections/CollectionEdit.vue */ "./resources/manager/js/pages/Dashboard/Catalog/Collections/CollectionEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var CollectionImageList = function CollectionImageList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(11)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(15)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/Collections/ImageList.vue */ "./resources/manager/js/pages/Dashboard/Catalog/Collections/ImageList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Textures
 
 
 var TextureList = function TextureList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(16)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(21)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Textures/TextureList.vue */ "./resources/manager/js/pages/Dashboard/Textures/TextureList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var TextureCreate = function TextureCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(5), __webpack_require__.e(6), __webpack_require__.e(44)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(10), __webpack_require__.e(69)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Textures/TextureCreate.vue */ "./resources/manager/js/pages/Dashboard/Textures/TextureCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var TextureEdit = function TextureEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(5), __webpack_require__.e(6), __webpack_require__.e(45)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(10), __webpack_require__.e(70)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Textures/TextureEdit.vue */ "./resources/manager/js/pages/Dashboard/Textures/TextureEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Users
 
 
 var UserList = function UserList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(24)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(4), __webpack_require__.e(31)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Users/UserList.vue */ "./resources/manager/js/pages/Dashboard/Users/UserList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var UserCreate = function UserCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(4), __webpack_require__.e(59)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(39)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Users/UserCreate.vue */ "./resources/manager/js/pages/Dashboard/Users/UserCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var UserEdit = function UserEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(4), __webpack_require__.e(60)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(40)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Users/UserEdit.vue */ "./resources/manager/js/pages/Dashboard/Users/UserEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Roles
 
 
 var RoleList = function RoleList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(23)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(4), __webpack_require__.e(28)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Roles/RoleList.vue */ "./resources/manager/js/pages/Dashboard/Roles/RoleList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var RoleCreate = function RoleCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(36)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(56)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Roles/RoleCreate.vue */ "./resources/manager/js/pages/Dashboard/Roles/RoleCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var RoleEdit = function RoleEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(37)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(57)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Roles/RoleEdit.vue */ "./resources/manager/js/pages/Dashboard/Roles/RoleEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Permissions
 
 
 var PermissionList = function PermissionList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(20)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(27)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Permissions/PermissionList.vue */ "./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var PermissionCreate = function PermissionCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(34)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(54)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Permissions/PermissionCreate.vue */ "./resources/manager/js/pages/Dashboard/Permissions/PermissionCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var PermissionEdit = function PermissionEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(35)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(55)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Permissions/PermissionEdit.vue */ "./resources/manager/js/pages/Dashboard/Permissions/PermissionEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Settings
 
 
 var SettingList = function SettingList(resolve) {
-  __webpack_require__.e(/*! require.ensure */ 15).then((function () {
+  __webpack_require__.e(/*! require.ensure */ 20).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Settings/SettingList.vue */ "./resources/manager/js/pages/Dashboard/Settings/SettingList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SettingAdministrationList = function SettingAdministrationList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(8), __webpack_require__.e(33)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(4), __webpack_require__.e(14)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Settings/SettingAdministrationList.vue */ "./resources/manager/js/pages/Dashboard/Settings/SettingAdministrationList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SettingCreate = function SettingCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(4), __webpack_require__.e(55)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(37)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Settings/SettingCreate.vue */ "./resources/manager/js/pages/Dashboard/Settings/SettingCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SettingEdit = function SettingEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(4), __webpack_require__.e(56)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(38)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Settings/SettingEdit.vue */ "./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SettingGroupCreate = function SettingGroupCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(38)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(58)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Settings/SettingGroupCreate.vue */ "./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SettingGroupEdit = function SettingGroupEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(39)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(59)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Settings/SettingGroupEdit.vue */ "./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Store
 
 
 var StorePanel = function StorePanel(resolve) {
-  __webpack_require__.e(/*! require.ensure */ 58).then((function () {
+  __webpack_require__.e(/*! require.ensure */ 68).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/StorePanel.vue */ "./resources/manager/js/pages/Dashboard/Store/StorePanel.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Deliveries
 
 
 var DeliveryList = function DeliveryList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(21)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(29)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/Delivery/DeliveryList.vue */ "./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var DeliveryCreate = function DeliveryCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(40)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(60)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/Delivery/DeliveryCreate.vue */ "./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var DeliveryEdit = function DeliveryEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(41)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(61)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/Delivery/DeliveryEdit.vue */ "./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // OrderStatuses
 
 
 var OrderStatusList = function OrderStatusList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(22)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(30)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/OrderStatuses/OrderStatusList.vue */ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var OrderStatusCreate = function OrderStatusCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(42)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(62)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue */ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var OrderStatusEdit = function OrderStatusEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(43)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(63)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue */ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Orders
 
 
 var OrderList = function OrderList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(3), __webpack_require__.e(8), __webpack_require__.e(57)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(4), __webpack_require__.e(18)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/Orders/OrderList.vue */ "./resources/manager/js/pages/Dashboard/Store/Orders/OrderList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var Order = function Order(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(14)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(49)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/Orders/Order.vue */ "./resources/manager/js/pages/Dashboard/Store/Orders/Order.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Pages
 
 
 var PagesPanel = function PagesPanel(resolve) {
-  __webpack_require__.e(/*! require.ensure */ 54).then((function () {
+  __webpack_require__.e(/*! require.ensure */ 67).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/PagesPanel.vue */ "./resources/manager/js/pages/Dashboard/Pages/PagesPanel.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var HomePage = function HomePage(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(5), __webpack_require__.e(6), __webpack_require__.e(8), __webpack_require__.e(13)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(6), __webpack_require__.e(3), __webpack_require__.e(7), __webpack_require__.e(9), __webpack_require__.e(19)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Home */ "./resources/manager/js/pages/Dashboard/Pages/Home/index.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var PurchaseStepCreate = function PurchaseStepCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(5), __webpack_require__.e(6), __webpack_require__.e(52)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(52)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepCreate.vue */ "./resources/manager/js/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var PurchaseStepEdit = function PurchaseStepEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(5), __webpack_require__.e(6), __webpack_require__.e(53)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(53)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepEdit.vue */ "./resources/manager/js/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepEdit.vue"));
+  }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+};
+
+var InteriorSlideCreate = function InteriorSlideCreate(resolve) {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(50)]).then((function () {
+    resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Home/Interiors/SlideCreate.vue */ "./resources/manager/js/pages/Dashboard/Pages/Home/Interiors/SlideCreate.vue"));
+  }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+};
+
+var InteriorSlideEdit = function InteriorSlideEdit(resolve) {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(51)]).then((function () {
+    resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Home/Interiors/SlideEdit.vue */ "./resources/manager/js/pages/Dashboard/Pages/Home/Interiors/SlideEdit.vue"));
+  }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+};
+
+var PortfolioPage = function PortfolioPage(resolve) {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(6), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(7), __webpack_require__.e(9), __webpack_require__.e(43)]).then((function () {
+    resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Portfolio */ "./resources/manager/js/pages/Dashboard/Pages/Portfolio/index.vue"));
+  }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+};
+
+var WorkExampleCreate = function WorkExampleCreate(resolve) {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(33)]).then((function () {
+    resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleCreate.vue */ "./resources/manager/js/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleCreate.vue"));
+  }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+};
+
+var WorkExampleEdit = function WorkExampleEdit(resolve) {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(34)]).then((function () {
+    resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleEdit.vue */ "./resources/manager/js/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleEdit.vue"));
+  }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+};
+
+var WorkExampleImageList = function WorkExampleImageList(resolve) {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(48)]).then((function () {
+    resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Portfolio/WorkExamples/ImageList.vue */ "./resources/manager/js/pages/Dashboard/Pages/Portfolio/WorkExamples/ImageList.vue"));
+  }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+};
+
+var BlogPage = function BlogPage(resolve) {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(6), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(7), __webpack_require__.e(9), __webpack_require__.e(26)]).then((function () {
+    resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Blog */ "./resources/manager/js/pages/Dashboard/Pages/Blog/index.vue"));
+  }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+};
+
+var PostCreate = function PostCreate(resolve) {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(13)]).then((function () {
+    resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Blog/Posts/PostCreate.vue */ "./resources/manager/js/pages/Dashboard/Pages/Blog/Posts/PostCreate.vue"));
+  }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+};
+
+var PostEdit = function PostEdit(resolve) {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(6), __webpack_require__.e(3), __webpack_require__.e(7), __webpack_require__.e(12)]).then((function () {
+    resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Blog/Posts/PostEdit.vue */ "./resources/manager/js/pages/Dashboard/Pages/Blog/Posts/PostEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Error pages
 
 
 var Error404 = function Error404(resolve) {
-  __webpack_require__.e(/*! require.ensure */ 51).then((function () {
+  __webpack_require__.e(/*! require.ensure */ 66).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Errors/404.vue */ "./resources/manager/js/pages/Dashboard/Errors/404.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var ErrorsLayout = function ErrorsLayout(resolve) {
-  __webpack_require__.e(/*! require.ensure */ 31).then((function () {
+  __webpack_require__.e(/*! require.ensure */ 47).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Errors/ErrorsLayout.vue */ "./resources/manager/js/pages/Dashboard/Errors/ErrorsLayout.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
@@ -78902,12 +79045,53 @@ var managerMenuPages = {
     component: HomePage
   }, {
     path: 'home/purchase-steps/create',
-    name: 'manager.pages.home.purchase-steps.create',
+    name: 'manager.pages.home.purchaseSteps.create',
     component: PurchaseStepCreate
   }, {
     path: 'home/purchase-steps/:id',
-    name: 'manager.pages.home.purchase-steps.edit',
+    name: 'manager.pages.home.purchaseSteps.edit',
     component: PurchaseStepEdit,
+    props: true
+  }, {
+    path: 'home/interiors/:interiorId/slides/create',
+    name: 'manager.pages.home.interiorSlides.create',
+    component: InteriorSlideCreate,
+    props: true
+  }, {
+    path: 'home/interiors/slides/:id',
+    name: 'manager.pages.home.interiorSlides.edit',
+    component: InteriorSlideEdit,
+    props: true
+  }, {
+    path: 'portfolio',
+    name: 'manager.pages.portfolio',
+    component: PortfolioPage
+  }, {
+    path: 'portfolio/work-examples/create',
+    name: 'manager.pages.portfolio.workExamples.create',
+    component: WorkExampleCreate
+  }, {
+    path: 'portfolio/work-examples/:id',
+    name: 'manager.pages.portfolio.workExamples.edit',
+    component: WorkExampleEdit,
+    props: true
+  }, {
+    path: 'portfolio/work-examples/:id/images',
+    name: 'manager.pages.portfolio.workExamples.images',
+    component: WorkExampleImageList,
+    props: true
+  }, {
+    path: 'blog',
+    name: 'manager.pages.blog',
+    component: BlogPage
+  }, {
+    path: 'blog/posts/create',
+    name: 'manager.pages.blog.posts.create',
+    component: PostCreate
+  }, {
+    path: 'blog/posts/:id/edit',
+    name: 'manager.pages.blog.posts.edit',
+    component: PostEdit,
     props: true
   }]
 };
@@ -78957,8 +79141,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_order_statuses__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./modules/order-statuses */ "./resources/manager/js/store/modules/order-statuses/index.js");
 /* harmony import */ var _modules_table__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./modules/table */ "./resources/manager/js/store/modules/table/index.js");
 /* harmony import */ var _modules_pages__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./modules/pages */ "./resources/manager/js/store/modules/pages/index.js");
-/* harmony import */ var _modules_purchase_steps__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./modules/purchase-steps */ "./resources/manager/js/store/modules/purchase-steps/index.js");
-/* harmony import */ var _lib_errors__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @/lib/errors */ "./resources/manager/js/lib/errors/index.js");
+/* harmony import */ var _modules_home_purchase_steps__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./modules/home/purchase-steps */ "./resources/manager/js/store/modules/home/purchase-steps.js");
+/* harmony import */ var _modules_home_interiors__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./modules/home/interiors */ "./resources/manager/js/store/modules/home/interiors.js");
+/* harmony import */ var _modules_work_examples__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./modules/work-examples */ "./resources/manager/js/store/modules/work-examples/index.js");
+/* harmony import */ var _modules_posts__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./modules/posts */ "./resources/manager/js/store/modules/posts/index.js");
+/* harmony import */ var _lib_errors__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @/lib/errors */ "./resources/manager/js/lib/errors/index.js");
+
+
+
 
 
 
@@ -78996,7 +79186,7 @@ var mutations = {
 
     switch (error.status) {
       case 404:
-        state.serverErrors.push(_lib_errors__WEBPACK_IMPORTED_MODULE_18__["default"].ERROR_NOTFOUND);
+        state.serverErrors.push(_lib_errors__WEBPACK_IMPORTED_MODULE_21__["default"].ERROR_NOTFOUND);
         break;
 
       case 400:
@@ -79016,7 +79206,7 @@ var mutations = {
         break;
 
       default:
-        state.serverErrors.push(_lib_errors__WEBPACK_IMPORTED_MODULE_18__["default"].ERROR_DEFAULT);
+        state.serverErrors.push(_lib_errors__WEBPACK_IMPORTED_MODULE_21__["default"].ERROR_DEFAULT);
     }
   },
   CLEAR_ERRORS: function CLEAR_ERRORS(state) {
@@ -79087,7 +79277,10 @@ var getters = {
     orderStatuses: _modules_order_statuses__WEBPACK_IMPORTED_MODULE_14__["default"],
     table: _modules_table__WEBPACK_IMPORTED_MODULE_15__["default"],
     pages: _modules_pages__WEBPACK_IMPORTED_MODULE_16__["default"],
-    purchaseSteps: _modules_purchase_steps__WEBPACK_IMPORTED_MODULE_17__["default"]
+    homePurchaseSteps: _modules_home_purchase_steps__WEBPACK_IMPORTED_MODULE_17__["default"],
+    homeInteriors: _modules_home_interiors__WEBPACK_IMPORTED_MODULE_18__["default"],
+    workExamples: _modules_work_examples__WEBPACK_IMPORTED_MODULE_19__["default"],
+    posts: _modules_posts__WEBPACK_IMPORTED_MODULE_20__["default"]
   }
 }));
 
@@ -79130,16 +79323,18 @@ var axiosAction = function axiosAction(method, commit, _ref) {
     commit('UPDATE_ERRORS', error.response, {
       root: true
     });
-    throw Error;
+    throw error;
   });
 };
 var axiosPatch = function axiosPatch(_ref2) {
   var commit = _ref2.commit,
       data = _ref2.data,
       url = _ref2.url,
-      thenContent = _ref2.thenContent;
+      thenContent = _ref2.thenContent,
+      _ref2$method = _ref2.method,
+      method = _ref2$method === void 0 ? 'PATCH' : _ref2$method;
   var request = axios__WEBPACK_IMPORTED_MODULE_0___default.a.create({
-    method: 'PATCH',
+    method: method,
     baseURL: _config__WEBPACK_IMPORTED_MODULE_1__["default"].baseUrl
   });
   return request.patch(url, data).then(function (response) {
@@ -79154,7 +79349,7 @@ var axiosPatch = function axiosPatch(_ref2) {
     commit('UPDATE_ERRORS', error.response, {
       root: true
     });
-    throw Error;
+    throw error;
   });
 };
 
@@ -79172,16 +79367,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "uniqueFieldMixin", function() { return uniqueFieldMixin; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "uniqueFieldEditMixin", function() { return uniqueFieldEditMixin; });
 var uniqueFieldMixin = function uniqueFieldMixin(items, fieldName, value) {
-  return items ? !!items.find(function (item) {
-    return item[fieldName].toLowerCase() === value.toLowerCase();
-  }) : true;
+  return !items.length || !items.some(function (item) {
+    return item[fieldName].toString().toLowerCase() === value.toString().toLowerCase();
+  });
 };
 var uniqueFieldEditMixin = function uniqueFieldEditMixin(items, fieldName, value, id) {
-  return items ? !!items.find(function (item) {
+  return !items.length || !items.some(function (item) {
     if (+item.id !== +id) {
-      return item[fieldName].toLowerCase() === value.toLowerCase();
+      return item[fieldName].toString().toLowerCase() === value.toString().toLowerCase();
     }
-  }) : true;
+  });
 };
 
 /***/ }),
@@ -79221,6 +79416,7 @@ var state = {
     image: '',
     image_path: '',
     publish: '',
+    meta_title: '',
     description: '',
     keywords: '',
     has_published_images: ''
@@ -79529,6 +79725,7 @@ var state = {
     owner_id: '',
     main_image_id: '',
     publish: '',
+    meta_title: '',
     description: '',
     keywords: '',
     has_published_images: ''
@@ -79596,6 +79793,7 @@ var actions = {
     var id = _ref6.id,
         data = _ref6.data;
     return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_1__["axiosPatch"])({
+      method: 'PUT',
       url: "/catalog/collections/".concat(id),
       commit: commit,
       data: data
@@ -79922,6 +80120,362 @@ var getters = {
     };
   }
 };
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: state,
+  mutations: mutations,
+  actions: actions,
+  getters: getters
+});
+
+/***/ }),
+
+/***/ "./resources/manager/js/store/modules/home/interiors.js":
+/*!**************************************************************!*\
+  !*** ./resources/manager/js/store/modules/home/interiors.js ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _mixins_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixins/actions */ "./resources/manager/js/store/mixins/actions.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+var state = {
+  fields: {
+    image_id: '',
+    image: '',
+    image_path: '',
+    order: ''
+  },
+  items: []
+};
+var mutations = {
+  SET_ITEMS: function SET_ITEMS(state, payload) {
+    state.items = payload;
+  },
+  DELETE_ITEM_SLIDE: function DELETE_ITEM_SLIDE(state, _ref) {
+    var interiorId = _ref.interiorId,
+        slideId = _ref.slideId;
+    state.items = state.items.map(function (item) {
+      if (item.id === interiorId) {
+        item.slides = item.slides.filter(function (slide) {
+          return slide.id !== slideId;
+        });
+      }
+
+      return item;
+    });
+  },
+  SET_ITEM_FIELD: function SET_ITEM_FIELD(state, _ref2) {
+    var field = _ref2.field,
+        value = _ref2.value;
+    state.fields[field] = value;
+  },
+  CLEAR_ITEM_FIELDS: function CLEAR_ITEM_FIELDS(state) {
+    for (var _i = 0, _Object$keys = Object.keys(state.fields); _i < _Object$keys.length; _i++) {
+      var field = _Object$keys[_i];
+      state.fields[field] = '';
+    }
+  },
+  SET_ITEM_FIELDS: function SET_ITEM_FIELDS(state, payload) {
+    for (var _i2 = 0, _Object$keys2 = Object.keys(state.fields); _i2 < _Object$keys2.length; _i2++) {
+      var field = _Object$keys2[_i2];
+      state.fields[field] = payload[field] === null ? '' : payload[field];
+    }
+  },
+  UPDATE_ITEM_SLIDES: function UPDATE_ITEM_SLIDES(state, _ref3) {
+    var id = _ref3.id,
+        slides = _ref3.slides;
+    state.items = state.items.map(function (item) {
+      if (item.id === id) {
+        item.slides = slides;
+      }
+
+      return item;
+    });
+  }
+};
+var actions = {
+  getInteriors: function getInteriors(_ref4) {
+    var commit = _ref4.commit;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('get', commit, {
+      url: '/home-interiors',
+      thenContent: function thenContent(response) {
+        return commit('SET_ITEMS', response.data);
+      }
+    });
+  },
+  getInteriorSlides: function getInteriorSlides(_ref5, id) {
+    var commit = _ref5.commit;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('get', commit, {
+      url: "/home-interiors/".concat(id, "/slides"),
+      thenContent: function thenContent(response) {
+        return commit('UPDATE_ITEM_SLIDES', {
+          id: id,
+          slides: response.data
+        });
+      }
+    });
+  },
+  updateInteriorOrder: function updateInteriorOrder(_ref6, _ref7) {
+    var commit = _ref6.commit,
+        dispatch = _ref6.dispatch;
+    var id = _ref7.id,
+        data = _ref7.data;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosPatch"])({
+      url: "/home-interiors/".concat(id),
+      commit: commit,
+      data: data,
+      thenContent: function thenContent(response) {
+        return dispatch('getInteriors');
+      }
+    });
+  },
+  updateInteriorSlideOrder: function updateInteriorSlideOrder(_ref8, _ref9) {
+    var commit = _ref8.commit,
+        dispatch = _ref8.dispatch;
+    var interiorId = _ref9.interiorId,
+        id = _ref9.id,
+        data = _ref9.data;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosPatch"])({
+      url: "/home-interior-slides/".concat(id),
+      commit: commit,
+      data: data,
+      thenContent: function thenContent(response) {
+        return dispatch('getInteriorSlides', interiorId);
+      }
+    });
+  },
+  getItem: function getItem(_ref10, id) {
+    var commit = _ref10.commit;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('get', commit, {
+      url: "/home-interior-slides/".concat(id),
+      thenContent: function thenContent(response) {
+        return commit('SET_ITEM_FIELDS', response.data);
+      }
+    });
+  },
+  store: function store(_ref11, payload) {
+    var commit = _ref11.commit;
+    var data = new FormData();
+
+    for (var _i3 = 0, _Object$entries = Object.entries(payload); _i3 < _Object$entries.length; _i3++) {
+      var _Object$entries$_i = _slicedToArray(_Object$entries[_i3], 2),
+          field = _Object$entries$_i[0],
+          value = _Object$entries$_i[1];
+
+      data.append(field, value);
+    }
+
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('post', commit, {
+      url: '/home-interior-slides',
+      data: data
+    });
+  },
+  update: function update(_ref12, _ref13) {
+    var commit = _ref12.commit;
+    var id = _ref13.id,
+        formData = _ref13.formData;
+    var data = new FormData();
+
+    for (var _i4 = 0, _Object$entries2 = Object.entries(formData); _i4 < _Object$entries2.length; _i4++) {
+      var _Object$entries2$_i = _slicedToArray(_Object$entries2[_i4], 2),
+          field = _Object$entries2$_i[0],
+          value = _Object$entries2$_i[1];
+
+      if (field !== 'image' || value) {
+        data.append(field, value);
+      }
+    }
+
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('post', commit, {
+      url: "/home-interior-slides/".concat(id),
+      data: data
+    });
+  },
+  "delete": function _delete(_ref14, _ref15) {
+    var commit = _ref14.commit;
+    var payload = _ref15.payload,
+        _ref15$tableMode = _ref15.tableMode,
+        tableMode = _ref15$tableMode === void 0 ? false : _ref15$tableMode;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('delete', commit, {
+      url: "/home-interior-slides/".concat(payload.slideId),
+      thenContent: function thenContent(response) {
+        if (tableMode) {
+          commit('DELETE_ITEM_SLIDE', payload);
+        }
+      }
+    });
+  },
+  setItemField: function setItemField(_ref16, payload) {
+    var commit = _ref16.commit;
+    commit('SET_ITEM_FIELD', payload);
+  },
+  clearItemFields: function clearItemFields(_ref17) {
+    var commit = _ref17.commit;
+    commit('CLEAR_ITEM_FIELDS');
+  }
+};
+var getters = {};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: state,
+  mutations: mutations,
+  actions: actions,
+  getters: getters
+});
+
+/***/ }),
+
+/***/ "./resources/manager/js/store/modules/home/purchase-steps.js":
+/*!*******************************************************************!*\
+  !*** ./resources/manager/js/store/modules/home/purchase-steps.js ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _mixins_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixins/actions */ "./resources/manager/js/store/mixins/actions.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+var state = {
+  fields: {
+    title: '',
+    image: '',
+    image_path: '',
+    description: ''
+  },
+  items: []
+};
+var mutations = {
+  SET_ITEMS: function SET_ITEMS(state, payload) {
+    state.items = payload;
+  },
+  DELETE_ITEM: function DELETE_ITEM(state, payload) {
+    state.items = state.items.filter(function (item) {
+      return item.id !== payload;
+    });
+  },
+  SET_ITEM_FIELD: function SET_ITEM_FIELD(state, _ref) {
+    var field = _ref.field,
+        value = _ref.value;
+    state.fields[field] = value;
+  },
+  CLEAR_ITEM_FIELDS: function CLEAR_ITEM_FIELDS(state) {
+    for (var _i = 0, _Object$keys = Object.keys(state.fields); _i < _Object$keys.length; _i++) {
+      var field = _Object$keys[_i];
+      state.fields[field] = '';
+    }
+  },
+  SET_ITEM_FIELDS: function SET_ITEM_FIELDS(state, payload) {
+    for (var _i2 = 0, _Object$keys2 = Object.keys(state.fields); _i2 < _Object$keys2.length; _i2++) {
+      var field = _Object$keys2[_i2];
+      state.fields[field] = payload[field] === null ? '' : payload[field];
+    }
+  }
+};
+var actions = {
+  getItems: function getItems(_ref2) {
+    var commit = _ref2.commit;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('get', commit, {
+      url: '/home-purchase-steps',
+      thenContent: function thenContent(response) {
+        return commit('SET_ITEMS', response.data);
+      }
+    });
+  },
+  getItem: function getItem(_ref3, id) {
+    var commit = _ref3.commit;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('get', commit, {
+      url: "/home-purchase-steps/".concat(id),
+      thenContent: function thenContent(response) {
+        return commit('SET_ITEM_FIELDS', response.data);
+      }
+    });
+  },
+  store: function store(_ref4, payload) {
+    var commit = _ref4.commit;
+    var data = new FormData();
+
+    for (var _i3 = 0, _Object$entries = Object.entries(payload); _i3 < _Object$entries.length; _i3++) {
+      var _Object$entries$_i = _slicedToArray(_Object$entries[_i3], 2),
+          field = _Object$entries$_i[0],
+          value = _Object$entries$_i[1];
+
+      data.append(field, value);
+    }
+
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('post', commit, {
+      url: '/home-purchase-steps',
+      data: data
+    });
+  },
+  update: function update(_ref5, _ref6) {
+    var commit = _ref5.commit;
+    var id = _ref6.id,
+        formData = _ref6.formData;
+    var data = new FormData();
+
+    for (var _i4 = 0, _Object$entries2 = Object.entries(formData); _i4 < _Object$entries2.length; _i4++) {
+      var _Object$entries2$_i = _slicedToArray(_Object$entries2[_i4], 2),
+          field = _Object$entries2$_i[0],
+          value = _Object$entries2$_i[1];
+
+      if (field !== 'image' || value) {
+        data.append(field, value);
+      }
+    }
+
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('post', commit, {
+      url: "/home-purchase-steps/".concat(id),
+      data: data
+    });
+  },
+  "delete": function _delete(_ref7, _ref8) {
+    var commit = _ref7.commit;
+    var payload = _ref8.payload;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('delete', commit, {
+      url: "/home-purchase-steps/".concat(payload),
+      thenContent: function thenContent(response) {
+        return commit('DELETE_ITEM', payload);
+      }
+    });
+  },
+  setItemField: function setItemField(_ref9, payload) {
+    var commit = _ref9.commit;
+    commit('SET_ITEM_FIELD', payload);
+  },
+  clearItemFields: function clearItemFields(_ref10) {
+    var commit = _ref10.commit;
+    commit('CLEAR_ITEM_FIELDS');
+  }
+};
+var getters = {};
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: state,
@@ -80796,17 +81350,19 @@ var getters = {
 
 /***/ }),
 
-/***/ "./resources/manager/js/store/modules/purchase-steps/index.js":
-/*!********************************************************************!*\
-  !*** ./resources/manager/js/store/modules/purchase-steps/index.js ***!
-  \********************************************************************/
+/***/ "./resources/manager/js/store/modules/posts/index.js":
+/*!***********************************************************!*\
+  !*** ./resources/manager/js/store/modules/posts/index.js ***!
+  \***********************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _mixins_getters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixins/getters */ "./resources/manager/js/store/mixins/getters.js");
-/* harmony import */ var _mixins_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../mixins/actions */ "./resources/manager/js/store/mixins/actions.js");
+/* harmony import */ var _mixins_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixins/actions */ "./resources/manager/js/store/mixins/actions.js");
+/* harmony import */ var _mixins_getters__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../mixins/getters */ "./resources/manager/js/store/mixins/getters.js");
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -80824,9 +81380,18 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var state = {
   fields: {
     title: '',
-    image: '',
+    alias: '',
+    date: '',
+    intro: '',
     image_path: '',
-    description: ''
+    image: '',
+    images: [],
+    content: '',
+    type: '',
+    publish: '',
+    meta_title: '',
+    description: '',
+    keywords: ''
   },
   items: []
 };
@@ -80834,9 +81399,11 @@ var mutations = {
   SET_ITEMS: function SET_ITEMS(state, payload) {
     state.items = payload;
   },
-  DELETE_ITEM: function DELETE_ITEM(state, payload) {
-    state.items = state.items.filter(function (item) {
-      return item.id !== payload;
+  CHANGE_PUBLISH: function CHANGE_PUBLISH(state, payload) {
+    state.items.forEach(function (item) {
+      if (item.id === payload.id) {
+        item.publish = payload.publish;
+      }
     });
   },
   SET_ITEM_FIELD: function SET_ITEM_FIELD(state, _ref) {
@@ -80844,24 +81411,30 @@ var mutations = {
         value = _ref.value;
     state.fields[field] = value;
   },
+  TOGGLE_PUBLISH_FIELD: function TOGGLE_PUBLISH_FIELD(state) {
+    state.fields.publish = +!state.fields.publish;
+  },
   CLEAR_ITEM_FIELDS: function CLEAR_ITEM_FIELDS(state) {
     for (var _i = 0, _Object$keys = Object.keys(state.fields); _i < _Object$keys.length; _i++) {
       var field = _Object$keys[_i];
-      state.fields[field] = '';
+      state.fields[field] = state.fields[field] instanceof Array ? [] : '';
     }
   },
   SET_ITEM_FIELDS: function SET_ITEM_FIELDS(state, payload) {
     for (var _i2 = 0, _Object$keys2 = Object.keys(state.fields); _i2 < _Object$keys2.length; _i2++) {
       var field = _Object$keys2[_i2];
-      state.fields[field] = payload[field] === null ? '' : payload[field];
+
+      if (payload[field] !== null) {
+        state.fields[field] = payload[field];
+      }
     }
   }
 };
 var actions = {
   getItems: function getItems(_ref2) {
     var commit = _ref2.commit;
-    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_1__["axiosAction"])('get', commit, {
-      url: '/purchase-steps',
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('get', commit, {
+      url: '/posts',
       thenContent: function thenContent(response) {
         return commit('SET_ITEMS', response.data);
       }
@@ -80869,15 +81442,24 @@ var actions = {
   },
   getItem: function getItem(_ref3, id) {
     var commit = _ref3.commit;
-    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_1__["axiosAction"])('get', commit, {
-      url: "/purchase-steps/".concat(id),
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('get', commit, {
+      url: "/posts/".concat(id),
       thenContent: function thenContent(response) {
         return commit('SET_ITEM_FIELDS', response.data);
       }
     });
   },
-  store: function store(_ref4, payload) {
+  publish: function publish(_ref4, id) {
     var commit = _ref4.commit;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('get', commit, {
+      url: "/posts/".concat(id, "/publish"),
+      thenContent: function thenContent(response) {
+        return commit('CHANGE_PUBLISH', response.data);
+      }
+    });
+  },
+  store: function store(_ref5, payload) {
+    var commit = _ref5.commit;
     var data = new FormData();
 
     for (var _i3 = 0, _Object$entries = Object.entries(payload); _i3 < _Object$entries.length; _i3++) {
@@ -80888,15 +81470,15 @@ var actions = {
       data.append(field, value);
     }
 
-    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_1__["axiosAction"])('post', commit, {
-      url: '/purchase-steps',
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('post', commit, {
+      url: '/posts',
       data: data
     });
   },
-  update: function update(_ref5, _ref6) {
-    var commit = _ref5.commit;
-    var id = _ref6.id,
-        formData = _ref6.formData;
+  update: function update(_ref6, _ref7) {
+    var commit = _ref6.commit;
+    var id = _ref7.id,
+        formData = _ref7.formData;
     var data = new FormData();
 
     for (var _i4 = 0, _Object$entries2 = Object.entries(formData); _i4 < _Object$entries2.length; _i4++) {
@@ -80909,31 +81491,112 @@ var actions = {
       }
     }
 
-    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_1__["axiosAction"])('post', commit, {
-      url: "/purchase-steps/".concat(id),
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('post', commit, {
+      url: "/posts/".concat(id),
       data: data
     });
   },
-  "delete": function _delete(_ref7, _ref8) {
-    var commit = _ref7.commit;
-    var payload = _ref8.payload;
-    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_1__["axiosAction"])('delete', commit, {
-      url: "/purchase-steps/".concat(payload),
+  "delete": function _delete(_ref8, _ref9) {
+    var commit = _ref8.commit,
+        dispatch = _ref8.dispatch;
+    var payload = _ref9.payload,
+        _ref9$tableMode = _ref9.tableMode,
+        tableMode = _ref9$tableMode === void 0 ? false : _ref9$tableMode;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('delete', commit, {
+      url: "/posts/".concat(payload),
       thenContent: function thenContent(response) {
-        return commit('DELETE_ITEM', payload);
+        if (tableMode === 'table') {
+          dispatch('table/getItemsPost', null, {
+            root: true
+          });
+          dispatch('table/deleteSearchedItem', payload, {
+            root: true
+          });
+        }
       }
     });
   },
-  setItemField: function setItemField(_ref9, payload) {
-    var commit = _ref9.commit;
+  uploadImages: function uploadImages(_ref10, _ref11) {
+    var commit = _ref10.commit,
+        dispatch = _ref10.dispatch;
+    var id = _ref11.id,
+        files = _ref11.files;
+    var data = new FormData();
+
+    var _iterator = _createForOfIteratorHelper(files),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var file = _step.value;
+        data.append('images[]', file);
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('post', commit, {
+      url: "/posts/".concat(id, "/upload"),
+      data: data,
+      options: {
+        onUploadProgress: function onUploadProgress(imageUpload) {
+          commit('images/CHANGE_FILE_PROGRESS', Math.round(imageUpload.loaded / imageUpload.total * 100), {
+            root: true
+          });
+        }
+      },
+      thenContent: function thenContent(response) {
+        commit('images/CHANGE_FILE_PROGRESS', 0, {
+          root: true
+        });
+        commit('SET_ITEM_FIELD', {
+          field: 'images',
+          value: response.data
+        });
+      }
+    });
+  },
+  deleteImageByIndex: function deleteImageByIndex(_ref12, _ref13) {
+    var commit = _ref12.commit;
+    var id = _ref13.id,
+        index = _ref13.index;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('get', commit, {
+      url: "/posts/".concat(id, "/delete-image/").concat(index),
+      thenContent: function thenContent(response) {
+        return commit('SET_ITEM_FIELD', {
+          field: 'images',
+          value: response.data
+        });
+      }
+    });
+  },
+  setItemField: function setItemField(_ref14, payload) {
+    var commit = _ref14.commit;
     commit('SET_ITEM_FIELD', payload);
   },
-  clearItemFields: function clearItemFields(_ref10) {
-    var commit = _ref10.commit;
+  togglePublishField: function togglePublishField(_ref15) {
+    var commit = _ref15.commit;
+    commit('TOGGLE_PUBLISH_FIELD');
+  },
+  clearItemFields: function clearItemFields(_ref16) {
+    var commit = _ref16.commit;
     commit('CLEAR_ITEM_FIELDS');
   }
 };
-var getters = {};
+var getters = {
+  isUniqueAlias: function isUniqueAlias(state) {
+    return function (value) {
+      return Object(_mixins_getters__WEBPACK_IMPORTED_MODULE_1__["uniqueFieldMixin"])(state.items, 'alias', value);
+    };
+  },
+  isUniqueAliasEdit: function isUniqueAliasEdit(state) {
+    return function (value, id) {
+      return Object(_mixins_getters__WEBPACK_IMPORTED_MODULE_1__["uniqueFieldEditMixin"])(state.items, 'alias', value, id);
+    };
+  }
+};
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: state,
@@ -81400,7 +82063,8 @@ var state = {
     group_id: ''
   },
   types: [],
-  items: []
+  items: [],
+  entries: {}
 };
 var mutations = {
   SET_ITEMS: function SET_ITEMS(state, payload) {
@@ -81431,15 +82095,6 @@ var mutations = {
       state.fields[field] = '';
     }
   },
-  // SET_ITEM_FIELDS (state, id) {
-  //     for(let item of state.items) {
-  //         if(item.id === +id) {
-  //             for(const field of Object.keys(state.fields)) {
-  //                 state.fields[field] = item[field] === null ? '' : item[field];
-  //             }
-  //         }
-  //     }
-  // },
   SET_ITEM_FIELDS: function SET_ITEM_FIELDS(state, payload) {
     for (var _i2 = 0, _Object$keys2 = Object.keys(state.fields); _i2 < _Object$keys2.length; _i2++) {
       var field = _Object$keys2[_i2];
@@ -81448,11 +82103,16 @@ var mutations = {
   },
   SET_TYPES: function SET_TYPES(state, payload) {
     state.types = payload;
+  },
+  SET_FIELD: function SET_FIELD(state, _ref3) {
+    var field = _ref3.field,
+        value = _ref3.value;
+    state[field] = value;
   }
 };
 var actions = {
-  getItems: function getItems(_ref3) {
-    var commit = _ref3.commit;
+  getItems: function getItems(_ref4) {
+    var commit = _ref4.commit;
     return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_1__["axiosAction"])('get', commit, {
       url: '/settings',
       thenContent: function thenContent(response) {
@@ -81460,8 +82120,8 @@ var actions = {
       }
     });
   },
-  getItemsWithGroup: function getItemsWithGroup(_ref4) {
-    var commit = _ref4.commit;
+  getItemsWithGroup: function getItemsWithGroup(_ref5) {
+    var commit = _ref5.commit;
     return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_1__["axiosAction"])('get', commit, {
       url: '/settings/with-group',
       thenContent: function thenContent(response) {
@@ -81469,8 +82129,8 @@ var actions = {
       }
     });
   },
-  getItemsWithTypes: function getItemsWithTypes(_ref5) {
-    var commit = _ref5.commit;
+  getItemsWithTypes: function getItemsWithTypes(_ref6) {
+    var commit = _ref6.commit;
     return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_1__["axiosAction"])('get', commit, {
       url: '/settings/with-types',
       thenContent: function thenContent(response) {
@@ -81483,8 +82143,8 @@ var actions = {
       }
     });
   },
-  getItem: function getItem(_ref6, id) {
-    var commit = _ref6.commit;
+  getItem: function getItem(_ref7, id) {
+    var commit = _ref7.commit;
     return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_1__["axiosAction"])('get', commit, {
       url: "/settings/".concat(id),
       thenContent: function thenContent(response) {
@@ -81492,8 +82152,20 @@ var actions = {
       }
     });
   },
-  store: function store(_ref7, payload) {
-    var commit = _ref7.commit;
+  getEntries: function getEntries(_ref8) {
+    var commit = _ref8.commit;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_1__["axiosAction"])('get', commit, {
+      url: "/settings/entries",
+      thenContent: function thenContent(response) {
+        commit('SET_FIELD', {
+          field: 'entries',
+          value: response.data
+        });
+      }
+    });
+  },
+  store: function store(_ref9, payload) {
+    var commit = _ref9.commit;
     var data = new FormData();
 
     for (var _i3 = 0, _Object$entries = Object.entries(payload); _i3 < _Object$entries.length; _i3++) {
@@ -81509,10 +82181,10 @@ var actions = {
       data: data
     });
   },
-  update: function update(_ref8, _ref9) {
-    var commit = _ref8.commit;
-    var id = _ref9.id,
-        formData = _ref9.formData;
+  update: function update(_ref10, _ref11) {
+    var commit = _ref10.commit;
+    var id = _ref11.id,
+        formData = _ref11.formData;
     var data = new FormData();
 
     for (var _i4 = 0, _Object$entries2 = Object.entries(formData); _i4 < _Object$entries2.length; _i4++) {
@@ -81528,8 +82200,8 @@ var actions = {
       data: data
     });
   },
-  set: function set(_ref10, payload) {
-    var commit = _ref10.commit;
+  set: function set(_ref12, payload) {
+    var commit = _ref12.commit;
     var data = new FormData();
 
     for (var _i5 = 0, _Object$entries3 = Object.entries(payload); _i5 < _Object$entries3.length; _i5++) {
@@ -81551,9 +82223,9 @@ var actions = {
       }
     });
   },
-  "delete": function _delete(_ref11, _ref12) {
-    var commit = _ref11.commit;
-    var payload = _ref12.payload;
+  "delete": function _delete(_ref13, _ref14) {
+    var commit = _ref13.commit;
+    var payload = _ref14.payload;
     return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_1__["axiosAction"])('delete', commit, {
       url: "/settings/".concat(payload),
       thenContent: function thenContent(response) {
@@ -81561,12 +82233,12 @@ var actions = {
       }
     });
   },
-  setItemFields: function setItemFields(_ref13, id) {
-    var commit = _ref13.commit;
+  setItemFields: function setItemFields(_ref15, id) {
+    var commit = _ref15.commit;
     return commit('SET_ITEM_FIELDS', id);
   },
-  setImageValue: function setImageValue(_ref14, payload) {
-    var commit = _ref14.commit;
+  setImageValue: function setImageValue(_ref16, payload) {
+    var commit = _ref16.commit;
     var data = new FormData();
 
     for (var _i6 = 0, _Object$entries4 = Object.entries(payload); _i6 < _Object$entries4.length; _i6++) {
@@ -81582,8 +82254,8 @@ var actions = {
       data: data
     });
   },
-  setTextValue: function setTextValue(_ref15, payload) {
-    var commit = _ref15.commit;
+  setTextValue: function setTextValue(_ref17, payload) {
+    var commit = _ref17.commit;
     var data = new FormData();
 
     for (var _i7 = 0, _Object$entries5 = Object.entries(payload); _i7 < _Object$entries5.length; _i7++) {
@@ -81599,12 +82271,12 @@ var actions = {
       data: data
     });
   },
-  setItemField: function setItemField(_ref16, payload) {
-    var commit = _ref16.commit;
+  setItemField: function setItemField(_ref18, payload) {
+    var commit = _ref18.commit;
     commit('SET_ITEM_FIELD', payload);
   },
-  clearItemFields: function clearItemFields(_ref17) {
-    var commit = _ref17.commit;
+  clearItemFields: function clearItemFields(_ref19) {
+    var commit = _ref19.commit;
     commit('CLEAR_ITEM_FIELDS');
   }
 };
@@ -82481,6 +83153,254 @@ var actions = {
   }
 };
 var getters = {};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: state,
+  mutations: mutations,
+  actions: actions,
+  getters: getters
+});
+
+/***/ }),
+
+/***/ "./resources/manager/js/store/modules/work-examples/index.js":
+/*!*******************************************************************!*\
+  !*** ./resources/manager/js/store/modules/work-examples/index.js ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _mixins_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixins/actions */ "./resources/manager/js/store/mixins/actions.js");
+/* harmony import */ var _mixins_getters__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../mixins/getters */ "./resources/manager/js/store/mixins/getters.js");
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+var state = {
+  fields: {
+    title: '',
+    date: '',
+    image_path: '',
+    image_id: '',
+    image: '',
+    images: '',
+    publish: ''
+  },
+  items: []
+};
+var mutations = {
+  SET_ITEMS: function SET_ITEMS(state, payload) {
+    state.items = payload;
+  },
+  CHANGE_PUBLISH: function CHANGE_PUBLISH(state, payload) {
+    state.items.forEach(function (item) {
+      if (item.id === payload.id) {
+        item.publish = payload.publish;
+      }
+    });
+  },
+  SET_ITEM_FIELD: function SET_ITEM_FIELD(state, _ref) {
+    var field = _ref.field,
+        value = _ref.value;
+    state.fields[field] = value;
+  },
+  TOGGLE_PUBLISH_FIELD: function TOGGLE_PUBLISH_FIELD(state) {
+    state.fields.publish = +!state.fields.publish;
+  },
+  CLEAR_ITEM_FIELDS: function CLEAR_ITEM_FIELDS(state) {
+    for (var _i = 0, _Object$keys = Object.keys(state.fields); _i < _Object$keys.length; _i++) {
+      var field = _Object$keys[_i];
+      state.fields[field] = '';
+    }
+  },
+  SET_ITEM_FIELDS: function SET_ITEM_FIELDS(state, payload) {
+    for (var _i2 = 0, _Object$keys2 = Object.keys(state.fields); _i2 < _Object$keys2.length; _i2++) {
+      var field = _Object$keys2[_i2];
+      state.fields[field] = payload[field] === null ? '' : payload[field];
+    }
+  }
+};
+var actions = {
+  getItems: function getItems(_ref2) {
+    var commit = _ref2.commit;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('get', commit, {
+      url: '/work-examples',
+      thenContent: function thenContent(response) {
+        return commit('SET_ITEMS', response.data);
+      }
+    });
+  },
+  getItem: function getItem(_ref3, id) {
+    var commit = _ref3.commit;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('get', commit, {
+      url: "/work-examples/".concat(id),
+      thenContent: function thenContent(response) {
+        return commit('SET_ITEM_FIELDS', response.data);
+      }
+    });
+  },
+  publish: function publish(_ref4, id) {
+    var commit = _ref4.commit;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('get', commit, {
+      url: "/work-examples/".concat(id, "/publish"),
+      thenContent: function thenContent(response) {
+        return commit('CHANGE_PUBLISH', response.data);
+      }
+    });
+  },
+  store: function store(_ref5, payload) {
+    var commit = _ref5.commit;
+    var data = new FormData();
+
+    for (var _i3 = 0, _Object$entries = Object.entries(payload); _i3 < _Object$entries.length; _i3++) {
+      var _Object$entries$_i = _slicedToArray(_Object$entries[_i3], 2),
+          field = _Object$entries$_i[0],
+          value = _Object$entries$_i[1];
+
+      data.append(field, value);
+    }
+
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('post', commit, {
+      url: '/work-examples',
+      data: data
+    });
+  },
+  update: function update(_ref6, _ref7) {
+    var commit = _ref6.commit;
+    var id = _ref7.id,
+        formData = _ref7.formData;
+    var data = new FormData();
+
+    for (var _i4 = 0, _Object$entries2 = Object.entries(formData); _i4 < _Object$entries2.length; _i4++) {
+      var _Object$entries2$_i = _slicedToArray(_Object$entries2[_i4], 2),
+          field = _Object$entries2$_i[0],
+          value = _Object$entries2$_i[1];
+
+      if (field !== 'image' || value) {
+        data.append(field, value);
+      }
+    }
+
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('post', commit, {
+      url: "/work-examples/".concat(id),
+      data: data
+    });
+  },
+  "delete": function _delete(_ref8, _ref9) {
+    var commit = _ref8.commit,
+        dispatch = _ref8.dispatch;
+    var payload = _ref9.payload,
+        _ref9$tableMode = _ref9.tableMode,
+        tableMode = _ref9$tableMode === void 0 ? false : _ref9$tableMode;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('delete', commit, {
+      url: "/work-examples/".concat(payload),
+      thenContent: function thenContent(response) {
+        if (tableMode === 'table') {
+          dispatch('table/getItemsPost', null, {
+            root: true
+          });
+          dispatch('table/deleteSearchedItem', payload, {
+            root: true
+          });
+        }
+      }
+    });
+  },
+  uploadImages: function uploadImages(_ref10, _ref11) {
+    var commit = _ref10.commit,
+        dispatch = _ref10.dispatch;
+    var id = _ref11.id,
+        files = _ref11.files;
+    var data = new FormData();
+
+    var _iterator = _createForOfIteratorHelper(files),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var file = _step.value;
+        data.append('images[]', file);
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('post', commit, {
+      url: "/work-examples/".concat(id, "/upload"),
+      data: data,
+      options: {
+        onUploadProgress: function onUploadProgress(imageUpload) {
+          commit('images/CHANGE_FILE_PROGRESS', Math.round(imageUpload.loaded / imageUpload.total * 100), {
+            root: true
+          });
+        }
+      },
+      thenContent: function thenContent(response) {
+        commit('images/CHANGE_FILE_PROGRESS', 0, {
+          root: true
+        });
+        commit('SET_ITEM_FIELD', {
+          field: 'images',
+          value: response.data
+        });
+      }
+    });
+  },
+  deleteImageByIndex: function deleteImageByIndex(_ref12, _ref13) {
+    var commit = _ref12.commit;
+    var id = _ref13.id,
+        index = _ref13.index;
+    return Object(_mixins_actions__WEBPACK_IMPORTED_MODULE_0__["axiosAction"])('get', commit, {
+      url: "/work-examples/".concat(id, "/delete-image/").concat(index),
+      thenContent: function thenContent(response) {
+        return commit('SET_ITEM_FIELD', {
+          field: 'images',
+          value: response.data
+        });
+      }
+    });
+  },
+  setItemField: function setItemField(_ref14, payload) {
+    var commit = _ref14.commit;
+    commit('SET_ITEM_FIELD', payload);
+  },
+  togglePublishField: function togglePublishField(_ref15) {
+    var commit = _ref15.commit;
+    commit('TOGGLE_PUBLISH_FIELD');
+  },
+  clearItemFields: function clearItemFields(_ref16) {
+    var commit = _ref16.commit;
+    commit('CLEAR_ITEM_FIELDS');
+  }
+};
+var getters = {
+  isUniqueImageId: function isUniqueImageId(state) {
+    return function (value) {
+      return Object(_mixins_getters__WEBPACK_IMPORTED_MODULE_1__["uniqueFieldMixin"])(state.items, 'image_id', value);
+    };
+  },
+  isUniqueImageIdEdit: function isUniqueImageIdEdit(state) {
+    return function (value, id) {
+      return Object(_mixins_getters__WEBPACK_IMPORTED_MODULE_1__["uniqueFieldEditMixin"])(state.items, 'image_id', value, id);
+    };
+  }
+};
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: state,

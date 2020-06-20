@@ -21808,6 +21808,14 @@ be a descendant of the grid when it is being dragged.
   border-color: #4caf50 !important;
 }
 
+.md-field.md-datepicker.md-valid .md-icon svg {
+  fill: #4caf50 !important;
+}
+
+.md-field.md-datepicker.md-error .md-icon svg {
+  fill: #f44336 !important;
+}
+
 .under-input-notice,
 .under-textarea-notice {
   position: absolute;
@@ -21853,6 +21861,12 @@ be a descendant of the grid when it is being dragged.
   display: flex;
 }
 
+.md-flex-right {
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
 .md-justify-end {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -21869,6 +21883,10 @@ be a descendant of the grid when it is being dragged.
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+}
+
+.md-block {
+  display: block;
 }
 
 .spinner__container {
