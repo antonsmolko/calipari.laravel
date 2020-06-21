@@ -27,7 +27,6 @@ class GetPathExtensionHandler
      */
     public function handle(string $path): array
     {
-        dd($path);
         $nameArray = explode('.', $path);
         $ext = array_pop($nameArray);
         $file = implode('.', $nameArray);
