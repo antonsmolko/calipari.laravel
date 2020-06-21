@@ -27,11 +27,11 @@ class GetPathExtensionHandler
      */
     public function handle(string $path): array
     {
+        dd($path);
         $nameArray = explode('.', $path);
         $ext = array_pop($nameArray);
         $file = implode('.', $nameArray);
         $filePath = $this->uploadPath . implode('/', [$path[0], $path[0] . $path[1] . $path[2], $file . '.' . $ext]);
-
         if (!File::isFile($filePath)) {
             $filePath = $this->noImagePath;
             $ext = $this->noImageExtension;
