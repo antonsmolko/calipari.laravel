@@ -21,17 +21,17 @@ RUN curl -sS https://getcomposer.org/installer | php && \
 
 
 # Install Node/NPM
-#RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
-#ENV NODE_VER v12.18.1
-#ENV NVM_DIR "/root/.nvm"
-#RUN -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" \
-#    && nvm install $NODE_VER \
-#    && nvm alias default $NODE_VER \
-#    && nvm use default \
-#    && npm install -g webpack
-#ENV BASE_NODE_PATH $NVM_DIR/versions/node
-#ENV NODE_PATH $BASE_NODE_PATH/$NODE_VER/lib/node_modules
-#ENV PATH $BASE_NODE_PATH/$NODE_VER/bin:$PATH
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+ENV NODE_VER v12.18.1
+ENV NVM_DIR "/root/.nvm"
+RUN [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" \
+    && nvm install $NODE_VER \
+    && nvm alias default $NODE_VER \
+    && nvm use default \
+    && npm install -g webpack
+ENV BASE_NODE_PATH $NVM_DIR/versions/node
+ENV NODE_PATH $BASE_NODE_PATH/$NODE_VER/lib/node_modules
+ENV PATH $BASE_NODE_PATH/$NODE_VER/bin:$PATH
 
 
 # Configurations
@@ -53,7 +53,7 @@ RUN sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.4/cli/ph
 
 
 # Add our init script
-ADD run.sh /run.sh
+ADD ../run.sh /run.sh
 RUN chmod 755 /run.sh
 
 
