@@ -11,6 +11,7 @@
         "php": "^7.4",
         "ext-json": "*",
         "ext-memcached": "*",
+        "ext-gd": "*",
         "algolia/algoliasearch-client-php": "^2.2",
         "creativeorange/gravatar": "~1.0",
         "fideloper/proxy": "^4.0",
