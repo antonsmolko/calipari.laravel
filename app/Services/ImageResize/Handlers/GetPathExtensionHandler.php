@@ -36,8 +36,6 @@ class GetPathExtensionHandler
             $ext = $this->noImageExtension;
         }
 
-        abort(400, 'message: ' . $filePath);
-
         return [$filePath, $ext];
     }
 }

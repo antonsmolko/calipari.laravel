@@ -144,6 +144,7 @@ class ImageResizeService
     public function widen(int $width, string $path)
     {
         list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
+        dd($imgPath);
         $img = $this->repository->widen($imgPath, $width);
 
         return $this->createResponseHandler->handle($img, $ext);
