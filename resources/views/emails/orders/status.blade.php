@@ -4,8 +4,8 @@
 
 @section('content')
     <x-emails.order.about
-        title="ЗАКАЗ РАЗМЕЩЕН"
-        intro="Здравствуйте! Мы получили Ваш заказ."
+        title="СТАТУС ЗАКАЗА ИЗМЕНЕН"
+        intro="Здравствуйте! Ваш заказ: «{{ $order['status'] }}»"
         :number="$order['number']"
         :date="$order['date']"
         :status="$order['status']"/>
@@ -43,7 +43,9 @@
         </tr>
     </table>
 
-    <x-emails.order.delivery :delivery="$order['delivery']" :customer="$order['customer']"/>
+    <x-emails.order.delivery
+        :delivery="$order['delivery']"
+        :customer="$order['customer']"/>
 
     @if (!empty($order['comment']))
         <x-emails.order.comment :comment="$order['comment']" />

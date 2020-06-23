@@ -4,11 +4,15 @@
 namespace App\Services\Order;
 
 
+use App\Mail\ChangeOrderStatus;
 use App\Mail\OrderInProcess;
 use App\Models\Order;
 use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
 use App\Services\Order\Handlers\GetMailFormatOrderHandler;
 use App\Services\Order\Repositories\CmsOrderRepository;
+use App\Services\Order\Resources\CmsOrder as OrderResource;
+use App\Services\Order\Resources\CmsOrderFromList as OrderFromListResource;
+use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
 
 class CmsOrderService
@@ -78,6 +82,37 @@ class CmsOrderService
     }
 
     /**
+     * @param int $id
+     * @param array $requestData
+     * @return Resources\CmsOrder|Resources\CmsOrderFromList
+     */
+    public function changeStatus(int $id, array $requestData)
+    {
+        $order = $this->repository->getItem($id);
+
+        $changeStatusOrder = $this->repository
+            ->changeStatus($order, $requestData['status']);
+
+        $this->sendMail(\App\Mail\ChangeOrderStatus::class, $changeStatusOrder);
+
+        return $requestData['list']
+            ? new OrderFromListResource($changeStatusOrder)
+            : new OrderResource($changeStatusOrder);
+    }
+
+    /**
+     * @param $mailClass
+     * @param Order $order
+     */
+    public function sendMail($mailClass, Order $order)
+    {
+        $orderData = $this->getMailFormatOrderHandler->handle($order);
+        $email = $orderData['customer']['email'];
+        $mail = app()->makeWith($mailClass, ['order' => $orderData]);
+        Mail::to($email)->queue($mail);
+    }
+
+    /**
      * @param Order $order
      */
     public function sendMailByCreate(Order $order)
@@ -90,14 +125,14 @@ class CmsOrderService
     }
 
     /**
-     * @param int $id
-     * @param array $requestData
-     * @return Resources\CmsOrder|Resources\CmsOrderFromList
+     * @param Order $order
      */
-    public function changeStatus(int $id, array $requestData)
+    public function sendMailByChangeStatus(Order $order)
     {
-        $order = $this->repository->getItem($id);
+        $orderData = $this->getMailFormatOrderHandler->handle($order);
+        $email = $orderData['customer']['email'];
 
-        return $this->repository->changeStatus($order, $requestData['status'], $requestData['list']);
+        Mail::to($email)
+            ->queue(new ChangeOrderStatus($orderData));
     }
 }

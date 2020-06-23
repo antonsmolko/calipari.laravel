@@ -115,7 +115,7 @@
                     <card-icon-header title="Статусы" icon="update"/>
                     <md-card-content v-if="restStatuses.length">
                         <h4 class="card-title mb-0">Текущий статус</h4>
-                        <md-field>
+                        <md-field v-if="restStatuses.length && currentStatus.alias !== 'canceled'">
                             <md-select
                                 @md-selected="onStatusChange"
                                 :value="currentStatus.id">
@@ -127,9 +127,14 @@
                                 </md-option>
                             </md-select>
                         </md-field>
+                        <span v-else class="md-title">{{ currentStatus.title }}</span>
                     </md-card-content>
                     <md-card-content>
-                        <md-table :value="order.statuses" class="tm-order-item__table table-striped table-hover">
+                        <md-table
+                            md-sort="date"
+                            md-sort-order="desc"
+                            :value="order.statuses"
+                            class="tm-order-item__table table-striped table-hover">
                             <md-table-row slot="md-table-row" slot-scope="{ item }">
                                 <md-table-cell class="tm-width-1-2">
                                     <h4 class="card-title mb-0 mt-0">{{ item.title }}</h4>
@@ -148,8 +153,9 @@
 
 <script>
     import { mapActions, mapState } from 'vuex';
-    import first from 'lodash/first';
     import { getFormatPrice, getArticle } from "@/helpers";
+    import sortBy from "lodash/sortBy";
+    import last from "lodash/last";
 
     import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
     import ProductCard from "@/components/Cards/ProductCard";
@@ -184,7 +190,9 @@
                 return this.$store.getters['orderStatuses/getRestItems'](this.currentStatus.order);
             },
             currentStatus () {
-                return first([...this.order.statuses]);
+                const sortedByOrderStatuses = sortBy([...this.order.statuses], 'order');
+
+                return last(sortedByOrderStatuses);
             },
             baseTableData () {
                 return [

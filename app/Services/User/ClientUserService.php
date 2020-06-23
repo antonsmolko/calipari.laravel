@@ -6,6 +6,7 @@ namespace App\Services\User;
 
 use App\Models\User;
 use App\Services\Auth\AuthService;
+use App\Services\Order\Resources\ClientOrder as ClientOrderResource;
 use App\Services\User\Handlers\CancelOrderHandler;
 use App\Services\User\Handlers\ClientCreateHandler;
 use App\Services\User\Handlers\UpdateHandler;
@@ -161,7 +162,8 @@ class ClientUserService
      */
     public function cancelOrder(int $number)
     {
-        return $this->cancelOrderHandler->handle(auth()->user(), $number);
+        return new ClientOrderResource($this->cancelOrderHandler
+            ->handle(auth()->user(), $number));
     }
 
     /**

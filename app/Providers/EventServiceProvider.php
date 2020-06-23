@@ -71,6 +71,10 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Mail\Order\SendCreated::class,
         ],
 
+        \App\Events\Models\Order\OrderCanceled::class => [
+            \App\Listeners\Mail\Order\SendCanceled::class,
+        ],
+
         \App\Events\Models\Order\OrderDeleted::class => [
             \App\Listeners\Mail\Order\SendCreated::class,
         ],

@@ -77,15 +77,12 @@ class CmsOrderRepository
     /**
      * @param Order $order
      * @param int $status
-     * @param bool $isList
-     * @return OrderResource|OrderFromListResource
+     * @return Order
      */
-    public function changeStatus(Order $order, int $status, bool $isList)
+    public function changeStatus(Order $order, int $status)
     {
         $order->statuses()->syncWithoutDetaching([$status]);
 
-        return $isList
-            ? new OrderFromListResource($order)
-            : new OrderResource($order);
+        return $order;
     }
 }

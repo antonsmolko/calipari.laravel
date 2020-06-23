@@ -113,6 +113,7 @@
                             <md-table-cell md-label="Доставка">
                                 {{ item.delivery }}
                             </md-table-cell>
+
                             <md-table-cell md-label="Статус">
                                 <span class="md-body-1">{{ getCurrentStatus(item).title }}</span>
                             </md-table-cell>
@@ -145,7 +146,8 @@
 <script>
     import { mapActions } from 'vuex'
 
-    import first from 'lodash/first'
+    import sortBy from 'lodash/sortBy'
+    import last from 'lodash/last'
     import { pageTitle } from '@/mixins/base'
     import { deleteMethod } from '@/mixins/crudMethods'
     import Tabs from '@/custom_components/Tabs.vue'
@@ -232,7 +234,9 @@
                 return this.$store.getters['orderStatuses/getRestItems'](currentStatus.order);
             },
             getCurrentStatus (item) {
-                return first([...item.statuses])
+                const sortedByOrderStatuses = sortBy([...item.statuses], 'order');
+
+                return last(sortedByOrderStatuses);
             }
         }
     }

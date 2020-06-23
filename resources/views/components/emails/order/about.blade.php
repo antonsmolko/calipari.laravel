@@ -1,8 +1,8 @@
 <table class="spacer float-center">
     <tbody>
-    <tr>
-        <td height="24px" style="font-size:24px;line-height:24px;">&#xA0;</td>
-    </tr>
+        <tr>
+            <td height="24px" style="font-size:24px;line-height:24px;">&#xA0;</td>
+        </tr>
     </tbody>
 </table>
 <center data-parsed="">
@@ -15,7 +15,7 @@
     </tr>
     </tbody>
 </table>
-<h1 class="text-center">ЗАКАЗ РАЗМЕЩЕН</h1>
+<h1 class="text-center">{{ $title }}</h1>
 <table class="spacer">
     <tbody>
     <tr>
@@ -23,7 +23,7 @@
     </tr>
     </tbody>
 </table>
-<span class="text-center">Здравствуйте! Мы получили Ваш заказ.</span>
+<span class="text-center">{{ $intro }}</span>
 <table class="spacer">
     <tbody>
     <tr>

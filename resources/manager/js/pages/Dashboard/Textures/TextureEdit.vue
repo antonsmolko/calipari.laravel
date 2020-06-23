@@ -132,7 +132,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.name.$dirty || !this.isUniqueNameEdit
+                    return (value.trim() === '') && !this.$v.name.$dirty || this.isUniqueNameEdit
                 }
             },
             price: {
@@ -171,7 +171,7 @@
                 publish: state => state.fields.publish
             }),
             isUniqueNameEdit() {
-                return !!this.$store.getters['textures/isUniqueNameEdit'](this.name, this.id);
+                return this.$store.getters['textures/isUniqueNameEdit'](this.name, this.id);
             },
         },
         created () {

@@ -108,7 +108,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.name.$dirty || !this.isUniqueName
+                    return (value.trim() === '') && !this.$v.name.$dirty || this.isUniqueName
                 }
             },
             price: {
@@ -141,7 +141,7 @@
                 description: state => state.fields.description
             }),
             isUniqueName() {
-                return !!this.$store.getters['textures/isUniqueName'](this.name);
+                return this.$store.getters['textures/isUniqueName'](this.name);
             },
         },
         methods: {
@@ -175,7 +175,6 @@
                     this.responseData = true;
                 })
                 .catch(() => this.$router.push(this.redirectRoute));
-
         }
     }
 </script>

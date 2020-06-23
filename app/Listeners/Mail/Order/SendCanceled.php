@@ -2,12 +2,12 @@
 
 namespace App\Listeners\Mail\Order;
 
-use App\Events\Models\Order\OrderSaved;
+use App\Events\Models\Order\OrderCanceled;
 use App\Services\Order\CmsOrderService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class SendCreated implements ShouldQueue
+class SendCanceled implements ShouldQueue
 {
     use InteractsWithQueue;
 
@@ -25,11 +25,11 @@ class SendCreated implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  OrderSaved $event
+     * @param  OrderCanceled $event
      * @return void
      */
-    public function handle(OrderSaved $event)
+    public function handle(OrderCanceled $event)
     {
-        $this->orderSevice->sendMail(\App\Mail\OrderInProcess::class, $event->order);
+        $this->orderSevice->sendMail(\App\Mail\ChangeOrderStatus::class, $event->order);
     }
 }

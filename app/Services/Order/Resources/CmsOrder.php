@@ -23,7 +23,7 @@ class CmsOrder extends JsonResource
             'delivery' => json_decode($this->delivery, true),
             'customer' => json_decode($this->customer, true),
             'price' => $this->price,
-            'statuses' => OrderStatusWithPivotDate::collection($this->statuses),
+            'statuses' => OrderStatusWithPivotDate::collection($this->statuses()->orderByDesc('order')->get()),
             'date' => $this->created_at->format('d.m.Y - H:i:s')
         ];
     }

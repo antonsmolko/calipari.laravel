@@ -4,13 +4,12 @@
 namespace App\Services\User\Handlers;
 
 
+use App\Events\Models\Order\OrderCanceled;
 use App\Models\Order;
 use App\Models\User;
 use App\Services\Order\Repositories\ClientOrderRepository;
-use App\Services\OrderStatus\OrderStatusService;
 use App\Services\OrderStatus\Repositories\OrderStatusRepository;
 use App\Services\User\Repositories\ClientUserRepository;
-use Illuminate\Support\Arr;
 
 class CancelOrderHandler
 {
@@ -50,6 +49,10 @@ class CancelOrderHandler
             ? $this->orderRepository->changeStatus($order, $canceledStatus->id)
             : abort(406, __('order.order_cannot_be_canceled'));
 
-        return $this->repository->getOrder($user, $number);
+        $canceledOrder = $this->repository->getOrder($user, $number);
+
+        event(new OrderCanceled($canceledOrder));
+
+        return $canceledOrder;
     }
 }

@@ -148,17 +148,15 @@ class ClientUserRepository
     }
 
     /**
-     * @param \Illuminate\Contracts\Auth\Authenticatable|User $user
+     * @param $user
      * @param int $number
      * @return mixed
      */
     public function getOrder($user, int $number)
     {
-        return new ClientOrderResource(
-            $user->orders()
-                ->where('number', $number)
-                ->firstOrFail()
-        );
+        return $user->orders()
+            ->where('number', $number)
+            ->firstOrFail();
     }
 
     /**
