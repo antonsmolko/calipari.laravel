@@ -20,13 +20,11 @@ class ImagesTableSeeder extends Seeder
         if (!file_exists($uploadDir)) {
             File::makeDirectory($uploadDir, config('uploads.storage_permissions', 0755));
         }
-//        File::makeDirectory($uploadDir, config('uploads.storage_permissions', 0755));
 
         File::deleteDirectory($seedsImageDir);
         if (!file_exists($seedsImageDir)) {
             File::makeDirectory($seedsImageDir, config('uploads.storage_permissions', 0755));
         }
-//        File::makeDirectory($seedsImageDir, config('uploads.storage_permissions', 0755));
 
         $images = getImagesFromLocal($seedsUploadImageDir);
 
