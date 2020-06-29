@@ -18,7 +18,7 @@ class FromClient extends JsonResource
             'title' => $this->title,
             'alias' => $this->alias,
             'image_path' => $this->image_path,
-            'intro' => $this->intro,
+            'content' => $this->content,
             'meta_title' => $this->meta_title,
             'description' => $this->description,
             'keywords' => $this->keywords

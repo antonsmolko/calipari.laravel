@@ -8,7 +8,6 @@ use App\Services\ImageResize\Builders\ImageProcessingBuilder;
 
 class GetOrderImageThumbHandler
 {
-    private const CANVAS_COLOR = 'F8F8F8';
     private const CANVAS_WITH = 600;
     private const CANVAS_HEIGHT = 340;
 
@@ -29,7 +28,8 @@ class GetOrderImageThumbHandler
      * @param string $height
      * @param string $x
      * @param string $y
-     * @param string $flip
+     * @param string $flipH
+     * @param string $flipV
      * @param string $colorize
      * @return \Intervention\Image\Image
      */
@@ -39,17 +39,18 @@ class GetOrderImageThumbHandler
         string $height,
         string $x,
         string $y,
-        string $flip,
+        string $flipH,
+        string $flipV,
         string $colorize
     )
     {
         return $this->imageProcessingBuilder
             ->make($imgPath)
-            ->flip($flip)
+            ->flipH($flipH)
+            ->flipV($flipV)
             ->crop($width, $height, $x, $y)
             ->colorize($colorize)
             ->resizeWithAspectRatio(self::CANVAS_WITH, self::CANVAS_HEIGHT)
-            ->cropCanvas(self::CANVAS_WITH, self::CANVAS_HEIGHT, self::CANVAS_COLOR)
             ->get();
     }
 }

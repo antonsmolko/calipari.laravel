@@ -164,9 +164,18 @@ class ImageResizeRepository
      * @param \Intervention\Image\Image $image
      * @return \Intervention\Image\Image
      */
-    public function flip(\Intervention\Image\Image $image): \Intervention\Image\Image
+    public function flipH(\Intervention\Image\Image $image): \Intervention\Image\Image
     {
         return $image->flip();
+    }
+
+    /**
+     * @param \Intervention\Image\Image $image
+     * @return \Intervention\Image\Image
+     */
+    public function flipV(\Intervention\Image\Image $image): \Intervention\Image\Image
+    {
+        return $image->flip('v');
     }
 
     /**

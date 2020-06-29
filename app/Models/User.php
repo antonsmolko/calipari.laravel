@@ -129,7 +129,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
      */
     public function likes()
     {
-        return $this->belongsToMany('App\Models\Image', 'likes', 'user_id', 'image_id');
+        return $this->belongsToMany('App\Models\Image', 'likes');
     }
 
     /**

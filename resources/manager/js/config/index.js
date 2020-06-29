@@ -13,7 +13,8 @@ export default {
         contacts: 4,
         portfolio: 5,
         blog: 6,
-        policy: 7
+        policy: 7,
+        contractOffer: 8
     },
 
     postTypes: [

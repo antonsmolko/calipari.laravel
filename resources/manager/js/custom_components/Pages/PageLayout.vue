@@ -27,6 +27,7 @@
                                              :value="fields.title"
                                              :vField="$v.fields.title"
                                              :differ="true"
+                                             :maxlength="70"
                                              :module="storeModule"
                                              :vRules="{ required: true, unique: true, minLength: true }" />
                                     <v-image name="image"
@@ -35,10 +36,10 @@
                                              :withDelete="true"
                                              @delete="handleDeleteImage"
                                              :module="storeModule" />
-                                    <text-editor title="Интро"
-                                             name="intro"
-                                             :value="fields.intro"
-                                             :vField="$v.fields.intro"
+                                    <text-editor title="Контент"
+                                             name="content"
+                                             :value="fields.content"
+                                             :vField="$v.fields.content"
                                              :differ="true"
                                              :module="storeModule" />
                                 </div>
@@ -128,7 +129,7 @@ export default {
             image: {
                 touch: false
             },
-            intro: {
+            content: {
                 touch: false
             },
             meta_title: {
@@ -178,7 +179,7 @@ export default {
                     id: this.item.id,
                     formData: {
                         title: this.fields.title,
-                        intro: this.fields.intro,
+                        content: this.fields.content,
                         image: this.fields.image,
                         meta_title: this.fields.meta_title,
                         description: this.fields.description,

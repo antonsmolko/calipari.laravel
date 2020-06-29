@@ -1,3 +1,6 @@
+import sortBy from 'lodash/sortBy'
+import last from 'lodash/last'
+
 export const getFormatPrice = price => typeof price === 'number' && price > 0
     ? price.toLocaleString('ru-Ru', {
         style: 'currency',
@@ -22,8 +25,13 @@ export const getFormatDate = (milliseconds, delimiter = '.') => {
     return formatDate.join(delimiter);
 }
 
+export const getCurrentStatus = (statuses) => {
+    return last(sortBy(statuses, 'order'));
+}
+
 export default {
     getFormatPrice,
     getArticle,
-    getFormatDate
+    getFormatDate,
+    getCurrentStatus
 }

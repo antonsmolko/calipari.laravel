@@ -25,11 +25,15 @@
                                     </md-table-cell>
 
                                     <md-table-cell md-label="Превью">
-                                        <img class="md-table-thumb img-raised rounded" :src="`/image/crop/300/300/${item.sample_path}`" :alt="item.name">
+                                        <img class="md-table-thumb img-raised rounded" :src="`/image/crop/500/300/${item.sample_path}`" :alt="item.name">
                                     </md-table-cell>
 
                                     <md-table-cell md-label="Название">
                                         <span class="md-subheading">{{ item.name }}</span>
+                                    </md-table-cell>
+
+                                    <md-table-cell md-label="Заказы">
+                                        <md-icon>shopping_cart</md-icon> {{ item.orders_count }}
                                     </md-table-cell>
 
                                     <md-table-cell md-label="Опубликован">

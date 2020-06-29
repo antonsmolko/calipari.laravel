@@ -11,8 +11,8 @@ class PurchaseStepsTableSeeder extends Seeder
     public function __construct()
     {
         $this->uploadDir = public_path(config('uploads.image_upload_path'));
-        $this->seedsUploadImageDir = config('seeds.seeds_uploads_path') . 'purchase-steps';
-        $this->seedsImageDir = public_path(config('seeds.seeds_path'));
+        $this->seedsUploadImageDir = config('seeds.seeds_data_path') . 'purchase-steps';
+        $this->seedsImageDir = public_path(config('seeds.seeds_uploads_path'));
     }
 
     /**

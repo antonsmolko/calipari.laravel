@@ -50,7 +50,8 @@ class ImageResizeController extends Controller
      * @param string $height
      * @param string $x
      * @param string $y
-     * @param string $flip
+     * @param string $flipH
+     * @param string $flipV
      * @param string $colorize
      * @param string $path
      * @return mixed
@@ -60,11 +61,12 @@ class ImageResizeController extends Controller
         string $height,
         string $x,
         string $y,
-        string $flip,
+        string $flipH,
+        string $flipV,
         string $colorize,
         string $path)
     {
-        return $this->service->getOrderImage($path, $width, $height, $x, $y, $flip, $colorize);
+        return $this->service->getOrderImage($path, $width, $height, $x, $y, $flipH, $flipV, $colorize);
     }
 
     /**
@@ -72,7 +74,32 @@ class ImageResizeController extends Controller
      * @param string $height
      * @param string $x
      * @param string $y
-     * @param string $flip
+     * @param string $flipH
+     * @param string $flipV
+     * @param string $colorize
+     * @param string $path
+     * @return mixed
+     */
+    public function getMailOrderImageThumb(
+        string $width,
+        string $height,
+        string $x,
+        string $y,
+        string $flipH,
+        string $flipV,
+        string $colorize,
+        string $path)
+    {
+        return $this->service->getMailOrderImageThumb($path, $width, $height, $x, $y, $flipH, $flipV, $colorize);
+    }
+
+    /**
+     * @param string $width
+     * @param string $height
+     * @param string $x
+     * @param string $y
+     * @param string $flipH
+     * @param string $flipV
      * @param string $colorize
      * @param string $path
      * @return mixed
@@ -82,11 +109,12 @@ class ImageResizeController extends Controller
         string $height,
         string $x,
         string $y,
-        string $flip,
+        string $flipH,
+        string $flipV,
         string $colorize,
         string $path)
     {
-        return $this->service->getOrderImageThumb($path, $width, $height, $x, $y, $flip, $colorize);
+        return $this->service->getOrderImageThumb($path, $width, $height, $x, $y, $flipH,$flipV, $colorize);
     }
 
     /**

@@ -5,7 +5,7 @@
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
                         <md-button class="md-info md-just-icon"
-                                   @click="$router.go(-1) ? $router.go(-1) : $router.push(redirectRoute)">
+                                   @click="goBack">
                             <md-icon>arrow_back</md-icon>
                             <md-tooltip md-direction="right">Назад</md-tooltip>
                         </md-button>
@@ -328,6 +328,9 @@
                     storeModule: this.storeModule,
                     redirectRoute: this.redirectRoute
                 })
+            },
+            goBack () {
+                window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute)
             }
         },
         beforeRouteEnter(to, from, next) {

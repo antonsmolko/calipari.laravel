@@ -18,7 +18,8 @@ class CmsBaseCategoryRepository extends CmsBaseResourceRepository
     public function getImages($category, array $requestData)
     {
         return $category->images()
-            ->with(config('query_builder.image'))
+            ->with(Image::IMAGE_QUERY_BUILDER)
+            ->withCount(['likes', 'orders'])
             ->when(!empty($requestData['query']),
                 fn ($query) => $query->where('id', 'like', $requestData['query'] . '%'))
             ->orderBy($requestData['sort_by'], $requestData['sort_order'])
@@ -34,7 +35,8 @@ class CmsBaseCategoryRepository extends CmsBaseResourceRepository
     {
         return Image::doesntHave('collection')
             ->whereDoesntHave('categories', fn ($query) => $query->where('id', $category->id))
-            ->with(config('query_builder.image'))
+            ->with(Image::IMAGE_QUERY_BUILDER)
+            ->withCount(['likes', 'orders'])
             ->when(!empty($requestData['query']),
                 fn ($query) => $query->where('id', 'like', $requestData['query'] . '%'))
             ->orderBy($requestData['sort_by'], $requestData['sort_order'])

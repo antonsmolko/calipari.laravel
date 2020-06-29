@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Cms\Collection\Requests;
 
 use App\Http\Requests\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreRequest extends FormRequest
 {
@@ -26,6 +27,14 @@ class StoreRequest extends FormRequest
         return [
             'title' => 'bail|required|unique:collections,title|min:' . config('validation.title.min') . '|max:' . config('validation.title.max'),
             'alias' => 'bail|required|unique:collections,alias|min:' . config('validation.alias.min') . '|max:' . config('validation.alias.max') . '|regex:' . config('validation.alias.pattern'),
+            'image_id' => [
+                'bail',
+                'integer',
+                'nullable',
+                'max:' . config('validation.images.max_id_number'),
+                Rule::exists('images', 'id')
+                    ->where('collection_id', null),
+            ],
             'topics' => 'bail|array|nullable',
             'interiors' => 'bail|array|nullable',
             'tags' => 'bail|array|nullable',

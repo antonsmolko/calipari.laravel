@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Cms\Collection\Requests;
 
 use App\Http\Requests\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -28,6 +29,14 @@ class UpdateRequest extends FormRequest
         return [
             'title' => 'bail|required|unique:collections,title,' . $id . '|min:' . config('validation.title.min') . '|max:' . config('validation.title.max'),
             'alias' => 'bail|required|unique:collections,alias,' . $id . '|min:' . config('validation.alias.min') . '|max:' . config('validation.alias.max') . '|regex:' . config('validation.alias.pattern'),
+            'image_id' => [
+                'bail',
+                'integer',
+                'nullable',
+                'max:' . config('validation.images.max_id_number'),
+                Rule::exists('images', 'id')
+                    ->where('collection_id', null),
+            ],
             'max_print_width' => 'bail|integer|max:' . config('validation.images.max_print_width') . '|nullable',
             'image_description' => 'max:' . config('validation.description.max'),
             'topics' => 'bail|array|nullable',

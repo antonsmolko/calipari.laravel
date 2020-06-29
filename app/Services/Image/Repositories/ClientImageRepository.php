@@ -4,11 +4,11 @@
 namespace App\Services\Image\Repositories;
 
 
-use App\Models\Category;
 use App\Models\Image;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
 use App\Services\Image\Resources\FromEditorClient as ImageFromEditorResource;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -30,7 +30,17 @@ class ClientImageRepository extends ClientBaseResourceRepository
      */
     public function getResourceItem(int $id): ImageFromEditorResource
     {
-        return new ImageFromEditorResource($this->model::findOrFail($id));
+        try {
+            return new ImageFromEditorResource($this->model::published()
+                ->where('id', $id)
+                ->firstOrFail());
+        } catch (ModelNotFoundException $e) {
+            abort(404, 'Изображение не найдено. Вероятно изображение было удалено или снято с публикации!');
+        }
+
+//        return new ImageFromEditorResource($this->model::published()
+//            ->where('id', $id)
+//            ->firstOrFail());
     }
 
     /**

@@ -56,9 +56,13 @@
                 </span>
             </md-table-cell>
 
-            <md-table-cell md-label="Просм."><md-icon>visibility</md-icon> {{ item.views }}</md-table-cell>
-            <md-table-cell md-label="Лайки"><md-icon>favorite</md-icon> {{ item.likes }}</md-table-cell>
-            <md-table-cell md-label="Заказы"><md-icon>shopping_cart</md-icon> {{ item.orders }}</md-table-cell>
+            <md-table-cell md-label="Лайки" md-sort-by="likes_count">
+                <md-icon>favorite</md-icon> {{ item.likes_count }}
+            </md-table-cell>
+
+            <md-table-cell md-label="Заказы" md-sort-by="orders_count">
+                <md-icon>shopping_cart</md-icon> {{ item.orders_count }}
+            </md-table-cell>
 
             <md-table-cell md-label="Опубл.">
                 <md-switch :value="!item.publish" @change="onPublish(item.id)" />

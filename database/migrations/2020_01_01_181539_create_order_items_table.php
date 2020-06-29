@@ -17,11 +17,17 @@ class CreateOrderItemsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('image_id');
-            $table->string('image_crop', 100);
+            $table->unsignedSmallInteger('width_cm');
+            $table->unsignedSmallInteger('height_cm');
             $table->unsignedInteger('texture_id');
-            $table->unsignedSmallInteger('width');
-            $table->unsignedSmallInteger('height');
-            $table->unsignedSmallInteger('cost');
+            $table->unsignedSmallInteger('x')->default(0);
+            $table->unsignedSmallInteger('y')->default(0);
+            $table->unsignedSmallInteger('width_px');
+            $table->unsignedSmallInteger('height_px');
+            $table->unsignedSmallInteger('qty');
+            $table->string('filter_details');
+            $table->json('filter');
+            $table->unsignedSmallInteger('price');
             $table->timestamps();
         });
 

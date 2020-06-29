@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[60],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue?vue&type=script&lang=js&":
-/*!*****************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue?vue&type=script&lang=js& ***!
-  \*****************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -80,35 +80,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'DeliveryCreate',
-  mixins: [_mixins_base__WEBPACK_IMPORTED_MODULE_2__["pageTitle"], _mixins_crudMethods__WEBPACK_IMPORTED_MODULE_3__["createMethod"]],
+  name: 'SettingGroupEdit',
+  mixins: [_mixins_base__WEBPACK_IMPORTED_MODULE_2__["pageTitle"], _mixins_crudMethods__WEBPACK_IMPORTED_MODULE_3__["updateMethod"], _mixins_crudMethods__WEBPACK_IMPORTED_MODULE_3__["deleteMethod"]],
+  props: {
+    id: {
+      type: [Number, String],
+      required: true
+    }
+  },
   data: function data() {
     return {
-      redirectRoute: {
-        name: 'manager.store.deliveries'
-      },
       responseData: false,
-      storeModule: 'deliveries'
+      controlSaveVisibilities: false,
+      redirectRoute: {
+        name: 'manager.settings.administration',
+        params: {
+          activeTab: 'Группы'
+        }
+      },
+      storeModule: 'settingGroups'
     };
   },
   validations: {
@@ -117,100 +112,96 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       touch: false,
       minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(2),
       isUnique: function isUnique(value) {
-        return value.trim() === '' && !this.$v.title.$dirty || !this.isUniqueTitle;
+        return value.trim() === '' && !this.$v.title.$dirty || !this.isUniqueTitleEdit;
       }
     },
     alias: {
       required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
       touch: false,
-      testAlias: function testAlias(value) {
-        return value.trim() === '' || this.$config.ALIAS_REGEXP.test(value);
-      },
       minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(2),
       isUnique: function isUnique(value) {
-        return value.trim() === '' && !this.$v.alias.$dirty || !this.isUniqueAlias;
+        return value.trim() === '' && !this.$v.alias.$dirty || !this.isUniqueAliasEdit;
+      },
+      testAlias: function testAlias(value) {
+        return value.trim() === '' || this.$config.ALIAS_REGEXP.test(value);
       }
-    },
-    price: {
-      numeric: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["numeric"],
-      touch: false
-    },
-    order: {
-      numeric: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["numeric"],
-      touch: false
     },
     description: {
       touch: false
     }
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('deliveries', {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('settingGroups', {
     title: function title(state) {
       return state.fields.title;
     },
     alias: function alias(state) {
       return state.fields.alias;
     },
-    price: function price(state) {
-      return state.fields.price;
-    },
-    order: function order(state) {
-      return state.fields.order;
-    },
-    publish: function publish(state) {
-      return state.fields.publish;
-    },
     description: function description(state) {
       return state.fields.description;
     }
   }), {
-    isUniqueTitle: function isUniqueTitle() {
-      return !!this.$store.getters['deliveries/isUniqueTitle'](this.title);
+    isUniqueTitleEdit: function isUniqueTitleEdit() {
+      return !!this.$store.getters['settingGroups/isUniqueTitleEdit'](this.title, this.id);
     },
-    isUniqueAlias: function isUniqueAlias() {
-      return !!this.$store.getters['deliveries/isUniqueAlias'](this.alias);
-    }
-  }),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('deliveries', {
-    getItemsAction: 'getItems',
-    clearFieldsAction: 'clearItemFields'
-  }), {
-    onCreate: function onCreate() {
-      return this.create({
-        sendData: {
-          title: this.title,
-          alias: this.alias,
-          price: +this.price,
-          order: +this.order,
-          publish: +this.publish,
-          description: this.description
-        },
-        title: this.title,
-        successText: 'Способ доставки создан!',
-        storeModule: this.storeModule,
-        redirectRoute: this.redirectRoute
-      });
+    isUniqueAliasEdit: function isUniqueAliasEdit() {
+      return !!this.$store.getters['settingGroups/isUniqueAliasEdit'](this.alias, this.id);
     }
   }),
   created: function created() {
     var _this = this;
 
-    this.clearFieldsAction();
-    this.getItemsAction().then(function () {
-      _this.setPageTitle('Новый способ доставки');
+    Promise.all([this.getItemsAction(), this.getItemAction(this.id)]).then(function () {
+      _this.setPageTitle("\u0413\u0440\u0443\u043F\u043F\u0430 \xAB".concat(_this.title, "\xBB"));
 
       _this.responseData = true;
+    }).then(function () {
+      _this.$v.$reset();
+
+      _this.controlSaveVisibilities = true;
     })["catch"](function () {
       return _this.$router.push(_this.redirectRoute);
     });
-  }
+  },
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('settingGroups', {
+    getItemsAction: 'getItems',
+    getItemAction: 'getItem'
+  }), {
+    onUpdate: function onUpdate() {
+      return this.update({
+        sendData: {
+          formData: {
+            title: this.title,
+            alias: this.alias,
+            description: this.description
+          },
+          id: this.id
+        },
+        title: this.title,
+        successText: 'Группа обновлена!',
+        storeModule: this.storeModule,
+        redirectRoute: this.redirectRoute
+      });
+    },
+    onDelete: function onDelete() {
+      return this["delete"]({
+        payload: this.id,
+        title: this.title,
+        alertText: "\u0433\u0440\u0443\u043F\u043F\u0443 \xAB".concat(this.title, "\xBB"),
+        successText: 'Группа удалена!',
+        storeModule: this.storeModule,
+        redirectRoute: this.redirectRoute
+      });
+    }
+  })
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue?vue&type=template&id=58e42cab&":
-/*!*********************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue?vue&type=template&id=58e42cab& ***!
-  \*********************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue?vue&type=template&id=4e6302da&":
+/*!*****************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue?vue&type=template&id=4e6302da& ***!
+  \*****************************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -238,27 +229,48 @@ var render = function() {
                     [
                       _c("router-button-link", {
                         attrs: {
+                          title: "В администрирование",
                           route: _vm.redirectRoute.name,
-                          title: "К списку доставок"
+                          params: _vm.redirectRoute.params
                         }
                       }),
                       _vm._v(" "),
                       _c(
-                        "slide-y-down-transition",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: !_vm.$v.$invalid,
-                              expression: "!$v.$invalid"
-                            }
-                          ]
-                        },
+                        "div",
                         [
+                          _c(
+                            "slide-y-down-transition",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value:
+                                    _vm.controlSaveVisibilities &&
+                                    _vm.$v.$anyDirty &&
+                                    !_vm.$v.$invalid,
+                                  expression:
+                                    "controlSaveVisibilities && $v.$anyDirty && !$v.$invalid"
+                                }
+                              ]
+                            },
+                            [
+                              _c("control-button", {
+                                attrs: { title: "Сохранить" },
+                                on: { click: _vm.onUpdate }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
                           _c("control-button", {
-                            attrs: { title: "Создать доставку" },
-                            on: { click: _vm.onCreate }
+                            staticClass: "md-danger",
+                            attrs: { title: "Удалить", icon: "delete" },
+                            on: {
+                              click: function($event) {
+                                return _vm.onDelete()
+                              }
+                            }
                           })
                         ],
                         1
@@ -277,9 +289,7 @@ var render = function() {
         _c("div", { staticClass: "md-layout" }, [
           _c(
             "div",
-            {
-              staticClass: "md-layout-item md-medium-size-50 md-small-size-100"
-            },
+            { staticClass: "md-layout-item" },
             [
               _c(
                 "md-card",
@@ -294,7 +304,9 @@ var render = function() {
                           title: "Заголовок",
                           icon: "title",
                           name: "title",
+                          value: _vm.title,
                           vField: _vm.$v.title,
+                          differ: true,
                           module: _vm.storeModule,
                           vRules: {
                             required: true,
@@ -309,6 +321,8 @@ var render = function() {
                           title: "Алиас",
                           icon: "code",
                           name: "alias",
+                          value: _vm.alias,
+                          differ: true,
                           vDelay: true,
                           vField: _vm.$v.alias,
                           module: _vm.storeModule,
@@ -321,64 +335,12 @@ var render = function() {
                         }
                       }),
                       _vm._v(" "),
-                      _c("v-input", {
-                        attrs: {
-                          title: "Стоимость",
-                          icon: "attach_money",
-                          name: "price",
-                          vDelay: true,
-                          vField: _vm.$v.price,
-                          maxlength: 5,
-                          module: _vm.storeModule,
-                          vRules: { numeric: true }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("v-input", {
-                        attrs: {
-                          title: "Порядок",
-                          icon: "sort",
-                          name: "order",
-                          vField: _vm.$v.order,
-                          maxlength: 2,
-                          module: _vm.storeModule,
-                          vRules: { numeric: true }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("v-switch", {
-                        attrs: { value: _vm.publish, module: _vm.storeModule }
-                      })
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "md-layout-item md-medium-size-50 md-small-size-100"
-            },
-            [
-              _c(
-                "md-card",
-                [
-                  _c("card-icon-header", {
-                    attrs: { icon: "description", title: "" }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "md-card-content",
-                    [
                       _c("v-textarea", {
                         attrs: {
                           name: "description",
+                          value: _vm.description,
                           vField: _vm.$v.description,
+                          differ: true,
                           module: _vm.storeModule
                         }
                       }),
@@ -693,18 +655,18 @@ var subCategoryImageAddMethod = {
 
 /***/ }),
 
-/***/ "./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue":
-/*!********************************************************************************!*\
-  !*** ./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue ***!
-  \********************************************************************************/
+/***/ "./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue":
+/*!****************************************************************************!*\
+  !*** ./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue ***!
+  \****************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _DeliveryCreate_vue_vue_type_template_id_58e42cab___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DeliveryCreate.vue?vue&type=template&id=58e42cab& */ "./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue?vue&type=template&id=58e42cab&");
-/* harmony import */ var _DeliveryCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DeliveryCreate.vue?vue&type=script&lang=js& */ "./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _SettingGroupEdit_vue_vue_type_template_id_4e6302da___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SettingGroupEdit.vue?vue&type=template&id=4e6302da& */ "./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue?vue&type=template&id=4e6302da&");
+/* harmony import */ var _SettingGroupEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SettingGroupEdit.vue?vue&type=script&lang=js& */ "./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -713,9 +675,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _DeliveryCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _DeliveryCreate_vue_vue_type_template_id_58e42cab___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _DeliveryCreate_vue_vue_type_template_id_58e42cab___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _SettingGroupEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SettingGroupEdit_vue_vue_type_template_id_4e6302da___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SettingGroupEdit_vue_vue_type_template_id_4e6302da___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -725,38 +687,38 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue"
+component.options.__file = "resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue?vue&type=script&lang=js&":
-/*!*********************************************************************************************************!*\
-  !*** ./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue?vue&type=script&lang=js& ***!
-  \*********************************************************************************************************/
+/***/ "./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DeliveryCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./DeliveryCreate.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DeliveryCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingGroupEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./SettingGroupEdit.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingGroupEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue?vue&type=template&id=58e42cab&":
-/*!***************************************************************************************************************!*\
-  !*** ./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue?vue&type=template&id=58e42cab& ***!
-  \***************************************************************************************************************/
+/***/ "./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue?vue&type=template&id=4e6302da&":
+/*!***********************************************************************************************************!*\
+  !*** ./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue?vue&type=template&id=4e6302da& ***!
+  \***********************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DeliveryCreate_vue_vue_type_template_id_58e42cab___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./DeliveryCreate.vue?vue&type=template&id=58e42cab& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue?vue&type=template&id=58e42cab&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DeliveryCreate_vue_vue_type_template_id_58e42cab___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingGroupEdit_vue_vue_type_template_id_4e6302da___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./SettingGroupEdit.vue?vue&type=template&id=4e6302da& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue?vue&type=template&id=4e6302da&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingGroupEdit_vue_vue_type_template_id_4e6302da___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DeliveryCreate_vue_vue_type_template_id_58e42cab___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SettingGroupEdit_vue_vue_type_template_id_4e6302da___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

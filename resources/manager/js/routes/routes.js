@@ -1,7 +1,7 @@
 import DashboardLayout from '@/pages/Dashboard/Layout/DashboardLayout.vue'
 import Dashboard from '@/pages/Dashboard/Dashboard.vue'
 
-// Image pages
+/** Image pages */
 const ImageList = resolve => {
     require.ensure(['@/pages/Dashboard/Images/ImageList.vue'], () => {
         resolve(require('@/pages/Dashboard/Images/ImageList.vue'))
@@ -23,7 +23,7 @@ const ImageTrashedList = resolve => {
     })
 };
 
-// Category pages
+/** Category pages */
 const CatalogPanel = resolve => {
     require.ensure(['@/pages/Dashboard/Catalog/CatalogPanel.vue'], () => {
         resolve(require('@/pages/Dashboard/Catalog/CatalogPanel.vue'))
@@ -45,7 +45,7 @@ const CategoryEdit = resolve => {
     })
 };
 
-// SubCategories
+/** SubCategories */
 const SubCategoryList = resolve => {
     require.ensure(['@/pages/Dashboard/Catalog/SubCategories/SubCategoryList.vue'], () => {
         resolve(require('@/pages/Dashboard/Catalog/SubCategories/SubCategoryList.vue'))
@@ -72,7 +72,7 @@ const SubCategoryExcludedImageList = resolve => {
     })
 };
 
-// Category pages
+/** Category pages */
 const CollectionList = resolve => {
     require.ensure(['@/pages/Dashboard/Catalog/Collections/CollectionList.vue'], () => {
         resolve(require('@/pages/Dashboard/Catalog/Collections/CollectionList.vue'))
@@ -94,7 +94,7 @@ const CollectionImageList = resolve => {
     })
 };
 
-// Textures
+/** Textures */
 const TextureList = resolve => {
     require.ensure(['@/pages/Dashboard/Textures/TextureList.vue'], () => {
         resolve(require('@/pages/Dashboard/Textures/TextureList.vue'))
@@ -111,7 +111,7 @@ const TextureEdit = resolve => {
     })
 };
 
-// Users
+/** Users */
 const UserList = resolve => {
     require.ensure(['@/pages/Dashboard/Users/UserList.vue'], () => {
         resolve(require('@/pages/Dashboard/Users/UserList.vue'))
@@ -128,7 +128,7 @@ const UserEdit = resolve => {
     })
 };
 
-// Roles
+/** Roles */
 const RoleList = resolve => {
     require.ensure(['@/pages/Dashboard/Roles/RoleList.vue'], () => {
         resolve(require('@/pages/Dashboard/Roles/RoleList.vue'))
@@ -145,7 +145,7 @@ const RoleEdit = resolve => {
     })
 };
 
-// Permissions
+/** Permissions */
 const PermissionList = resolve => {
     require.ensure(['@/pages/Dashboard/Permissions/PermissionList.vue'], () => {
         resolve(require('@/pages/Dashboard/Permissions/PermissionList.vue'))
@@ -162,7 +162,7 @@ const PermissionEdit = resolve => {
     })
 };
 
-// Settings
+/** Settings */
 const SettingList = resolve => {
     require.ensure(['@/pages/Dashboard/Settings/SettingList.vue'], () => {
         resolve(require('@/pages/Dashboard/Settings/SettingList.vue'))
@@ -194,14 +194,14 @@ const SettingGroupEdit = resolve => {
     })
 };
 
-// Store
+/** Store */
 const StorePanel = resolve => {
     require.ensure(['@/pages/Dashboard/Store/StorePanel.vue'], () => {
         resolve(require('@/pages/Dashboard/Store/StorePanel.vue'))
     })
 };
 
-// Deliveries
+/** Deliveries */
 const DeliveryList = resolve => {
     require.ensure(['@/pages/Dashboard/Store/Delivery/DeliveryList.vue'], () => {
         resolve(require('@/pages/Dashboard/Store/Delivery/DeliveryList.vue'))
@@ -218,7 +218,7 @@ const DeliveryEdit = resolve => {
     })
 };
 
-// OrderStatuses
+/** OrderStatuses */
 const OrderStatusList = resolve => {
     require.ensure(['@/pages/Dashboard/Store/OrderStatuses/OrderStatusList.vue'], () => {
         resolve(require('@/pages/Dashboard/Store/OrderStatuses/OrderStatusList.vue'))
@@ -235,7 +235,7 @@ const OrderStatusEdit = resolve => {
     })
 };
 
-// Orders
+/** Orders */
 const OrderList = resolve => {
     require.ensure(['@/pages/Dashboard/Store/Orders/OrderList.vue'], () => {
         resolve(require('@/pages/Dashboard/Store/Orders/OrderList.vue'))
@@ -247,7 +247,7 @@ const Order = resolve => {
     })
 };
 
-// Pages
+/** Pages */
 const PagesPanel = resolve => {
     require.ensure(['@/pages/Dashboard/Pages/PagesPanel.vue'], () => {
         resolve(require('@/pages/Dashboard/Pages/PagesPanel.vue'))
@@ -315,7 +315,38 @@ const PostEdit = resolve => {
     })
 };
 
-// Error pages
+const TexturesPage = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Textures'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Textures'))
+    })
+};
+
+const ContactsPage = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Contacts'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Contacts'))
+    })
+};
+
+const PolicyPage = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Policy'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Policy'))
+    })
+};
+
+const ContractOfferPage = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/ContractOffer'], () => {
+        resolve(require('@/pages/Dashboard/Pages/ContractOffer'))
+    })
+};
+
+const CatalogPage = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Catalog'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Catalog'))
+    })
+};
+
+
+/** Error pages */
 const Error404 = resolve => {
     require.ensure(['@/pages/Dashboard/Errors/404.vue'], () => {
         resolve(require('@/pages/Dashboard/Errors/404.vue'))
@@ -745,6 +776,31 @@ const managerMenuPages = {
             name: 'manager.pages.blog.posts.edit',
             component: PostEdit,
             props: true
+        },
+        {
+            path: 'textures',
+            name: 'manager.pages.textures',
+            component: TexturesPage
+        },
+        {
+            path: 'contacts',
+            name: 'manager.pages.contacts',
+            component: ContactsPage
+        },
+        {
+            path: 'catalog',
+            name: 'manager.pages.catalog',
+            component: CatalogPage
+        },
+        {
+            path: 'policy',
+            name: 'manager.pages.policy',
+            component: PolicyPage
+        },
+        {
+            path: 'contract-offer',
+            name: 'manager.pages.contract-offer',
+            component: ContractOfferPage
         },
     ]
 };

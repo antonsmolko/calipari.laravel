@@ -10,12 +10,21 @@ use Illuminate\Http\Request;
 
 class AuthController extends BaseAuthController
 {
+//    /**
+//     * @return JsonResponse
+//     */
+//    public function me(): JsonResponse
+//    {
+//        return response()->json($this->authService->me());
+//    }
+
     /**
+     * @param Request $request
      * @return JsonResponse
      */
-    public function me(): JsonResponse
+    public function me(Request $request): JsonResponse
     {
-        return response()->json($this->authService->me());
+        return response()->json($this->authService->me($request));
     }
 
     public function logout()

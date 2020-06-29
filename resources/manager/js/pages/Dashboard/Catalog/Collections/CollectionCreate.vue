@@ -35,6 +35,15 @@
                                          :module="storeModule"
                                          :vRules="{ required: true, unique: true, minLength: true, alias: true }" />
                             </div>
+                            <div class="md-layout-item md-small-size-100">
+                                <v-input title="ID Изображения"
+                                         icon="image"
+                                         name="image_id"
+                                         :maxlength="5"
+                                         :vField="$v.imageId"
+                                         :module="storeModule"
+                                         :vRules="{ numeric: true }" />
+                            </div>
                         </div>
                         <div class="space-20"></div>
                     </md-card-content>
@@ -116,7 +125,7 @@
 
 <script>
     import { mapState, mapActions } from 'vuex'
-    import { required, minLength } from 'vuelidate/lib/validators'
+    import { required, minLength, numeric } from 'vuelidate/lib/validators'
 
     import VSelect from "@/custom_components/VForm/VSelect";
     import { pageTitle } from '@/mixins/base'
@@ -153,6 +162,10 @@
                     return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAlias
                 },
             },
+            imageId: {
+                numeric,
+                touch: false
+            },
             metaTitle: {
                 touch: false
             },
@@ -167,6 +180,7 @@
             ...mapState({
                 title: state => state.collections.fields.title,
                 alias: state => state.collections.fields.alias,
+                imageId: state => state.collections.fields.image_id,
                 topics: state => state.collections.fields.topics,
                 interiors: state => state.collections.fields.interiors,
                 tags: state => state.collections.fields.tags,
@@ -220,6 +234,7 @@
                     sendData: {
                         title: this.title,
                         alias: this.alias,
+                        image_id: this.imageId,
                         topics: this.topics,
                         interiors: this.interiors,
                         tags: this.tags,

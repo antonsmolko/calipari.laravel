@@ -32,6 +32,7 @@ return [
         'mimes' => 'jpeg,png'
     ],
     'images' => [
+        'max_id_number' => 99999,
         'max_print_width' => 5000
     ],
     'alias' => [

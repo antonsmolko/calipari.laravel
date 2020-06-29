@@ -5,6 +5,7 @@ const state = {
     fields: {
         title: '',
         alias: '',
+        image_id: '',
         image_description: '',
         max_print_width: '',
         topics: [],
@@ -16,7 +17,8 @@ const state = {
         meta_title: '',
         description: '',
         keywords: '',
-        has_published_images: ''
+        has_published_images: '',
+        has_images: ''
     },
     items: []
 };

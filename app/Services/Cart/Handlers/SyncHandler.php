@@ -4,6 +4,7 @@
 namespace App\Services\Cart\Handlers;
 
 
+use App\Models\Image;
 use App\Services\Cart\Repositories\ClientCartRepository;
 
 class SyncHandler
@@ -21,22 +22,29 @@ class SyncHandler
 
     /**
      * @param array $items
-     * @return mixed
+     * @return array|mixed
      */
     public function handle(array $items)
     {
         $user = auth()->user();
-
         $storeData = $items;
 
-        if ($user->cart) {
+        if ($user && $user->cart) {
             $cart = $user->cart;
             $cartItems = json_decode($cart->items, true);
-            $storeData = array_values(collect([...$items, ...$cartItems])
+            $storeData = collect([...$items, ...$cartItems])
                 ->unique('id')
-                ->toArray());
+                ->toArray();
         }
 
-        return $this->repository->update($user, $storeData);
+        $storeData = array_values(
+            array_filter($storeData, fn ($item) => Image::where('publish', 1)
+                ->where('id', $item['image_id'])
+                ->exists()));
+
+
+        return $user
+            ? $this->repository->update($user, $storeData)
+            : $storeData;
     }
 }

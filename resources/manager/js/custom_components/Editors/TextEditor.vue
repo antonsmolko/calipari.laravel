@@ -10,13 +10,13 @@
 </template>
 
 <script>
+import MediaEmbed from '@ckeditor/ckeditor5-media-embed/src/mediaembed';
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import Image from '@ckeditor/ckeditor5-image/src/image';
 import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption';
 import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar';
 import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle';
 import ImageResize from '@ckeditor/ckeditor5-image/src/imageresize';
-
 import InsertImage from '@/custom_components/Editors/InsertImagePlugin';
 import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials';
 import Heading from '@ckeditor/ckeditor5-heading/src/heading';
@@ -69,7 +69,8 @@ export default {
                     LinkPlugin,
                     ParagraphPlugin,
                     List,
-                    Heading
+                    Heading,
+                    MediaEmbed
                 ],
                 toolbar: {
                     items: [
@@ -84,7 +85,9 @@ export default {
                         'insertImage',
                         '|',
                         'undo',
-                        'redo'
+                        'redo',
+                        '|',
+                        'mediaEmbed'
                     ]
                 },
                 image: {
@@ -112,6 +115,9 @@ export default {
                         { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
                         { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
                     ]
+                },
+                mediaEmbed: {
+                    previewsInData: true
                 }
             },
             valueReference: ''

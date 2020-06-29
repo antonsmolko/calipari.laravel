@@ -4,6 +4,7 @@ namespace App\Services\ImageResize;
 
 use App\Services\ImageResize\Handlers\CreateResponseHandler;
 use App\Services\ImageResize\Handlers\GetOrderImageHandler;
+use App\Services\ImageResize\Handlers\GetMailOrderImageThumbHandler;
 use App\Services\ImageResize\Handlers\GetOrderImageThumbHandler;
 use App\Services\ImageResize\Handlers\GetPathExtensionHandler;
 use App\Services\ImageResize\Repositories\ImageResizeRepository;
@@ -14,6 +15,7 @@ class ImageResizeService
     private GetPathExtensionHandler $pathExtensionHandler;
     private CreateResponseHandler $createResponseHandler;
     private GetOrderImageHandler $getOrderImageHandler;
+    private GetMailOrderImageThumbHandler $getMailOrderImageThumbHandler;
     private GetOrderImageThumbHandler $getOrderImageThumbHandler;
 
 
@@ -23,6 +25,7 @@ class ImageResizeService
      * @param GetPathExtensionHandler $getPathExtensionHandler
      * @param CreateResponseHandler $createResponseHandler
      * @param GetOrderImageHandler $getOrderImageHandler
+     * @param GetMailOrderImageThumbHandler $getMailOrderImageThumbHandler
      * @param GetOrderImageThumbHandler $getOrderImageThumbHandler
      */
     public function __construct(
@@ -30,6 +33,7 @@ class ImageResizeService
         GetPathExtensionHandler $getPathExtensionHandler,
         CreateResponseHandler $createResponseHandler,
         GetOrderImageHandler $getOrderImageHandler,
+        GetMailOrderImageThumbHandler $getMailOrderImageThumbHandler,
         GetOrderImageThumbHandler $getOrderImageThumbHandler
     )
     {
@@ -37,6 +41,7 @@ class ImageResizeService
         $this->pathExtensionHandler = $getPathExtensionHandler;
         $this->createResponseHandler = $createResponseHandler;
         $this->getOrderImageHandler = $getOrderImageHandler;
+        $this->getMailOrderImageThumbHandler = $getMailOrderImageThumbHandler;
         $this->getOrderImageThumbHandler = $getOrderImageThumbHandler;
     }
 
@@ -74,7 +79,8 @@ class ImageResizeService
      * @param string $height
      * @param string $x
      * @param string $y
-     * @param string $flip
+     * @param string $flipH
+     * @param string $flipV
      * @param string $colorize
      * @return mixed
      */
@@ -84,13 +90,14 @@ class ImageResizeService
         string $height,
         string $x,
         string $y,
-        string $flip,
+        string $flipH,
+        string $flipV,
         string $colorize
     )
     {
         list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
 
-        $img = $this->getOrderImageHandler->handle($imgPath, $width, $height, $x, $y, $flip, $colorize);
+        $img = $this->getOrderImageHandler->handle($imgPath, $width, $height, $x, $y, $flipH, $flipV, $colorize);
 
         return $this->createResponseHandler->handle($img, $ext);
     }
@@ -101,7 +108,37 @@ class ImageResizeService
      * @param string $height
      * @param string $x
      * @param string $y
-     * @param string $flip
+     * @param string $flipH
+     * @param string $flipV
+     * @param string $colorize
+     * @return mixed
+     */
+    public function getMailOrderImageThumb(
+        string $path,
+        string $width,
+        string $height,
+        string $x,
+        string $y,
+        string $flipH,
+        string $flipV,
+        string $colorize
+    )
+    {
+        list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
+
+        $img = $this->getMailOrderImageThumbHandler->handle($imgPath, $width, $height, $x, $y, $flipH, $flipV, $colorize);
+
+        return $this->createResponseHandler->handle($img, $ext);
+    }
+
+    /**
+     * @param string $path
+     * @param string $width
+     * @param string $height
+     * @param string $x
+     * @param string $y
+     * @param string $flipH
+     * @param string $flipV
      * @param string $colorize
      * @return mixed
      */
@@ -111,13 +148,14 @@ class ImageResizeService
         string $height,
         string $x,
         string $y,
-        string $flip,
+        string $flipH,
+        string $flipV,
         string $colorize
     )
     {
         list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
 
-        $img = $this->getOrderImageThumbHandler->handle($imgPath, $width, $height, $x, $y, $flip, $colorize);
+        $img = $this->getOrderImageThumbHandler->handle($imgPath, $width, $height, $x, $y, $flipH, $flipV, $colorize);
 
         return $this->createResponseHandler->handle($img, $ext);
     }

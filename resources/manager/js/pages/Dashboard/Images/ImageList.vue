@@ -12,6 +12,11 @@
                             :params="{ category_type }"
                         />
                         <div>
+                            <router-button-link v-if="category_type === 'images'"
+                                                icon="delete"
+                                                color="md-info"
+                                                title="Удаленные изображения"
+                                                route="manager.images.trashed" />
                             <router-button-link v-if="category_type !== 'images'"
                                 icon="add"
                                 color="md-success"

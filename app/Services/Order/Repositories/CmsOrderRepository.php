@@ -4,13 +4,13 @@
 namespace App\Services\Order\Repositories;
 
 use App\Models\Order;
+use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
 use App\Services\Order\Resources\CmsOrder as OrderResource;
 use App\Services\Order\Resources\CmsOrderFromList as OrderFromListResource;
 use App\Services\Order\Resources\CmsOrderFromListCollection as OrderFromListCollection;
 
-class CmsOrderRepository
+class CmsOrderRepository extends CmsBaseResourceRepository
 {
-    private Order $model;
     /**
      * DeliveryRepository constructor.
      * @param Order $model
@@ -35,7 +35,10 @@ class CmsOrderRepository
     public function getCurrentItems(array $requestData)
     {
         return new OrderFromListCollection(
-            $this->model::whereDoesntHave('statuses', fn ($query) => $query->where('alias', 'completed'))
+            $this->model::whereDoesntHave('statuses', fn ($query) => $query
+                ->where('alias', 'completed')
+                ->orWhere('alias', 'canceled')
+            )
                 ->when(!empty($requestData['query']),
                     fn ($query) => $query->where('number', 'like', $requestData['query'] . '%'))
                 ->orderBy($requestData['sort_by'], $requestData['sort_order'])
@@ -44,12 +47,13 @@ class CmsOrderRepository
 
     /**
      * @param array $requestData
+     * @param string $status
      * @return OrderFromListCollection
      */
-    public function getCompletedItems(array $requestData)
+    public function getItemsByStatus(array $requestData, string $status)
     {
         return new OrderFromListCollection($this->model::orderBy('id', 'desc')
-            ->whereHas('statuses', fn ($query) => $query->where('alias', 'completed'))
+            ->whereHas('statuses', fn ($query) => $query->where('alias', $status))
             ->when(!empty($requestData['query']),
                 fn ($query) => $query->where('number', 'like', $requestData['query'] . '%'))
             ->orderBy($requestData['sort_by'], $requestData['sort_order'])

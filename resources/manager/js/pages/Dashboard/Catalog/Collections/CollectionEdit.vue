@@ -42,16 +42,18 @@
                                          :module="storeModule"
                                          :vRules="{ required: true, unique: true, minLength: true, alias: true }" />
                             </div>
-                            <div class="md-layout-item md-size-100">
-                                <v-switch :vField="$v.publish"
-                                          :disabled="!hasPublishedImages"
-                                          :differ="true"
-                                          :value="publish"
-                                          :module="storeModule">
-                                    <span v-if="!hasPublishedImages">Нет опубликованных изображений</span>
-                                </v-switch>
-                            </div>
-                            <template v-if="hasPublishedImages">
+                            <template v-if="!hasImages">
+                                <div class="md-layout-item md-small-size-100">
+                                    <v-input title="ID Изображения"
+                                             icon="image"
+                                             name="image_id"
+                                             :maxlength="5"
+                                             :vField="$v.imageId"
+                                             :module="storeModule"
+                                             :vRules="{ numeric: true }" />
+                                </div>
+                            </template>
+                            <template v-if="hasImages">
                                 <div class="md-layout-item md-size-50 md-small-size-100">
                                     <v-input title="Максимальная ширина печати"
                                              icon="straighten"
@@ -74,6 +76,15 @@
                                              :module="storeModule" />
                                 </div>
                             </template>
+                            <div class="md-layout-item md-size-100">
+                                <v-switch :vField="$v.publish"
+                                          :disabled="!hasPublishedImages"
+                                          :differ="true"
+                                          :value="publish"
+                                          :module="storeModule">
+                                    <span v-if="!hasPublishedImages">Нет опубликованных изображений</span>
+                                </v-switch>
+                            </div>
                         </div>
                         <div class="space-20"></div>
                     </md-card-content>
@@ -216,6 +227,10 @@
                     return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
                 }
             },
+            imageId: {
+                numeric,
+                touch: false
+            },
             maxPrintWidth: {
                 numeric,
                 touch: false
@@ -252,6 +267,7 @@
             ...mapState({
                 title: state => state.collections.fields.title,
                 alias: state => state.collections.fields.alias,
+                imageId: state => state.collections.fields.image_id,
                 imageDescription: state => state.collections.fields.image_description,
                 maxPrintWidth: state => state.collections.fields.max_print_width,
                 topics: state => state.collections.fields.topics,
@@ -260,6 +276,7 @@
                 owner: state => state.collections.fields.owner_id,
                 publish: state => state.collections.fields.publish,
                 hasPublishedImages: state => state.collections.fields.has_published_images,
+                hasImages: state => state.collections.fields.has_images,
                 metaTitle: state => state.collections.fields.meta_title,
                 description: state => state.collections.fields.description,
                 keywords: state => state.collections.fields.keywords,
@@ -316,6 +333,7 @@
                         data: {
                             title: this.title,
                             alias: this.alias,
+                            image_id: this.imageId,
                             max_print_width: this.maxPrintWidth,
                             image_description: this.imageDescription,
                             topics: this.topics,

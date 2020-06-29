@@ -8,7 +8,7 @@
             </md-card>
 
             <tabs
-                :tab-name="['Текущие заказы', 'Выполненные заказы']"
+                :tab-name="['Текущие заказы', 'Выполненные заказы', 'Отмененные заказы']"
                 :activeTab="activeTab"
                 color-button="success">
                 <template slot="tab-pane-1">
@@ -138,6 +138,65 @@
                     </v-extended-table>
 
                 </template>
+                <template slot="tab-pane-3">
+                    <v-extended-table :serverPagination="true"
+                                      :resourceUrl="canceledResourceUrl"
+                                      defaultSortOrder="desc"
+                                      emptyContent="У Вас еще нет отмененных заказов!"
+                                      :searchFields="[ 'number', 'date' ]" >
+                        <template slot-scope="{ item }">
+
+                            <md-table-cell md-label="#" style="width: 50px">
+                                {{ item.id }}
+                            </md-table-cell>
+
+                            <md-table-cell md-label="Номер" md-sort-by="number">
+                                <span class="md-subheading">{{ item.number }}</span>
+                            </md-table-cell>
+
+                            <md-table-cell md-label="Дата" md-sort-by="date">
+                                {{ item.date }}
+                            </md-table-cell>
+
+                            <md-table-cell md-label="Пользователь">
+                                <span v-if="item.email">
+                                    {{ item.email }}
+                                </span>
+                                <span v-else>-</span>
+                            </md-table-cell>
+
+                            <md-table-cell md-label="Цена">
+                                <span class="md-subheading">{{ item.price }}</span>
+                            </md-table-cell>
+
+                            <md-table-cell md-label="Доставка">
+                                {{ item.delivery }}
+                            </md-table-cell>
+
+                            <md-table-cell md-label="Статус">
+                                <span class="md-body-1">{{ getCurrentStatus(item).title }}</span>
+                            </md-table-cell>
+
+                            <md-table-cell md-label="Действия">
+                                <div class="table-actions" v-if="item">
+
+                                    <router-button-link title="Подробнее"
+                                                        icon="visibility"
+                                                        color="md-info"
+                                                        :route="`manager.store.orders.order`"
+                                                        :params="{ id: item.id }" />
+
+                                    <control-button title="Удалить"
+                                                    icon="delete"
+                                                    color="md-danger"
+                                                    @click="onDelete(item)" />
+                                </div>
+                            </md-table-cell>
+
+                        </template>
+                    </v-extended-table>
+
+                </template>
             </tabs>
         </div>
     </div>
@@ -146,8 +205,7 @@
 <script>
     import { mapActions } from 'vuex'
 
-    import sortBy from 'lodash/sortBy'
-    import last from 'lodash/last'
+    import { getCurrentStatus } from "@/helpers";
     import { pageTitle } from '@/mixins/base'
     import { deleteMethod } from '@/mixins/crudMethods'
     import Tabs from '@/custom_components/Tabs.vue'
@@ -164,6 +222,7 @@
                 activeTab: '',
                 currentResourceUrl: '/store/orders/current',
                 completedResourceUrl: '/store/orders/completed',
+                canceledResourceUrl: '/store/orders/canceled',
                 responseData: false,
                 redirectRoute: { name: 'manager.store' },
                 storeModule: 'orders'
@@ -191,9 +250,9 @@
                             return this.changeStatusAction({ id: item.id, status: value })
                                 .then(() => {
                                     return swal.fire({
-                                        title: `Статус заказа № ${item.number} обновлен!`,
+                                        title: `Заказ № ${item.number} обновлен!`,
                                         text: `Установлен статус «${status.title}»`,
-                                        timer: 2000,
+                                        timer: 3000,
                                         icon: 'success',
                                         showConfirmButton: false
                                     })
@@ -211,7 +270,7 @@
                         confirmButton: 'md-button md-success btn-fill',
                         cancelButton: 'md-button md-danger btn-fill'
                     },
-                    confirmButtonText: 'Сменить',
+                    confirmButtonText: 'Подтвердить',
                     cancelButtonText: 'Отменить',
                     buttonsStyling: false
                 })
@@ -231,12 +290,11 @@
             },
             getRestItems (item) {
                 const currentStatus = this.getCurrentStatus(item)
+
                 return this.$store.getters['orderStatuses/getRestItems'](currentStatus.order);
             },
             getCurrentStatus (item) {
-                const sortedByOrderStatuses = sortBy([...item.statuses], 'order');
-
-                return last(sortedByOrderStatuses);
+                return getCurrentStatus(item.statuses);
             }
         }
     }

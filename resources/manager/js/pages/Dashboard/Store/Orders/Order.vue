@@ -3,7 +3,7 @@
         <div class="md-layout-item md-size-100">
             <md-card class="mt-0">
                 <md-card-content class="md-between">
-                    <router-button-link :route="redirectRoute.name" title="К списку доставок" />
+                    <router-button-link :route="redirectRoute.name" title="К списку заказов" />
                     <div>
                         <slide-y-down-transition v-show="controlSaveVisibilities && $v.$anyDirty && !$v.$invalid">
                             <control-button title="Сохранить" @click="onUpdate" />
@@ -14,12 +14,12 @@
             </md-card>
         </div>
         <div class="md-layout-item md-xsmall-size-100 md-medium-size-50 md-large-size-33 md-xlarge-size-25">
-            <div class="tm-order-item mb-5" v-for="(item, index) in order.items" :key="index">
+            <div class="tm-order-item mb-5" v-for="item in order.items" :key="item.id">
                 <product-card headerAnimation="false">
-                    <img class="img" slot="imageHeader" :src="item.imagePath" />
+                    <img class="img" slot="imageHeader" :src="item.thumb" />
                     <h4 slot="title" class="title">
                         <span class="card-title">Артикул:</span>
-                        <span class="md-title"><small>{{ getArticle(item.imageId) }}</small></span>
+                        <span class="md-title"><small>{{ item.article }}</small></span>
                     </h4>
                     <div slot="description" class="card-description">
                         <div class="md-order-item__details-item">
@@ -32,11 +32,11 @@
                         </div>
                         <div class="md-order-item__details-item">
                             <span class="card-title">Фактура:</span>
-                            <span class="md-body-2">{{ item.texture.name }}</span>
+                            <span class="md-body-2">{{ item.texture }}</span>
                         </div>
                         <div class="md-order-item__details-item">
                             <span class="card-title">Эффекты:</span>
-                            <span class="md-body-2">{{ item.filterString }}</span>
+                            <span class="md-body-2">{{ item.filter }}</span>
                         </div>
                         <div class="md-order-item__details-item">
                             <span class="card-title">Количество:</span>
@@ -153,9 +153,7 @@
 
 <script>
     import { mapActions, mapState } from 'vuex';
-    import { getFormatPrice, getArticle } from "@/helpers";
-    import sortBy from "lodash/sortBy";
-    import last from "lodash/last";
+    import { getFormatPrice, getArticle, getCurrentStatus } from "@/helpers";
 
     import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
     import ProductCard from "@/components/Cards/ProductCard";
@@ -190,9 +188,7 @@
                 return this.$store.getters['orderStatuses/getRestItems'](this.currentStatus.order);
             },
             currentStatus () {
-                const sortedByOrderStatuses = sortBy([...this.order.statuses], 'order');
-
-                return last(sortedByOrderStatuses);
+                return getCurrentStatus(this.order.statuses);
             },
             baseTableData () {
                 return [
@@ -286,7 +282,7 @@
                             })
                                 .then(() => {
                                     return swal.fire({
-                                        title: `Статус заказа № ${this.order.number} обновлен!`,
+                                        title: `Заказ № ${this.order.number} обновлен!`,
                                         text: `Установлен статус «${status.title}»`,
                                         timer: 2000,
                                         icon: 'success',
@@ -306,7 +302,7 @@
                         confirmButton: 'md-button md-success btn-fill',
                         cancelButton: 'md-button md-danger btn-fill'
                     },
-                    confirmButtonText: 'Сменить',
+                    confirmButtonText: 'Подтвердить',
                     cancelButtonText: 'Отменить',
                     buttonsStyling: false
                 })

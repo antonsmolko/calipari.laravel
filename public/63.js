@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[63],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue?vue&type=script&lang=js&":
-/*!***********************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue?vue&type=script&lang=js& ***!
-  \***********************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -86,39 +86,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'OrderStatusEdit',
-  mixins: [_mixins_base__WEBPACK_IMPORTED_MODULE_2__["pageTitle"], _mixins_crudMethods__WEBPACK_IMPORTED_MODULE_3__["updateMethod"], _mixins_crudMethods__WEBPACK_IMPORTED_MODULE_3__["deleteMethod"]],
-  props: {
-    id: {
-      type: [String, Number],
-      required: true
-    }
-  },
+  name: 'OrderStatusCreate',
+  mixins: [_mixins_base__WEBPACK_IMPORTED_MODULE_2__["pageTitle"], _mixins_crudMethods__WEBPACK_IMPORTED_MODULE_3__["createMethod"]],
   data: function data() {
     return {
       redirectRoute: {
         name: 'manager.store.orderStatuses'
       },
       responseData: false,
-      storeModule: 'orderStatuses',
-      controlSaveVisibilities: false
+      storeModule: 'orderStatuses'
     };
   },
   validations: {
@@ -127,25 +108,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       touch: false,
       minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(2),
       isUnique: function isUnique(value) {
-        return value.trim() === '' && !this.$v.title.$dirty ? true : !this.isUniqueTitleEdit;
+        return value.trim() === '' && !this.$v.title.$dirty ? true : !this.isUniqueTitle;
       }
     },
     alias: {
       required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
       touch: false,
-      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(2),
-      isUnique: function isUnique(value) {
-        return value.trim() === '' && !this.$v.alias.$dirty || !this.isUniqueAliasEdit;
-      },
       testAlias: function testAlias(value) {
         return value.trim() === '' || this.$config.ALIAS_REGEXP.test(value);
+      },
+      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(2),
+      isUnique: function isUnique(value) {
+        return value.trim() === '' && !this.$v.alias.$dirty || !this.isUniqueAlias;
       }
     },
     order: {
       numeric: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["numeric"],
-      touch: false
-    },
-    publish: {
       touch: false
     },
     description: {
@@ -169,41 +147,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return state.fields.description;
     }
   }), {
-    isUniqueTitleEdit: function isUniqueTitleEdit() {
-      return !!this.$store.getters['orderStatuses/isUniqueTitleEdit'](this.title, this.id);
+    isUniqueTitle: function isUniqueTitle() {
+      return !!this.$store.getters['orderStatuses/isUniqueTitle'](this.title);
     },
-    isUniqueAliasEdit: function isUniqueAliasEdit() {
-      return !!this.$store.getters['orderStatuses/isUniqueAliasEdit'](this.alias, this.id);
+    isUniqueAlias: function isUniqueAlias() {
+      return !!this.$store.getters['orderStatuses/isUniqueAlias'](this.alias);
     }
   }),
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('orderStatuses', {
     getItemsAction: 'getItems',
-    getItemAction: 'getItem'
+    clearFieldsAction: 'clearFields'
   }), {
-    onUpdate: function onUpdate() {
-      return this.update({
+    onCreate: function onCreate() {
+      return this.create({
         sendData: {
-          data: {
-            title: this.title,
-            alias: this.alias,
-            order: +this.order,
-            publish: +this.publish,
-            description: this.description
-          },
-          id: this.id
+          title: this.title,
+          alias: this.alias,
+          order: +this.order,
+          publish: +this.publish,
+          description: this.description
         },
         title: this.title,
-        successText: 'Статус заказа обновлен!',
-        storeModule: this.storeModule,
-        redirectRoute: this.redirectRoute
-      });
-    },
-    onDelete: function onDelete() {
-      return this["delete"]({
-        payload: this.id,
-        title: this.title,
-        alertText: "\u0441\u0442\u0430\u0442\u0443\u0441 \u0437\u0430\u043A\u0430\u0437\u0430 \xAB".concat(this.title, "\xBB"),
-        successText: 'Статус заказа удален!',
+        successText: 'Статус заказа создан!',
         storeModule: this.storeModule,
         redirectRoute: this.redirectRoute
       });
@@ -212,16 +177,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   created: function created() {
     var _this = this;
 
+    this.clearFieldsAction();
     this.getItemsAction().then(function () {
-      return _this.getItemAction(_this.id);
-    }).then(function () {
-      _this.setPageTitle(_this.title);
+      _this.setPageTitle('Новый статус заказа');
 
       _this.responseData = true;
-    }).then(function () {
-      _this.$v.$reset();
-
-      _this.controlSaveVisibilities = true;
     })["catch"](function () {
       return _this.$router.push(_this.redirectRoute);
     });
@@ -230,10 +190,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue?vue&type=template&id=dcc03b2e&":
-/*!***************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue?vue&type=template&id=dcc03b2e& ***!
-  \***************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue?vue&type=template&id=73b692ca&":
+/*!*****************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue?vue&type=template&id=73b692ca& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -264,37 +224,21 @@ var render = function() {
                       }),
                       _vm._v(" "),
                       _c(
-                        "div",
-                        [
-                          _c(
-                            "slide-y-down-transition",
+                        "slide-y-down-transition",
+                        {
+                          directives: [
                             {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value:
-                                    _vm.controlSaveVisibilities &&
-                                    _vm.$v.$anyDirty &&
-                                    !_vm.$v.$invalid,
-                                  expression:
-                                    "controlSaveVisibilities && $v.$anyDirty && !$v.$invalid"
-                                }
-                              ]
-                            },
-                            [
-                              _c("control-button", {
-                                attrs: { title: "Сохранить" },
-                                on: { click: _vm.onUpdate }
-                              })
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
+                              name: "show",
+                              rawName: "v-show",
+                              value: !_vm.$v.$invalid,
+                              expression: "!$v.$invalid"
+                            }
+                          ]
+                        },
+                        [
                           _c("control-button", {
-                            staticClass: "md-danger",
-                            attrs: { title: "Удалить", icon: "delete" },
-                            on: { click: _vm.onDelete }
+                            attrs: { title: "Создать статус заказа" },
+                            on: { click: _vm.onCreate }
                           })
                         ],
                         1
@@ -330,9 +274,7 @@ var render = function() {
                           title: "Заголовок",
                           icon: "title",
                           name: "title",
-                          value: _vm.title,
                           vField: _vm.$v.title,
-                          differ: true,
                           module: _vm.storeModule,
                           vRules: {
                             required: true,
@@ -347,8 +289,6 @@ var render = function() {
                           title: "Алиас",
                           icon: "code",
                           name: "alias",
-                          value: _vm.alias,
-                          differ: true,
                           vDelay: true,
                           vField: _vm.$v.alias,
                           module: _vm.storeModule,
@@ -366,8 +306,6 @@ var render = function() {
                           title: "Порядок",
                           icon: "sort",
                           name: "order",
-                          value: _vm.order,
-                          vDelay: true,
                           vField: _vm.$v.order,
                           maxlength: 2,
                           module: _vm.storeModule,
@@ -376,12 +314,7 @@ var render = function() {
                       }),
                       _vm._v(" "),
                       _c("v-switch", {
-                        attrs: {
-                          vField: _vm.$v.publish,
-                          differ: true,
-                          value: _vm.publish,
-                          module: _vm.storeModule
-                        }
+                        attrs: { value: _vm.publish, module: _vm.storeModule }
                       })
                     ],
                     1
@@ -412,7 +345,6 @@ var render = function() {
                       _c("v-textarea", {
                         attrs: {
                           name: "description",
-                          value: _vm.description,
                           vField: _vm.$v.description,
                           module: _vm.storeModule
                         }
@@ -728,17 +660,17 @@ var subCategoryImageAddMethod = {
 
 /***/ }),
 
-/***/ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue":
-/*!**************************************************************************************!*\
-  !*** ./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue ***!
-  \**************************************************************************************/
+/***/ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue":
+/*!****************************************************************************************!*\
+  !*** ./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue ***!
+  \****************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _OrderStatusEdit_vue_vue_type_template_id_dcc03b2e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OrderStatusEdit.vue?vue&type=template&id=dcc03b2e& */ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue?vue&type=template&id=dcc03b2e&");
-/* harmony import */ var _OrderStatusEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OrderStatusEdit.vue?vue&type=script&lang=js& */ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue?vue&type=script&lang=js&");
+/* harmony import */ var _OrderStatusCreate_vue_vue_type_template_id_73b692ca___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OrderStatusCreate.vue?vue&type=template&id=73b692ca& */ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue?vue&type=template&id=73b692ca&");
+/* harmony import */ var _OrderStatusCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OrderStatusCreate.vue?vue&type=script&lang=js& */ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -748,9 +680,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _OrderStatusEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _OrderStatusEdit_vue_vue_type_template_id_dcc03b2e___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _OrderStatusEdit_vue_vue_type_template_id_dcc03b2e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _OrderStatusCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _OrderStatusCreate_vue_vue_type_template_id_73b692ca___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _OrderStatusCreate_vue_vue_type_template_id_73b692ca___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -760,38 +692,38 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue"
+component.options.__file = "resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************************!*\
-  !*** ./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************************/
+/***/ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************!*\
+  !*** ./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderStatusEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./OrderStatusEdit.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderStatusEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderStatusCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./OrderStatusCreate.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderStatusCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue?vue&type=template&id=dcc03b2e&":
-/*!*********************************************************************************************************************!*\
-  !*** ./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue?vue&type=template&id=dcc03b2e& ***!
-  \*********************************************************************************************************************/
+/***/ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue?vue&type=template&id=73b692ca&":
+/*!***********************************************************************************************************************!*\
+  !*** ./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue?vue&type=template&id=73b692ca& ***!
+  \***********************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderStatusEdit_vue_vue_type_template_id_dcc03b2e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./OrderStatusEdit.vue?vue&type=template&id=dcc03b2e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue?vue&type=template&id=dcc03b2e&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderStatusEdit_vue_vue_type_template_id_dcc03b2e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderStatusCreate_vue_vue_type_template_id_73b692ca___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../../node_modules/vue-loader/lib??vue-loader-options!./OrderStatusCreate.vue?vue&type=template&id=73b692ca& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue?vue&type=template&id=73b692ca&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderStatusCreate_vue_vue_type_template_id_73b692ca___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderStatusEdit_vue_vue_type_template_id_dcc03b2e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderStatusCreate_vue_vue_type_template_id_73b692ca___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

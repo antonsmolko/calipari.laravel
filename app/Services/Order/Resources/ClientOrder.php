@@ -2,6 +2,7 @@
 
 namespace App\Services\Order\Resources;
 
+use App\Services\OrderItem\Resources\ClientOrderItem as OrderItemResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ClientOrder extends JsonResource
@@ -19,7 +20,7 @@ class ClientOrder extends JsonResource
             'number' => $this->number,
             'hash_number' => $this->hash_number,
             'user_id' => $this->user_id,
-            'items' => json_decode($this->items, true),
+            'items' => OrderItemResource::collection($this->items),
             'delivery' => json_decode($this->delivery, true),
             'customer' => json_decode($this->customer, true),
             'price' => $this->price,

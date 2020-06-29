@@ -7,7 +7,7 @@ const state = {
         long_title: '',
         image: '',
         image_path: '',
-        intro: '',
+        content: '',
         description: '',
         keywords: ''
     },

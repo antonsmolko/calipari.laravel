@@ -2,6 +2,7 @@
 
 use App\Services\Uploader\ImageValidationBuilder;
 use App\Services\User\UserValidator;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\UploadedFile;
 use App\Services\Uploader\Uploader;
@@ -220,5 +221,33 @@ if (! function_exists('addImagesFromResource')) {
         }
 
         return $images;
+    }
+}
+
+if (! function_exists('getOrderItemPath')) {
+    /**
+     * @param JsonResource|\App\Models\OrderItem $item
+     * @return string
+     */
+    function getOrderItemPath($item)
+    {
+        $filter = json_decode($item->filter, true);
+        $w = $item->width_px;
+        $h = $item->height_px;
+        $x = $item->x;
+        $y = $item->y;
+        $flipH = (int) $filter['flipH'];
+        $flipV = (int) $filter['flipV'];
+        $colorize = (bool) $filter['colorize'] ? $filter['colorize'] : 0;
+        $imagePath = $item->image->path;
+
+        return  '/' . $w .
+                '/' . $h .
+                '/' . $x .
+                '/' . $y .
+                '/' . $flipH .
+                '/' . $flipV .
+                '/' . $colorize .
+                '/' . $imagePath;
     }
 }

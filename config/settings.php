@@ -7,5 +7,8 @@ return [
         '11' => '# ### ### ####',
         '7' => '### ## ##',
         '6' => '## ## ##'
-    ]
+    ],
+    'order_item_full_url' => 'order-full',
+    'mail_order_item_thumb_url' => 'mail-thumb',
+    'order_item_thumb_url' => 'thumb',
 ];

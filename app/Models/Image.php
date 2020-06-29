@@ -24,6 +24,16 @@ class Image extends Model
         'deleted' => ImageDeleted::class,
     ];
 
+    const IMAGE_QUERY_BUILDER = [
+        'topics:id,title,alias',
+        'colors:id,title,alias',
+        'interiors:id,title,alias',
+        'tags:id,title',
+        'owner:id,title',
+        'format:id,icon,title',
+        'collection:id,title,main_image_id'
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -109,20 +119,20 @@ class Image extends Model
         return $this->belongsTo('App\Models\Collection');
     }
 
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-//     */
-//    public function orders()
-//    {
-//        return $this->hasMany('App\Models\OrderItem', 'order_id');
-//    }
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany('App\Models\OrderItem', 'image_id');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function likes()
     {
-        return $this->belongsToMany('App\Models\User', 'likes', 'image_id', 'user_id');
+        return $this->belongsToMany('App\Models\User', 'likes');
     }
 
     /**

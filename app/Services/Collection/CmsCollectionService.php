@@ -7,6 +7,7 @@ namespace App\Services\Collection;
 use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
 use App\Services\Collection\Handlers\DestroyHandler;
 use App\Services\Collection\Handlers\GetSyncDataHandler;
+use App\Services\Collection\Handlers\SnapImageHandler;
 use App\Services\Collection\Handlers\StoreHandler;
 use App\Services\Collection\Handlers\UpdateHandler;
 use App\Services\Collection\Handlers\UpdateImagesHandler;
@@ -25,6 +26,7 @@ class CmsCollectionService extends CmsBaseResourceService
     private UpdateHandler $updateHandler;
     private UpdateImagesHandler $updateImagesHandler;
     private DestroyHandler $destroyHandler;
+    private SnapImageHandler $snapImageHandler;
 
     /**
      * CmsCollectionService constructor.
@@ -37,6 +39,7 @@ class CmsCollectionService extends CmsBaseResourceService
      * @param UpdateImagesHandler $updateImagesHandler
      * @param UploadHandler $uploadHandler
      * @param DestroyHandler $destroyHandler
+     * @param SnapImageHandler $snapImageHandler
      */
     public function __construct(
         CmsCollectionRepository $repository,
@@ -47,7 +50,8 @@ class CmsCollectionService extends CmsBaseResourceService
         UpdateHandler $updateHandler,
         UpdateImagesHandler $updateImagesHandler,
         UploadHandler $uploadHandler,
-        DestroyHandler $destroyHandler
+        DestroyHandler $destroyHandler,
+        SnapImageHandler $snapImageHandler
     )
     {
         parent::__construct($repository, $clearCacheByTagHandler);
@@ -58,6 +62,7 @@ class CmsCollectionService extends CmsBaseResourceService
         $this->updateHandler = $updateHandler;
         $this->updateImagesHandler = $updateImagesHandler;
         $this->destroyHandler = $destroyHandler;
+        $this->snapImageHandler = $snapImageHandler;
     }
 
     /**
@@ -76,10 +81,16 @@ class CmsCollectionService extends CmsBaseResourceService
     public function store(array $requestData)
     {
         $rawSyncData = Arr::only($requestData, ['topics', 'interiors', 'tags']);
-        $storeData = Arr::except($requestData, ['topics', 'interiors', 'tags']);
+        $storeData = Arr::except($requestData, ['topics', 'interiors', 'tags', 'image_id']);
         $syncData = $this->getSyncDataHandler->handle($rawSyncData);
 
         $collection = $this->repository->store($storeData);
+
+        if (!empty($requestData['image_id'])) {
+            $image = $this->imageRepository->getItem($requestData['image_id']);
+            $this->snapImageHandler->handle($collection, $image);
+        }
+
         return $this->repository->syncCategories($collection, $syncData);
     }
 
@@ -93,10 +104,16 @@ class CmsCollectionService extends CmsBaseResourceService
         $collection = $this->repository->getItem($id);
 
         $rawSyncData = Arr::only($requestData, ['topics', 'interiors', 'tags']);
-        $updateData = Arr::except($requestData, ['topics', 'interiors', 'tags']);
+        $updateData = Arr::except($requestData, ['topics', 'interiors', 'tags', 'image_id']);
         $syncData = $this->getSyncDataHandler->handle($rawSyncData);
 
         $collection = $this->updateHandler->handle($collection, $updateData);
+
+        if (!$collection->images()->count() && !empty($requestData['image_id'])) {
+            $image = $this->imageRepository->getItem($requestData['image_id']);
+            $this->snapImageHandler->handle($collection, $image);
+        }
+
         $this->repository->syncCategories($collection, $syncData);
 
         if ($collection->images) {

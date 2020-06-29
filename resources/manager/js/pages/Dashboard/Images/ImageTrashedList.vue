@@ -4,7 +4,7 @@
             <div class="md-layout-item">
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
-                        <router-button-link route="manager.dashboard"/>
+                        <router-button-link route="manager.images"/>
                     </md-card-content>
                 </md-card>
             </div>

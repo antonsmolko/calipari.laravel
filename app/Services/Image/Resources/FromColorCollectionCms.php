@@ -22,7 +22,7 @@ class FromColorCollectionCms extends JsonResource
             'format' => $this->format,
             'views' => $this->views,
             'likes' => $this->likes->count(),
-//            'orders' => $this->orders->count(),
+            'orders' => $this->orders->count(),
             'publish' => $this->publish
         ];
     }

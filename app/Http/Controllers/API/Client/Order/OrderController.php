@@ -3,28 +3,27 @@
 namespace App\Http\Controllers\API\Client\Order;
 
 use App\Http\Controllers\API\Client\Order\Requests\StoreRequest;
-use App\Services\Order\OrderService;
-use Illuminate\Http\JsonResponse;
+use App\Services\Order\ClientOrderService;
 
 class OrderController
 {
-    private OrderService $service;
+    private ClientOrderService $service;
 
     /**
      * OrderController constructor.
-     * @param OrderService $service
+     * @param ClientOrderService $service
      */
-    public function __construct(OrderService $service)
+    public function __construct(ClientOrderService $service)
     {
         $this->service = $service;
     }
 
     /**
      * @param StoreRequest $request
-     * @return JsonResponse
+     * @return int
      */
-    public function store(StoreRequest $request): JsonResponse
+    public function store(StoreRequest $request): int
     {
-        return response()->json($this->service->store($request->all()));
+        return $this->service->store($request->all());
     }
 }

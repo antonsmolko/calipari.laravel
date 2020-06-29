@@ -7,7 +7,7 @@ namespace App\Services\User\Repositories;
 use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\User;
-use App\Services\Order\Resources\ClientOrder as ClientOrderResource;
+use App\Services\Order\Resources\ClientOrder as OrderResource;
 use App\Services\User\Resources\User as UserResource;
 
 class ClientUserRepository
@@ -144,7 +144,19 @@ class ClientUserRepository
      */
     public function getOrders($user)
     {
-        return ClientOrderResource::collection($user->orders()->orderBy('id', 'desc')->get());
+        return OrderResource::collection($user->orders()->orderBy('id', 'desc')->get());
+    }
+
+    /**
+     * @param $user
+     * @param int $number
+     * @return mixed
+     */
+    public function getOrderResource($user, int $number)
+    {
+        return new OrderResource($user->orders()
+            ->where('number', $number)
+            ->firstOrFail());
     }
 
     /**
@@ -171,23 +183,23 @@ class ClientUserRepository
 
         /** @var Order $order */
         $order = $user->orders()->where('number', $number)->firstOrFail();
-        $lastOrderStatus = $order->statuses->last();
+//        $lastOrderStatus = $order->statuses->last();
 
         $order->statuses()->syncWithoutDetaching([$canceledStatus->id]);
 
-        return new ClientOrderResource($order);
+        return new OrderResource($order);
     }
 
     /**
-     * @param \Illuminate\Contracts\Auth\Authenticatable|User $user
-     * @param array $items
+     * @param $user
+     * @param array $likes
      * @return mixed
      */
-    public function syncLikes($user, array $items)
+    public function syncWishlist($user, array $likes)
     {
-        $user->likes()->syncWithoutDetaching($items);
+        $user->likes()->sync($likes);
 
-        return $user->likes->pluck('id');
+        return $user->likes->modelKeys();
     }
 
     /**

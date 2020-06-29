@@ -12,18 +12,22 @@ class UploadHandler
 {
     private CmsCollectionRepository $repository;
     private Image $uploadModel;
+    private SnapImageHandler $snapImageHandler;
 
     /**
      * UploadHandler constructor.
      * @param CmsCollectionRepository $repository
      * @param Image $uploadModel
+     * @param SnapImageHandler $snapImageHandler
      */
     public function __construct(
         CmsCollectionRepository $repository,
-        Image $uploadModel)
+        Image $uploadModel,
+        SnapImageHandler $snapImageHandler)
     {
         $this->repository = $repository;
         $this->uploadModel = $uploadModel;
+        $this->snapImageHandler = $snapImageHandler;
     }
 
     /**
@@ -33,11 +37,7 @@ class UploadHandler
      */
     public function handle(Collection $collection, array $uploadFiles)
     {
-        $categories = $collection->categories
-            ->mapWithKeys(fn($item) => [$item['id'] => ['category_type' =>$item['type']]])
-            ->toArray();
-
-        return array_map(function ($file) use ($collection, $categories) {
+        return array_map(function ($file) use ($collection) {
             if ($collection->mainImage && !uploader()->isEqualSizes($file, $collection->mainImage)) {
                 abort(422, __('image_validation.dimensions_should_be_same_as_previous', [
                     'width' => $collection->mainImage->width,
@@ -46,19 +46,8 @@ class UploadHandler
             }
 
             $image = uploader()->store($file, $this->uploadModel);
-            $image->collection_id = $collection->id;
-            if ($collection->owner) {
-                $image->owner_id = $collection->owner->id;
-            }
-            $image->save();
-            $image->categories()->sync($categories);
 
-            if (!$collection->mainImage) {
-                $collection->mainImage()->associate($image);
-                $collection->save();
-            }
-
-            return $image->id;
+            return $this->snapImageHandler->handle($collection, $image);
         }, $uploadFiles);
     }
 }

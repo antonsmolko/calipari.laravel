@@ -5379,7 +5379,7 @@ __webpack_require__.r(__webpack_exports__);
    */
 var WorldMap = function WorldMap() {
   return {
-    component: Promise.all(/*! import() */[__webpack_require__.e(72), __webpack_require__.e(64)]).then(__webpack_require__.bind(null, /*! ./WorldMap.vue */ "./resources/manager/js/components/WorldMap/WorldMap.vue")),
+    component: Promise.all(/*! import() */[__webpack_require__.e(73), __webpack_require__.e(65)]).then(__webpack_require__.bind(null, /*! ./WorldMap.vue */ "./resources/manager/js/components/WorldMap/WorldMap.vue")),
     delay: 200
   };
 };
@@ -78402,369 +78402,369 @@ __webpack_require__.r(__webpack_exports__);
  // Image pages
 
 var ImageList = function ImageList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(8), __webpack_require__.e(25)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(8), __webpack_require__.e(27)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Images/ImageList.vue */ "./resources/manager/js/pages/Dashboard/Images/ImageList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var ExcludedImageList = function ExcludedImageList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(8), __webpack_require__.e(44)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(8), __webpack_require__.e(46)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Images/ExcludedImageList.vue */ "./resources/manager/js/pages/Dashboard/Images/ExcludedImageList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var ImageEdit = function ImageEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(32)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(34)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Images/ImageEdit.vue */ "./resources/manager/js/pages/Dashboard/Images/ImageEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var ImageTrashedList = function ImageTrashedList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(11)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(12)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Images/ImageTrashedList.vue */ "./resources/manager/js/pages/Dashboard/Images/ImageTrashedList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Category pages
 
 
 var CatalogPanel = function CatalogPanel(resolve) {
-  __webpack_require__.e(/*! require.ensure */ 65).then((function () {
+  __webpack_require__.e(/*! require.ensure */ 66).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/CatalogPanel.vue */ "./resources/manager/js/pages/Dashboard/Catalog/CatalogPanel.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var CategoryList = function CategoryList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(17)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(18)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/Categories/CategoryList.vue */ "./resources/manager/js/pages/Dashboard/Catalog/Categories/CategoryList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var CategoryCreate = function CategoryCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(41)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(43)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/Categories/CategoryCreate.vue */ "./resources/manager/js/pages/Dashboard/Catalog/Categories/CategoryCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var CategoryEdit = function CategoryEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(42)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(44)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/Categories/CategoryEdit.vue */ "./resources/manager/js/pages/Dashboard/Catalog/Categories/CategoryEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // SubCategories
 
 
 var SubCategoryList = function SubCategoryList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(22)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(24)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/SubCategories/SubCategoryList.vue */ "./resources/manager/js/pages/Dashboard/Catalog/SubCategories/SubCategoryList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SubCategoryCreate = function SubCategoryCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(45)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(47)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/SubCategories/SubCategoryCreate.vue */ "./resources/manager/js/pages/Dashboard/Catalog/SubCategories/SubCategoryCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SubCategoryEdit = function SubCategoryEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(46)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(48)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/SubCategories/SubCategoryEdit.vue */ "./resources/manager/js/pages/Dashboard/Catalog/SubCategories/SubCategoryEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SubCategoryImageList = function SubCategoryImageList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(8), __webpack_require__.e(24)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(8), __webpack_require__.e(26)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/SubCategories/ImageList.vue */ "./resources/manager/js/pages/Dashboard/Catalog/SubCategories/ImageList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SubCategoryExcludedImageList = function SubCategoryExcludedImageList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(8), __webpack_require__.e(23)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(8), __webpack_require__.e(25)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/SubCategories/ExcludedImageList.vue */ "./resources/manager/js/pages/Dashboard/Catalog/SubCategories/ExcludedImageList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Category pages
 
 
 var CollectionList = function CollectionList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(16)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(17)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/Collections/CollectionList.vue */ "./resources/manager/js/pages/Dashboard/Catalog/Collections/CollectionList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var CollectionCreate = function CollectionCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(35)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(37)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/Collections/CollectionCreate.vue */ "./resources/manager/js/pages/Dashboard/Catalog/Collections/CollectionCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var CollectionEdit = function CollectionEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(36)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(38)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/Collections/CollectionEdit.vue */ "./resources/manager/js/pages/Dashboard/Catalog/Collections/CollectionEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var CollectionImageList = function CollectionImageList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(15)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(16)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Catalog/Collections/ImageList.vue */ "./resources/manager/js/pages/Dashboard/Catalog/Collections/ImageList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Textures
 
 
 var TextureList = function TextureList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(21)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(22)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Textures/TextureList.vue */ "./resources/manager/js/pages/Dashboard/Textures/TextureList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var TextureCreate = function TextureCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(10), __webpack_require__.e(69)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(11), __webpack_require__.e(70)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Textures/TextureCreate.vue */ "./resources/manager/js/pages/Dashboard/Textures/TextureCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var TextureEdit = function TextureEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(10), __webpack_require__.e(70)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(11), __webpack_require__.e(71)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Textures/TextureEdit.vue */ "./resources/manager/js/pages/Dashboard/Textures/TextureEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Users
 
 
 var UserList = function UserList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(4), __webpack_require__.e(31)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(4), __webpack_require__.e(33)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Users/UserList.vue */ "./resources/manager/js/pages/Dashboard/Users/UserList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var UserCreate = function UserCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(39)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(41)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Users/UserCreate.vue */ "./resources/manager/js/pages/Dashboard/Users/UserCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var UserEdit = function UserEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(40)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(42)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Users/UserEdit.vue */ "./resources/manager/js/pages/Dashboard/Users/UserEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Roles
 
 
 var RoleList = function RoleList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(4), __webpack_require__.e(28)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(4), __webpack_require__.e(30)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Roles/RoleList.vue */ "./resources/manager/js/pages/Dashboard/Roles/RoleList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var RoleCreate = function RoleCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(56)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(57)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Roles/RoleCreate.vue */ "./resources/manager/js/pages/Dashboard/Roles/RoleCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var RoleEdit = function RoleEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(57)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(58)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Roles/RoleEdit.vue */ "./resources/manager/js/pages/Dashboard/Roles/RoleEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Permissions
 
 
 var PermissionList = function PermissionList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(27)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(29)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Permissions/PermissionList.vue */ "./resources/manager/js/pages/Dashboard/Permissions/PermissionList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var PermissionCreate = function PermissionCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(54)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(55)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Permissions/PermissionCreate.vue */ "./resources/manager/js/pages/Dashboard/Permissions/PermissionCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var PermissionEdit = function PermissionEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(55)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(56)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Permissions/PermissionEdit.vue */ "./resources/manager/js/pages/Dashboard/Permissions/PermissionEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Settings
 
 
 var SettingList = function SettingList(resolve) {
-  __webpack_require__.e(/*! require.ensure */ 20).then((function () {
+  __webpack_require__.e(/*! require.ensure */ 21).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Settings/SettingList.vue */ "./resources/manager/js/pages/Dashboard/Settings/SettingList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SettingAdministrationList = function SettingAdministrationList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(4), __webpack_require__.e(14)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(4), __webpack_require__.e(15)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Settings/SettingAdministrationList.vue */ "./resources/manager/js/pages/Dashboard/Settings/SettingAdministrationList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SettingCreate = function SettingCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(37)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(39)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Settings/SettingCreate.vue */ "./resources/manager/js/pages/Dashboard/Settings/SettingCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SettingEdit = function SettingEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(38)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(40)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Settings/SettingEdit.vue */ "./resources/manager/js/pages/Dashboard/Settings/SettingEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SettingGroupCreate = function SettingGroupCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(58)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(59)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Settings/SettingGroupCreate.vue */ "./resources/manager/js/pages/Dashboard/Settings/SettingGroupCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var SettingGroupEdit = function SettingGroupEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(59)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(60)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Settings/SettingGroupEdit.vue */ "./resources/manager/js/pages/Dashboard/Settings/SettingGroupEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Store
 
 
 var StorePanel = function StorePanel(resolve) {
-  __webpack_require__.e(/*! require.ensure */ 68).then((function () {
+  __webpack_require__.e(/*! require.ensure */ 69).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/StorePanel.vue */ "./resources/manager/js/pages/Dashboard/Store/StorePanel.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Deliveries
 
 
 var DeliveryList = function DeliveryList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(29)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(31)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/Delivery/DeliveryList.vue */ "./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var DeliveryCreate = function DeliveryCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(60)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(61)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/Delivery/DeliveryCreate.vue */ "./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var DeliveryEdit = function DeliveryEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(61)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(62)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/Delivery/DeliveryEdit.vue */ "./resources/manager/js/pages/Dashboard/Store/Delivery/DeliveryEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // OrderStatuses
 
 
 var OrderStatusList = function OrderStatusList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(30)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(32)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/OrderStatuses/OrderStatusList.vue */ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var OrderStatusCreate = function OrderStatusCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(62)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(63)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue */ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var OrderStatusEdit = function OrderStatusEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(63)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(64)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue */ "./resources/manager/js/pages/Dashboard/Store/OrderStatuses/OrderStatusEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Orders
 
 
 var OrderList = function OrderList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(4), __webpack_require__.e(18)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(10), __webpack_require__.e(4), __webpack_require__.e(19)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/Orders/OrderList.vue */ "./resources/manager/js/pages/Dashboard/Store/Orders/OrderList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var Order = function Order(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(49)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(10), __webpack_require__.e(3), __webpack_require__.e(23)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Store/Orders/Order.vue */ "./resources/manager/js/pages/Dashboard/Store/Orders/Order.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Pages
 
 
 var PagesPanel = function PagesPanel(resolve) {
-  __webpack_require__.e(/*! require.ensure */ 67).then((function () {
+  __webpack_require__.e(/*! require.ensure */ 68).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/PagesPanel.vue */ "./resources/manager/js/pages/Dashboard/Pages/PagesPanel.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var HomePage = function HomePage(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(6), __webpack_require__.e(3), __webpack_require__.e(7), __webpack_require__.e(9), __webpack_require__.e(19)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(6), __webpack_require__.e(3), __webpack_require__.e(7), __webpack_require__.e(9), __webpack_require__.e(20)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Home */ "./resources/manager/js/pages/Dashboard/Pages/Home/index.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var PurchaseStepCreate = function PurchaseStepCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(52)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(53)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepCreate.vue */ "./resources/manager/js/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var PurchaseStepEdit = function PurchaseStepEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(53)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(54)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepEdit.vue */ "./resources/manager/js/pages/Dashboard/Pages/Home/PurchaseSteps/PurchaseStepEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var InteriorSlideCreate = function InteriorSlideCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(50)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(51)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Home/Interiors/SlideCreate.vue */ "./resources/manager/js/pages/Dashboard/Pages/Home/Interiors/SlideCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var InteriorSlideEdit = function InteriorSlideEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(51)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(52)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Home/Interiors/SlideEdit.vue */ "./resources/manager/js/pages/Dashboard/Pages/Home/Interiors/SlideEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var PortfolioPage = function PortfolioPage(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(6), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(7), __webpack_require__.e(9), __webpack_require__.e(43)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(6), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(7), __webpack_require__.e(9), __webpack_require__.e(45)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Portfolio */ "./resources/manager/js/pages/Dashboard/Pages/Portfolio/index.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var WorkExampleCreate = function WorkExampleCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(33)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(35)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleCreate.vue */ "./resources/manager/js/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var WorkExampleEdit = function WorkExampleEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(34)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(36)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleEdit.vue */ "./resources/manager/js/pages/Dashboard/Pages/Portfolio/WorkExamples/WorkExampleEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var WorkExampleImageList = function WorkExampleImageList(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(48)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(50)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Portfolio/WorkExamples/ImageList.vue */ "./resources/manager/js/pages/Dashboard/Pages/Portfolio/WorkExamples/ImageList.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var BlogPage = function BlogPage(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(6), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(7), __webpack_require__.e(9), __webpack_require__.e(26)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(5), __webpack_require__.e(6), __webpack_require__.e(3), __webpack_require__.e(4), __webpack_require__.e(7), __webpack_require__.e(9), __webpack_require__.e(28)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Blog */ "./resources/manager/js/pages/Dashboard/Pages/Blog/index.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var PostCreate = function PostCreate(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(13)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(6), __webpack_require__.e(7), __webpack_require__.e(14)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Blog/Posts/PostCreate.vue */ "./resources/manager/js/pages/Dashboard/Pages/Blog/Posts/PostCreate.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var PostEdit = function PostEdit(resolve) {
-  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(6), __webpack_require__.e(3), __webpack_require__.e(7), __webpack_require__.e(12)]).then((function () {
+  Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(6), __webpack_require__.e(3), __webpack_require__.e(7), __webpack_require__.e(13)]).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Pages/Blog/Posts/PostEdit.vue */ "./resources/manager/js/pages/Dashboard/Pages/Blog/Posts/PostEdit.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }; // Error pages
 
 
 var Error404 = function Error404(resolve) {
-  __webpack_require__.e(/*! require.ensure */ 66).then((function () {
+  __webpack_require__.e(/*! require.ensure */ 67).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Errors/404.vue */ "./resources/manager/js/pages/Dashboard/Errors/404.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 var ErrorsLayout = function ErrorsLayout(resolve) {
-  __webpack_require__.e(/*! require.ensure */ 47).then((function () {
+  __webpack_require__.e(/*! require.ensure */ 49).then((function () {
     resolve(__webpack_require__(/*! @/pages/Dashboard/Errors/ErrorsLayout.vue */ "./resources/manager/js/pages/Dashboard/Errors/ErrorsLayout.vue"));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };

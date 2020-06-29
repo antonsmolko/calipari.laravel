@@ -14,7 +14,7 @@ class LikesRequest extends FormRequest
      */
     public function authorize()
     {
-        return !!auth()->user();
+        return true;
     }
 
     /**
@@ -25,7 +25,7 @@ class LikesRequest extends FormRequest
     public function rules()
     {
         return [
-            'items' => 'array'
+            'likes' => 'array'
         ];
     }
 }

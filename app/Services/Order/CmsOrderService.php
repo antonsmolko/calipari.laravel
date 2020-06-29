@@ -4,21 +4,17 @@
 namespace App\Services\Order;
 
 
-use App\Mail\ChangeOrderStatus;
-use App\Mail\OrderInProcess;
 use App\Models\Order;
+use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
 use App\Services\Order\Handlers\GetMailFormatOrderHandler;
 use App\Services\Order\Repositories\CmsOrderRepository;
 use App\Services\Order\Resources\CmsOrder as OrderResource;
 use App\Services\Order\Resources\CmsOrderFromList as OrderFromListResource;
-use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
 
-class CmsOrderService
+class CmsOrderService extends CmsBaseResourceService
 {
-    private CmsOrderRepository $repository;
-    private ClearCacheByTagHandler $clearCacheByTagHandler;
     private GetMailFormatOrderHandler $getMailFormatOrderHandler;
 
     /**
@@ -30,10 +26,10 @@ class CmsOrderService
     public function __construct(
         CmsOrderRepository $repository,
         ClearCacheByTagHandler $clearCacheByTagHandler,
-        GetMailFormatOrderHandler $getMailFormatOrderHandler)
+        GetMailFormatOrderHandler $getMailFormatOrderHandler
+    )
     {
-        $this->repository = $repository;
-        $this->clearCacheByTagHandler = $clearCacheByTagHandler;
+        parent::__construct($repository, $clearCacheByTagHandler);
         $this->getMailFormatOrderHandler = $getMailFormatOrderHandler;
     }
 
@@ -60,7 +56,16 @@ class CmsOrderService
      */
     public function getCompletedItems(array $requestData)
     {
-        return $this->repository->getCompletedItems($requestData);
+        return $this->repository->getItemsByStatus($requestData, 'completed');
+    }
+
+    /**
+     * @param array $requestData
+     * @return Resources\CmsOrderFromListCollection
+     */
+    public function getCanceledItems(array $requestData)
+    {
+        return $this->repository->getItemsByStatus($requestData, 'canceled');
     }
 
     /**
@@ -107,32 +112,9 @@ class CmsOrderService
     public function sendMail($mailClass, Order $order)
     {
         $orderData = $this->getMailFormatOrderHandler->handle($order);
+
         $email = $orderData['customer']['email'];
         $mail = app()->makeWith($mailClass, ['order' => $orderData]);
         Mail::to($email)->queue($mail);
-    }
-
-    /**
-     * @param Order $order
-     */
-    public function sendMailByCreate(Order $order)
-    {
-        $orderData = $this->getMailFormatOrderHandler->handle($order);
-        $email = $orderData['customer']['email'];
-
-        Mail::to($email)
-            ->queue(new OrderInProcess($orderData));
-    }
-
-    /**
-     * @param Order $order
-     */
-    public function sendMailByChangeStatus(Order $order)
-    {
-        $orderData = $this->getMailFormatOrderHandler->handle($order);
-        $email = $orderData['customer']['email'];
-
-        Mail::to($email)
-            ->queue(new ChangeOrderStatus($orderData));
     }
 }

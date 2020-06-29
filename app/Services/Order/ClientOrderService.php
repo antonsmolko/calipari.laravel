@@ -11,7 +11,7 @@ use App\Services\Cart\ClientCartService;
 use App\Services\Order\Handlers\StoreHandler;
 use App\Services\Order\Repositories\ClientOrderRepository;
 
-class OrderService extends ClientBaseResourceService
+class ClientOrderService extends ClientBaseResourceService
 {
     private StoreHandler $storeHandler;
     private ClientCartService $cartService;
@@ -37,9 +37,9 @@ class OrderService extends ClientBaseResourceService
 
     /**
      * @param array $requestData
-     * @return mixed
+     * @return int
      */
-    public function store(array $requestData)
+    public function store(array $requestData): int
     {
         $order = $this->storeHandler->handle($requestData);
 

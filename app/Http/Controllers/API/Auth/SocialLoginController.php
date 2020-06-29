@@ -65,7 +65,6 @@ class SocialLoginController extends BaseLoginController
     {
         try {
             $serviceUser = Socialite::driver($service)->stateless()->user();
-
         } catch (\Exception $e) {
 
             return redirect(env('CLIENT_BASE_URL')

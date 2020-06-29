@@ -55,7 +55,7 @@
                             </div>
                         </div>
                         <div class="md-layout md-gutter mt-2">
-                            <div class="md-layout-item">
+                            <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-large-size-33 md-size-25">
                                 <v-image title="Образец"
                                          name="sample"
                                          :imgDefault="samplePath"
@@ -63,7 +63,7 @@
                                          :differ="true"
                                          :module="storeModule" />
                             </div>
-                            <div class="md-layout-item">
+                            <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-large-size-33 md-size-25">
                                 <v-image title="Фон"
                                          name="background"
                                          :imgDefault="backgroundPath"

@@ -64,7 +64,7 @@ class UserController extends Controller
      */
     public function getOrder(int $number): JsonResponse
     {
-        return response()->json($this->service->getOrder($number));
+        return response()->json($this->service->getOrderResource($number));
     }
 
     /**
@@ -80,9 +80,9 @@ class UserController extends Controller
      * @param LikesRequest $request
      * @return JsonResponse
      */
-    public function syncLikes(LikesRequest $request): JsonResponse
+    public function syncWishlist(LikesRequest $request): JsonResponse
     {
-        return response()->json($this->service->syncLikes($request->items));
+        return response()->json($this->service->syncWishlist($request->likes));
     }
 
     /**

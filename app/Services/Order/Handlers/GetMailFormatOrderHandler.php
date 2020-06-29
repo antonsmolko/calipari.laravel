@@ -5,6 +5,8 @@ namespace App\Services\Order\Handlers;
 
 
 use App\Models\Order;
+use App\Services\OrderItem\Resources\MailOrderItem as MailOrderItemResource;
+use Illuminate\Support\Collection;
 
 class GetMailFormatOrderHandler
 {
@@ -14,16 +16,15 @@ class GetMailFormatOrderHandler
      */
     public function handle(Order $order): array
     {
-        $items = json_decode($order->items, true);
         $delivery = json_decode($order->delivery, true);
         $customer = json_decode($order->customer, true);
-        $goodQty = $this->getGoodsQtyString($items);
+        $goodQty = $this->getGoodsQtyString($order->items);
 
         return [
             'number' => $order->number,
             'date' => $order->created_at->format('d.m.Y'),
             'status' => $order->statuses->last()->title,
-            'items' => $this->getPreparedItems($items),
+            'items' => $this->getFormattedItems($order->items),
             'delivery' => $delivery,
             'customer' => $customer,
             'goodsQty' => $goodQty,
@@ -33,12 +34,14 @@ class GetMailFormatOrderHandler
     }
 
     /**
-     * @param array $items
+     * @param Collection $items
      * @return string
      */
-    private function getGoodsQtyString(array $items): string
+    private function getGoodsQtyString(Collection $items): string
     {
-        return $this->getGoodsQty($items) . ' ' . wordsDeclension($this->getGoodsQty($items), [
+        $qty = $this->getGoodsQty($items);
+
+        return $qty . ' ' . wordsDeclension($qty, [
             'ТОВАР',
             'ТОВАРА',
             'ТОВАРОВ'
@@ -46,42 +49,26 @@ class GetMailFormatOrderHandler
     }
 
     /**
-     * @param array $items
+     * @param Collection $items
      * @return int
      */
-    private function getGoodsQty(array $items): int
+    private function getGoodsQty(Collection $items): int
     {
-        return array_reduce($items, function($carry, $item) {
-            $carry += $item['qty'];
-            return $carry;
-        }, 0);
+        return $items->reduce(fn($carry, $item) => $carry + $item['qty'], 0);
     }
 
-    /**
-     * @param array $items
-     * @return array
-     */
-    private function getPreparedItems(array $items): array
+    private function getFormattedItems(Collection $items)
     {
-        return array_map(function($item) {
-            return $this->getPreparedItem($item);
-        }, $items);
-    }
-
-    /**
-     * @param array $item
-     * @return array
-     */
-    private function getPreparedItem(array $item): array
-    {
-        return [
-            'thumbPath' => env('APP_URL', 'manager.calipari.ru') . $item['thumbPath'],
-            'article' => getImageArticle($item['imageId']),
-            'dimensions' => $item['width'] . ' см × ' . $item['height'] . ' см',
-            'texture' => $item['texture']['name'],
-            'filter' => $item['filterString'],
-            'qty' => $item['qty'],
-            'price' => $item['price'] * $item['qty']
-        ];
+        return $items->map(fn ($item) => [
+           'article' => getImageArticle($item->image_id),
+           'dimensions' => $item->width_cm . ' см × ' . $item->height_cm . ' см',
+           'texture' => $item->texture->name,
+           'filter' => $item->filter_details,
+           'qty' => $item->qty,
+           'price' => $item->price,
+           'thumb' => env('APP_URL') . '/image/' .
+               config('settings.mail_order_item_thumb_url') .
+               getOrderItemPath($item)
+       ]);
     }
 }

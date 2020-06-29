@@ -17,23 +17,41 @@ Route::group(['prefix' => 'image'], function() {
             'path' => '[\w\.]+',
         ]);
 
-    Route::get('order-item-full/{width}/{height}/{x}/{y}/{flip}/{colorize}/{path}','ImageResize\ImageResizeController@getOrderImage')
+    Route::get(config('settings.order_item_full_url') .
+        '/{width}/{height}/{x}/{y}/{flipH}/{flipV}/{colorize}/{path}','ImageResize\ImageResizeController@getOrderImage')
         ->where([
             'width' => '\d+',
             'height' => '\d+',
             'x' => '\d+',
             'y' => '\d+',
-            'flip' => '[0,1]',
+            'flipH' => '[0,1]',
+            'flipV' => '[0,1]',
             'path' => '[\w\.]+'
         ]);
 
-    Route::get('order-item-thumb/{width}/{height}/{x}/{y}/{flip}/{colorize}/{path}','ImageResize\ImageResizeController@getOrderImageThumb')
+    Route::get(config('settings.order_item_thumb_url') .
+        '/{width}/{height}/{x}/{y}/{flipH}/{flipV}/{colorize}/{path}',
+        'ImageResize\ImageResizeController@getOrderImageThumb')
         ->where([
             'width' => '\d+',
             'height' => '\d+',
             'x' => '\d+',
             'y' => '\d+',
-            'flip' => '[0,1]',
+            'flipH' => '[0,1]',
+            'flipV' => '[0,1]',
+            'path' => '[\w\.]+'
+        ]);
+
+    Route::get(config('settings.mail_order_item_thumb_url') .
+        '/{width}/{height}/{x}/{y}/{flipH}/{flipV}/{colorize}/{path}',
+        'ImageResize\ImageResizeController@getMailOrderImageThumb')
+        ->where([
+            'width' => '\d+',
+            'height' => '\d+',
+            'x' => '\d+',
+            'y' => '\d+',
+            'flipH' => '[0,1]',
+            'flipV' => '[0,1]',
             'path' => '[\w\.]+'
         ]);
 

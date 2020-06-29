@@ -6,9 +6,10 @@ namespace App\Services\User;
 
 use App\Models\User;
 use App\Services\Auth\AuthService;
-use App\Services\Order\Resources\ClientOrder as ClientOrderResource;
+use App\Services\Order\Resources\ClientOrder as OrderResource;
 use App\Services\User\Handlers\CancelOrderHandler;
 use App\Services\User\Handlers\ClientCreateHandler;
+use App\Services\User\Handlers\SyncWishlistHandler;
 use App\Services\User\Handlers\UpdateHandler;
 use App\Services\User\Repositories\ClientUserRepository;
 
@@ -19,6 +20,7 @@ class ClientUserService
     private ClientCreateHandler $createHandler;
     private UpdateHandler $updateHandler;
     private CancelOrderHandler $cancelOrderHandler;
+    private SyncWishlistHandler $syncWishlistHandler;
     private $authUser;
 
     /**
@@ -28,13 +30,15 @@ class ClientUserService
      * @param ClientCreateHandler $createHandler
      * @param UpdateHandler $updateHandler
      * @param CancelOrderHandler $cancelOrderHandler
+     * @param SyncWishlistHandler $syncWishlistHandler
      */
     public function __construct(
         ClientUserRepository $repository,
         AuthService $authService,
         ClientCreateHandler $createHandler,
         UpdateHandler $updateHandler,
-        CancelOrderHandler $cancelOrderHandler
+        CancelOrderHandler $cancelOrderHandler,
+        SyncWishlistHandler $syncWishlistHandler
     )
     {
         $this->repository = $repository;
@@ -42,6 +46,7 @@ class ClientUserService
         $this->createHandler = $createHandler;
         $this->updateHandler = $updateHandler;
         $this->cancelOrderHandler = $cancelOrderHandler;
+        $this->syncWishlistHandler = $syncWishlistHandler;
         $this->authUser = auth()->user();
     }
 
@@ -151,9 +156,9 @@ class ClientUserService
      * @param int $number
      * @return mixed
      */
-    public function getOrder(int $number)
+    public function getOrderResource(int $number)
     {
-        return $this->repository->getOrder($this->authUser, $number);
+        return $this->repository->getOrderResource($this->authUser, $number);
     }
 
     /**
@@ -162,17 +167,17 @@ class ClientUserService
      */
     public function cancelOrder(int $number)
     {
-        return new ClientOrderResource($this->cancelOrderHandler
+        return new OrderResource($this->cancelOrderHandler
             ->handle(auth()->user(), $number));
     }
 
     /**
-     * @param array $items
+     * @param array $likes
      * @return mixed
      */
-    public function syncLikes(array $items)
+    public function syncWishlist(array $likes)
     {
-        return $this->repository->syncLikes($this->authUser, $items);
+        return $this->syncWishlistHandler->handle($likes);
     }
 
     /**

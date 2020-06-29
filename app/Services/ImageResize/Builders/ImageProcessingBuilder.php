@@ -49,10 +49,23 @@ class ImageProcessingBuilder
      * @param int $value
      * @return ImageProcessingBuilder
      */
-    public function flip(int $value): ImageProcessingBuilder
+    public function flipH(int $value): ImageProcessingBuilder
     {
         if ($value == 1) {
-            $this->image = $this->repository->flip($this->image);
+            $this->image = $this->repository->flipH($this->image);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param int $value
+     * @return ImageProcessingBuilder
+     */
+    public function flipV(int $value): ImageProcessingBuilder
+    {
+        if ($value == 1) {
+            $this->image = $this->repository->flipV($this->image);
         }
 
         return $this;

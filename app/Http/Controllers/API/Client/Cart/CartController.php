@@ -31,15 +31,6 @@ class CartController
         return response()->json($this->service->sync($request->items));
     }
 
-//    /**
-//     * @param UpdateRequest $request
-//     * @return JsonResponse
-//     */
-//    public function update(UpdateRequest $request): JsonResponse
-//    {
-//        return response()->json($this->service->update($request->items));
-//    }
-
     /**
      * @param AddRequest $request
      * @return JsonResponse
@@ -57,7 +48,6 @@ class CartController
     {
         return response()->json($this->service->delete($id));
     }
-
 
     /**
      * @param SetQtyRequest $request

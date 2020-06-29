@@ -13,8 +13,8 @@ class ImagesTableSeeder extends Seeder
     public function run()
     {
         $uploadDir = public_path(config('uploads.image_upload_path'));
-        $seedsUploadImageDir = config('seeds.seeds_uploads_path') . 'images';
-        $seedsImageDir = public_path(config('seeds.seeds_path'));
+        $seedsUploadImageDir = config('seeds.seeds_data_path') . 'images';
+        $seedsImageDir = public_path(config('seeds.seeds_uploads_path'));
 
         File::deleteDirectory($uploadDir);
         if (!file_exists($uploadDir)) {

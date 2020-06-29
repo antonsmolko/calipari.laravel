@@ -15,6 +15,6 @@ class Texture extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function orders() {
-        return $this->hasMany('App\Models\Order');
+        return $this->hasMany('App\Models\OrderItem', 'texture_id');
     }
 }

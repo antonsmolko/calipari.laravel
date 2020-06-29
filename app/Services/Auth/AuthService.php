@@ -7,17 +7,33 @@ namespace App\Services\Auth;
 use App\Models\User;
 use App\Services\Base\Auth\BaseAuthService;
 use App\Services\User\Resources\User as UserResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthService extends BaseAuthService
 {
     /**
+     * @param Request $request
      * @return UserResource
      */
-    public function me()
+    public function me(Request $request)
     {
-        return new UserResource($this->guard()->user());
+        $user = $request->user();
+
+        if ($user && $user->isActive() && $user->isConfirmed()) {
+            return new UserResource(auth()->user());
+        }
+//        $this->logout();
     }
+//    /**
+//     * @return UserResource
+//     */
+//    public function me()
+//    {
+//        return $this->guard()->user()
+//            ? new UserResource($this->guard()->user())
+//            : null;
+//    }
 
     public function logout()
     {
@@ -111,19 +127,21 @@ class AuthService extends BaseAuthService
     public function respondWithRefreshToken(string $token)
     {
         return [
+            'message' => 'Токен обновлен!',
+            'status' => 'success',
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => $this->expiresIn
         ];
     }
 
-    /**
-     * Get the guard to be used during authentication.
-     *
-     * @return \Illuminate\Contracts\Auth\Guard
-     */
-    public function guard()
-    {
-        return Auth::guard();
-    }
+//    /**
+//     * Get the guard to be used during authentication.
+//     *
+//     * @return \Illuminate\Contracts\Auth\Guard
+//     */
+//    public function guard()
+//    {
+//        return Auth::guard();
+//    }
 }

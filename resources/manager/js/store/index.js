@@ -4,15 +4,16 @@ import Vuex from 'vuex';
 import images from './modules/images';
 
 import categories from './modules/categories';
-import subCategories from './modules/sub-categories';
 import collections from './modules/collections';
+import dashboard from './modules/dashboard';
+import deliveries from './modules/deliveries';
+import subCategories from './modules/sub-categories';
 import textures from './modules/textures';
 import users from './modules/users';
 import roles from './modules/roles';
 import permissions from './modules/permissions';
 import settings from './modules/settings';
 import settingGroups from './modules/setting-groups';
-import deliveries from './modules/deliveries';
 import orders from './modules/orders';
 import orderStatuses from './modules/order-statuses';
 import table from './modules/table';
@@ -24,7 +25,7 @@ import posts from './modules/posts';
 
 Vue.use(Vuex);
 
-import errors from '@/lib/errors';
+import errors from '@/lib/Errors';
 
 const state = {
     pageTitle: '',
@@ -111,6 +112,7 @@ export default new Vuex.Store({
     modules: {
         images,
         categories,
+        dashboard,
         subCategories,
         collections,
         users,

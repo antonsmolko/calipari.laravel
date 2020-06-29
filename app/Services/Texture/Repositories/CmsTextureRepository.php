@@ -5,6 +5,7 @@ namespace App\Services\Texture\Repositories;
 
 use App\Models\Texture;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
+use Illuminate\Support\Collection;
 
 class CmsTextureRepository extends CmsBaseResourceRepository
 {
@@ -15,5 +16,15 @@ class CmsTextureRepository extends CmsBaseResourceRepository
     public function __construct(Texture $model)
     {
         $this->model = $model;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function index(): Collection
+    {
+        return $this->model::orderBy('id')
+            ->withCount('orders')
+            ->get();
     }
 }

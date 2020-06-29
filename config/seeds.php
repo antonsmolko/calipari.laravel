@@ -66,6 +66,10 @@ return [
         '7' => [
             'title' => 'Политика конфиденциальности',
             'alias' => 'policy'
+        ],
+        '8' => [
+            'title' => 'Договор оферты',
+            'alias' => 'contract-offer'
         ]
     ],
     'formats' => [
@@ -396,8 +400,8 @@ return [
 //            'description' => '',
 //        ]
 //    ],
-    'seeds_uploads_path' => 'seed_data/',
-    'seeds_path' => 'storage/uploads/seed_uploads/',
+    'seeds_data_path' => 'seed_data/',
+    'seeds_uploads_path' => 'storage/uploads/seed_uploads/',
     'categories' => [
         'topics' => [
             [

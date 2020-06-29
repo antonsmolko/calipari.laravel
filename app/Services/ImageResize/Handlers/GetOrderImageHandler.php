@@ -25,7 +25,8 @@ class GetOrderImageHandler
      * @param string $height
      * @param string $x
      * @param string $y
-     * @param string $flip
+     * @param string $flipH
+     * @param string $flipV
      * @param string $colorize
      * @return \Intervention\Image\Image
      */
@@ -35,13 +36,15 @@ class GetOrderImageHandler
         string $height,
         string $x,
         string $y,
-        string $flip,
+        string $flipH,
+        string $flipV,
         string $colorize
     ): \Intervention\Image\Image
     {
         return $this->imageProcessingBuilder
             ->make($imgPath)
-            ->flip($flip)
+            ->flipH($flipH)
+            ->flipV($flipV)
             ->crop($width, $height, $x, $y)
             ->colorize($colorize)
             ->get();

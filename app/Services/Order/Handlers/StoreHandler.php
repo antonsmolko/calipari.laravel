@@ -6,6 +6,8 @@ namespace App\Services\Order\Handlers;
 
 use App\Models\Order;
 use App\Services\Order\Repositories\ClientOrderRepository;
+use App\Services\OrderItem\OrderItemService;
+use Illuminate\Support\Arr;
 
 class StoreHandler
 {
@@ -14,21 +16,24 @@ class StoreHandler
     private GetOrderDeliveryHandler $getOrderDeliveryHandler;
     private GetOrderCustomerHandler $getOrderCustomerHandler;
     private GetOrderPriceHandler $getOrderPriceHandler;
+    private OrderItemService $itemService;
 
     /**
-     * CreateOrderHandler constructor.
+     * StoreHandler constructor.
      * @param ClientOrderRepository $repository
      * @param GetOrderItemsHandler $getOrderItemsHandler
      * @param GetOrderDeliveryHandler $getOrderDeliveryHandler
      * @param GetOrderCustomerHandler $getOrderCustomerHandler
      * @param GetOrderPriceHandler $getOrderPriceHandler
+     * @param OrderItemService $itemService
      */
     public function __construct(
         ClientOrderRepository $repository,
         GetOrderItemsHandler $getOrderItemsHandler,
         GetOrderDeliveryHandler $getOrderDeliveryHandler,
         GetOrderCustomerHandler $getOrderCustomerHandler,
-        GetOrderPriceHandler $getOrderPriceHandler
+        GetOrderPriceHandler $getOrderPriceHandler,
+        OrderItemService $itemService
     )
     {
         $this->repository = $repository;
@@ -36,6 +41,7 @@ class StoreHandler
         $this->getOrderDeliveryHandler = $getOrderDeliveryHandler;
         $this->getOrderCustomerHandler = $getOrderCustomerHandler;
         $this->getOrderPriceHandler = $getOrderPriceHandler;
+        $this->itemService = $itemService;
     }
 
     /**
@@ -45,49 +51,29 @@ class StoreHandler
     public function handle(array $requestData)
     {
         $number = $this->getOrderNumber();
-        $items = $this->getOrderItemsHandler->handle(json_decode($requestData['items'], true));
         $delivery = $this->getOrderDeliveryHandler->handle(json_decode($requestData['delivery'], true));
         $customer = $this->getOrderCustomerHandler->handle(json_decode($requestData['customer'], true));
+        $items = $this->getOrderItemsHandler->handle(json_decode($requestData['items'], true));
         $price = $this->getOrderPriceHandler->handle($items, $delivery['price']);
 
         $orderData = [
             'number' => $number,
             'hash_number' => encrypt($number),
             'user_id' => $requestData['userId'],
-            'items' => json_encode($items, true),
             'delivery' => json_encode($delivery, true),
             'customer' => json_encode($customer, true),
             'price' => $price,
             'comment' => $requestData['comment']
         ];
 
-        return $this->repository->store($orderData);
-    }
+        $order = $this->repository->store($orderData);
 
-    /**
-     * @param int $width
-     * @param int $height
-     * @param int $texturePrice
-     * @param int $qty
-     * @return float|int
-     */
-    private function getItemPrice(int $width, int $height, int $texturePrice, int $qty)
-    {
-        return round($width * $height / 1e6 * $texturePrice, 0) * 100 * $qty;
-    }
+        array_walk($items, function ($item) use ($order) {
+            $storeData = Arr::collapse([$item, ['order_id' => $order->id]]);
+            $this->itemService->store($storeData);
+        });
 
-    /**
-     * @param array $items
-     * @param int $deliveryPrice
-     * @return int|mixed
-     */
-    private function getOrderPrice(array $items, int $deliveryPrice)
-    {
-        $itemsPrice = array_reduce($items, function ($carry, $item) {
-            return $carry += $item['price'];
-        }, 0);
-
-        return $itemsPrice + $deliveryPrice;
+        return $order;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Emails\Order;
 
+
 use Illuminate\View\Component;
 
 class Item extends Component
