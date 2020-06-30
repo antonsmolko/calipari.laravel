@@ -5,11 +5,13 @@ namespace App\Services\Order;
 
 
 use App\Events\Models\Order\OrderSaved;
+use App\Notifications\ReceivedAnOrder;
 use App\Services\Base\Resource\ClientBaseResourceService;
 use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Cart\ClientCartService;
 use App\Services\Order\Handlers\StoreHandler;
 use App\Services\Order\Repositories\ClientOrderRepository;
+use Illuminate\Support\Facades\Notification;
 
 class ClientOrderService extends ClientBaseResourceService
 {
@@ -48,6 +50,8 @@ class ClientOrderService extends ClientBaseResourceService
         }
 
         event(new OrderSaved($order));
+        Notification::route('slack', env('ORDERS_SLACK_WEBHOOK_URL'))
+            ->notify(new ReceivedAnOrder($order));
 
         return $order->number;
     }

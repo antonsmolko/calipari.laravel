@@ -135,18 +135,19 @@ Route::group(['prefix' => 'orders'], function() {
 
 /** Carts */
 
-Route::group(['prefix' => 'carts'], function() {
-    Route::post('/', 'Client\Cart\CartController@update')
-        ->middleware('jwt.auth');
-    Route::post('sync', 'Client\Cart\CartController@sync');
-    Route::post('set-qty', 'Client\Cart\CartController@setQty')
-        ->middleware('jwt.auth');
-    Route::delete('{id}', 'Client\Cart\CartController@delete')
-        ->where('id', '[0-9]+')
-        ->middleware('jwt.auth');
-    Route::post('add', 'Client\Cart\CartController@add')
-        ->middleware('jwt.auth');
-});
+Route::prefix('carts')
+    ->group(function() {
+        Route::post('/', 'Client\Cart\CartController@update')
+            ->middleware('jwt.auth');
+        Route::post('sync', 'Client\Cart\CartController@sync');
+        Route::post('set-qty', 'Client\Cart\CartController@setQty')
+            ->middleware('jwt.auth');
+        Route::delete('{id}', 'Client\Cart\CartController@delete')
+            ->where('id', '[0-9]+')
+            ->middleware('jwt.auth');
+        Route::post('add', 'Client\Cart\CartController@add')
+            ->middleware('jwt.auth');
+    });
 
 
 /** PAGES */
@@ -323,6 +324,7 @@ Route::group(['prefix' => 'manager'], function() {
 
         Route::get('with-types', 'Cms\Setting\SettingController@getItemsWithTypes');
         Route::get('with-group', 'Cms\Setting\SettingController@getItemsWithGroup');
+        Route::post('entries-by-groups', 'Cms\Setting\SettingController@getItemEntriesByGroups');
     });
     Route::apiResource('settings', 'Cms\Setting\SettingController')
         ->except(['create', 'edit', 'update']);

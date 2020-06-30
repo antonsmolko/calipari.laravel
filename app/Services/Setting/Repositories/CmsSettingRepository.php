@@ -35,6 +35,15 @@ class CmsSettingRepository extends CmsBaseResourceRepository
     }
 
     /**
+     * @param array $groupKeys
+     * @return Collection
+     */
+    public function getItemsByGroups(array $groupKeys): Collection
+    {
+        return $this->model::whereIn('group_id', $groupKeys)->get();
+    }
+
+    /**
      * @param int $id
      * @return Setting
      */

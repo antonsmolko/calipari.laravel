@@ -29,47 +29,52 @@
 </template>
 
 <script>
-    export default {
-        name: 'setting-image',
-        props: {
-            title: String,
-            name: String,
-            value: {
-                type: String,
-                default: ''
-            },
-            onSave: Function,
-            type: {
-                default: 'file',
-                type: String
-            }
-        },
-        data () {
-            return {
-                imageData: '',
-                imagePlaceholder: '/img/image_placeholder.jpg'
-            }
-        },
-        methods: {
-            onFileChange(e) {
-                const files = e.target.files || e.dataTransfer.files;
-                if (!files.length)
-                    return;
-                this.createImage(files[0]);
-                this.onSave({
-                    key_name: this.name,
-                    value: e.target.files[0]
-                });
-            },
-            createImage(file) {
-                const reader = new FileReader();
-                const vm = this;
+import { mapActions } from 'vuex'
 
-                reader.onload = (e) => {
-                    vm.imageData = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            },
+export default {
+    name: 'setting-image',
+    props: {
+        title: String,
+        name: String,
+        value: {
+            type: String,
+            default: ''
+        },
+        type: {
+            default: 'file',
+            type: String
         }
+    },
+    data () {
+        return {
+            imageData: '',
+            imagePlaceholder: '/img/image_placeholder.jpg'
+        }
+    },
+    methods: {
+        ...mapActions({
+            updateAction: 'settings/setImageValue'
+        }),
+        onFileChange(e) {
+            const files = e.target.files || e.dataTransfer.files;
+            if (!files.length)
+                return;
+            this.createImage(files[0]);
+
+            this.updateAction({
+                key_name: this.name,
+                value: e.target.files[0]
+            });
+        },
+        createImage(file) {
+            const reader = new FileReader();
+            const vm = this;
+
+            reader.onload = (e) => {
+                vm.imageData = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        },
     }
+}
 </script>

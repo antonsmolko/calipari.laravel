@@ -71,6 +71,13 @@ const actions = {
             }
         })
     },
+    getItemsByGroups ({ commit }, data) {
+        return axiosAction('post', commit, {
+            url: '/settings/entries-by-groups',
+            data,
+            thenContent: response => commit('SET_FIELD', { field: 'entries', value: response.data })
+        })
+    },
     getItem ({ commit }, id) {
         return axiosAction('get', commit, {
             url: `/settings/${id}`,
@@ -82,9 +89,7 @@ const actions = {
     getEntries ({ commit }) {
         return axiosAction('get', commit, {
             url: `/settings/entries`,
-            thenContent: response => {
-                commit('SET_FIELD', { field: 'entries', value: response.data });
-            }
+            thenContent: response => commit('SET_FIELD', { field: 'entries', value: response.data })
         })
     },
     store ({ commit }, payload) {

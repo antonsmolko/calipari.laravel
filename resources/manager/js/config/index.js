@@ -14,7 +14,8 @@ export default {
         portfolio: 5,
         blog: 6,
         policy: 7,
-        contractOffer: 8
+        contractOffer: 8,
+        shippingPayment: 9
     },
 
     postTypes: [

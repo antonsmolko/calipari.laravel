@@ -8,6 +8,7 @@ const state = {
         image: '',
         image_path: '',
         content: '',
+        meta_title: '',
         description: '',
         keywords: ''
     },

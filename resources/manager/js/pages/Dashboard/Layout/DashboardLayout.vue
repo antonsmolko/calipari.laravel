@@ -27,6 +27,7 @@
                     <sidebar-item :link="{name: 'Контакты', path: '/manager/pages/contacts'}" />
                     <sidebar-item :link="{name: 'Политика', path: '/manager/pages/policy'}" />
                     <sidebar-item :link="{name: 'Договор оферты', path: '/manager/pages/contract-offer'}" />
+                    <sidebar-item :link="{name: 'Доставка, оплата', path: '/manager/pages/shipping-payment'}" />
                 </sidebar-item>
                 <sidebar-item :link="{name: 'Магазин', icon: 'local_mall', path: '/manager/store'}">
                     <sidebar-item :link="{name: 'Доставка', icon: 'local_mall', path: '/manager/store/deliveries'}" />

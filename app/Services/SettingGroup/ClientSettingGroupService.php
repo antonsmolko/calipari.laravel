@@ -32,10 +32,11 @@ class ClientSettingGroupService extends ClientBaseResourceService
      */
     public function index()
     {
-        $key = $this->cacheKeyManager->getResourceKey(Key::SETTINGS_PREFIX, ['settings']);
-
-        return Cache::tags(Tag::SETTINGS_TAG)->remember($key, TTL::SETTINGS_TTL, function () {
-            return $this->repository->getItems();
-        });
+        return $this->repository->getItems();
+//        $key = $this->cacheKeyManager->getResourceKey(Key::SETTINGS_PREFIX, ['settings']);
+//
+//        return Cache::tags(Tag::SETTINGS_TAG)->remember($key, TTL::SETTINGS_TTL, function () {
+//            return $this->repository->getItems();
+//        });
     }
 }

@@ -35,4 +35,13 @@ class CmsSettingGroupRepository extends CmsBaseResourceRepository
             ->with(['settings' => fn ($query) => $query->orderBy('id')])
             ->get();
     }
+
+    /**
+     * @param array $aliases
+     * @return mixed
+     */
+    public function getItemKeysByAlias(array $aliases)
+    {
+        return $this->model::whereIn('alias', $aliases)->pluck('id');
+    }
 }

@@ -14,7 +14,8 @@
         <panel-card-link route="manager.pages.blog" icon="article" title="Блог" color="cyan" />
         <panel-card-link route="manager.pages.contacts" icon="location_on" title="Контакты" color="teal" />
         <panel-card-link route="manager.pages.policy" icon="policy" title="Политика конфиденциальности" color="light-green" />
-        <panel-card-link route="manager.pages.contract-offer" icon="grading" title="Договор оферты" color="yellow" />
+        <panel-card-link route="manager.pages.contract-offer" icon="grading" title="Договор оферты" color="amber" />
+        <panel-card-link route="manager.pages.shipping-payment" icon="local_shipping" title="Доставка, оплата" color="deep-orange" />
     </div>
 </template>
 

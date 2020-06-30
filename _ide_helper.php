@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 7.8.1 on 2020-05-29 21:01:37.
+ * Generated for Laravel 7.16.1 on 2020-06-30 14:58:31.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -1654,8 +1654,8 @@ namespace Illuminate\Support\Facades {
      * 
      *
      * @method static \Illuminate\Contracts\Auth\Authenticatable loginUsingId(mixed $id, bool $remember = false)
-     * @method static bool viaRemember()
      * @method static \Symfony\Component\HttpFoundation\Response|null onceBasic(string $field = 'email',array $extraConditions = [])
+     * @method static bool viaRemember()
      * @method static bool|null logoutOtherDevices(string $password, string $attribute = 'password')
      * @see \Illuminate\Auth\AuthManager
      * @see \Illuminate\Contracts\Auth\Factory
@@ -2612,14 +2612,15 @@ namespace Illuminate\Support\Facades {
          * Compile a class component opening.
          *
          * @param string $component
+         * @param string $alias
          * @param string $data
          * @param string $hash
          * @return string 
          * @static 
          */ 
-        public static function compileClassComponentOpening($component, $data, $hash)
+        public static function compileClassComponentOpening($component, $alias, $data, $hash)
         {
-                        return \Illuminate\View\Compilers\BladeCompiler::compileClassComponentOpening($component, $data, $hash);
+                        return \Illuminate\View\Compilers\BladeCompiler::compileClassComponentOpening($component, $alias, $data, $hash);
         }
         
         /**
@@ -2644,6 +2645,19 @@ namespace Illuminate\Support\Facades {
         public static function sanitizeComponentAttribute($value)
         {
                         return \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($value);
+        }
+        
+        /**
+         * Compile Blade echos into valid PHP.
+         *
+         * @param string $value
+         * @return string 
+         * @static 
+         */ 
+        public static function compileEchos($value)
+        {
+                        /** @var \Illuminate\View\Compilers\BladeCompiler $instance */
+                        return $instance->compileEchos($value);
         }
          
     }
@@ -2892,7 +2906,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Assert if a job was dispatched based on a truth-test callback.
          *
-         * @param string $command
+         * @param string|\Closure $command
          * @param callable|int|null $callback
          * @return void 
          * @static 
@@ -2920,7 +2934,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Determine if a job was dispatched based on a truth-test callback.
          *
-         * @param string $command
+         * @param string|\Closure $command
          * @param callable|null $callback
          * @return void 
          * @static 
@@ -2934,7 +2948,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Assert if a job was dispatched after the response was sent based on a truth-test callback.
          *
-         * @param string $command
+         * @param string|\Closure $command
          * @param callable|int|null $callback
          * @return void 
          * @static 
@@ -2962,7 +2976,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Determine if a job was dispatched based on a truth-test callback.
          *
-         * @param string $command
+         * @param string|\Closure $command
          * @param callable|null $callback
          * @return void 
          * @static 
@@ -3923,7 +3937,7 @@ namespace Illuminate\Support\Facades {
          * @param string $key
          * @param mixed $default
          * @param string|null $path
-         * @return \Symfony\Component\HttpFoundation\Cookie 
+         * @return \Symfony\Component\HttpFoundation\Cookie|null 
          * @static 
          */ 
         public static function queued($key, $default = null, $path = null)
@@ -4190,6 +4204,20 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\Database\DatabaseManager $instance */
                         return $instance->reconnect($name);
+        }
+        
+        /**
+         * Set the default database connection for the callback execution.
+         *
+         * @param string $name
+         * @param callable $callback
+         * @return mixed 
+         * @static 
+         */ 
+        public static function usingConnection($name, $callback)
+        {
+                        /** @var \Illuminate\Database\DatabaseManager $instance */
+                        return $instance->usingConnection($name, $callback);
         }
         
         /**
@@ -5390,7 +5418,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Assert if an event was dispatched based on a truth-test callback.
          *
-         * @param string $event
+         * @param string|\Closure $event
          * @param callable|int|null $callback
          * @return void 
          * @static 
@@ -5418,7 +5446,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Determine if an event was dispatched based on a truth-test callback.
          *
-         * @param string $event
+         * @param string|\Closure $event
          * @param callable|null $callback
          * @return void 
          * @static 
@@ -5735,6 +5763,19 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\Filesystem\Filesystem $instance */
                         return $instance->extension($path);
+        }
+        
+        /**
+         * Guess the file extension from the mime-type of a given file.
+         *
+         * @param string $path
+         * @return string|null 
+         * @static 
+         */ 
+        public static function guessExtension($path)
+        {
+                        /** @var \Illuminate\Filesystem\Filesystem $instance */
+                        return $instance->guessExtension($path);
         }
         
         /**
@@ -7125,7 +7166,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Assert if a mailable was sent based on a truth-test callback.
          *
-         * @param string $mailable
+         * @param string|\Closure $mailable
          * @param callable|int|null $callback
          * @return void 
          * @static 
@@ -7165,7 +7206,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Assert if a mailable was queued based on a truth-test callback.
          *
-         * @param string $mailable
+         * @param string|\Closure $mailable
          * @param callable|int|null $callback
          * @return void 
          * @static 
@@ -7500,7 +7541,7 @@ namespace Illuminate\Support\Facades {
          * Assert if a notification was sent based on a truth-test callback.
          *
          * @param mixed $notifiable
-         * @param string $notification
+         * @param string|\Closure $notification
          * @param callable|null $callback
          * @return void 
          * @throws \Exception
@@ -7531,7 +7572,7 @@ namespace Illuminate\Support\Facades {
          * Determine if a notification was sent based on a truth-test callback.
          *
          * @param mixed $notifiable
-         * @param string $notification
+         * @param string|\Closure $notification
          * @param callable|null $callback
          * @return void 
          * @throws \Exception
@@ -7642,8 +7683,8 @@ namespace Illuminate\Support\Facades {
     /**
      * 
      *
-     * @method static string sendResetLink(array $credentials)
      * @method static mixed reset(array $credentials, \Closure $callback)
+     * @method static string sendResetLink(array $credentials)
      * @see \Illuminate\Auth\Passwords\PasswordBroker
      */ 
     class Password {
@@ -7869,7 +7910,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Assert if a job was pushed based on a truth-test callback.
          *
-         * @param string $job
+         * @param string|\Closure $job
          * @param callable|int|null $callback
          * @return void 
          * @static 
@@ -7884,7 +7925,7 @@ namespace Illuminate\Support\Facades {
          * Assert if a job was pushed based on a truth-test callback.
          *
          * @param string $queue
-         * @param string $job
+         * @param string|\Closure $job
          * @param callable|null $callback
          * @return void 
          * @static 
@@ -7927,7 +7968,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Determine if a job was pushed based on a truth-test callback.
          *
-         * @param string $job
+         * @param string|\Closure $job
          * @param callable|null $callback
          * @return void 
          * @static 
@@ -8717,7 +8758,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the client user agent.
          *
-         * @return string 
+         * @return string|null 
          * @static 
          */ 
         public static function userAgent()
@@ -9933,8 +9974,8 @@ namespace Illuminate\Support\Facades {
         
         /**
          * Gets the preferred format for the response by inspecting, in the following order:
-         *   * the request format set using setRequestFormat
-         *   * the values of the Accept HTTP header
+         *   * the request format set using setRequestFormat;
+         *   * the values of the Accept HTTP header.
          * 
          * Note that if you use this method, you should send the "Vary: Accept" header
          * in the response to prevent any issues with intermediary HTTP caches.
@@ -10029,6 +10070,19 @@ namespace Illuminate\Support\Facades {
             //Method inherited from \Symfony\Component\HttpFoundation\Request            
                         /** @var \Illuminate\Http\Request $instance */
                         return $instance->isXmlHttpRequest();
+        }
+        
+        /**
+         * Checks whether the client browser prefers safe content or not according to RFC8674.
+         *
+         * @see https://tools.ietf.org/html/rfc8674
+         * @static 
+         */ 
+        public static function preferSafeContent()
+        {
+            //Method inherited from \Symfony\Component\HttpFoundation\Request            
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->preferSafeContent();
         }
         
         /**
@@ -10882,13 +10936,13 @@ namespace Illuminate\Support\Facades {
     /**
      * 
      *
-     * @method static \Illuminate\Routing\RouteRegistrar prefix(string  $prefix)
-     * @method static \Illuminate\Routing\RouteRegistrar where(array  $where)
-     * @method static \Illuminate\Routing\RouteRegistrar middleware(array|string|null $middleware)
      * @method static \Illuminate\Routing\RouteRegistrar as(string $value)
      * @method static \Illuminate\Routing\RouteRegistrar domain(string $value)
+     * @method static \Illuminate\Routing\RouteRegistrar middleware(array|string|null $middleware)
      * @method static \Illuminate\Routing\RouteRegistrar name(string $value)
      * @method static \Illuminate\Routing\RouteRegistrar namespace(string $value)
+     * @method static \Illuminate\Routing\RouteRegistrar prefix(string  $prefix)
+     * @method static \Illuminate\Routing\RouteRegistrar where(array  $where)
      * @see \Illuminate\Routing\Router
      */ 
     class Route {
@@ -12155,6 +12209,30 @@ namespace Illuminate\Support\Facades {
      * @see \Illuminate\Session\Store
      */ 
     class Session {
+        
+        /**
+         * Determine if requests for the same session should wait for each to finish before executing.
+         *
+         * @return bool 
+         * @static 
+         */ 
+        public static function shouldBlock()
+        {
+                        /** @var \Illuminate\Session\SessionManager $instance */
+                        return $instance->shouldBlock();
+        }
+        
+        /**
+         * Get the name of the cache store / driver that should be used to acquire session locks.
+         *
+         * @return string|null 
+         * @static 
+         */ 
+        public static function blockDriver()
+        {
+                        /** @var \Illuminate\Session\SessionManager $instance */
+                        return $instance->blockDriver();
+        }
         
         /**
          * Get the session configuration.
@@ -14517,7 +14595,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Start a component rendering process.
          *
-         * @param \Illuminate\View\View|string $view
+         * @param \Illuminate\View\View|\Closure|string $view
          * @param array $data
          * @return void 
          * @static 
@@ -15102,6 +15180,18 @@ namespace Creativeorange\Gravatar\Facades {
                         /** @var \Creativeorange\Gravatar\Gravatar $instance */
                         return $instance->get($email, $configGroup);
         }
+         
+    }
+ 
+}
+
+namespace Jenssegers\Date { 
+
+    /**
+     * 
+     *
+     */ 
+    class Date {
          
     }
  
@@ -15973,18 +16063,6 @@ namespace Facade\Ignition\Facades {
                         /** @var \Facade\FlareClient\Flare $instance */
                         return $instance->group($groupName, $properties);
         }
-         
-    }
- 
-}
-
-namespace Jenssegers\Date { 
-
-    /**
-     * 
-     *
-     */ 
-    class Date {
          
     }
  
@@ -16976,13 +17054,14 @@ namespace Collective\Html {
          * @param string $url
          * @param string $title
          * @param array $attributes
+         * @param bool $escape
          * @return \Illuminate\Support\HtmlString 
          * @static 
          */ 
-        public static function secureLink($url, $title = null, $attributes = [])
+        public static function secureLink($url, $title = null, $attributes = [], $escape = true)
         {
                         /** @var \Collective\Html\HtmlBuilder $instance */
-                        return $instance->secureLink($url, $title, $attributes);
+                        return $instance->secureLink($url, $title, $attributes, $escape);
         }
         
         /**
@@ -16992,13 +17071,14 @@ namespace Collective\Html {
          * @param string $title
          * @param array $attributes
          * @param bool $secure
+         * @param bool $escape
          * @return \Illuminate\Support\HtmlString 
          * @static 
          */ 
-        public static function linkAsset($url, $title = null, $attributes = [], $secure = null)
+        public static function linkAsset($url, $title = null, $attributes = [], $secure = null, $escape = true)
         {
                         /** @var \Collective\Html\HtmlBuilder $instance */
-                        return $instance->linkAsset($url, $title, $attributes, $secure);
+                        return $instance->linkAsset($url, $title, $attributes, $secure, $escape);
         }
         
         /**
@@ -17007,13 +17087,14 @@ namespace Collective\Html {
          * @param string $url
          * @param string $title
          * @param array $attributes
+         * @param bool $escape
          * @return \Illuminate\Support\HtmlString 
          * @static 
          */ 
-        public static function linkSecureAsset($url, $title = null, $attributes = [])
+        public static function linkSecureAsset($url, $title = null, $attributes = [], $escape = true)
         {
                         /** @var \Collective\Html\HtmlBuilder $instance */
-                        return $instance->linkSecureAsset($url, $title, $attributes);
+                        return $instance->linkSecureAsset($url, $title, $attributes, $escape);
         }
         
         /**
@@ -17023,13 +17104,15 @@ namespace Collective\Html {
          * @param string $title
          * @param array $parameters
          * @param array $attributes
+         * @param bool $secure
+         * @param bool $escape
          * @return \Illuminate\Support\HtmlString 
          * @static 
          */ 
-        public static function linkRoute($name, $title = null, $parameters = [], $attributes = [])
+        public static function linkRoute($name, $title = null, $parameters = [], $attributes = [], $secure = null, $escape = true)
         {
                         /** @var \Collective\Html\HtmlBuilder $instance */
-                        return $instance->linkRoute($name, $title, $parameters, $attributes);
+                        return $instance->linkRoute($name, $title, $parameters, $attributes, $secure, $escape);
         }
         
         /**
@@ -17039,13 +17122,15 @@ namespace Collective\Html {
          * @param string $title
          * @param array $parameters
          * @param array $attributes
+         * @param bool $secure
+         * @param bool $escape
          * @return \Illuminate\Support\HtmlString 
          * @static 
          */ 
-        public static function linkAction($action, $title = null, $parameters = [], $attributes = [])
+        public static function linkAction($action, $title = null, $parameters = [], $attributes = [], $secure = null, $escape = true)
         {
                         /** @var \Collective\Html\HtmlBuilder $instance */
-                        return $instance->linkAction($action, $title, $parameters, $attributes);
+                        return $instance->linkAction($action, $title, $parameters, $attributes, $secure, $escape);
         }
         
         /**
@@ -18702,7 +18787,7 @@ namespace  {
             }
          
             /**
-             * Execute a callback over each item while chunking by id.
+             * Execute a callback over each item while chunking by ID.
              *
              * @param callable $callback
              * @param int $count
@@ -18749,7 +18834,7 @@ namespace  {
              * Pass the query to a given callback.
              *
              * @param callable $callback
-             * @return \Illuminate\Database\Query\Builder 
+             * @return \Illuminate\Database\Eloquent\Builder 
              * @static 
              */ 
             public static function tap($callback)
@@ -19064,7 +19149,7 @@ namespace  {
             /**
              * Add a subselect expression to the query.
              *
-             * @param \Closure|\Illuminate\Database\Query\Builder|string $query
+             * @param \Closure|$this|string $query
              * @param string $as
              * @return \Illuminate\Database\Query\Builder 
              * @throws \InvalidArgumentException
@@ -19493,6 +19578,20 @@ namespace  {
             }
          
             /**
+             * Add an "or where in raw" clause for integer values to the query.
+             *
+             * @param string $column
+             * @param \Illuminate\Contracts\Support\Arrayable|array $values
+             * @return \Illuminate\Database\Query\Builder 
+             * @static 
+             */ 
+            public static function orWhereIntegerInRaw($column, $values)
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->orWhereIntegerInRaw($column, $values);
+            }
+         
+            /**
              * Add a "where not in raw" clause for integer values to the query.
              *
              * @param string $column
@@ -19505,6 +19604,20 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Query\Builder $instance */
                                 return $instance->whereIntegerNotInRaw($column, $values, $boolean);
+            }
+         
+            /**
+             * Add an "or where not in raw" clause for integer values to the query.
+             *
+             * @param string $column
+             * @param \Illuminate\Contracts\Support\Arrayable|array $values
+             * @return \Illuminate\Database\Query\Builder 
+             * @static 
+             */ 
+            public static function orWhereIntegerNotInRaw($column, $values)
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->orWhereIntegerNotInRaw($column, $values);
             }
          
             /**
@@ -20883,11 +20996,11 @@ namespace  {
 
     class Gravatar extends \Creativeorange\Gravatar\Facades\Gravatar {}
 
+    class Date extends \Jenssegers\Date\Date {}
+
     class Debugbar extends \Barryvdh\Debugbar\Facade {}
 
     class Flare extends \Facade\Ignition\Facades\Flare {}
-
-    class Date extends \Jenssegers\Date\Date {}
 
     class Socialite extends \Laravel\Socialite\Facades\Socialite {}
 

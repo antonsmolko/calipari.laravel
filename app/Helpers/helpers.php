@@ -251,3 +251,16 @@ if (! function_exists('getOrderItemPath')) {
                 '/' . $imagePath;
     }
 }
+
+if (! function_exists('getRandomEmoji')) {
+    /**
+     * @param array $emoji
+     * @return string
+     */
+    function getRandomEmoji(array $emoji): string
+    {
+        $randIndex = array_rand($emoji);
+
+        return $emoji[$randIndex];
+    }
+}

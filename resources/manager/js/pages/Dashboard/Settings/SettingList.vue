@@ -27,7 +27,6 @@
                                         :name="setting.key_name"
                                         :value="setting.value"
                                         :type="setting.file"
-                                        :onSave="onSaveImage"
                                     />
 
                                     <setting-input
@@ -35,7 +34,6 @@
                                         :title="setting.display_name"
                                         :name="setting.key_name"
                                         :value="setting.value"
-                                        :onSave="onSaveText"
                                     />
 
                                 </div>
@@ -56,8 +54,8 @@
 <script>
     import { mapActions, mapState } from 'vuex'
 
-    import SettingInput from './SettingInput';
-    import SettingImage from './SettingImage';
+    import SettingInput from '@/custom_components/Settings/SettingInput';
+    import SettingImage from '@/custom_components/Settings/SettingImage';
 
     import { pageTitle } from '@/mixins/base'
 
@@ -78,17 +76,8 @@
         },
         methods: {
             ...mapActions({
-                getItemsWithSettingsAction: 'settingGroups/getItemsWithSettings',
-                updateTextValueAction: 'settings/setTextValue',
-                updateImageValueAction: 'settings/setImageValue'
+                getItemsWithSettingsAction: 'settingGroups/getItemsWithSettings'
             }),
-
-            onSaveText (payload) {
-                this.updateTextValueAction(payload);
-            },
-            onSaveImage (payload) {
-                this.updateImageValueAction(payload);
-            },
         },
         created () {
             this.getItemsWithSettingsAction()

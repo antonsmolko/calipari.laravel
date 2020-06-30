@@ -1,28 +1,22 @@
 <template>
-    <div>
-        <div class="md-between">
-            <h3>Блог</h3>
-            <router-button-link title="Создать статью" icon="add" color="md-success"
-                                route="manager.pages.blog.posts.create" />
-        </div>
-        <tabs
-            :tab-name="['Гид', 'Новости', 'Акции', 'События']"
-            :activeTab="activePostTab"
-            color-button="success">
-            <template slot="tab-pane-1">
-                <PostList />
-            </template>
-            <template slot="tab-pane-2">
-                <PostList type="news" typeTitle="Новости" />
-            </template>
-            <template slot="tab-pane-3">
-                <PostList type="stocks" typeTitle="Акции" />
-            </template>
-            <template slot="tab-pane-4">
-                <PostList type="events" typeTitle="События" />
-            </template>
-        </tabs>
-    </div>
+    <tabs
+        :tab-name="['Гид', 'Новости', 'Акции', 'События']"
+        :activeTab="activePostTab"
+        color-button="success">
+        <template slot="header-title"><h3>Статьи</h3></template>
+        <template slot="tab-pane-1">
+            <PostList />
+        </template>
+        <template slot="tab-pane-2">
+            <PostList type="news" typeTitle="Новости" />
+        </template>
+        <template slot="tab-pane-3">
+            <PostList type="stocks" typeTitle="Акции" />
+        </template>
+        <template slot="tab-pane-4">
+            <PostList type="events" typeTitle="События" />
+        </template>
+    </tabs>
 </template>
 
 <script>

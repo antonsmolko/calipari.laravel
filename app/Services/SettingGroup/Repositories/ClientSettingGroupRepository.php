@@ -20,7 +20,9 @@ class ClientSettingGroupRepository extends ClientBaseResourceRepository
      */
     public function getItems()
     {
-        return SettingGroupWithSettingsResource::collection($this->model::has('settings')->get()->load('settings'));
+        return SettingGroupWithSettingsResource::collection($this->model::has('settings')
+            ->get()
+            ->load('settings'));
 
 
     }

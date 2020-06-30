@@ -345,6 +345,12 @@ const CatalogPage = resolve => {
     })
 };
 
+const ShippingPaymentPage = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/ShippingPayment'], () => {
+        resolve(require('@/pages/Dashboard/Pages/ShippingPayment'))
+    })
+};
+
 
 /** Error pages */
 const Error404 = resolve => {
@@ -801,6 +807,11 @@ const managerMenuPages = {
             path: 'contract-offer',
             name: 'manager.pages.contract-offer',
             component: ContractOfferPage
+        },
+        {
+            path: 'shipping-payment',
+            name: 'manager.pages.shipping-payment',
+            component: ShippingPaymentPage
         },
     ]
 };

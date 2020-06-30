@@ -33,21 +33,16 @@ class GetPriceHandler
                 'base_uri' => 'https://integration.edu.cdek.ru',
             ])
         );
-        $this->senderPostCode =
-            $this->settingService->getItemValueByKey(config('cdek.post_code_setting_key')) ??
-            config('cdek.default_post_code');
-        $this->packageWeight =
-            $this->settingService->getItemValueByKey(config('cdek.package.weight')) ??
-            config('cdek.package.weight');
-        $this->packageHeight =
-            $this->settingService->getItemValueByKey(config('cdek.package.dimensions.height')) ??
-            config('cdek.package.dimensions.height');
-        $this->packageWidth =
-            $this->settingService->getItemValueByKey(config('cdek.package.dimensions.width')) ??
-            config('cdek.package.dimensions.width');
-        $this->packageLength =
-            $this->settingService->getItemValueByKey(config('cdek.package.dimensions.length')) ??
-            config('cdek.package.dimensions.length');
+        $this->senderPostCode = $this->settingService
+            ->getItemValueByKey(config('cdek.post_code_setting_key'));
+        $this->packageWeight = $this->settingService
+            ->getItemValueByKey(config('cdek.package_weight_setting_key'));
+        $this->packageHeight = $this->settingService
+            ->getItemValueByKey(config('cdek.package_height_setting_key'));
+        $this->packageWidth = $this->settingService
+            ->getItemValueByKey(config('cdek.package_width_setting_key'));
+        $this->packageLength = $this->settingService
+            ->getItemValueByKey(config('cdek.package_length_setting_key'));
     }
 
     /**

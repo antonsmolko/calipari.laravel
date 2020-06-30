@@ -9,18 +9,20 @@
     "license": "MIT",
     "require": {
         "php": "^7.4",
+        "ext-gd": "*",
         "ext-json": "*",
         "ext-memcached": "*",
-        "ext-gd": "*",
         "algolia/algoliasearch-client-php": "^2.2",
         "creativeorange/gravatar": "~1.0",
         "fideloper/proxy": "^4.0",
         "fruitcake/laravel-cors": "^1.0",
+        "fzaninotto/faker": "^1.4",
         "intervention/image": "^2.5",
         "intervention/imagecache": "^2.4",
         "jenssegers/date": "^4.0",
         "laravel/framework": "^7.0",
         "laravel/scout": "^7.2",
+        "laravel/slack-notification-channel": "^2.0",
         "laravel/socialite": "^4.3",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
@@ -32,8 +34,7 @@
         "socialiteproviders/yandex": "^3.0",
         "spatie/laravel-query-builder": "^2.8",
         "tymon/jwt-auth": "^1.0",
-        "yandex-money/yandex-checkout-sdk-php": "^1.5",
-        "fzaninotto/faker": "^1.4"
+        "yandex-money/yandex-checkout-sdk-php": "^1.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

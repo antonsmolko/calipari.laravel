@@ -9,27 +9,32 @@ use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
 use App\Services\Setting\Handlers\SetImageSettingValueHandler;
 use App\Services\Setting\Repositories\CmsSettingRepository;
 use App\Services\Base\Resource\CmsBaseResourceService;
+use App\Services\SettingGroup\Repositories\CmsSettingGroupRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 
 class CmsSettingService extends CmsBaseResourceService
 {
     private SetImageSettingValueHandler $setImageValueHandler;
+    private CmsSettingGroupRepository $groupRepository;
     private array $types;
 
     /**
-     * SettingServiceCms constructor.
+     * CmsSettingService constructor.
      * @param CmsSettingRepository $repository
      * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param CmsSettingGroupRepository $groupRepository
      * @param SetImageSettingValueHandler $setImageSettingValueHandler
      */
     public function __construct(
         CmsSettingRepository $repository,
         ClearCacheByTagHandler $clearCacheByTagHandler,
+        CmsSettingGroupRepository $groupRepository,
         SetImageSettingValueHandler $setImageSettingValueHandler
     )
     {
         parent::__construct($repository, $clearCacheByTagHandler);
+        $this->groupRepository = $groupRepository;
         $this->setImageValueHandler = $setImageSettingValueHandler;
         $this->types = Setting::TYPES;
     }
@@ -63,6 +68,18 @@ class CmsSettingService extends CmsBaseResourceService
     public function getItemsWithGroup(): Collection
     {
         return $this->repository->getItemsWithGroup();
+    }
+
+    /**
+     * @param array $groups
+     * @return mixed
+     */
+    public function getItemEntriesByGroups(array $groups)
+    {
+        $groupKeys = $this->groupRepository->getItemKeysByAlias($groups)->toArray();
+        $items = $this->repository->getItemsByGroups($groupKeys);
+
+        return $items->pluck('value', 'key_name');
     }
 
     /**

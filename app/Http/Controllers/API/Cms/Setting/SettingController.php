@@ -9,6 +9,7 @@ use App\Http\Controllers\API\Cms\Setting\Requests\SetTextSettingValueRequest;
 use App\Http\Controllers\API\Cms\Setting\Requests\UpdateSettingRequest;
 use App\Services\Setting\CmsSettingService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class SettingController extends BaseResourceController
 {
@@ -35,6 +36,15 @@ class SettingController extends BaseResourceController
     public function getItemsWithGroup(): JsonResponse
     {
         return response()->json($this->service->getItemsWithGroup());
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getItemEntriesByGroups(Request $request): JsonResponse
+    {
+        return response()->json($this->service->getItemEntriesByGroups($request->groups));
     }
 
     /**

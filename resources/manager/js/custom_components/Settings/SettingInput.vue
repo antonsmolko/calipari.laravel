@@ -3,6 +3,7 @@
         <div class="md-layout-item">
             <h4 class="card-title">{{ title }}</h4>
             <md-field>
+                <md-icon v-if="icon">{{ icon }}</md-icon>
                 <md-input
                     :name="name"
                     :value="value"
@@ -16,6 +17,9 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import debounce from 'lodash/debounce'
+const _debounce = debounce(fn => fn(), 500)
 export default {
     name: 'setting-input',
     props: {
@@ -28,8 +32,12 @@ export default {
             default: 500,
         },
         type: {
-            default: 'text',
-            type: String
+            type: String,
+            default: 'text'
+        },
+        icon: {
+            type: String,
+            default: null
         }
     },
     data () {
@@ -40,19 +48,18 @@ export default {
         }
     },
     methods: {
-        onUpdateDelay() {
-            clearTimeout(this.updateTimeout);
-            this.updateTimeout = setTimeout(this.onUpdate, this.timeout);
-        },
+        ...mapActions({
+            updateAction: 'settings/setTextValue',
+        }),
         onInputChange(value) {
             this.inputValue = value.trim();
-            this.onUpdateDelay();
+            _debounce(this.onUpdate);
         },
         onUpdate() {
-            return this.onSave({
+            this.updateAction({
                 key_name: this.name,
                 value: this.inputValue
-            });
+            })
         }
     },
     created() {

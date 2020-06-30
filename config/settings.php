@@ -11,4 +11,25 @@ return [
     'order_item_full_url' => 'order-full',
     'mail_order_item_thumb_url' => 'mail-thumb',
     'order_item_thumb_url' => 'thumb',
+    'slack' => [
+        'emoji' => [
+            'order' => [
+                'national_park',
+                'cityscape',
+                'foggy',
+                'night_with_stars',
+                'sunrise_over_mountains',
+                'sunrise',
+                'city_sunset',
+                'city_sunrise',
+                'bridge_at_night',
+                'milky_way',
+                'fireworks',
+                'sparkler',
+
+            ],
+            'backcall' => 'telephone_receiver',
+            'feedback' => 'incoming_envelope'
+        ]
+    ]
 ];

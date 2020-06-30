@@ -70,6 +70,10 @@ return [
         '8' => [
             'title' => 'Договор оферты',
             'alias' => 'contract-offer'
+        ],
+        '9' => [
+            'title' => 'Доставка, оплата',
+            'alias' => 'shipping-payment'
         ]
     ],
     'formats' => [
@@ -245,14 +249,14 @@ return [
         ],
         [
             'display_name' => 'Московский 99',
-            'key_name' => 'moscow_99',
+            'key_name' => 'pickup_1',
             'type' => 'text',
             'value' => 'г. Брянск, пр-кт Московский, дом 99, строительный комплекс «Твой Дом», павильон 34',
             'group_id' => 4
         ],
         [
             'display_name' => 'Кромская 50',
-            'key_name' => 'kromskaya_50',
+            'key_name' => 'pickup_2',
             'type' => 'text',
             'value' => 'г. Брянск, ул. Кромская, дом 50, «Сервисбаза», склад 3Б',
             'group_id' => 4
@@ -260,30 +264,35 @@ return [
         [
             'display_name' => 'Почтовый индекс отправителя',
             'key_name' => config('cdek.post_code_setting_key'), //!!! Don't touch !!!
+            'value' => config('cdek.default_post_code'), //!!! Don't touch !!!
             'type' => 'text',
             'group_id' => 5
         ],
         [
             'display_name' => 'Вес упакавки',
-            'key_name' => config('cdek.package.weight'), //!!! Don't touch !!!
+            'key_name' => config('cdek.package_weight_setting_key'),
+            'value'=> config('cdek.package.weight'), //!!! Don't touch !!!
             'type' => 'text',
             'group_id' => 5
         ],
         [
             'display_name' => 'Высота упаковки',
-            'key_name' => config('cdek.package.dimensions.height'), //!!! Don't touch !!!
+            'key_name' => config('cdek.package_height_setting_key'),
+            'value'=> config('cdek.package.dimensions.height'), //!!! Don't touch !!!
             'type' => 'text',
             'group_id' => 5
         ],
         [
             'display_name' => 'Ширина упаковки',
-            'key_name' => config('cdek.package.dimensions.width'), //!!! Don't touch !!!
+            'key_name' => config('cdek.package_width_setting_key'),
+            'value'=> config('cdek.package.dimensions.width'), //!!! Don't touch !!!
             'type' => 'text',
             'group_id' => 5
         ],
         [
             'display_name' => 'Длина упаковки',
-            'key_name' => config('cdek.package.dimensions.length'), //!!! Don't touch !!!
+            'key_name' => config('cdek.package_length_setting_key'),
+            'value'=> config('cdek.package.dimensions.length'), //!!! Don't touch !!!
             'type' => 'text',
             'group_id' => 5
         ],

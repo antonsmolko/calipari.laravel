@@ -1,7 +1,11 @@
 <template>
-    <div class="md-layout">
-        <div class="md-layout-item">
-            <h3>Портфолио</h3>
+    <md-card>
+        <md-card-header class="md-card-header-text md-card-header-green">
+            <div class="card-text">
+                <h4 class="title">Портфолио</h4>
+            </div>
+        </md-card-header>
+        <md-card-content>
             <div class="md-between">
                 <h4>Список работ</h4>
                 <router-button-link title="Создать работу" icon="add" color="md-success"
@@ -61,8 +65,8 @@
 
                 </template>>
             </v-extended-table>
-        </div>
-    </div>
+        </md-card-content>
+    </md-card>
 </template>
 
 <script>
