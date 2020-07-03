@@ -128,7 +128,7 @@ const actions = {
     },
     removeImage({ commit, dispatch }, id) {
         return axiosAction('get', commit, {
-            url: `/images/${id}/remove-owner`,
+            url: `/images/${id}/dissociate-owner`,
             thenContent: response => dispatch('table/updateItemsPost', null, { root: true })
         })
     },

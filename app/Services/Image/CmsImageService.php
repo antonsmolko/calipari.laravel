@@ -7,10 +7,10 @@ namespace App\Services\Image;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
 use App\Services\Cache\Tag;
-use App\Services\Collection\Repositories\CmsCollectionRepository;
+use App\Services\ColorCollection\Repositories\CmsColorCollectionRepository;
 use App\Services\Image\Handlers\DeleteImageHandler;
 use App\Services\Image\Handlers\GetSyncDataHandler;
-use App\Services\Image\Handlers\SyncUpdateWithCollectionHandler;
+use App\Services\Image\Handlers\SyncUpdateWithColorCollectionHandler;
 use App\Services\Image\Handlers\UpdateHandler;
 use App\Services\Image\Handlers\UpdateImagePathHandler;
 use App\Services\Image\Handlers\UploadHandler;
@@ -20,46 +20,46 @@ use Illuminate\Support\Arr;
 
 class CmsImageService extends CmsBaseResourceService
 {
-    private CmsCollectionRepository $collectionRepository;
+    private CmsColorCollectionRepository $colorCollectionRepository;
     private UploadHandler $uploadHandler;
     private UpdateImagePathHandler $updateItemPathHandler;
     private DeleteImageHandler $destroyHandler;
     private GetSyncDataHandler $getSyncDataHandler;
     private UpdateHandler $updateHandler;
-    private SyncUpdateWithCollectionHandler $syncUpdateWithCollectionHandler;
+    private SyncUpdateWithColorCollectionHandler $syncUpdateWithColorCollectionHandler;
 
     /**
      * CmsImageService constructor.
      * @param CmsImageRepository $repository
-     * @param CmsCollectionRepository $collectionRepository
+     * @param CmsColorCollectionRepository $colorCollectionRepository
      * @param ClearCacheByTagHandler $clearCacheByTagHandler
      * @param UploadHandler $uploadHandler
      * @param UpdateImagePathHandler $updateImagePathHandler
      * @param DeleteImageHandler $deleteImageHandler
      * @param GetSyncDataHandler $getSyncDataHandler
      * @param UpdateHandler $updateHandler
-     * @param SyncUpdateWithCollectionHandler $syncUpdateWithCollectionHandler
+     * @param SyncUpdateWithColorCollectionHandler $syncUpdateWithColorCollectionHandler
      */
     public function __construct(
         CmsImageRepository $repository,
-        CmsCollectionRepository $collectionRepository,
+        CmsColorCollectionRepository $colorCollectionRepository,
         ClearCacheByTagHandler $clearCacheByTagHandler,
         UploadHandler $uploadHandler,
         UpdateImagePathHandler $updateImagePathHandler,
         DeleteImageHandler $deleteImageHandler,
         GetSyncDataHandler $getSyncDataHandler,
         UpdateHandler $updateHandler,
-        SyncUpdateWithCollectionHandler $syncUpdateWithCollectionHandler
+        SyncUpdateWithColorCollectionHandler $syncUpdateWithColorCollectionHandler
     )
     {
         parent::__construct($repository, $clearCacheByTagHandler);
-        $this->collectionRepository = $collectionRepository;
+        $this->colorCollectionRepository = $colorCollectionRepository;
         $this->uploadHandler = $uploadHandler;
         $this->updateItemPathHandler = $updateImagePathHandler;
         $this->destroyHandler = $deleteImageHandler;
         $this->getSyncDataHandler = $getSyncDataHandler;
         $this->updateHandler = $updateHandler;
-        $this->syncUpdateWithCollectionHandler = $syncUpdateWithCollectionHandler;
+        $this->syncUpdateWithColorCollectionHandler = $syncUpdateWithColorCollectionHandler;
         $this->cacheTag = Tag::IMAGES_TAG;
     }
 
@@ -114,9 +114,9 @@ class CmsImageService extends CmsBaseResourceService
 
         $this->updateHandler->handle($image, $syncData, $updateData);
 
-        $collection = $image->collection;
-        if ($collection) {
-            $this->syncUpdateWithCollectionHandler->handle($id, $collection, $updateData);
+        $colorCollection = $image->colorCollection;
+        if ($colorCollection) {
+            $this->syncUpdateWithColorCollectionHandler->handle($id, $colorCollection, $updateData);
         }
 
         if (Arr::has($requestData, 'image')) {
@@ -161,21 +161,21 @@ class CmsImageService extends CmsBaseResourceService
     public function publish(int $id)
     {
         $item = $this->repository->getItem($id);
-        $collection = $item->collection;
+        $colorCollection = $item->colorCollection;
 
-        return !$collection || $collection->main_image_id !== $item->id
+        return !$colorCollection || $colorCollection->main_image_id !== $item->id
             ? $this->repository->publish($item)
-            : abort(400, __('image_validation.unable_to_unpublish_main_image_of_collection'));
+            : abort(400, __('image_validation.unable_to_unpublish_main_image_of_color_collection'));
     }
 
     /**
      * @param int $id
      * @return mixed
      */
-    public function removeOwner(int $id)
+    public function dissociateOwner(int $id)
     {
         $item = $this->repository->getItem($id);
 
-        return $this->repository->removeOwner($item);
+        return $this->repository->dissociateOwner($item);
     }
 }

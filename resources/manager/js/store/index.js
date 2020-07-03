@@ -3,8 +3,9 @@ import Vuex from 'vuex';
 
 import images from './modules/images';
 
+import artCollections from './modules/art-collections';
 import categories from './modules/categories';
-import collections from './modules/collections';
+import colorCollections from './modules/color-collections';
 import dashboard from './modules/dashboard';
 import deliveries from './modules/deliveries';
 import subCategories from './modules/sub-categories';
@@ -110,11 +111,12 @@ export default new Vuex.Store({
     actions,
     getters,
     modules: {
-        images,
+        artCollections,
         categories,
+        colorCollections,
+        images,
         dashboard,
         subCategories,
-        collections,
         users,
         roles,
         permissions,

@@ -33,7 +33,7 @@ class CmsBaseCategoryRepository extends CmsBaseResourceRepository
      */
     public function getExcludedImages($category, array $requestData)
     {
-        return Image::doesntHave('collection')
+        return Image::doesntHave('colorCollection')
             ->whereDoesntHave('categories', fn ($query) => $query->where('id', $category->id))
             ->with(Image::IMAGE_QUERY_BUILDER)
             ->withCount(['likes', 'orders'])

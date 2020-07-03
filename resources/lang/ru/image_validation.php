@@ -12,7 +12,7 @@ return [
     'not_writable_directory' => 'Директория «:path» не доступна для записи!',
     'wrong_proportions' => 'Пропорции изображения «:file_name» не входят в допустимые пределы!',
     'unable_to_delete_main_image_of_collection' => 'Невозможно удалить главное изображение коллекции!',
-    'unable_to_unpublish_main_image_of_collection' => 'Невозможно отменить публикацию главного изображения коллекции!',
-    'unable_to_remove_image_of_collection' => 'Невозможно отвязать изображение коллекции!',
+    'unable_to_unpublish_main_image_of_color_collection' => 'Невозможно отменить публикацию главного изображения цветовой коллекции!',
+    'unable_to_remove_image_of_color_collection' => 'Невозможно отвязать изображение цветовой коллекции!',
     'dimensions_should_be_same_as_previous' => 'Размеры изображения должны быть такими же, как у предыдущего изображения: высота - :width px, ширина - :height px!'
 ];

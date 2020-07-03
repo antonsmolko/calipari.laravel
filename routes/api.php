@@ -72,6 +72,9 @@ Route::prefix('catalog')
         Route::get('images/{id}/editor', 'Client\Image\ImageController@getItemFromEditor')
             ->where('id', '[0-9]+');
 
+        Route::get('images/{id}/color-collection-images', 'Client\Image\ImageController@getItemColorCollectionImages')
+            ->where('id', '[0-9]+');
+
         Route::post('images/wish-list/tags', 'Client\Image\ImageController@getWishListTags')
             ->name('catalog.images.wish-list.tags');
 
@@ -90,12 +93,17 @@ Route::prefix('catalog')
         Route::get('search/{query}', 'Client\Search\SearchController');
 
 
-        /** Collections */
+        /** Color Collections */
 
-        Route::get('collections/{collection}', 'Client\Collection\CollectionController@getItemByAliasWithImages')
+        Route::get('color-collections/{collection}', 'Client\ColorCollection\ColorCollectionController@getItemByAliasWithImages')
             ->where('collection', '[a-z]+');
-        Route::get('collections/{id}/tags', 'Client\Collection\CollectionController@getItemTags')
-            ->where('id', '[0-9]+');
+//        Route::get('color-collections/{id}/tags', 'Client\ColorCollection\ColorCollectionController@getItemTags')
+//            ->where('id', '[0-9]+');
+
+        /** Art Collections */
+
+        Route::get('art-collections/{collection}', 'Client\ArtCollection\ArtCollectionController@getItemByAliasWithImages')
+            ->where('collection', '[a-z]+');
 
 
         /** Filters */
@@ -227,9 +235,9 @@ Route::group(['prefix' => 'manager'], function() {
     Route::get('images/{id}/publish', 'Cms\Image\ImageController@publish')
         ->where('id', '[0-9]+')
         ->name('images.publish');
-    Route::get('images/{id}/remove-owner', 'Cms\Image\ImageController@removeOwner')
+    Route::get('images/{id}/dissociate-owner', 'Cms\Image\ImageController@dissociateOwner')
         ->where('id', '[0-9]+')
-        ->name('images.remove-owner');
+        ->name('images.dissociate-owner');
     Route::post('images/{id}', 'Cms\Image\ImageController@update')
         ->where('id', '[0-9]+')
         ->name('images.update');
@@ -285,19 +293,34 @@ Route::group(['prefix' => 'manager'], function() {
         Route::apiResource('owners', 'Cms\Owner\OwnerController')->except(['create', 'edit']);
 
 
-        /** Collections */
+        /** Color Collections */
 
-        Route::group(['prefix' => 'collections'], function() {
-            Route::get('{id}/images', 'Cms\Collection\CollectionController@getImages')
+        Route::group(['prefix' => 'color-collections'], function() {
+            Route::get('{id}/images', 'Cms\ColorCollection\ColorCollectionController@getImages')
                 ->where('id', '[0-9]+');
-            Route::post('{id}/upload', 'Cms\Collection\CollectionController@upload')
+            Route::post('{id}/upload', 'Cms\ColorCollection\ColorCollectionController@upload')
                 ->where('id', '[0-9]+');
-            Route::post('{id}/set-main-image', 'Cms\Collection\CollectionController@setMainImage')
+            Route::post('{id}/set-main-image', 'Cms\ColorCollection\ColorCollectionController@setMainImage')
                 ->where('id', '[0-9]+');
-            Route::get('{id}/publish', 'Cms\Collection\CollectionController@publish')
+            Route::get('{id}/publish', 'Cms\ColorCollection\ColorCollectionController@publish')
                 ->where('id', '[0-9]+');
         });
-        Route::apiResource('collections', 'Cms\Collection\CollectionController');
+        Route::apiResource('color-collections', 'Cms\ColorCollection\ColorCollectionController');
+
+        /** Art Collections */
+
+        Route::group(['prefix' => 'art-collections'], function() {
+            Route::get('{id}/images', 'Cms\ArtCollection\ArtCollectionController@getImages')
+                ->where('id', '[0-9]+');
+            Route::get('{id}/publish', 'Cms\ArtCollection\ArtCollectionController@publish')
+                ->where('id', '[0-9]+');
+            Route::post('{id}/images/add', 'Cms\ArtCollection\ArtCollectionController@addImages')
+                ->where('id', '[0-9]+');
+            Route::get('{categoryId}/images/{imageId}/remove', 'Cms\ArtCollection\ArtCollectionController@removeImage')
+                ->where('id', '[0-9]+');
+            Route::post('images/excluded', 'Cms\ArtCollection\ArtCollectionController@getExcludedImages');
+        });
+        Route::apiResource('art-collections', 'Cms\ArtCollection\ArtCollectionController');
     });
 
 

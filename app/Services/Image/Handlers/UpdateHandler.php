@@ -12,6 +12,10 @@ class UpdateHandler
 {
     private CmsImageRepository $repository;
 
+    /**
+     * UpdateHandler constructor.
+     * @param CmsImageRepository $repository
+     */
     public function __construct(CmsImageRepository $repository)
     {
         $this->repository = $repository;

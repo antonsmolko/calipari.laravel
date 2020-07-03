@@ -15,6 +15,11 @@ class CacheWarmUpHandler
     private ClientCategoryRepository $clientRepository;
     private CacheKeyManager $cacheKeyManager;
 
+    /**
+     * CacheWarmUpHandler constructor.
+     * @param ClientCategoryRepository $clientRepository
+     * @param CacheKeyManager $cacheKeyManager
+     */
     public function __construct(
         ClientCategoryRepository $clientRepository,
         CacheKeyManager $cacheKeyManager

@@ -4,7 +4,6 @@
 namespace App\Services\Filter;
 
 
-use App\Services\Filter\Handlers\GetModelKeysHandler;
 use App\Services\Filter\Repositories\FilterRepository;
 use App\Services\Image\Repositories\ClientImageRepository;
 use Illuminate\Http\Request;
@@ -13,23 +12,19 @@ class FilterService
 {
     private FilterRepository $filterRepository;
     private ClientImageRepository $imageRepository;
-    private GetModelKeysHandler $getModelKeysHandler;
 
     /**
      * FilterService constructor.
      * @param FilterRepository $filterRepository
      * @param ClientImageRepository $imageRepository
-     * @param GetModelKeysHandler $getModelKeysHandler
      */
     public function __construct(
         FilterRepository $filterRepository,
-        ClientImageRepository $imageRepository,
-        GetModelKeysHandler $getModelKeysHandler
+        ClientImageRepository $imageRepository
     )
     {
         $this->filterRepository = $filterRepository;
         $this->imageRepository = $imageRepository;
-        $this->getModelKeysHandler = $getModelKeysHandler;
     }
 
     /**

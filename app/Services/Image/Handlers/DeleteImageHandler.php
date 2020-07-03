@@ -33,9 +33,8 @@ class DeleteImageHandler
      */
     public function handle(Image $image)
     {
-        $collection = $image->collection;
-        if (!$collection || $collection->main_image_id !== $image->id) {
-//            uploader()->remove($image->path);
+        $colorCollection = $image->colorCollection;
+        if (!$colorCollection || $colorCollection->main_image_id !== $image->id) {
             if ($image->homeModuleInteriorSlide) {
                 $this->homeModuleInteriorSlideDestroyHandler->handle($image->homeModuleInteriorSlide);
             }
@@ -43,6 +42,6 @@ class DeleteImageHandler
             return $this->repository->destroy($image);
         }
 
-        return abort(400, __('image_validation.unable_to_delete_main_image_of_collection'));
+        return abort(400, __('image_validation.unable_to_delete_main_image_of_color_collection'));
     }
 }

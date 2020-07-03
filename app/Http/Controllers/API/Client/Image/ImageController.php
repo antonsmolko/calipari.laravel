@@ -54,4 +54,13 @@ class ImageController extends Controller
     {
         return response()->json($this->service->getWishListTags($request->keys));
     }
+
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getItemColorCollectionImages(int $id): JsonResponse
+    {
+        return response()->json($this->service->getItemColorCollectionImages($id));
+    }
 }

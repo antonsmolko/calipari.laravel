@@ -103,13 +103,13 @@ class CmsBaseCategoryService extends CmsBaseResourceService
     {
         $category = $this->repository->getItem($categoryId);
         $image = $this->imageService->getItem($imageId);
-        $collection = $image->collection;
+        $colorCollection = $image->colorCollection;
 
-        if (!$collection || !$collection->main_image_id === $image->id) {
+        if (!$colorCollection || !$colorCollection->main_image_id === $image->id) {
             return $this->repository->removeImage($category, $imageId);
         }
 
-        return abort(400, __('image_validation.unable_to_remove_image_of_collection'));
+        return abort(400, __('image_validation.unable_to_remove_image_of_color_collection'));
     }
 
     /**

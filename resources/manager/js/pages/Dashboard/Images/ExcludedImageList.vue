@@ -53,16 +53,13 @@
     import { mapState, mapActions } from 'vuex'
 
     import { categoryPage } from '@/mixins/categories'
-    import { pageTitle } from '@/mixins/base'
     import { imageAddMethod } from '@/mixins/crudMethods'
-
     import ImageListTable from "@/custom_components/Tables/ImageListTable";
 
     export default {
         name: 'ExcludedImageList',
         mixins: [
             categoryPage,
-            pageTitle,
             imageAddMethod
         ],
         components: {
@@ -88,8 +85,7 @@
         },
         computed: {
             ...mapState({
-                category: state => state.categories.item,
-                title: state => state.categories.fields.title
+                category: state => state.categories.item
             })
         },
         created () {

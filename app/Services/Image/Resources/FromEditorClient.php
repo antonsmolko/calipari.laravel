@@ -18,12 +18,11 @@ class FromEditorClient extends JsonResource
             'id' => $this->id,
             'article' => getImageArticle($this->id),
             'path' => $this->path,
-            'format' => $this->format->title,
             'ratio' => $this->width / $this->height,
             'width' => $this->width,
             'height' => $this->height,
             'max_print_width' => $this->max_print_width,
-            'collection_id' => $this->collection_id
+            'hasColorCollection' => (bool) $this->colorCollection
         ];
     }
 }

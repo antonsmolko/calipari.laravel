@@ -50,20 +50,10 @@ class ReceivedAnOrder extends Notification
             ->from('Calipari', ':package:')
             ->to('#orders')
             ->content('Поступил новый заказ № ' . $order->number)
-
             ->attachment(function ($attachment) use ($order) {
                 $customer = json_decode($order->customer, true);
                 $delivery = json_decode($order->delivery, true);
-//                $attachment
-//                    ->fields([
-//                        'Имя' => $customer['name'],
-//                        'Email' => $customer['email'],
-//                        'Телефон' => $customer['phone'],
-//                        'Способ доставки' => $delivery['title'],
-//                        'Комментарий к заказу' => $order['comment'] ?? '-',
-//                        'Цена' => $order->price . ' ₽',
-//                    ])
-//                    ->markdown(['fields']);
+/** Не форматировать. Оставить так. !!! */
                 $attachment
                     ->content(
 '*Имя* - ' . $customer['name'] . '
@@ -78,20 +68,6 @@ class ReceivedAnOrder extends Notification
                     ->markdown(['text']);
                 });
     }
-
-//    /**
-//     * Get the mail representation of the notification.
-//     *
-//     * @param  mixed  $notifiable
-//     * @return \Illuminate\Notifications\Messages\MailMessage
-//     */
-//    public function toMail($notifiable)
-//    {
-//        return (new MailMessage)
-//                    ->line('The introduction to the notification.')
-//                    ->action('Notification Action', url('/'))
-//                    ->line('Thank you for using our application!');
-//    }
 
     /**
      * Get the array representation of the notification.

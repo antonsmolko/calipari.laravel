@@ -11,7 +11,7 @@
             route="manager.catalog"
             icon="category"
             title="Каталог"
-            :count="resourcesCount.categories + resourcesCount.collections"
+            :count="resourcesCount.categories + resourcesCount.color_collections"
             color="blue-grey" />
 
         <panel-card-link
@@ -81,12 +81,6 @@ import { pageTitle } from '@/mixins/base'
 
 export default {
     components: {
-        // ChartCard,
-        // AnimatedNumber,
-        // ProductCard,
-        // GlobalSalesCard,
-        // GlobalSalesTable,
-        // AsyncWorldMap,
         PanelCardLink
     },
     mixins: [ pageTitle ],
@@ -105,7 +99,7 @@ export default {
             tables: [
                 'images',
                 'categories',
-                'collections',
+                'color_collections',
                 'textures',
                 'settings',
                 'orders',

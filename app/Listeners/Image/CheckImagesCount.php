@@ -4,23 +4,23 @@ namespace App\Listeners\Image;
 
 use App\Events\Models\Model as ModelEvent;
 use App\Services\Category\CmsCategoryService;
-use App\Services\Collection\CmsCollectionService;
+use App\Services\ColorCollection\CmsColorCollectionService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
 class CheckImagesCount implements ShouldQueue
 {
     private CmsCategoryService $categoryService;
-    private CmsCollectionService $collectionService;
+    private CmsColorCollectionService $collectionService;
 
     /**
      * CheckImagesCount constructor.
      * @param CmsCategoryService $categoryService
-     * @param CmsCollectionService $collectionService
+     * @param CmsColorCollectionService $collectionService
      */
     public function __construct(
         CmsCategoryService $categoryService,
-        CmsCollectionService $collectionService
+        CmsColorCollectionService $collectionService
     )
     {
         $this->categoryService = $categoryService;

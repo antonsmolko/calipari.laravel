@@ -12,6 +12,10 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ClientCategoryRepository extends ClientBaseResourceRepository
 {
+    /**
+     * ClientCategoryRepository constructor.
+     * @param Category $model
+     */
     public function __construct(Category $model)
     {
         $this->model = $model;
@@ -64,6 +68,10 @@ class ClientCategoryRepository extends ClientBaseResourceRepository
         );
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     */
     public function getItemTags(int $id)
     {
         return $this->model::getTagsById($id);

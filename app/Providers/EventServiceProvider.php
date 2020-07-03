@@ -25,46 +25,53 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         \App\Events\Models\Category\CategorySaved::class => [
-            \App\Listeners\Cache\Category\CategoryClearByTag::class,
+            \App\Listeners\Cache\Category\CategoryCacheClear::class,
+            \App\Listeners\Cache\Image\ImageCacheClear::class,
         ],
 
         \App\Events\Models\Category\CategoryUpdated::class => [
-            \App\Listeners\Cache\Category\CategoryClearByTag::class,
+            \App\Listeners\Cache\Category\CategoryCacheClear::class,
+            \App\Listeners\Cache\Image\ImageCacheClear::class,
         ],
 
         \App\Events\Models\Category\CategoryDeleted::class => [
-            \App\Listeners\Cache\Category\CategoryClearByTag::class,
+            \App\Listeners\Cache\Category\CategoryCacheClear::class,
+            \App\Listeners\Cache\Image\ImageCacheClear::class,
         ],
 
         \App\Events\Models\Image\ImageSaved::class => [
-            \App\Listeners\Cache\Image\ImageClearByTag::class,
+            \App\Listeners\Cache\Image\ImageCacheClear::class,
+            \App\Listeners\Cache\Category\CategoryCacheClear::class,
             \App\Listeners\Image\CheckImagesCount::class,
         ],
 
         \App\Events\Models\Image\ImageUpdated::class => [
-            \App\Listeners\Cache\Image\ImageClearByTag::class,
+            \App\Listeners\Cache\Image\ImageCacheClear::class,
+            \App\Listeners\Cache\Category\CategoryCacheClear::class,
             \App\Listeners\Image\CheckImagesCount::class,
         ],
 
         \App\Events\Models\Image\ImageDeleted::class => [
-            \App\Listeners\Cache\Image\ImageClearByTag::class,
+            \App\Listeners\Cache\Image\ImageCacheClear::class,
+            \App\Listeners\Cache\Category\CategoryCacheClear::class,
             \App\Listeners\Image\CheckImagesCount::class,
         ],
 
         \App\Events\Models\Delivery\DeliverySaved::class => [
-            \App\Listeners\Cache\Delivery\DeliveryClearByTag::class,
+            \App\Listeners\Cache\Delivery\DeliveryCacheClear::class,
         ],
 
         \App\Events\Models\Delivery\DeliveryUpdated::class => [
-            \App\Listeners\Cache\Delivery\DeliveryClearByTag::class,
+            \App\Listeners\Cache\Delivery\DeliveryCacheClear::class,
         ],
 
         \App\Events\Models\Delivery\DeliveryDeleted::class => [
-            \App\Listeners\Cache\Delivery\DeliveryClearByTag::class,
+            \App\Listeners\Cache\Delivery\DeliveryCacheClear::class,
         ],
 
         \App\Events\Models\Order\OrderSaved::class => [
             \App\Listeners\Mail\Order\SendCreated::class,
+            \App\Listeners\Cache\Image\ImageCacheClear::class,
         ],
 
         \App\Events\Models\Order\OrderUpdated::class => [

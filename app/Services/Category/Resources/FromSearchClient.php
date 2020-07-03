@@ -18,7 +18,6 @@ class FromSearchClient extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'image_path' => $this->image_path,
-//            'images_count' => $this->images->count(),
             'type' => 'category',
         ];
     }

@@ -10,8 +10,7 @@
         <side-bar
             :active-color="sidebarBackground"
             :background-image="sidebarBackgroundImage"
-            :data-background-color="sidebarBackgroundColor"
-        >
+            :data-background-color="sidebarBackgroundColor">
             <user-menu />
             <mobile-menu />
             <template slot="links">
@@ -39,7 +38,8 @@
                     <sidebar-item :link="{name: 'Цвета', path: '/manager/catalog/categories/colors'}" />
                     <sidebar-item :link="{name: 'Интерьеры', path: '/manager/catalog/categories/interiors'}" />
                     <sidebar-item :link="{name: 'Теги', path: '/manager/catalog/categories/tags'}" />
-                    <sidebar-item :link="{name: 'Коллекции', path: '/manager/catalog/collections'}" />
+                    <sidebar-item :link="{name: 'Арт коллекции', path: '/manager/catalog/art-collections'}" />
+                    <sidebar-item :link="{name: 'Цветовые коллекции', path: '/manager/catalog/color-collections'}" />
                     <sidebar-item :link="{name: 'Владельцы', path: '/manager/catalog/subcategories/owners'}" />
                 </sidebar-item>
                 <sidebar-item :link="{name: 'Фактуры', icon: 'style', path: '/manager/textures'}" />

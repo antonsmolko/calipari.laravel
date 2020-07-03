@@ -7,8 +7,8 @@ export const createMethod = {
 
             return this.$store.dispatch(`${module}store`, sendData)
                 .then(() => {
-                    this.$router.push(redirectRoute);
-                    // window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
+                    // this.$router.push(redirectRoute);
+                    window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
 
                     return swal.fire({
                         title: successText,
@@ -66,10 +66,10 @@ export const deleteMethod = {
                         return this.$store.dispatch(`${module}${method}`, { payload, tableMode })
                             .then(() => {
                                 if (redirectRoute) {
-                                    this.$router.push(redirectRoute);
-                                    // window.history.length > 1
-                                    //     ? this.$router.go(-1)
-                                    //     : this.$router.push(redirectRoute);
+                                    // this.$router.push(redirectRoute);
+                                    window.history.length > 1
+                                        ? this.$router.go(-1)
+                                        : this.$router.push(redirectRoute);
                                 }
 
                                 return deleteSwalFireAlert(successText, title);

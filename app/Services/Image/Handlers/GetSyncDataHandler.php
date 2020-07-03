@@ -4,8 +4,6 @@
 namespace App\Services\Image\Handlers;
 
 
-use Illuminate\Support\Arr;
-
 class GetSyncDataHandler
 {
     /**

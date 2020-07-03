@@ -5,22 +5,22 @@ namespace App\Services\Search;
 
 
 use App\Services\Category\Repositories\ClientCategoryRepository;
-use App\Services\Collection\Repositories\ClientCollectionRepository;
+use App\Services\ColorCollection\Repositories\ClientColorCollectionRepository;
 use Illuminate\Support\Arr;
 
 class SearchService
 {
     private ClientCategoryRepository $categoryRepository;
-    private ClientCollectionRepository $collectionRepository;
+    private ClientColorCollectionRepository $collectionRepository;
 
     /**
      * SearchService constructor.
      * @param ClientCategoryRepository $categoryRepository
-     * @param ClientCollectionRepository $collectionRepository
+     * @param ClientColorCollectionRepository $collectionRepository
      */
     public function __construct(
         ClientCategoryRepository $categoryRepository,
-        ClientCollectionRepository $collectionRepository)
+        ClientColorCollectionRepository $collectionRepository)
     {
         $this->categoryRepository = $categoryRepository;
         $this->collectionRepository = $collectionRepository;

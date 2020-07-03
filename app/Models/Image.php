@@ -31,7 +31,8 @@ class Image extends Model
         'tags:id,title',
         'owner:id,title',
         'format:id,icon,title',
-        'collection:id,title,main_image_id'
+        'colorCollection:id,title,main_image_id',
+        'artCollection:id,title'
     ];
 
     /**
@@ -114,9 +115,17 @@ class Image extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function collection()
+    public function colorCollection()
     {
-        return $this->belongsTo('App\Models\Collection');
+        return $this->belongsTo('App\Models\ColorCollection');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function artCollection()
+    {
+        return $this->belongsTo('App\Models\ArtCollection');
     }
 
     /**
@@ -156,17 +165,10 @@ class Image extends Model
                 ->where('id', $id));
     }
 
-//    public function scopeWhereTag($query, int $id)
-//    {
-//        return $query
-//            ->published()
-//            ->whereHas('tags', fn (Builder $query) => $query
-//                ->where('id', $id));
-//    }
-    public function scopeWhereCollection($query, int $id)
+    public function scopeWhereColorCollection($query, int $id)
     {
         return $query
-            ->whereHas('collection', fn (Builder $query) => $query
+            ->whereHas('colorCollection', fn (Builder $query) => $query
                 ->where('id', $id));
     }
 

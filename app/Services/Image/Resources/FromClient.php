@@ -2,7 +2,8 @@
 
 namespace App\Services\Image\Resources;
 
-use App\Services\Collection\Resources\FromImageClient as FromImageClientResource;
+use App\Services\ArtCollection\Resources\FromImageClient as ArtCollectionResource;
+use App\Services\ColorCollection\Resources\FromImageClient as ColorCollectionResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FromClient extends JsonResource
@@ -23,7 +24,8 @@ class FromClient extends JsonResource
             'views' => $this->views,
             'likes' => $this->likes->count(),
             'ratio' => $this->ratio,
-            'collection' => new FromImageClientResource($this->collection)
+            'colorCollection' => new ColorCollectionResource($this->colorCollection),
+            'artCollection' => new ArtCollectionResource($this->artCollection)
         ];
     }
 }

@@ -11,8 +11,8 @@
                             title="Коллекция"
                             icon="perm_media"
                             color="md-teal"
-                            route="manager.catalog.collections.images"
-                            :params="{ id: item.collection.id }" />
+                            route="manager.catalog.color-collections.images"
+                            :params="{ id: item.colorCollection.id }" />
 
         <router-button-link title="Редактировать"
                             icon="edit"
@@ -43,10 +43,10 @@
         },
         computed: {
           hasCollection () {
-              return !!this.item.collection;
+              return !!this.item.colorCollection;
           },
           isCollectionMainImage () {
-              return this.hasCollection && this.item.id === this.item.collection.main_image_id;
+              return this.hasCollection && this.item.id === this.item.colorCollection.main_image_id;
           }
         },
         methods: {

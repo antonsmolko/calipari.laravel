@@ -18,7 +18,7 @@
         <panel-card-link
             route="manager.catalog.categories.list"
             :params="{ category_type: 'colors' }"
-            icon="palette"
+            icon="format_paint"
             :count="resourcesCount.colors"
             title="Цвета"
             color="rose" />
@@ -37,14 +37,21 @@
             icon="local_offer"
             :count="resourcesCount.tags"
             title="Теги"
-            color="primary" />
+            color="brown" />
 
         <panel-card-link
-            route="manager.catalog.collections"
-            icon="view_module"
-            :count="resourcesCount.collections"
-            title="Коллекции"
+            route="manager.catalog.color-collections"
+            icon="palette"
+            :count="resourcesCount.color_collections"
+            title="Цветовые коллекции"
             color="cyan" />
+
+        <panel-card-link
+            route="manager.catalog.art-collections"
+            icon="view_quilt"
+            :count="resourcesCount.art_collections"
+            title="Арт коллекции"
+            color="blue-grey" />
 
         <panel-card-link
             route="manager.catalog.subcategories.list"
@@ -79,7 +86,8 @@ export default{
     created() {
         this.getResourcesCountAction({
             tables: [
-                'collections',
+                'color_collections',
+                'art_collections',
                 'owners'
             ],
             categories: [

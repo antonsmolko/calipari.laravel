@@ -14,7 +14,7 @@
                                 <control-button @click="onUpdate"/>
                             </slide-y-down-transition>
                             <control-button
-                                :disabled="isCollectionMainImage"
+                                :disabled="isColorCollectionMainImage"
                                 title="Удалить"
                                 icon="delete"
                                 color="md-danger"
@@ -88,12 +88,12 @@
                                          :module="storeModule" />
 
                                 <v-switch :vField="$v.publish"
-                                          :disabled="isCollectionMainImage"
+                                          :disabled="isColorCollectionMainImage"
                                           :differ="true"
                                           :value="publish"
                                           :module="storeModule">
                                     <template>
-                                        <span v-if="isCollectionMainImage">Главное изображение коллекции нельзя снять с публикации!</span>
+                                        <span v-if="isColorCollectionMainImage">Главное изображение коллекции нельзя снять с публикации!</span>
                                     </template>
                                 </v-switch>
                             </div>
@@ -105,11 +105,11 @@
             </div>
 
             <div class="md-layout-item md-size-100">
-                <md-card v-if="item.collection">
+                <md-card v-if="item.color_collection">
                     <card-icon-header icon="view_module" color="md-card-header-cyan" title="Коллекция"/>
                     <md-card-content>
-                        <h4 v-if="isCollectionMainImage" class="card-title mb-0">Основное изображение</h4>
-                        <h3 class="mt-0"><small>{{ item.collection.title }}</small></h3>
+                        <h4 v-if="isColorCollectionMainImage" class="card-title mb-0">Основное изображение</h4>
+                        <h3 class="mt-0"><small>{{ item.color_collection.title }}</small></h3>
                     </md-card-content>
                 </md-card>
             </div>
@@ -123,7 +123,7 @@
                     </md-card-header>
                     <md-card-content>
 
-                        <v-select v-if="!item.collection && topicList.length" title="Темы" placeholder="Выберите темы"
+                        <v-select v-if="!item.color_collection && topicList.length" title="Темы" placeholder="Выберите темы"
                                   :multiple="true"
                                   name="topics"
                                   :vField="$v.topics"
@@ -141,7 +141,7 @@
                                   :options="colorList"
                                   :module="storeModule" />
 
-                        <v-select v-if="!item.collection && interiorList.length" title="Интерьеры" placeholder="Выберите интерьеры"
+                        <v-select v-if="!item.color_collection && interiorList.length" title="Интерьеры" placeholder="Выберите интерьеры"
                                   :multiple="true"
                                   name="interiors"
                                   :vField="$v.interiors"
@@ -150,7 +150,7 @@
                                   :options="interiorList"
                                   :module="storeModule" />
 
-                        <v-select v-if="!item.collection && tagList.length" title="Теги" placeholder="Выберите теги"
+                        <v-select v-if="!item.color_collection && tagList.length" title="Теги" placeholder="Выберите теги"
                                   :multiple="true"
                                   name="tags"
                                   :vField="$v.tags"
@@ -159,7 +159,7 @@
                                   :options="tagList"
                                   :module="storeModule" />
 
-                        <v-select v-if="!item.collection && ownerList.length" title="Владельцы" placeholder="Выберите владельца"
+                        <v-select v-if="!item.color_collection && ownerList.length" title="Владельцы" placeholder="Выберите владельца"
                                   name="owner_id"
                                   :vField="$v.owner"
                                   :differ="true"
@@ -264,8 +264,8 @@
             tagList () {
                 return this.$store.getters['categories/getItemsByType']('tags');
             },
-            isCollectionMainImage () {
-                return this.item.collection && this.item.id === this.item.collection.main_image_id;
+            isColorCollectionMainImage () {
+                return this.item.color_collection && this.item.id === this.item.color_collection.main_image_id;
             }
         },
         async created() {

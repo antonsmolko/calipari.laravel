@@ -92,8 +92,8 @@ class ImageController extends BaseResourceController
      * @param int $id
      * @return mixed
      */
-    public function removeOwner(int $id)
+    public function dissociateOwner(int $id)
     {
-        return $this->service->removeOwner($id);
+        return $this->service->dissociateOwner($id);
     }
 }

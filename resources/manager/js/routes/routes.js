@@ -72,25 +72,52 @@ const SubCategoryExcludedImageList = resolve => {
     })
 };
 
-/** Category pages */
-const CollectionList = resolve => {
-    require.ensure(['@/pages/Dashboard/Catalog/Collections/CollectionList.vue'], () => {
-        resolve(require('@/pages/Dashboard/Catalog/Collections/CollectionList.vue'))
+/** Color Collections pages */
+const ColorCollectionList = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/ColorCollections/ColorCollectionList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/ColorCollections/ColorCollectionList.vue'))
     })
 };
-const CollectionCreate = resolve => {
-    require.ensure(['@/pages/Dashboard/Catalog/Collections/CollectionCreate.vue'], () => {
-        resolve(require('@/pages/Dashboard/Catalog/Collections/CollectionCreate.vue'))
+const ColorCollectionCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/ColorCollections/ColorCollectionCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/ColorCollections/ColorCollectionCreate.vue'))
     })
 };
-const CollectionEdit = resolve => {
-    require.ensure(['@/pages/Dashboard/Catalog/Collections/CollectionEdit.vue'], () => {
-        resolve(require('@/pages/Dashboard/Catalog/Collections/CollectionEdit.vue'))
+const ColorCollectionEdit = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/ColorCollections/ColorCollectionEdit.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/ColorCollections/ColorCollectionEdit.vue'))
     })
 };
-const CollectionImageList = resolve => {
-    require.ensure(['@/pages/Dashboard/Catalog/Collections/ImageList.vue'], () => {
-        resolve(require('@/pages/Dashboard/Catalog/Collections/ImageList.vue'))
+const ColorCollectionImageList = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/ColorCollections/ImageList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/ColorCollections/ImageList.vue'))
+    })
+};
+
+/** Art Collections pages */
+const ArtCollectionList = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/ArtCollections/ArtCollectionList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/ArtCollections/ArtCollectionList.vue'))
+    })
+};
+const ArtCollectionCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/ArtCollections/ArtCollectionCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/ArtCollections/ArtCollectionCreate.vue'))
+    })
+};
+const ArtCollectionEdit = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/ArtCollections/ArtCollectionEdit.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/ArtCollections/ArtCollectionEdit.vue'))
+    })
+};
+const ArtCollectionImageList = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/ArtCollections/ImageList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/ArtCollections/ImageList.vue'))
+    })
+};
+const ArtCollectionExcludedImageList = resolve => {
+    require.ensure(['@/pages/Dashboard/Catalog/ArtCollections/ExcludedImageList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Catalog/ArtCollections/ExcludedImageList.vue'))
     })
 };
 
@@ -619,31 +646,67 @@ const managerSubCategoriesPages = {
     ]
 };
 
-const managerCollectionsPages = {
+const managerColorCollectionsPages = {
     path: '/manager/catalog',
     component: DashboardLayout,
     children: [
         {
-            path: 'collections',
-            name: 'manager.catalog.collections',
-            component: CollectionList,
+            path: 'color-collections',
+            name: 'manager.catalog.color-collections',
+            component: ColorCollectionList,
             props: true
         },
         {
-            path: 'collections/create',
-            name: 'manager.catalog.collections.create',
-            component: CollectionCreate
+            path: 'color-collections/create',
+            name: 'manager.catalog.color-collections.create',
+            component: ColorCollectionCreate
         },
         {
-            path: 'collections/:id',
-            name: 'manager.catalog.collections.edit',
-            component: CollectionEdit,
+            path: 'color-collections/:id',
+            name: 'manager.catalog.color-collections.edit',
+            component: ColorCollectionEdit,
             props: true
         },
         {
-            path: 'collections/:id/images',
-            name: 'manager.catalog.collections.images',
-            component: CollectionImageList,
+            path: 'color-collections/:id/images',
+            name: 'manager.catalog.color-collections.images',
+            component: ColorCollectionImageList,
+            props: true
+        }
+    ]
+};
+
+const managerArtCollectionsPages = {
+    path: '/manager/catalog',
+    component: DashboardLayout,
+    children: [
+        {
+            path: 'art-collections',
+            name: 'manager.catalog.art-collections',
+            component: ArtCollectionList,
+            props: true
+        },
+        {
+            path: 'art-collections/create',
+            name: 'manager.catalog.art-collections.create',
+            component: ArtCollectionCreate
+        },
+        {
+            path: 'art-collections/:id',
+            name: 'manager.catalog.art-collections.edit',
+            component: ArtCollectionEdit,
+            props: true
+        },
+        {
+            path: 'art-collections/:id/images',
+            name: 'manager.catalog.art-collections.images',
+            component: ArtCollectionImageList,
+            props: true
+        },
+        {
+            path: 'art-collections/:id/images/excluded',
+            name: 'manager.catalog.art-collections.images.excluded',
+            component: ArtCollectionExcludedImageList,
             props: true
         }
     ]
@@ -832,7 +895,8 @@ const routes = [
     managerPages,
     managerCategoriesPages,
     managerSubCategoriesPages,
-    managerCollectionsPages,
+    managerColorCollectionsPages,
+    managerArtCollectionsPages,
     managerDeliveriesPages,
     managerOrderPages,
     managerOrderStatusPages,

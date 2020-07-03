@@ -93,7 +93,7 @@ class CmsImageRepository extends CmsBaseResourceRepository
      * @param Image $item
      * @return mixed
      */
-    public function removeOwner(Image $item)
+    public function dissociateOwner(Image $item)
     {
         $item->owner()->dissociate();
 
@@ -120,5 +120,14 @@ class CmsImageRepository extends CmsBaseResourceRepository
         return $this->model::onlyTrashed()
             ->where('id', $id)
             ->restore();
+    }
+
+    /**
+     * @param Image $item
+     * @return mixed
+     */
+    public function dissociateArtCollection(Image $item)
+    {
+        return $this->update($item, ['art_collection_id' => null]);
     }
 }

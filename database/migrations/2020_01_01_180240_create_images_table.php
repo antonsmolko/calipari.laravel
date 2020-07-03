@@ -23,7 +23,8 @@ class CreateImagesTable extends Migration
             $table->unsignedSmallInteger('max_print_width')->nullable();
             $table->unsignedInteger('format_id')->nullable();
             $table->unsignedInteger('owner_id')->nullable();
-            $table->unsignedInteger('collection_id')->nullable();
+            $table->unsignedInteger('color_collection_id')->nullable();
+            $table->unsignedInteger('art_collection_id')->nullable();
             $table->unsignedInteger('views')->default(0);
             $table->unsignedTinyInteger('publish')->default(1 );
             $table->text('description')->nullable();
@@ -42,12 +43,22 @@ class CreateImagesTable extends Migration
         });
 
         Schema::table('images', function(Blueprint $table) {
-            $table->foreign('collection_id')->references('id')->on('collections')
+            $table->foreign('color_collection_id')->references('id')->on('color_collections')
                 ->onDelete('set null')->onUpdate('cascade');
         });
 
-        Schema::table('collections', function(Blueprint $table) {
+        Schema::table('images', function(Blueprint $table) {
+            $table->foreign('art_collection_id')->references('id')->on('art_collections')
+                ->onDelete('set null')->onUpdate('cascade');
+        });
+
+        Schema::table('color_collections', function(Blueprint $table) {
             $table->foreign('main_image_id')->references('id')->on('images')
+                ->onDelete('set null')->onUpdate('cascade');
+        });
+
+        Schema::table('art_collections', function(Blueprint $table) {
+            $table->foreign('image_id')->references('id')->on('images')
                 ->onDelete('set null')->onUpdate('cascade');
         });
     }
@@ -59,8 +70,11 @@ class CreateImagesTable extends Migration
      */
     public function down()
     {
-        Schema::table('collections', function(Blueprint $table) {
+        Schema::table('color_collections', function(Blueprint $table) {
             $table->dropForeign(['main_image_id']);
+        });
+        Schema::table('art_collections', function(Blueprint $table) {
+            $table->dropForeign(['image_id']);
         });
         Schema::dropIfExists('images');
     }

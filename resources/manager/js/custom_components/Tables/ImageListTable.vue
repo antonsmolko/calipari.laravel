@@ -34,17 +34,17 @@
                 </span>
             </md-table-cell>
 
-            <md-table-cell md-label="Коллекция">
-                <template v-if="item.collection">
+            <md-table-cell md-label="Цветовая коллекция">
+                <template v-if="item.colorCollection">
                     <md-badge
-                        v-if="item.id === item.collection.main_image_id"
+                        v-if="item.id === item.colorCollection.main_image_id"
                         md-content="М">
                         <span class="md-category-tag">
-                            {{ item.collection.title }}
+                            {{ item.colorCollection.title }}
                         </span>
                     </md-badge>
                     <span v-else class="md-category-tag">
-                        {{ item.collection.title }}
+                        {{ item.colorCollection.title }}
                     </span>
                 </template>
             </md-table-cell>
