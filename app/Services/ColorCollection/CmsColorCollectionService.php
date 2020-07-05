@@ -4,7 +4,8 @@
 namespace App\Services\ColorCollection;
 
 
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\Tag;
 use App\Services\ColorCollection\Handlers\DestroyHandler;
 use App\Services\ColorCollection\Handlers\GetSyncDataHandler;
 use App\Services\ColorCollection\Handlers\SnapImageHandler;
@@ -32,7 +33,7 @@ class CmsColorCollectionService extends CmsBaseResourceService
      * CmsColorCollectionService constructor.
      * @param CmsColorCollectionRepository $repository
      * @param CmsImageRepository $imageRepository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheByTagHandler
      * @param GetSyncDataHandler $getSyncDataHandler
      * @param StoreHandler $storeHandler
      * @param UpdateHandler $updateHandler
@@ -44,7 +45,7 @@ class CmsColorCollectionService extends CmsBaseResourceService
     public function __construct(
         CmsColorCollectionRepository $repository,
         CmsImageRepository $imageRepository,
-        ClearCacheByTagHandler $clearCacheByTagHandler,
+        ClearCacheHandler $clearCacheByTagHandler,
         GetSyncDataHandler $getSyncDataHandler,
         StoreHandler $storeHandler,
         UpdateHandler $updateHandler,
@@ -63,6 +64,7 @@ class CmsColorCollectionService extends CmsBaseResourceService
         $this->updateImagesHandler = $updateImagesHandler;
         $this->destroyHandler = $destroyHandler;
         $this->snapImageHandler = $snapImageHandler;
+        $this->cacheTag = Tag::COLOR_COLLECTIONS_TAG;
     }
 
     /**

@@ -5,8 +5,10 @@ namespace App\Services\Image;
 
 
 use App\Services\Base\Resource\CmsBaseResourceService;
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Cache\Tag;
+use App\Services\Cache\TTL;
 use App\Services\ColorCollection\Repositories\CmsColorCollectionRepository;
 use App\Services\Image\Handlers\DeleteImageHandler;
 use App\Services\Image\Handlers\GetSyncDataHandler;
@@ -15,8 +17,11 @@ use App\Services\Image\Handlers\UpdateHandler;
 use App\Services\Image\Handlers\UpdateImagePathHandler;
 use App\Services\Image\Handlers\UploadHandler;
 use App\Services\Image\Repositories\CmsImageRepository;
+use App\Services\Image\Resources\FromClientCollection;
+use App\Services\Image\Resources\FromListCmsCollection as FromListCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 
 class CmsImageService extends CmsBaseResourceService
 {
@@ -27,29 +32,32 @@ class CmsImageService extends CmsBaseResourceService
     private GetSyncDataHandler $getSyncDataHandler;
     private UpdateHandler $updateHandler;
     private SyncUpdateWithColorCollectionHandler $syncUpdateWithColorCollectionHandler;
+    private CacheKeyManager $cacheKeyManager;
 
     /**
      * CmsImageService constructor.
      * @param CmsImageRepository $repository
      * @param CmsColorCollectionRepository $colorCollectionRepository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheByTagHandler
      * @param UploadHandler $uploadHandler
      * @param UpdateImagePathHandler $updateImagePathHandler
      * @param DeleteImageHandler $deleteImageHandler
      * @param GetSyncDataHandler $getSyncDataHandler
      * @param UpdateHandler $updateHandler
      * @param SyncUpdateWithColorCollectionHandler $syncUpdateWithColorCollectionHandler
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsImageRepository $repository,
         CmsColorCollectionRepository $colorCollectionRepository,
-        ClearCacheByTagHandler $clearCacheByTagHandler,
+        ClearCacheHandler $clearCacheByTagHandler,
         UploadHandler $uploadHandler,
         UpdateImagePathHandler $updateImagePathHandler,
         DeleteImageHandler $deleteImageHandler,
         GetSyncDataHandler $getSyncDataHandler,
         UpdateHandler $updateHandler,
-        SyncUpdateWithColorCollectionHandler $syncUpdateWithColorCollectionHandler
+        SyncUpdateWithColorCollectionHandler $syncUpdateWithColorCollectionHandler,
+        CacheKeyManager $cacheKeyManager
     )
     {
         parent::__construct($repository, $clearCacheByTagHandler);
@@ -61,15 +69,22 @@ class CmsImageService extends CmsBaseResourceService
         $this->updateHandler = $updateHandler;
         $this->syncUpdateWithColorCollectionHandler = $syncUpdateWithColorCollectionHandler;
         $this->cacheTag = Tag::IMAGES_TAG;
+        $this->cacheKeyManager = $cacheKeyManager;
     }
 
     /**
      * @param array $requestData
-     * @return mixed
+     * @return array|mixed
      */
     public function getItems(array $requestData)
     {
-        return $this->repository->getItems($requestData);
+        $key = $this->cacheKeyManager
+            ->getImagesKey(['client'], ['pagination' => $requestData]);
+//        return new FromListCollection($this->repository->getItems($requestData));
+        return Cache::tags(Tag::IMAGES_TAG)
+            ->remember($key, TTL::IMAGES_TTL, function () use ($requestData) {
+                return new FromListCollection($this->repository->getItems($requestData));
+            });
     }
 
     /**
@@ -115,6 +130,7 @@ class CmsImageService extends CmsBaseResourceService
         $this->updateHandler->handle($image, $syncData, $updateData);
 
         $colorCollection = $image->colorCollection;
+
         if ($colorCollection) {
             $this->syncUpdateWithColorCollectionHandler->handle($id, $colorCollection, $updateData);
         }

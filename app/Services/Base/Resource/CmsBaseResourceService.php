@@ -4,7 +4,7 @@
 namespace App\Services\Base\Resource;
 
 
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -15,22 +15,22 @@ abstract class CmsBaseResourceService
 {
     protected CmsBaseResourceRepository $repository;
 
-    protected ClearCacheByTagHandler $clearCacheByTagHandler;
+    protected ClearCacheHandler $clearCacheHandler;
 
     protected string $cacheTag;
 
     /**
      * CmsBaseResourceService constructor.
      * @param CmsBaseResourceRepository $repository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheHandler
      */
     public function __construct(
         CmsBaseResourceRepository $repository,
-        ClearCacheByTagHandler $clearCacheByTagHandler
+        ClearCacheHandler $clearCacheHandler
     )
     {
         $this->repository = $repository;
-        $this->clearCacheByTagHandler = $clearCacheByTagHandler;
+        $this->clearCacheHandler = $clearCacheHandler;
         $this->cacheTag = '';
     }
 
@@ -98,8 +98,8 @@ abstract class CmsBaseResourceService
     /**
      * Clear cache by tag
      */
-    public function clearCacheByTag()
+    public function clearCache()
     {
-        $this->clearCacheByTagHandler->handle($this->cacheTag);
+        $this->clearCacheHandler->handle($this->cacheTag);
     }
 }

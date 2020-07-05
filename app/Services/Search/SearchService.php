@@ -4,26 +4,46 @@
 namespace App\Services\Search;
 
 
+use App\Services\ArtCollection\Repositories\ClientArtCollectionRepository;
+use App\Services\Cache\KeyManager as CacheKeyManager;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\Tag;
+use App\Services\Cache\TTL;
 use App\Services\Category\Repositories\ClientCategoryRepository;
 use App\Services\ColorCollection\Repositories\ClientColorCollectionRepository;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 
 class SearchService
 {
     private ClientCategoryRepository $categoryRepository;
-    private ClientColorCollectionRepository $collectionRepository;
+    private ClientColorCollectionRepository $colorCollectionRepository;
+    private ClientArtCollectionRepository $artCollectionRepository;
+    private ClearCacheHandler $clearCacheHandler;
+    private CacheKeyManager $cacheKeyManager;
+    private string $cacheTag;
 
     /**
      * SearchService constructor.
      * @param ClientCategoryRepository $categoryRepository
-     * @param ClientColorCollectionRepository $collectionRepository
+     * @param ClientColorCollectionRepository $colorCollectionRepository
+     * @param ClientArtCollectionRepository $artCollectionRepository
+     * @param ClearCacheHandler $clearCacheHandler
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         ClientCategoryRepository $categoryRepository,
-        ClientColorCollectionRepository $collectionRepository)
+        ClientColorCollectionRepository $colorCollectionRepository,
+        ClientArtCollectionRepository $artCollectionRepository,
+        ClearCacheHandler $clearCacheHandler,
+        CacheKeyManager $cacheKeyManager
+    )
     {
         $this->categoryRepository = $categoryRepository;
-        $this->collectionRepository = $collectionRepository;
+        $this->colorCollectionRepository = $colorCollectionRepository;
+        $this->artCollectionRepository = $artCollectionRepository;
+        $this->clearCacheHandler = $clearCacheHandler;
+        $this->cacheKeyManager = $cacheKeyManager;
+        $this->cacheTag = Tag::SEARCH_TAG;
     }
 
     /**
@@ -32,10 +52,23 @@ class SearchService
      */
     public function getSearchedResult(string $query)
     {
-        $categories = $this->categoryRepository->getSearchedItems($query);
-        $collections = $this->collectionRepository->getSearchedItems($query);
+        $key = $this->cacheKeyManager->getResourceKey(Tag::SEARCH_TAG, ['client', 'search', 'query:' . $query]);
 
-        return [...$categories, ...$collections];
-//        return $this->categoryRepository->getSearchedItems($query);
+        return Cache::tags(Tag::SEARCH_TAG)
+            ->remember($key,TTL::SEARCH_TTL, function() use ($query) {
+                $categories = $this->categoryRepository->getSearchedItems($query);
+                $colorCollections = $this->colorCollectionRepository->getSearchedItems($query);
+                $artCollections = $this->artCollectionRepository->getSearchedItems($query);
+
+                return [...$categories, ...$colorCollections, ...$artCollections];
+            });
+    }
+
+    /**
+     * Clear cache by tag
+     */
+    public function clearCache()
+    {
+        $this->clearCacheHandler->handle($this->cacheTag);
     }
 }

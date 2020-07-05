@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use App\Events\Models\ColorCollection\ColorCollectionDeleted;
+use App\Events\Models\ColorCollection\ColorCollectionSaved;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Scout\Searchable;
 
@@ -14,6 +16,11 @@ class ColorCollection extends Model
      * @var array
      */
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    protected $dispatchesEvents = [
+        'saved' => ColorCollectionSaved::class,
+        'deleted' => ColorCollectionDeleted::class,
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -28,7 +35,7 @@ class ColorCollection extends Model
      */
     public function publishedImages() {
         return $this->hasMany('App\Models\Image')
-            ->where('publish', '=', 1);
+            ->where('publish', '=', self::PUBLISHED);
     }
 
     /**

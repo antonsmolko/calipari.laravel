@@ -25,16 +25,4 @@ class ClientArtCollectionService extends ClientBaseResourceService
     {
         return $this->repository->getItemByAliasWithImages($alias);
     }
-
-//    /**
-//     * @param int $id
-//     * @param int $currentImageId
-//     * @return mixed
-//     */
-//    public function getItemImagesFromEditor(int $id, int $currentImageId)
-//    {
-//        $item = $this->repository->getItem($id);
-//
-//        return $this->repository->getItemImagesFromEditor($item, $currentImageId);
-//    }
 }

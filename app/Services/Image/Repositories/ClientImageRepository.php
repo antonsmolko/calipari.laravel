@@ -48,14 +48,19 @@ class ClientImageRepository extends ClientBaseResourceRepository
     {
         $pagination = $request->pagination;
 
-        return QueryBuilder::for(Image::class)
+        return QueryBuilder::for(Image::with([
+            'publishedColorCollection:id,title,alias',
+            'publishedArtCollection:id,title,alias'])->withCount('likes'))
             ->when($colorCollectionRestriction, fn ($query) => $query
-                ->whereDoesntHave('colorCollection')
-                ->orWhereHas('colorCollection', fn ($query) => $query->whereColumn('main_image_id', 'images.id'))
+                ->whereDoesntHave('colorCollection', fn ($query) => $query->published())
+                ->orWhereHas('colorCollection', fn ($query) => $query
+                    ->published()
+                    ->whereColumn('main_image_id', 'images.id'))
             )
             ->defaultSort('-id')
             ->allowedFilters([
                 AllowedFilter::scope('restrictive_category', 'whereCategory'),
+                AllowedFilter::scope('restrictive_art_collection', 'whereArtCollection'),
                 AllowedFilter::scope('restrictive_color_collection', 'whereColorCollection'),
                 AllowedFilter::scope('restrictive_keys', 'whereKeys'),
                 AllowedFilter::scope('formats', 'whereFormats'),

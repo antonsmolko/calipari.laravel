@@ -57,11 +57,11 @@
             </md-table-cell>
 
             <md-table-cell md-label="Лайки" md-sort-by="likes_count">
-                <md-icon>favorite</md-icon> {{ item.likes_count }}
+                <md-icon>favorite</md-icon> {{ item.likesCount }}
             </md-table-cell>
 
             <md-table-cell md-label="Заказы" md-sort-by="orders_count">
-                <md-icon>shopping_cart</md-icon> {{ item.orders_count }}
+                <md-icon>shopping_cart</md-icon> {{ item.ordersCount }}
             </md-table-cell>
 
             <md-table-cell md-label="Опубл.">

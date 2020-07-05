@@ -11,6 +11,7 @@ use App\Services\Cache\TTL;
 use App\Services\Category\Repositories\ClientCategoryRepository;
 use App\Services\ColorCollection\Repositories\ClientColorCollectionRepository;
 use App\Services\Image\Handlers\DefineRestrictionsForColorCollectionsHandler;
+use App\Services\Image\Handlers\GetItemFromEditorHandler;
 use App\Services\Image\Repositories\ClientImageRepository;
 use App\Services\Image\Resources\FromClientCollection;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ class ClientImageService
     private ClientArtCollectionRepository $artCollectionRepository;
     private CacheKeyManager $cacheKeyManager;
     private DefineRestrictionsForColorCollectionsHandler $defineRestrictionsForColorCollectionsHandler;
+    private GetItemFromEditorHandler $getItemFromEditorHandler;
 
     /**
      * ClientImageService constructor.
@@ -33,6 +35,7 @@ class ClientImageService
      * @param ClientArtCollectionRepository $artCollectionRepository
      * @param CacheKeyManager $cacheKeyManager
      * @param DefineRestrictionsForColorCollectionsHandler $defineRestrictionsForColorCollectionsHandler
+     * @param GetItemFromEditorHandler $getItemFromEditorHandler
      */
     public function __construct(
         ClientImageRepository $repository,
@@ -40,7 +43,8 @@ class ClientImageService
         ClientColorCollectionRepository $colorCollectionRepository,
         ClientArtCollectionRepository $artCollectionRepository,
         CacheKeyManager $cacheKeyManager,
-        DefineRestrictionsForColorCollectionsHandler $defineRestrictionsForColorCollectionsHandler
+        DefineRestrictionsForColorCollectionsHandler $defineRestrictionsForColorCollectionsHandler,
+        GetItemFromEditorHandler $getItemFromEditorHandler
     )
     {
         $this->repository = $repository;
@@ -49,6 +53,7 @@ class ClientImageService
         $this->artCollectionRepository = $artCollectionRepository;
         $this->cacheKeyManager = $cacheKeyManager;
         $this->defineRestrictionsForColorCollectionsHandler = $defineRestrictionsForColorCollectionsHandler;
+        $this->getItemFromEditorHandler = $getItemFromEditorHandler;
     }
 
     /**
@@ -57,9 +62,17 @@ class ClientImageService
      */
     public function getItems(Request $request): FromClientCollection
     {
-        $isRestrictedForColorCollection = $this->defineRestrictionsForColorCollectionsHandler->handle($request);
+        $key = $this->cacheKeyManager
+            ->getImagesKey(['client'], $request->all());
 
-        return new FromClientCollection($this->repository->getItems($request, $isRestrictedForColorCollection));
+        return Cache::tags(Tag::IMAGES_TAG)
+            ->remember($key, TTL::IMAGES_TTL, function () use ($request) {
+                $isRestrictedForColorCollection = $this->defineRestrictionsForColorCollectionsHandler
+                    ->handle($request);
+
+                return new FromClientCollection($this->repository
+                    ->getItems($request, $isRestrictedForColorCollection));
+            });
     }
 
     /**
@@ -69,7 +82,7 @@ class ClientImageService
     public function getItem(int $id)
     {
         $key = $this->cacheKeyManager
-            ->getImagesKey(['client', 'published', 'id_' . $id]);
+            ->getImagesKey(['client', 'id_' . $id]);
 
         return Cache::tags(Tag::IMAGES_TAG)
             ->remember($key, TTL::IMAGES_TTL, function () use ($id) {
@@ -83,20 +96,15 @@ class ClientImageService
      */
     public function getItemFromEditor(int $id): array
     {
-        $item = $this->repository->getResourceItem($id);
+        $key = $this->cacheKeyManager
+            ->getImagesKey(['client', 'from-editor', 'id_' . $id]);
 
-        return [
-            'item' => $item,
-            'colorCollection' => $item->colorCollection
-                ? [$item, ...$this->colorCollectionRepository
-                    ->getItemImagesFromEditor($item->colorCollection, $id)]
-                : [],
-            'artCollection' => $item->artCollection
-                ? [$item, ...$this->artCollectionRepository
-                    ->getItemImagesFromEditor($item->artCollection, $id)]
-                : []
-        ];
+        return Cache::tags(Tag::IMAGES_TAG)
+            ->remember($key, TTL::IMAGES_TTL, function () use ($id) {
+                $item = $this->repository->getResourceItem($id);
 
+                return $this->getItemFromEditorHandler->handle($item);
+            });
     }
 
     /**
@@ -105,7 +113,13 @@ class ClientImageService
      */
     public function getWishListTags(array $keys)
     {
-        return $this->categoryRepository->getTagsByImageKeys($keys);
+        $key = $this->cacheKeyManager
+            ->getImagesKey(['client', 'wish-list-tags', 'keys_' . implode('_', $keys)]);
+
+        return Cache::tags(Tag::IMAGES_TAG)
+            ->remember($key, TTL::IMAGES_TTL, function () use ($keys) {
+                return $this->categoryRepository->getTagsByImageKeys($keys);
+            });
     }
 
     /**
@@ -114,9 +128,15 @@ class ClientImageService
      */
     public function getItemColorCollectionImages(int $id)
     {
-        $item = $this->repository->getResourceItem($id);
+        $key = $this->cacheKeyManager
+            ->getImagesKey(['client', 'color-collection-images', 'id_' . $id]);
 
-        return [$item, ...$this->colorCollectionRepository
-            ->getItemImagesFromEditor($item->colorCollection, $id)];
+        return Cache::tags(Tag::IMAGES_TAG)
+            ->remember($key, TTL::IMAGES_TTL, function () use ($id) {
+                $item = $this->repository->getResourceItem($id);
+
+                return [$item, ...$this->colorCollectionRepository
+                    ->getItemImagesFromEditor($item->colorCollection, $id)];
+            });
     }
 }

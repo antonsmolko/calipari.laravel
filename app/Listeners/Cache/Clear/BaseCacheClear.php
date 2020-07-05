@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Listeners\Cache;
+namespace App\Listeners\Cache\Clear;
 
-use App\Events\Models\Model as ModelEvent;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-abstract class CacheClear
+abstract class BaseCacheClear
 {
     private CmsBaseResourceService $service;
 
@@ -25,6 +24,6 @@ abstract class CacheClear
      */
     public function handle()
     {
-        $this->service->clearCacheByTag();
+        $this->service->clearCache();
     }
 }

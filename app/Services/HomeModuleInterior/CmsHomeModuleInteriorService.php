@@ -5,7 +5,7 @@ namespace App\Services\HomeModuleInterior;
 
 
 use App\Services\Base\Resource\CmsBaseResourceService;
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\HomeModuleInterior\Handlers\InteriorDestroyHandler;
 use App\Services\HomeModuleInterior\Handlers\InteriorStoreHandler;
 use App\Services\HomeModuleInterior\Repositories\CmsHomeModuleInteriorRepository;
@@ -18,13 +18,13 @@ class CmsHomeModuleInteriorService extends CmsBaseResourceService
     /**
      * CmsHomeModuleInteriorService constructor.
      * @param CmsHomeModuleInteriorRepository $repository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheByTagHandler
      * @param InteriorStoreHandler $storeHandler
      * @param InteriorDestroyHandler $destroyHandler
      */
     public function __construct(
         CmsHomeModuleInteriorRepository $repository,
-        ClearCacheByTagHandler $clearCacheByTagHandler,
+        ClearCacheHandler $clearCacheByTagHandler,
         InteriorStoreHandler $storeHandler,
         InteriorDestroyHandler $destroyHandler
     )

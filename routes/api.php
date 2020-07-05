@@ -81,8 +81,8 @@ Route::prefix('catalog')
         Route::get('categories', 'Client\Category\CategoryController@index');
 
         Route::get('categories/{category}', 'Client\Category\CategoryController@getItemByAlias');
-        Route::post('categories/{id}/images', 'Client\Category\CategoryController@getImages')
-            ->where('id', '[0-9]+');
+//        Route::post('categories/{id}/images', 'Client\Category\CategoryController@getImages')
+//            ->where('id', '[0-9]+');
 
         Route::get('categories/{id}/tags', 'Client\Category\CategoryController@getItemTags')
             ->where('id', '[0-9]+');
@@ -96,14 +96,14 @@ Route::prefix('catalog')
         /** Color Collections */
 
         Route::get('color-collections/{collection}', 'Client\ColorCollection\ColorCollectionController@getItemByAliasWithImages')
-            ->where('collection', '[a-z]+');
+            ->where('collection', '^([a-z0-9]+-?)+[a-z0-9]$');
 //        Route::get('color-collections/{id}/tags', 'Client\ColorCollection\ColorCollectionController@getItemTags')
 //            ->where('id', '[0-9]+');
 
         /** Art Collections */
 
         Route::get('art-collections/{collection}', 'Client\ArtCollection\ArtCollectionController@getItemByAliasWithImages')
-            ->where('collection', '[a-z]+');
+            ->where('collection', '^([a-z0-9]+-?)+[a-z0-9]$');
 
 
         /** Filters */

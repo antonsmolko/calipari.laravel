@@ -12,4 +12,5 @@ class Key
     const DELIVERY_PREFIX = 'deliveries';
     const SETTINGS_PREFIX = 'settings';
     const ORDERS_PREFIX = 'orders';
+    const CDEK_PREFIX = 'cdek';
 }

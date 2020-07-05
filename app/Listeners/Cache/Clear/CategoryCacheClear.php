@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Listeners\Cache\Category;
+namespace App\Listeners\Cache\Clear;
 
-use App\Listeners\Cache\CacheClear;
+
 use App\Services\Base\Category\CmsBaseCategoryService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class CategoryCacheClear extends CacheClear
+class CategoryCacheClear extends BaseCacheClear
 {
     public function __construct(CmsBaseCategoryService $service)
     {

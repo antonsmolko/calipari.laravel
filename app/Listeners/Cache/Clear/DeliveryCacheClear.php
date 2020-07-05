@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Listeners\Cache\Delivery;
+namespace App\Listeners\Cache\Clear;
 
-use App\Listeners\Cache\CacheClear;
+
 use App\Services\Delivery\CmsDeliveryService;
 
-class DeliveryCacheClear extends CacheClear
+class DeliveryCacheClear extends BaseCacheClear
 {
     public function __construct(CmsDeliveryService $service)
     {

@@ -4,7 +4,7 @@
 namespace App\Services\Delivery;
 
 
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\Cache\Tag;
 use App\Services\Delivery\Repositories\CmsDeliveryRepository;
 use App\Services\Base\Resource\CmsBaseResourceService;
@@ -14,11 +14,11 @@ class CmsDeliveryService extends CmsBaseResourceService
     /**
      * CmsDeliveryService constructor.
      * @param CmsDeliveryRepository $repository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheByTagHandler
      */
     public function __construct(
         CmsDeliveryRepository $repository,
-        ClearCacheByTagHandler $clearCacheByTagHandler
+        ClearCacheHandler $clearCacheByTagHandler
     )
     {
         parent::__construct($repository, $clearCacheByTagHandler);

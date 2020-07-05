@@ -6,7 +6,7 @@ namespace App\Services\Order;
 
 use App\Models\Order;
 use App\Services\Base\Resource\CmsBaseResourceService;
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\Order\Handlers\GetMailFormatOrderHandler;
 use App\Services\Order\Repositories\CmsOrderRepository;
 use App\Services\Order\Resources\CmsOrder as OrderResource;
@@ -20,12 +20,12 @@ class CmsOrderService extends CmsBaseResourceService
     /**
      * CmsOrderService constructor.
      * @param CmsOrderRepository $repository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheByTagHandler
      * @param GetMailFormatOrderHandler $getMailFormatOrderHandler
      */
     public function __construct(
         CmsOrderRepository $repository,
-        ClearCacheByTagHandler $clearCacheByTagHandler,
+        ClearCacheHandler $clearCacheByTagHandler,
         GetMailFormatOrderHandler $getMailFormatOrderHandler
     )
     {

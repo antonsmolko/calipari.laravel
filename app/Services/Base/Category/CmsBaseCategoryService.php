@@ -7,7 +7,7 @@ namespace App\Services\Base\Category;
 use App\Services\Base\Category\Repositories\CmsBaseCategoryRepository;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Image\Handlers\UploadHandler;
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\Cache\Tag;
 use App\Services\Image\CmsImageService;
 
@@ -19,13 +19,13 @@ class CmsBaseCategoryService extends CmsBaseResourceService
     /**
      * CmsBaseCategoryService constructor.
      * @param CmsBaseCategoryRepository $repository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheByTagHandler
      * @param UploadHandler $uploadHandler
      * @param CmsImageService $imageService
      */
     public function __construct(
         CmsBaseCategoryRepository $repository,
-        ClearCacheByTagHandler $clearCacheByTagHandler,
+        ClearCacheHandler $clearCacheByTagHandler,
         UploadHandler $uploadHandler,
         CmsImageService $imageService
     )

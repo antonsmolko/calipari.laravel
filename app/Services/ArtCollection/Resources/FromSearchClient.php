@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\ColorCollection\Resources;
+namespace App\Services\ArtCollection\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,8 +17,8 @@ class FromSearchClient extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'image_path' => $this->mainImage->path,
-            'type' => 'color_collection',
+            'image_path' => $this->backgroundImage ? $this->backgroundImage->path : null,
+            'type' => 'art_collection',
         ];
     }
 }

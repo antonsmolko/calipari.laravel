@@ -5,7 +5,7 @@ namespace App\Services\Owner;
 
 
 use App\Services\Image\Handlers\UploadHandler;
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\Image\CmsImageService;
 use App\Services\Owner\Repositories\OwnerRepository;
 use App\Services\SubCategory\SubCategoryService;
@@ -15,13 +15,13 @@ class OwnerService extends SubCategoryService
     /**
      * OwnerService constructor.
      * @param OwnerRepository $repository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheByTagHandler
      * @param UploadHandler $uploadHandler
      * @param CmsImageService $imageService
      */
     public function __construct(
         OwnerRepository $repository,
-        ClearCacheByTagHandler $clearCacheByTagHandler,
+        ClearCacheHandler $clearCacheByTagHandler,
         UploadHandler $uploadHandler,
         CmsImageService $imageService
     )

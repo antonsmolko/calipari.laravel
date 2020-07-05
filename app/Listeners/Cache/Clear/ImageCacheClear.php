@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Listeners\Cache\Image;
+namespace App\Listeners\Cache\Clear;
 
-use App\Listeners\Cache\CacheClear;
+
 use App\Services\Image\CmsImageService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class ImageCacheClear extends CacheClear
+class ImageCacheClear extends BaseCacheClear
 {
     public function __construct(CmsImageService $service)
     {

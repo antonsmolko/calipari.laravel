@@ -5,7 +5,7 @@ namespace App\Services\Page;
 
 
 use App\Services\Base\Resource\CmsBaseResourceService;
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\Page\Handlers\DeleteImageHandler;
 use App\Services\Page\Handlers\UpdateHandler;
 use App\Services\Page\Repositories\CmsPageRepository;
@@ -18,13 +18,13 @@ class CmsPageService extends CmsBaseResourceService
     /**
      * CmsPageService constructor.
      * @param CmsPageRepository $repository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheByTagHandler
      * @param UpdateHandler $updateHandler
      * @param DeleteImageHandler $deleteImageHandler
      */
     public function __construct(
         CmsPageRepository $repository,
-        ClearCacheByTagHandler $clearCacheByTagHandler,
+        ClearCacheHandler $clearCacheByTagHandler,
         UpdateHandler $updateHandler,
         DeleteImageHandler $deleteImageHandler
     )

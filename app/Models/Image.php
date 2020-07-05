@@ -123,9 +123,27 @@ class Image extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+    public function publishedColorCollection()
+    {
+        return $this->belongsTo('App\Models\ColorCollection', 'color_collection_id', 'id')
+            ->where('publish',self::PUBLISHED);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function artCollection()
     {
         return $this->belongsTo('App\Models\ArtCollection');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function publishedArtCollection()
+    {
+        return $this->belongsTo('App\Models\ArtCollection', 'art_collection_id', 'id')
+            ->where('publish', '=', self::PUBLISHED);
     }
 
     /**
@@ -165,10 +183,21 @@ class Image extends Model
                 ->where('id', $id));
     }
 
+    public function scopeWhereArtCollection($query, int $id)
+    {
+        return $query
+            ->published()
+            ->whereHas('artCollection', fn (Builder $query) => $query
+                ->published()
+                ->where('id', $id));
+    }
+
     public function scopeWhereColorCollection($query, int $id)
     {
         return $query
+            ->published()
             ->whereHas('colorCollection', fn (Builder $query) => $query
+                ->published()
                 ->where('id', $id));
     }
 

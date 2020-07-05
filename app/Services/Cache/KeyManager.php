@@ -19,10 +19,22 @@ class KeyManager
 
     /**
      * @param array $params
+     * @param array|null $query
      * @return string
      */
-    public function getImagesKey(array $params): string
+    public function getImagesKey(array $params, array $query = null): string
     {
+        if ($query) {
+            $queryString = implode('|', array_map(function ($paramKey, $paramValue) {
+                return $paramKey . ':' . implode(',', array_map(function($key, $value) {
+                    return $key . '_' . $value;
+                }, array_keys($paramValue), array_values($paramValue)));
+            }, array_keys($query), array_values($query)));
+
+
+            $params = [...$params, $queryString];
+        }
+
         return $this->getKey(Key::IMAGES_PREFIX, $this->generateParamsKeySuffix($params));
     }
 

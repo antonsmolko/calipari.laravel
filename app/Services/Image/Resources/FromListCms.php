@@ -2,11 +2,9 @@
 
 namespace App\Services\Image\Resources;
 
-use App\Services\ArtCollection\Resources\FromImageClient as ArtCollectionResource;
-use App\Services\ColorCollection\Resources\FromImageClient as ColorCollectionResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FromClient extends JsonResource
+class FromListCms extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,12 +16,16 @@ class FromClient extends JsonResource
     {
         return [
             'id' => $this->id,
-            'article' => $this->article,
             'path' => $this->path,
+            'topics' => $this->topics,
+            'colors' => $this->colors,
+            'interiors' => $this->interiors,
+            'owner' => $this->owner,
+            'colorCollection' => $this->colorCollection,
             'likesCount' => $this->likes_count,
-            'ratio' => $this->ratio,
-            'colorCollection' => $this->publishedColorCollection,
-            'artCollection' => $this->publishedArtCollection
+            'ordersCount' => $this->orders_count,
+            'format' => $this->format,
+            'publish' => $this->publish
         ];
     }
 }

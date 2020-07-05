@@ -6,6 +6,7 @@ namespace App\Services\ArtCollection\Repositories;
 
 use App\Models\ArtCollection;
 use App\Services\ArtCollection\Resources\FromClient as FromClientResource;
+use App\Services\ArtCollection\Resources\FromSearchClient as FromSearchResource;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
 use App\Services\Image\Resources\FromEditorClient as ImageFromEditorResource;
 
@@ -34,5 +35,16 @@ class ClientArtCollectionRepository extends ClientBaseResourceRepository
     public function getItemImagesFromEditor(ArtCollection $item, int $currentImageId)
     {
         return ImageFromEditorResource::collection($item->images->except($currentImageId));
+    }
+
+    /**
+     * @param string $search
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getSearchedItems(string $search)
+    {
+        return FromSearchResource::collection($this->model::search($search)
+            ->where('publish', $this->model::PUBLISHED)
+            ->get());
     }
 }

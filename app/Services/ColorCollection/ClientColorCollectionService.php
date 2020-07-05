@@ -6,7 +6,10 @@ namespace App\Services\ColorCollection;
 
 use App\Services\Base\Resource\ClientBaseResourceService;
 use App\Services\Cache\KeyManager as CacheKeyManager;
+use App\Services\Cache\Tag;
+use App\Services\Cache\TTL;
 use App\Services\ColorCollection\Repositories\ClientColorCollectionRepository;
+use Illuminate\Support\Facades\Cache;
 
 class ClientColorCollectionService extends ClientBaseResourceService
 {
@@ -23,38 +26,19 @@ class ClientColorCollectionService extends ClientBaseResourceService
         parent::__construct($repository, $cacheKeyManager);
     }
 
-//    /**
-//     * @param int $id
-//     * @param int $currentImageId
-//     * @return mixed
-//     */
-//    public function getItemImagesFromEditor(int $id, int $currentImageId)
-//    {
-//        $item = $this->repository->getItem($id);
-//
-//        return $this->repository->getItemImagesFromEditor($item, $currentImageId);
-//    }
-
     /**
      * @param string $alias
      * @return mixed
      */
     public function getItemByAliasWithImages(string $alias)
     {
-        return $this->repository->getItemByAliasWithImages($alias);
-    }
+        $key = $this->cacheKeyManager
+            ->getResourceKey(Tag::COLOR_COLLECTIONS_TAG, ['client', $alias]);
 
-//    /**
-//     * @param int $id
-//     * @return mixed
-//     */
-//    public function getItemTags(int $id)
-//    {
-////        $tagKey = $this->cacheKeyManager->getResourceKey(Key::TAGS_PREFIX, ['client', 'by_category_' . $id]);
-//        $item = $this->repository->getItem($id);
-//
-//        return $this->repository->getItemTags($item);
-////        return Cache::tags(Tag::TAGS_TAG)
-////            ->remember($tagKey, TTL::TAGS_TTL, fn () => $this->repository->getItemTags($id));
-//    }
+        return Cache::tags(Tag::COLOR_COLLECTIONS_TAG)
+            ->remember(
+                $key,
+                TTL::COLOR_COLLECTIONS_TTL,
+                fn () => $this->repository->getItemByAliasWithImages($alias));
+    }
 }

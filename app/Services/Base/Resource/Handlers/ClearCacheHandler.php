@@ -5,7 +5,7 @@ namespace App\Services\Base\Resource\Handlers;
 
 use Illuminate\Support\Facades\Cache;
 
-class ClearCacheByTagHandler
+class ClearCacheHandler
 {
     /**
      *  Clear categories cache

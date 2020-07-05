@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Events\Models\ArtCollection\ArtCollectionDeleted;
+use App\Events\Models\ArtCollection\ArtCollectionSaved;
 use Laravel\Scout\Searchable;
 
 class ArtCollection extends Model
@@ -14,6 +15,11 @@ class ArtCollection extends Model
      */
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    protected $dispatchesEvents = [
+        'saved' => ArtCollectionSaved::class,
+        'deleted' => ArtCollectionDeleted::class,
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -23,19 +29,19 @@ class ArtCollection extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function backgroundImage()
-    {
-        return $this->belongsTo('App\Models\Image', 'image_id');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function publishedImages() {
         return $this->hasMany('App\Models\Image')
             ->where('publish', '=', 1);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function backgroundImage()
+    {
+        return $this->belongsTo('App\Models\Image', 'image_id');
     }
 
     /**

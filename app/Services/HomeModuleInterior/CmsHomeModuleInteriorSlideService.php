@@ -5,7 +5,7 @@ namespace App\Services\HomeModuleInterior;
 
 
 use App\Services\Base\Resource\CmsBaseResourceService;
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\HomeModuleInterior\Handlers\InteriorSlideDeleteHandler;
 use App\Services\HomeModuleInterior\Handlers\InteriorSlideStoreHandler;
 use App\Services\HomeModuleInterior\Handlers\InteriorSlideUpdateHandler;
@@ -20,14 +20,14 @@ class CmsHomeModuleInteriorSlideService extends CmsBaseResourceService
     /**
      * CmsHomeModuleInteriorSlideService constructor.
      * @param CmsHomeModuleInteriorSlideRepository $repository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheByTagHandler
      * @param InteriorSlideStoreHandler $storeHandler
      * @param InteriorSlideUpdateHandler $updateHandler
      * @param InteriorSlideDeleteHandler $deleteHandler
      */
     public function __construct(
         CmsHomeModuleInteriorSlideRepository $repository,
-        ClearCacheByTagHandler $clearCacheByTagHandler,
+        ClearCacheHandler $clearCacheByTagHandler,
         InteriorSlideStoreHandler $storeHandler,
         InteriorSlideUpdateHandler $updateHandler,
         InteriorSlideDeleteHandler $deleteHandler

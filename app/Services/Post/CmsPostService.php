@@ -5,7 +5,7 @@ namespace App\Services\Post;
 
 
 use App\Services\Base\Resource\CmsBaseResourceService;
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\Post\Handlers\DeleteHandler;
 use App\Services\Post\Handlers\DeleteImageHandler;
 use App\Services\Post\Handlers\StoreHandler;
@@ -24,7 +24,7 @@ class CmsPostService extends CmsBaseResourceService
     /**
      * CmsPostService constructor.
      * @param CmsPostRepository $repository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheByTagHandler
      * @param StoreHandler $storeHandler
      * @param UpdateHandler $updateHandler
      * @param DeleteHandler $deleteHandler
@@ -33,7 +33,7 @@ class CmsPostService extends CmsBaseResourceService
      */
     public function __construct(
         CmsPostRepository $repository,
-        ClearCacheByTagHandler $clearCacheByTagHandler,
+        ClearCacheHandler $clearCacheByTagHandler,
         StoreHandler $storeHandler,
         UpdateHandler $updateHandler,
         DeleteHandler $deleteHandler,

@@ -25,7 +25,6 @@ class FromEditCms extends JsonResource
             'format' => $this->format->title,
             'width' => $this->width,
             'height' => $this->height,
-            'views' => $this->views,
             'likes' => $this->likes->count(),
             'color_collection' => $this->colorCollection,
             'orders' => $this->orders->count(),

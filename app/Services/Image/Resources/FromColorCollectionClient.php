@@ -19,7 +19,11 @@ class FromColorCollectionClient extends JsonResource
             'id' => $this->id,
             'article' => $this->article,
             'path' => $this->path,
-            'likes' => $this->likes->count()
+            'width' => $this->width,
+            'height' => $this->height,
+            'likes' => $this->likes->count(),
+            'colorCollection' => $this->colorCollection ? $this->colorCollection->alias : null,
+            'artCollection' => $this->artCollection ? $this->artCollection->alias : null
         ];
     }
 }

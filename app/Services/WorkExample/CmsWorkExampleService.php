@@ -5,7 +5,7 @@ namespace App\Services\WorkExample;
 
 
 use App\Services\Base\Resource\CmsBaseResourceService;
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\WorkExample\Handlers\DeleteImageHandler;
 use App\Services\WorkExample\Handlers\StoreHandler;
 use App\Services\WorkExample\Handlers\UpdateHandler;
@@ -24,7 +24,7 @@ class CmsWorkExampleService extends CmsBaseResourceService
     /**
      * CmsWorkExampleService constructor.
      * @param CmsWorkExampleRepository $repository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheByTagHandler
      * @param StoreHandler $storeHandler
      * @param UpdateHandler $updateHandler
      * @param UploadHandler $uploadHandler
@@ -33,7 +33,7 @@ class CmsWorkExampleService extends CmsBaseResourceService
      */
     public function __construct(
         CmsWorkExampleRepository $repository,
-        ClearCacheByTagHandler $clearCacheByTagHandler,
+        ClearCacheHandler $clearCacheByTagHandler,
         StoreHandler $storeHandler,
         UpdateHandler $updateHandler,
         UploadHandler $uploadHandler,

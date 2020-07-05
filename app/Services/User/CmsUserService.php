@@ -6,7 +6,7 @@ namespace App\Services\User;
 
 use App\Models\User;
 use App\Services\Base\Resource\CmsBaseResourceService;
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\User\Handlers\CmsCreateHandler;
 use App\Services\User\Handlers\UpdateHandler;
 use App\Services\User\Repositories\CmsUserRepository;
@@ -27,13 +27,13 @@ class CmsUserService extends CmsBaseResourceService
     /**
      * UserServiceCms constructor.
      * @param CmsUserRepository $repository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheByTagHandler
      * @param CmsCreateHandler $createUserHandler
      * @param UpdateHandler $updateUserHandler
      */
     public function __construct(
         CmsUserRepository $repository,
-        ClearCacheByTagHandler $clearCacheByTagHandler,
+        ClearCacheHandler $clearCacheByTagHandler,
         CmsCreateHandler $createUserHandler,
         UpdateHandler $updateUserHandler
     )

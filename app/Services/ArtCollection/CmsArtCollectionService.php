@@ -8,7 +8,8 @@ use App\Services\ArtCollection\Handlers\AddImagesHandler;
 use App\Services\ArtCollection\Handlers\RemoveImageHandler;
 use App\Services\ArtCollection\Repositories\CmsArtCollectionRepository;
 use App\Services\Base\Resource\CmsBaseResourceService;
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\Tag;
 
 class CmsArtCollectionService extends CmsBaseResourceService
 {
@@ -18,13 +19,13 @@ class CmsArtCollectionService extends CmsBaseResourceService
     /**
      * CmsArtCollectionService constructor.
      * @param CmsArtCollectionRepository $repository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheByTagHandler
      * @param AddImagesHandler $addImagesHandler
      * @param RemoveImageHandler $removeImageHandler
      */
     public function __construct(
         CmsArtCollectionRepository $repository,
-        ClearCacheByTagHandler $clearCacheByTagHandler,
+        ClearCacheHandler $clearCacheByTagHandler,
         AddImagesHandler $addImagesHandler,
         RemoveImageHandler $removeImageHandler
     )
@@ -32,6 +33,7 @@ class CmsArtCollectionService extends CmsBaseResourceService
         parent::__construct($repository, $clearCacheByTagHandler);
         $this->addImagesHandler = $addImagesHandler;
         $this->removeImageHandler = $removeImageHandler;
+        $this->cacheTag = Tag::ART_COLLECTIONS_TAG;
     }
 
     /**

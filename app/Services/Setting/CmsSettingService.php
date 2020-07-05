@@ -5,7 +5,7 @@ namespace App\Services\Setting;
 
 
 use App\Models\Setting;
-use App\Services\Base\Resource\Handlers\ClearCacheByTagHandler;
+use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\Setting\Handlers\SetImageSettingValueHandler;
 use App\Services\Setting\Repositories\CmsSettingRepository;
 use App\Services\Base\Resource\CmsBaseResourceService;
@@ -22,13 +22,13 @@ class CmsSettingService extends CmsBaseResourceService
     /**
      * CmsSettingService constructor.
      * @param CmsSettingRepository $repository
-     * @param ClearCacheByTagHandler $clearCacheByTagHandler
+     * @param ClearCacheHandler $clearCacheByTagHandler
      * @param CmsSettingGroupRepository $groupRepository
      * @param SetImageSettingValueHandler $setImageSettingValueHandler
      */
     public function __construct(
         CmsSettingRepository $repository,
-        ClearCacheByTagHandler $clearCacheByTagHandler,
+        ClearCacheHandler $clearCacheByTagHandler,
         CmsSettingGroupRepository $groupRepository,
         SetImageSettingValueHandler $setImageSettingValueHandler
     )

@@ -13,12 +13,12 @@ class DefineRestrictionsForColorCollectionsHandler
      * @param Request $request
      * @return bool
      */
-    public function handle(Request $request)
+    public function handle(Request $request): bool
     {
         $hasFilterColors = isset($request->filter['colors']) && !empty($request->filter['colors']);
 
         $restrictiveCategoryId = isset($request->filter['restrictive_category'])
-            ? +$request->filter['restrictive_category'] : null;
+            ? (int) $request->filter['restrictive_category'] : null;
 
         if (!$restrictiveCategoryId) {
             return false;
