@@ -5,7 +5,7 @@ namespace App\Services\Image\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FromColorCollectionClient extends JsonResource
+class FromCollectionClient extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,9 +21,9 @@ class FromColorCollectionClient extends JsonResource
             'path' => $this->path,
             'width' => $this->width,
             'height' => $this->height,
-            'likes' => $this->likes->count(),
-            'colorCollection' => $this->colorCollection ? $this->colorCollection->alias : null,
-            'artCollection' => $this->artCollection ? $this->artCollection->alias : null
+            'likesCount' => $this->likes()->count(),
+            'colorCollection' => $this->publishedColorCollection ? $this->publishedColorCollection->alias : null,
+            'artCollection' => $this->publishedArtCollection ? $this->publishedArtCollection->alias : null
         ];
     }
 }

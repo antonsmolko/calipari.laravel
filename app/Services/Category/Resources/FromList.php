@@ -24,8 +24,8 @@ class FromList extends JsonResource
             'description' => $this->description,
             'publish' => $this->publish,
             'keywords' => $this->keywords,
-            'images_count' => $this->images->count(),
-            'has_published_images' => !!$this->publishedImages->count(),
+            'images_count' => $this->images_count,
+            'has_published_images' => (bool) $this->published_count,
         ];
     }
 }

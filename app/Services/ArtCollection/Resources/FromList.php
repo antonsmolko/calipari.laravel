@@ -19,8 +19,8 @@ class FromList extends JsonResource
             'title' => $this->title,
             'alias' => $this->alias,
             'thumb' => $this->backgroundImage ? $this->backgroundImage->path : null,
-            'images_count' => $this->images->count(),
-            'has_published_images' => (bool) $this->publishedImages->count(),
+            'images_count' => $this->images_count,
+            'has_published_images' => (bool) $this->published_count,
             'publish' => $this->publish
         ];
     }

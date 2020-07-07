@@ -7,7 +7,7 @@ use App\Models\ColorCollection;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
 use App\Services\ColorCollection\Resources\FromEdit as FromEditResource;
 use App\Services\ColorCollection\Resources\FromList as FromListResource;
-use App\Services\Image\Resources\FromColorCollectionCms as ImageToTableResource;
+use App\Services\Image\Resources\FromCollectionCms as ImageToTableResource;
 
 class CmsColorCollectionRepository extends CmsBaseResourceRepository
 {

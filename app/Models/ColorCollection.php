@@ -118,12 +118,4 @@ class ColorCollection extends Model
             ->whereDoesntHave('images', fn (Builder $query) => $query->published())
             ->get();
     }
-
-    /**
-     * @return bool
-     */
-    public function hasPublishedImagesAttribute()
-    {
-        return (bool) $this->images()->firstWhere('publish', '=', 1);
-    }
 }

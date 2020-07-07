@@ -30,14 +30,17 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Clear\ColorCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\SearchCacheClear::class,
+            \App\Listeners\Cache\Clear\FilterCacheClear::class,
         ],
 
-//        \App\Events\Models\Category\CategoryUpdated::class => [
-//            \App\Listeners\Cache\Clear\CategoryCacheClear::class,
-//            \App\Listeners\Cache\Clear\ImageCacheClear::class,
-//            \App\Listeners\Cache\Clear\ColorCollectionCacheClear::class,
-//            \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
-//        ],
+        \App\Events\Models\Category\CategoryUpdated::class => [
+            \App\Listeners\Cache\Clear\CategoryCacheClear::class,
+            \App\Listeners\Cache\Clear\ImageCacheClear::class,
+            \App\Listeners\Cache\Clear\ColorCollectionCacheClear::class,
+            \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
+            \App\Listeners\Cache\Clear\SearchCacheClear::class,
+            \App\Listeners\Cache\Clear\FilterCacheClear::class,
+        ],
 
         \App\Events\Models\Category\CategoryDeleted::class => [
             \App\Listeners\Cache\Clear\CategoryCacheClear::class,
@@ -45,6 +48,7 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Clear\ColorCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\SearchCacheClear::class,
+            \App\Listeners\Cache\Clear\FilterCacheClear::class,
         ],
 
         \App\Events\Models\Image\ImageSaved::class => [
@@ -53,16 +57,19 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Clear\ColorCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\SearchCacheClear::class,
+            \App\Listeners\Cache\Clear\FilterCacheClear::class,
             \App\Listeners\Image\CheckImagesCount::class,
         ],
 
-//        \App\Events\Models\Image\ImageUpdated::class => [
-//            \App\Listeners\Cache\Clear\CategoryCacheClear::class,
-//            \App\Listeners\Cache\Clear\ImageCacheClear::class,
-//            \App\Listeners\Cache\Clear\ColorCollectionCacheClear::class,
-//            \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
-//            \App\Listeners\Image\CheckImagesCount::class,
-//        ],
+        \App\Events\Models\Image\ImageUpdated::class => [
+            \App\Listeners\Cache\Clear\CategoryCacheClear::class,
+            \App\Listeners\Cache\Clear\ImageCacheClear::class,
+            \App\Listeners\Cache\Clear\ColorCollectionCacheClear::class,
+            \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
+            \App\Listeners\Cache\Clear\SearchCacheClear::class,
+            \App\Listeners\Cache\Clear\FilterCacheClear::class,
+            \App\Listeners\Image\CheckImagesCount::class,
+        ],
 
         \App\Events\Models\Image\ImageDeleted::class => [
             \App\Listeners\Cache\Clear\CategoryCacheClear::class,
@@ -70,6 +77,7 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Clear\ColorCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\SearchCacheClear::class,
+            \App\Listeners\Cache\Clear\FilterCacheClear::class,
             \App\Listeners\Image\CheckImagesCount::class,
         ],
 
@@ -79,6 +87,7 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Clear\ColorCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\SearchCacheClear::class,
+            \App\Listeners\Cache\Clear\FilterCacheClear::class,
         ],
 
         \App\Events\Models\ArtCollection\ArtCollectionDeleted::class => [
@@ -87,6 +96,7 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Clear\ColorCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\SearchCacheClear::class,
+            \App\Listeners\Cache\Clear\FilterCacheClear::class,
         ],
 
         \App\Events\Models\ColorCollection\ColorCollectionSaved::class => [
@@ -95,6 +105,7 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Clear\ColorCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\SearchCacheClear::class,
+            \App\Listeners\Cache\Clear\FilterCacheClear::class,
         ],
 
         \App\Events\Models\ColorCollection\ColorCollectionDeleted::class => [
@@ -103,6 +114,7 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Clear\ColorCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\SearchCacheClear::class,
+            \App\Listeners\Cache\Clear\FilterCacheClear::class,
         ],
 
         \App\Events\Models\Delivery\DeliverySaved::class => [
@@ -118,20 +130,44 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         \App\Events\Models\Order\OrderSaved::class => [
+            \App\Listeners\Cache\Clear\OrderCacheClear::class,
             \App\Listeners\Mail\Order\SendCreated::class,
-            \App\Listeners\Cache\Clear\DeliveryCacheClear::class,
         ],
 
         \App\Events\Models\Order\OrderUpdated::class => [
-            \App\Listeners\Mail\Order\SendCreated::class,
+            \App\Listeners\Cache\Clear\OrderCacheClear::class,
         ],
 
         \App\Events\Models\Order\OrderCanceled::class => [
+            \App\Listeners\Cache\Clear\OrderCacheClear::class,
             \App\Listeners\Mail\Order\SendCanceled::class,
         ],
 
         \App\Events\Models\Order\OrderDeleted::class => [
-            \App\Listeners\Mail\Order\SendCreated::class,
+            \App\Listeners\Cache\Clear\OrderCacheClear::class,
+        ],
+
+        \App\Events\Models\User\UserSaved::class => [
+            \App\Listeners\Cache\Clear\UserCacheClear::class,
+            \App\Listeners\Cache\Clear\OrderCacheClear::class,
+        ],
+
+        \App\Events\Models\User\UserUpdated::class => [
+            \App\Listeners\Cache\Clear\UserCacheClear::class,
+            \App\Listeners\Cache\Clear\OrderCacheClear::class,
+        ],
+
+        \App\Events\Models\User\UserDeleted::class => [
+            \App\Listeners\Cache\Clear\UserCacheClear::class,
+            \App\Listeners\Cache\Clear\OrderCacheClear::class,
+        ],
+
+        \App\Events\Models\Post\PostSaved::class => [
+            \App\Listeners\Cache\Clear\PostCacheClear::class,
+        ],
+
+        \App\Events\Models\Post\PostDeleted::class => [
+            \App\Listeners\Cache\Clear\PostCacheClear::class,
         ],
     ];
 

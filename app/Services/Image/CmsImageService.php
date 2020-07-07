@@ -17,7 +17,6 @@ use App\Services\Image\Handlers\UpdateHandler;
 use App\Services\Image\Handlers\UpdateImagePathHandler;
 use App\Services\Image\Handlers\UploadHandler;
 use App\Services\Image\Repositories\CmsImageRepository;
-use App\Services\Image\Resources\FromClientCollection;
 use App\Services\Image\Resources\FromListCmsCollection as FromListCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
@@ -32,7 +31,6 @@ class CmsImageService extends CmsBaseResourceService
     private GetSyncDataHandler $getSyncDataHandler;
     private UpdateHandler $updateHandler;
     private SyncUpdateWithColorCollectionHandler $syncUpdateWithColorCollectionHandler;
-    private CacheKeyManager $cacheKeyManager;
 
     /**
      * CmsImageService constructor.
@@ -60,7 +58,7 @@ class CmsImageService extends CmsBaseResourceService
         CacheKeyManager $cacheKeyManager
     )
     {
-        parent::__construct($repository, $clearCacheByTagHandler);
+        parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
         $this->colorCollectionRepository = $colorCollectionRepository;
         $this->uploadHandler = $uploadHandler;
         $this->updateItemPathHandler = $updateImagePathHandler;
@@ -69,7 +67,6 @@ class CmsImageService extends CmsBaseResourceService
         $this->updateHandler = $updateHandler;
         $this->syncUpdateWithColorCollectionHandler = $syncUpdateWithColorCollectionHandler;
         $this->cacheTag = Tag::IMAGES_TAG;
-        $this->cacheKeyManager = $cacheKeyManager;
     }
 
     /**
@@ -79,12 +76,13 @@ class CmsImageService extends CmsBaseResourceService
     public function getItems(array $requestData)
     {
         $key = $this->cacheKeyManager
-            ->getImagesKey(['client'], ['pagination' => $requestData]);
-//        return new FromListCollection($this->repository->getItems($requestData));
+            ->getImagesKey(['cms', 'list'], ['pagination' => $requestData]);
+
         return Cache::tags(Tag::IMAGES_TAG)
-            ->remember($key, TTL::IMAGES_TTL, function () use ($requestData) {
-                return new FromListCollection($this->repository->getItems($requestData));
-            });
+            ->remember(
+                $key,
+                TTL::IMAGES_TTL,
+                fn() => new FromListCollection($this->repository->getItems($requestData)));
     }
 
     /**
@@ -93,7 +91,14 @@ class CmsImageService extends CmsBaseResourceService
      */
     public function getTrashedItems(array $requestData)
     {
-        return $this->repository->getTrashedItems($requestData);
+        $key = $this->cacheKeyManager
+            ->getImagesKey(['cms', 'trashed'], ['pagination' => $requestData]);
+
+        return Cache::tags(Tag::IMAGES_TAG)
+            ->remember(
+                $key,
+                TTL::IMAGES_TTL,
+                fn() => $this->repository->getTrashedItems($requestData));
     }
 
     /**

@@ -203,6 +203,7 @@
         methods: {
             ...mapActions({
                 getItemAction: 'users/getItem',
+                setFieldsAction: 'users/setItemFields',
                 getRolesAction: 'roles/getItems'
             }),
             onChangePassword() {
@@ -210,9 +211,11 @@
             },
             cancelOldPasswordChange() {
                 this.changePassword = false;
-                this.updateField('old_password', '');
-                this.updateField('password', '');
-                this.updateField('password_confirmation', '');
+                this.setFieldsAction({
+                    old_password: '',
+                    password: '',
+                    password_confirmation: ''
+                });
                 this.$v.oldPassword.$reset();
                 this.$v.password.$reset();
                 this.$v.passwordConfirmation.$reset();
@@ -266,7 +269,7 @@
                     this.$v.$reset();
                     this.controlSaveVisibilities = true;
                 })
-                .catch(() => this.$router.push(this.redirectRoute));
+                // .catch(() => this.$router.push(this.redirectRoute));
         }
     }
 </script>

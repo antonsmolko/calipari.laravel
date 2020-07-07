@@ -7,6 +7,7 @@ namespace App\Services\Texture;
 use App\Models\Texture;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Texture\Repositories\CmsTextureRepository;
 use App\Services\Texture\Handlers\StoreTextureHandler;
 use App\Services\Texture\Handlers\DeleteTextureHandler;
@@ -19,22 +20,24 @@ class CmsTextureService extends CmsBaseResourceService
     private DeleteTextureHandler $destroyHandler;
 
     /**
-     * TextureServiceCms constructor.
+     * CmsTextureService constructor.
      * @param CmsTextureRepository $repository
      * @param ClearCacheHandler $clearCacheByTagHandler
      * @param StoreTextureHandler $createTextureHandler
      * @param UpdateTextureHandler $updateTextureHandler
      * @param DeleteTextureHandler $deleteTextureHandler
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsTextureRepository $repository,
         ClearCacheHandler $clearCacheByTagHandler,
         StoreTextureHandler $createTextureHandler,
         UpdateTextureHandler $updateTextureHandler,
-        DeleteTextureHandler $deleteTextureHandler
+        DeleteTextureHandler $deleteTextureHandler,
+        CacheKeyManager $cacheKeyManager
     )
     {
-        parent::__construct($repository, $clearCacheByTagHandler);
+        parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
         $this->storeHandler = $createTextureHandler;
         $this->updateHandler = $updateTextureHandler;
         $this->destroyHandler = $deleteTextureHandler;

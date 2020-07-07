@@ -4,12 +4,17 @@
 namespace App\Services\Base\Category;
 
 
+use App\Events\Models\Category\CategoryUpdated;
 use App\Services\Base\Category\Repositories\CmsBaseCategoryRepository;
 use App\Services\Base\Resource\CmsBaseResourceService;
+use App\Services\Cache\KeyManager as CacheKeyManager;
+use App\Services\Cache\TTL;
 use App\Services\Image\Handlers\UploadHandler;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\Cache\Tag;
 use App\Services\Image\CmsImageService;
+use App\Services\Image\Resources\FromListCmsCollection as FromListCollection;
+use Illuminate\Support\Facades\Cache;
 
 class CmsBaseCategoryService extends CmsBaseResourceService
 {
@@ -22,15 +27,21 @@ class CmsBaseCategoryService extends CmsBaseResourceService
      * @param ClearCacheHandler $clearCacheByTagHandler
      * @param UploadHandler $uploadHandler
      * @param CmsImageService $imageService
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsBaseCategoryRepository $repository,
         ClearCacheHandler $clearCacheByTagHandler,
         UploadHandler $uploadHandler,
-        CmsImageService $imageService
+        CmsImageService $imageService,
+        CacheKeyManager $cacheKeyManager
     )
     {
-        parent::__construct($repository, $clearCacheByTagHandler);
+        parent::__construct(
+            $repository,
+            $clearCacheByTagHandler,
+            $cacheKeyManager
+        );
         $this->cacheTag = Tag::CATEGORIES_TAG;
         $this->imageService = $imageService;
         $this->uploadHandler = $uploadHandler;
@@ -66,9 +77,18 @@ class CmsBaseCategoryService extends CmsBaseResourceService
      */
     public function getImages(int $categoryId, array $pagination)
     {
-        $category = $this->repository->getItem($categoryId);
+        $key = $this->cacheKeyManager
+            ->getImagesKey(['cms', 'category_id_' . $categoryId], $pagination);
 
-        return $this->repository->getImages($category, $pagination);
+        return Cache::tags(Tag::IMAGES_TAG)
+            ->remember(
+                $key,
+                TTL::IMAGES_TTL,
+                function() use ($categoryId, $pagination) {
+                    $category = $this->repository->getItem($categoryId);
+
+                    return new FromListCollection($this->repository->getImages($category, $pagination));
+                });
     }
 
     /**
@@ -78,9 +98,18 @@ class CmsBaseCategoryService extends CmsBaseResourceService
      */
     public function getExcludedImages(int $categoryId, array $pagination)
     {
-        $category = $this->repository->getItem($categoryId);
+        $key = $this->cacheKeyManager
+            ->getImagesKey(['cms', 'excluded', 'category_id_' . $categoryId], $pagination);
 
-        return $this->repository->getExcludedImages($category, $pagination);
+        return Cache::tags(Tag::IMAGES_TAG)
+            ->remember(
+                $key,
+                TTL::IMAGES_TTL,
+                function() use ($categoryId, $pagination) {
+                    $category = $this->repository->getItem($categoryId);
+
+                    return new FromListCollection($this->repository->getExcludedImages($category, $pagination));
+                });
     }
 
     /**
@@ -90,8 +119,9 @@ class CmsBaseCategoryService extends CmsBaseResourceService
     public function addImages(int $id, array $images)
     {
         $category = $this->repository->getItem($id);
-
         $this->repository->addImages($category, $images);
+
+        event(new CategoryUpdated());
     }
 
     /**
@@ -106,7 +136,10 @@ class CmsBaseCategoryService extends CmsBaseResourceService
         $colorCollection = $image->colorCollection;
 
         if (!$colorCollection || !$colorCollection->main_image_id === $image->id) {
-            return $this->repository->removeImage($category, $imageId);
+            $resolve = $this->repository->removeImage($category, $imageId);
+            event(new CategoryUpdated());
+
+            return $resolve;
         }
 
         return abort(400, __('image_validation.unable_to_remove_image_of_color_collection'));

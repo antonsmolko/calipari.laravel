@@ -32,6 +32,8 @@ class ClientImageRepository extends ClientBaseResourceRepository
     {
         try {
             return new ImageFromEditorResource($this->model::published()
+                ->with(['publishedColorCollection:id', 'publishedArtCollection:id'])
+                ->withCount('likes')
                 ->where('id', $id)
                 ->firstOrFail());
         } catch (ModelNotFoundException $e) {
@@ -50,7 +52,8 @@ class ClientImageRepository extends ClientBaseResourceRepository
 
         return QueryBuilder::for(Image::with([
             'publishedColorCollection:id,title,alias',
-            'publishedArtCollection:id,title,alias'])->withCount('likes'))
+            'publishedArtCollection:id,title,alias'])
+            ->withCount('likes'))
             ->when($colorCollectionRestriction, fn ($query) => $query
                 ->whereDoesntHave('colorCollection', fn ($query) => $query->published())
                 ->orWhereHas('colorCollection', fn ($query) => $query

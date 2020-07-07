@@ -18,9 +18,8 @@
                         :activeTab="activeTab"
                         color-button="success">
                         <template slot="tab-pane-1">
-                            <div class="md-layout md-gutter">
+                            <div class="md-layout">
                                 <div class="md-layout-item">
-                                    <h3>Основные настройки</h3>
                                     <v-input title="Заголовок"
                                              icon="title"
                                              name="title"
@@ -50,33 +49,37 @@
                             <slot name="modules"/>
                         </template>
                         <template slot="tab-pane-3">
-                            <v-input title="Мета заголовок"
-                                     icon="title"
-                                     name="meta_title"
-                                     :value="fields.meta_title"
-                                     :vField="$v.fields.meta_title"
-                                     :differ="true"
-                                     :maxlength="150"
-                                     :module="storeModule" />
-                            <v-input title="Описание"
-                                     icon="description"
-                                     name="description"
-                                     :value="fields.description"
-                                     :vField="$v.fields.description"
-                                     :differ="true"
-                                     :maxlength="250"
-                                     :module="storeModule" />
+                            <div class="md-layout">
+                                <div class="md-layout-item">
+                                    <v-input title="Мета заголовок"
+                                             icon="title"
+                                             name="meta_title"
+                                             :value="fields.meta_title"
+                                             :vField="$v.fields.meta_title"
+                                             :differ="true"
+                                             :maxlength="150"
+                                             :module="storeModule" />
+                                    <v-input title="Описание"
+                                             icon="description"
+                                             name="description"
+                                             :value="fields.description"
+                                             :vField="$v.fields.description"
+                                             :differ="true"
+                                             :maxlength="250"
+                                             :module="storeModule" />
 
-                            <v-input title="Ключевые слова"
-                                     icon="vpn_key"
-                                     name="keywords"
-                                     :value="fields.keywords"
-                                     :vField="$v.fields.keywords"
-                                     :differ="true"
-                                     :maxlength="150"
-                                     :module="storeModule" />
+                                    <v-input title="Ключевые слова"
+                                             icon="vpn_key"
+                                             name="keywords"
+                                             :value="fields.keywords"
+                                             :vField="$v.fields.keywords"
+                                             :differ="true"
+                                             :maxlength="150"
+                                             :module="storeModule" />
 
-                            <div class="space-30"></div>
+                                    <div class="space-30"></div>
+                                </div>
+                            </div>
                         </template>
                     </tabs>
 

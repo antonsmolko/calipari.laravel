@@ -75,6 +75,9 @@ Route::prefix('catalog')
         Route::get('images/{id}/color-collection-images', 'Client\Image\ImageController@getItemColorCollectionImages')
             ->where('id', '[0-9]+');
 
+        Route::get('images/{id}/art-collection-images', 'Client\Image\ImageController@getItemArtCollectionImages')
+            ->where('id', '[0-9]+');
+
         Route::post('images/wish-list/tags', 'Client\Image\ImageController@getWishListTags')
             ->name('catalog.images.wish-list.tags');
 

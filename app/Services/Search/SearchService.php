@@ -5,6 +5,7 @@ namespace App\Services\Search;
 
 
 use App\Services\ArtCollection\Repositories\ClientArtCollectionRepository;
+use App\Services\Cache\Key;
 use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\Cache\Tag;
@@ -52,7 +53,7 @@ class SearchService
      */
     public function getSearchedResult(string $query)
     {
-        $key = $this->cacheKeyManager->getResourceKey(Tag::SEARCH_TAG, ['client', 'search', 'query:' . $query]);
+        $key = $this->cacheKeyManager->getResourceKey(Key::SEARCH_PREFIX, ['client', 'search', 'query:' . $query]);
 
         return Cache::tags(Tag::SEARCH_TAG)
             ->remember($key,TTL::SEARCH_TTL, function() use ($query) {
@@ -64,9 +65,6 @@ class SearchService
             });
     }
 
-    /**
-     * Clear cache by tag
-     */
     public function clearCache()
     {
         $this->clearCacheHandler->handle($this->cacheTag);

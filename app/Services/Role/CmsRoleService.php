@@ -6,6 +6,7 @@ namespace App\Services\Role;
 
 use App\Models\Role;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Role\Repositories\CmsRoleRepository;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -13,16 +14,18 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class CmsRoleService extends CmsBaseResourceService
 {
     /**
-     * RoleServiceCms constructor.
+     * CmsRoleService constructor.
      * @param CmsRoleRepository $repository
      * @param ClearCacheHandler $clearCacheByTagHandler
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsRoleRepository $repository,
-        ClearCacheHandler $clearCacheByTagHandler
+        ClearCacheHandler $clearCacheByTagHandler,
+        CacheKeyManager $cacheKeyManager
     )
     {
-        parent::__construct($repository, $clearCacheByTagHandler);
+        parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
     }
 
     /**

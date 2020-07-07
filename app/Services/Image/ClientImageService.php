@@ -139,4 +139,22 @@ class ClientImageService
                     ->getItemImagesFromEditor($item->colorCollection, $id)];
             });
     }
+
+    /**
+     * @param int $id
+     * @return array
+     */
+    public function getItemArtCollectionImages(int $id)
+    {
+        $key = $this->cacheKeyManager
+            ->getImagesKey(['client', 'art-collection-images', 'id_' . $id]);
+
+        return Cache::tags(Tag::IMAGES_TAG)
+            ->remember($key, TTL::IMAGES_TTL, function () use ($id) {
+                $item = $this->repository->getResourceItem($id);
+
+                return [$item, ...$this->artCollectionRepository
+                    ->getItemImagesFromEditor($item->artCollection, $id)];
+            });
+    }
 }

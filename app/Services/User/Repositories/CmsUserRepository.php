@@ -6,8 +6,7 @@ namespace App\Services\User\Repositories;
 use App\Models\User;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
 use App\Services\User\Resources\UserCollection;
-use App\Services\User\Resources\User as UserResource;
-use Illuminate\Database\Eloquent\Collection;
+use App\Services\User\Resources\UserEdit as UserEditResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
@@ -24,15 +23,15 @@ class CmsUserRepository extends CmsBaseResourceRepository
         $this->model = $model;
     }
 
-    /**
-     * @return Collection
-     */
-    public function index(): Collection
-    {
-        return $this->model::with('roles')
-            ->withCount('orders')
-            ->get();
-    }
+//    /**
+//     * @return Collection
+//     */
+//    public function index(): Collection
+//    {
+//        return $this->model::with('roles')
+//            ->withCount('orders')
+//            ->get();
+//    }
 
     /**
      * @param array $requestData
@@ -44,6 +43,7 @@ class CmsUserRepository extends CmsBaseResourceRepository
             $this->model::when(!empty($requestData['query']), fn ($query) => $query
                 ->where('name', 'like', $requestData['query'] . '%')
                 ->orWhere('email', 'like', $requestData['query'] . '%'))
+            ->withCount('orders')
             ->orderBy($requestData['sort_by'], $requestData['sort_order'])
             ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']));
     }
@@ -63,7 +63,7 @@ class CmsUserRepository extends CmsBaseResourceRepository
      */
     public function getItemWithRole(int $id): JsonResource
     {
-        return new UserResource($this->model::findOrFail($id));
+        return new UserEditResource($this->model::findOrFail($id));
     }
 
     /**

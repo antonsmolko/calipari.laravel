@@ -4,7 +4,7 @@ namespace App\Services\Image\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FromColorCollectionCms extends JsonResource
+class FromCollectionCms extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,8 +21,8 @@ class FromColorCollectionCms extends JsonResource
             'owner' => $this->owner,
             'format' => $this->format,
             'views' => $this->views,
-            'likes' => $this->likes->count(),
-            'orders' => $this->orders->count(),
+            'likesCount' => $this->likes_count,
+            'ordersCount' => $this->orders_count,
             'publish' => $this->publish
         ];
     }

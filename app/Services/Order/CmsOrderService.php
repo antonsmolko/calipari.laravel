@@ -4,13 +4,19 @@
 namespace App\Services\Order;
 
 
+use App\Events\Models\Order\OrderUpdated;
 use App\Models\Order;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\Key;
+use App\Services\Cache\Tag;
+use App\Services\Cache\TTL;
+use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Order\Handlers\GetMailFormatOrderHandler;
 use App\Services\Order\Repositories\CmsOrderRepository;
 use App\Services\Order\Resources\CmsOrder as OrderResource;
 use App\Services\Order\Resources\CmsOrderFromList as OrderFromListResource;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 
 class CmsOrderService extends CmsBaseResourceService
@@ -22,15 +28,18 @@ class CmsOrderService extends CmsBaseResourceService
      * @param CmsOrderRepository $repository
      * @param ClearCacheHandler $clearCacheByTagHandler
      * @param GetMailFormatOrderHandler $getMailFormatOrderHandler
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsOrderRepository $repository,
         ClearCacheHandler $clearCacheByTagHandler,
-        GetMailFormatOrderHandler $getMailFormatOrderHandler
+        GetMailFormatOrderHandler $getMailFormatOrderHandler,
+        CacheKeyManager $cacheKeyManager
     )
     {
-        parent::__construct($repository, $clearCacheByTagHandler);
+        parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
         $this->getMailFormatOrderHandler = $getMailFormatOrderHandler;
+        $this->cacheTag = Tag::ORDERS_TAG;
     }
 
     /**
@@ -47,7 +56,14 @@ class CmsOrderService extends CmsBaseResourceService
      */
     public function getCurrentItems(array $requestData)
     {
-        return $this->repository->getCurrentItems($requestData);
+        $key = $this->cacheKeyManager
+            ->getResourceKey(Key::ORDERS_PREFIX, ['cms', 'current'], $requestData);
+
+        return Cache::tags(Tag::ORDERS_TAG)
+            ->remember(
+                $key,
+                TTL::ORDERS_TTL,
+                fn() => $this->repository->getCurrentItems($requestData));
     }
 
     /**
@@ -56,7 +72,14 @@ class CmsOrderService extends CmsBaseResourceService
      */
     public function getCompletedItems(array $requestData)
     {
-        return $this->repository->getItemsByStatus($requestData, 'completed');
+        $key = $this->cacheKeyManager
+            ->getResourceKey(Key::ORDERS_PREFIX, ['cms', 'completed'], $requestData);
+
+        return Cache::tags(Tag::ORDERS_TAG)
+            ->remember(
+                $key,
+                TTL::ORDERS_TTL,
+                fn() => $this->repository->getItemsByStatus($requestData, 'completed'));
     }
 
     /**
@@ -65,7 +88,14 @@ class CmsOrderService extends CmsBaseResourceService
      */
     public function getCanceledItems(array $requestData)
     {
-        return $this->repository->getItemsByStatus($requestData, 'canceled');
+        $key = $this->cacheKeyManager
+            ->getResourceKey(Key::ORDERS_PREFIX, ['cms', 'canceled'], $requestData);
+
+        return Cache::tags(Tag::ORDERS_TAG)
+            ->remember(
+                $key,
+                TTL::ORDERS_TTL,
+                fn() => $this->repository->getItemsByStatus($requestData, 'canceled'));
     }
 
     /**
@@ -74,7 +104,14 @@ class CmsOrderService extends CmsBaseResourceService
      */
     public function getItem(int $id)
     {
-        return $this->repository->getItem($id);
+        $key = $this->cacheKeyManager
+            ->getResourceKey(Key::ORDERS_PREFIX, ['cms', 'id_' . $id]);
+
+        return Cache::tags(Tag::ORDERS_TAG)
+            ->remember(
+                $key,
+                TTL::ORDERS_TTL,
+                fn() => $this->repository->getItem($id));
     }
 
     /**
@@ -83,7 +120,14 @@ class CmsOrderService extends CmsBaseResourceService
      */
     public function getItemDetails(int $id)
     {
-        return $this->repository->getItemDetails($id);
+        $key = $this->cacheKeyManager
+            ->getResourceKey(Key::ORDERS_PREFIX, ['cms', 'details', 'id_' . $id]);
+
+        return Cache::tags(Tag::ORDERS_TAG)
+            ->remember(
+                $key,
+                TTL::ORDERS_TTL,
+                fn() => $this->repository->getItemDetails($id));
     }
 
     /**
@@ -100,6 +144,8 @@ class CmsOrderService extends CmsBaseResourceService
 
         $this->sendMail(\App\Mail\ChangeOrderStatus::class, $changeStatusOrder);
 
+        event(new OrderUpdated());
+
         return $requestData['list']
             ? new OrderFromListResource($changeStatusOrder)
             : new OrderResource($changeStatusOrder);
@@ -113,7 +159,7 @@ class CmsOrderService extends CmsBaseResourceService
     {
         $orderData = $this->getMailFormatOrderHandler->handle($order);
 
-        $email = $orderData['customer']['email'];
+        $email = $order->user ? $order->user->email : $order['customer']['email'];
         $mail = app()->makeWith($mailClass, ['order' => $orderData]);
         Mail::to($email)->queue($mail);
     }

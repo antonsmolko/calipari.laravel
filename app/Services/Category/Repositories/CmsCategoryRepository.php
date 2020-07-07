@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Services\Base\Category\Repositories\CmsBaseCategoryRepository;
 use App\Services\Category\Resources\FromEdit as FromEditResource;
 use App\Services\Category\Resources\FromList as FromListResource;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class CmsCategoryRepository extends CmsBaseCategoryRepository
@@ -36,6 +37,7 @@ class CmsCategoryRepository extends CmsBaseCategoryRepository
     {
         return FromListResource::collection($this->model::where('type', $type)
             ->orderBy('id')
+            ->withCount(['images', 'images as published_count' => fn(Builder $query) => $query->published()])
             ->get());
     }
 

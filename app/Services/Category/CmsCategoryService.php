@@ -6,12 +6,16 @@ namespace App\Services\Category;
 
 use App\Services\Base\Category\CmsBaseCategoryService;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\KeyManager as CacheKeyManager;
+use App\Services\Cache\Tag;
+use App\Services\Cache\TTL;
 use App\Services\Category\Handlers\DestroyHandler;
 use App\Services\Category\Handlers\StoreHandler;
 use App\Services\Category\Handlers\UpdateHandler;
 use App\Services\Image\CmsImageService;
 use App\Services\Image\Handlers\UploadHandler;
 use App\Services\Category\Repositories\CmsCategoryRepository;
+use Illuminate\Support\Facades\Cache;
 
 class CmsCategoryService extends CmsBaseCategoryService
 {
@@ -28,6 +32,7 @@ class CmsCategoryService extends CmsBaseCategoryService
      * @param CmsImageService $imageService
      * @param UpdateHandler $updateHandler
      * @param DestroyHandler $destroyHandler
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsCategoryRepository $repository,
@@ -36,13 +41,17 @@ class CmsCategoryService extends CmsBaseCategoryService
         UploadHandler $uploadHandler,
         CmsImageService $imageService,
         UpdateHandler $updateHandler,
-        DestroyHandler $destroyHandler)
+        DestroyHandler $destroyHandler,
+        CacheKeyManager $cacheKeyManager
+    )
     {
         parent::__construct(
             $repository,
             $clearCacheByTagHandler,
             $uploadHandler,
-            $imageService);
+            $imageService,
+            $cacheKeyManager
+        );
         $this->storeHandler = $storeHandler;
         $this->updateHandler = $updateHandler;
         $this->destroyHandler = $destroyHandler;
@@ -54,7 +63,14 @@ class CmsCategoryService extends CmsBaseCategoryService
      */
     public function getItemsByType(string $type)
     {
-        return $this->repository->getItemsByType($type);
+        $key = $this->cacheKeyManager
+            ->getCategoriesKey(['cms', $type, 'list']);
+
+        return Cache::tags(Tag::CATEGORIES_TAG)
+            ->remember(
+                $key,
+                TTL::CATEGORIES_TTL,
+                fn() => $this->repository->getItemsByType($type));
     }
 
     /**

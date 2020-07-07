@@ -7,10 +7,16 @@ namespace App\Services\Cache;
 class Key
 {
     const CATEGORIES_PREFIX = 'categories';
-    const TAGS_PREFIX = 'tags';
     const IMAGES_PREFIX = 'images';
     const DELIVERY_PREFIX = 'deliveries';
     const SETTINGS_PREFIX = 'settings';
     const ORDERS_PREFIX = 'orders';
     const CDEK_PREFIX = 'cdek';
+    const SEARCH_PREFIX = 'search';
+    const COLOR_COLLECTIONS_PREFIX = 'colorCollections';
+    const ART_COLLECTIONS_PREFIX = 'artCollections';
+    const FILTERS_PREFIX = 'filters';
+    const USERS_PREFIX = 'users';
+    const POSTS_PREFIX = 'posts';
+    const WORK_EXAMPLES_PREFIX = 'workExamples';
 }

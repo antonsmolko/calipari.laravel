@@ -6,12 +6,17 @@ namespace App\Services\User;
 
 use App\Models\User;
 use App\Services\Auth\AuthService;
+use App\Services\Cache\Key;
+use App\Services\Cache\Tag;
+use App\Services\Cache\TTL;
+use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Order\Resources\ClientOrder as OrderResource;
 use App\Services\User\Handlers\CancelOrderHandler;
 use App\Services\User\Handlers\ClientCreateHandler;
 use App\Services\User\Handlers\SyncWishlistHandler;
 use App\Services\User\Handlers\UpdateHandler;
 use App\Services\User\Repositories\ClientUserRepository;
+use Illuminate\Support\Facades\Cache;
 
 class ClientUserService
 {
@@ -21,6 +26,7 @@ class ClientUserService
     private UpdateHandler $updateHandler;
     private CancelOrderHandler $cancelOrderHandler;
     private SyncWishlistHandler $syncWishlistHandler;
+    private CacheKeyManager $cacheKeyManager;
     private $authUser;
 
     /**
@@ -28,6 +34,7 @@ class ClientUserService
      * @param ClientUserRepository $repository
      * @param AuthService $authService
      * @param ClientCreateHandler $createHandler
+     * @param CacheKeyManager $cacheKeyManager
      * @param UpdateHandler $updateHandler
      * @param CancelOrderHandler $cancelOrderHandler
      * @param SyncWishlistHandler $syncWishlistHandler
@@ -36,6 +43,7 @@ class ClientUserService
         ClientUserRepository $repository,
         AuthService $authService,
         ClientCreateHandler $createHandler,
+        CacheKeyManager $cacheKeyManager,
         UpdateHandler $updateHandler,
         CancelOrderHandler $cancelOrderHandler,
         SyncWishlistHandler $syncWishlistHandler
@@ -47,6 +55,7 @@ class ClientUserService
         $this->updateHandler = $updateHandler;
         $this->cancelOrderHandler = $cancelOrderHandler;
         $this->syncWishlistHandler = $syncWishlistHandler;
+        $this->cacheKeyManager = $cacheKeyManager;
         $this->authUser = auth()->user();
     }
 
@@ -149,7 +158,16 @@ class ClientUserService
      */
     public function getOrders()
     {
-        return $this->repository->getOrders($this->authUser);
+        $key = $this->cacheKeyManager
+            ->getResourceKey(
+                Key::ORDERS_PREFIX,
+                ['client', 'user_id_' . $this->authUser->id, 'list']);
+
+        return Cache::tags(Tag::ORDERS_TAG)
+            ->remember(
+                $key,
+                TTL::ORDERS_TTL,
+                fn() => $this->repository->getOrders($this->authUser));
     }
 
     /**
@@ -158,7 +176,16 @@ class ClientUserService
      */
     public function getOrderResource(int $number)
     {
-        return $this->repository->getOrderResource($this->authUser, $number);
+        $key = $this->cacheKeyManager
+            ->getResourceKey(
+                Key::ORDERS_PREFIX,
+                ['client', 'user_id_' . $this->authUser->id, 'number_' . $number]);
+
+        return Cache::tags(Tag::ORDERS_TAG)
+            ->remember(
+                $key,
+                TTL::ORDERS_TTL,
+                fn() => $this->repository->getOrderResource($this->authUser, $number));
     }
 
     /**

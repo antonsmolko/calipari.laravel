@@ -6,6 +6,7 @@ namespace App\Services\Setting;
 
 use App\Models\Setting;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Setting\Handlers\SetImageSettingValueHandler;
 use App\Services\Setting\Repositories\CmsSettingRepository;
 use App\Services\Base\Resource\CmsBaseResourceService;
@@ -25,15 +26,17 @@ class CmsSettingService extends CmsBaseResourceService
      * @param ClearCacheHandler $clearCacheByTagHandler
      * @param CmsSettingGroupRepository $groupRepository
      * @param SetImageSettingValueHandler $setImageSettingValueHandler
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsSettingRepository $repository,
         ClearCacheHandler $clearCacheByTagHandler,
         CmsSettingGroupRepository $groupRepository,
-        SetImageSettingValueHandler $setImageSettingValueHandler
+        SetImageSettingValueHandler $setImageSettingValueHandler,
+        CacheKeyManager $cacheKeyManager
     )
     {
-        parent::__construct($repository, $clearCacheByTagHandler);
+        parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
         $this->groupRepository = $groupRepository;
         $this->setImageValueHandler = $setImageSettingValueHandler;
         $this->types = Setting::TYPES;

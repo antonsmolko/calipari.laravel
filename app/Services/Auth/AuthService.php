@@ -6,9 +6,8 @@ namespace App\Services\Auth;
 
 use App\Models\User;
 use App\Services\Base\Auth\BaseAuthService;
-use App\Services\User\Resources\User as UserResource;
+use App\Services\User\Resources\UserClient as UserResource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class AuthService extends BaseAuthService
 {

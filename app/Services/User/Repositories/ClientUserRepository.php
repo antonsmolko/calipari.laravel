@@ -38,7 +38,10 @@ class ClientUserRepository
      */
     public function getResourceItem(int $id): UserResource
     {
-        return new UserResource($this->model::findOrFail($id));
+        return new UserResource($this->model::where('id', $id)
+            ->with('roles:id,name,display_name')
+            ->withCount('orders')
+            ->firstOrFail());
     }
 
     /**
@@ -144,7 +147,10 @@ class ClientUserRepository
      */
     public function getOrders($user)
     {
-        return OrderResource::collection($user->orders()->orderBy('id', 'desc')->get());
+        return OrderResource::collection($user->orders()
+            ->with(['items', 'statuses'])
+            ->orderBy('id', 'desc')
+            ->get());
     }
 
     /**
@@ -156,6 +162,7 @@ class ClientUserRepository
     {
         return new OrderResource($user->orders()
             ->where('number', $number)
+            ->with(['items', 'statuses'])
             ->firstOrFail());
     }
 

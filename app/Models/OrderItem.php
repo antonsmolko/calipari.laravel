@@ -11,6 +11,8 @@ class OrderItem extends Model
      */
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    protected $with = ['texture', 'image'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

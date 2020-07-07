@@ -5,6 +5,7 @@ namespace App\Services\ColorCollection;
 
 
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Cache\Tag;
 use App\Services\ColorCollection\Handlers\DestroyHandler;
 use App\Services\ColorCollection\Handlers\GetSyncDataHandler;
@@ -41,6 +42,7 @@ class CmsColorCollectionService extends CmsBaseResourceService
      * @param UploadHandler $uploadHandler
      * @param DestroyHandler $destroyHandler
      * @param SnapImageHandler $snapImageHandler
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsColorCollectionRepository $repository,
@@ -52,10 +54,15 @@ class CmsColorCollectionService extends CmsBaseResourceService
         UpdateImagesHandler $updateImagesHandler,
         UploadHandler $uploadHandler,
         DestroyHandler $destroyHandler,
-        SnapImageHandler $snapImageHandler
+        SnapImageHandler $snapImageHandler,
+        CacheKeyManager $cacheKeyManager
     )
     {
-        parent::__construct($repository, $clearCacheByTagHandler);
+        parent::__construct(
+            $repository,
+            $clearCacheByTagHandler,
+            $cacheKeyManager
+        );
         $this->imageRepository = $imageRepository;
         $this->getSyncDataHandler = $getSyncDataHandler;
         $this->storeHandler = $storeHandler;
@@ -181,14 +188,14 @@ class CmsColorCollectionService extends CmsBaseResourceService
         $item = $this->repository->getItem($id);
 
         if (!$item->publishedImages->count()) {
-            abort(422, __('common.unable_publish_color_collection_without_published_images'));
+            abort(422, __('common.unable_publish_collection_without_published_images'));
         }
 
         return $this->repository->publish($item);
     }
 
     /**
-     * Unpublish Items if images_count === 0
+     * Unpublish Items if published_images_count === 0
      */
     public function processUnpublishItems()
     {

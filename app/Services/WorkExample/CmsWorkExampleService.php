@@ -6,6 +6,8 @@ namespace App\Services\WorkExample;
 
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\KeyManager as CacheKeyManager;
+use App\Services\Cache\Tag;
 use App\Services\WorkExample\Handlers\DeleteImageHandler;
 use App\Services\WorkExample\Handlers\StoreHandler;
 use App\Services\WorkExample\Handlers\UpdateHandler;
@@ -30,6 +32,7 @@ class CmsWorkExampleService extends CmsBaseResourceService
      * @param UploadHandler $uploadHandler
      * @param DeleteHandler $deleteHandler
      * @param DeleteImageHandler $deleteImageHandler
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsWorkExampleRepository $repository,
@@ -38,15 +41,17 @@ class CmsWorkExampleService extends CmsBaseResourceService
         UpdateHandler $updateHandler,
         UploadHandler $uploadHandler,
         DeleteHandler $deleteHandler,
-        DeleteImageHandler $deleteImageHandler
+        DeleteImageHandler $deleteImageHandler,
+        CacheKeyManager $cacheKeyManager
     )
     {
-        parent::__construct($repository, $clearCacheByTagHandler);
+        parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
         $this->storeHandler = $storeHandler;
         $this->updateHandler = $updateHandler;
         $this->uploadHandler = $uploadHandler;
         $this->deleteHandler = $deleteHandler;
         $this->deleteImageHandler = $deleteImageHandler;
+        $this->cacheTag = Tag::WORK_EXAMPLES_TAG;
     }
 
     /**

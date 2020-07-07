@@ -18,6 +18,8 @@ class Image extends Model
      */
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    protected $withCount = ['likes', 'orders'];
+
     protected $dispatchesEvents = [
         'saved' => ImageSaved::class,
         'updated' => ImageUpdated::class,

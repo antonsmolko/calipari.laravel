@@ -7,41 +7,42 @@ namespace App\Services\User;
 use App\Models\User;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\Key;
+use App\Services\Cache\KeyManager as CacheKeyManager;
+use App\Services\Cache\Tag;
+use App\Services\Cache\TTL;
 use App\Services\User\Handlers\CmsCreateHandler;
 use App\Services\User\Handlers\UpdateHandler;
 use App\Services\User\Repositories\CmsUserRepository;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Cache;
 
 class CmsUserService extends CmsBaseResourceService
 {
-    /**
-     * @var CmsCreateHandler
-     */
     private CmsCreateHandler $storeHandler;
-
-    /**
-     * @var UpdateHandler
-     */
     private UpdateHandler $updateHandler;
 
     /**
-     * UserServiceCms constructor.
+     * CmsUserService constructor.
      * @param CmsUserRepository $repository
      * @param ClearCacheHandler $clearCacheByTagHandler
      * @param CmsCreateHandler $createUserHandler
      * @param UpdateHandler $updateUserHandler
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsUserRepository $repository,
         ClearCacheHandler $clearCacheByTagHandler,
         CmsCreateHandler $createUserHandler,
-        UpdateHandler $updateUserHandler
+        UpdateHandler $updateUserHandler,
+        CacheKeyManager $cacheKeyManager
     )
     {
-        parent::__construct($repository, $clearCacheByTagHandler);
+        parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
         $this->repository = $repository;
         $this->storeHandler = $createUserHandler;
         $this->updateHandler = $updateUserHandler;
+        $this->cacheTag = Tag::USERS_TAG;
     }
 
     /**
@@ -50,7 +51,14 @@ class CmsUserService extends CmsBaseResourceService
      */
     public function getItems(array $requestData)
     {
-        return $this->repository->getItems($requestData);
+        $key = $this->cacheKeyManager
+            ->getResourceKey(Key::USERS_PREFIX, ['cms', 'list'], ['pagination' => $requestData]);
+
+        return Cache::tags(Tag::USERS_TAG)
+            ->remember(
+                $key,
+                TTL::USERS_TTL,
+                fn() => $this->repository->getItems($requestData));
     }
 
     /**

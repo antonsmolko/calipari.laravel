@@ -28,8 +28,9 @@ class OwnerRepository extends SubCategoryRepository
     public function getExcludedImages($category, array $requestData)
     {
         return Image::doesntHave('owner')
-            ->doesntHave('collection')
-            ->with(config('query_builder.image'))
+            ->doesntHave('colorCollection')
+            ->with(Image::IMAGE_QUERY_BUILDER)
+            ->withCount(['likes', 'orders'])
             ->when(!empty($requestData['query']),
                 fn ($query) => $query->where('id', 'like', $requestData['query'] . '%'))
             ->orderBy($requestData['sort_by'], $requestData['sort_order'])

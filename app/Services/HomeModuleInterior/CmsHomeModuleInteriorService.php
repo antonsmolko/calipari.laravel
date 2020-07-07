@@ -6,6 +6,7 @@ namespace App\Services\HomeModuleInterior;
 
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\HomeModuleInterior\Handlers\InteriorDestroyHandler;
 use App\Services\HomeModuleInterior\Handlers\InteriorStoreHandler;
 use App\Services\HomeModuleInterior\Repositories\CmsHomeModuleInteriorRepository;
@@ -21,15 +22,21 @@ class CmsHomeModuleInteriorService extends CmsBaseResourceService
      * @param ClearCacheHandler $clearCacheByTagHandler
      * @param InteriorStoreHandler $storeHandler
      * @param InteriorDestroyHandler $destroyHandler
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsHomeModuleInteriorRepository $repository,
         ClearCacheHandler $clearCacheByTagHandler,
         InteriorStoreHandler $storeHandler,
-        InteriorDestroyHandler $destroyHandler
+        InteriorDestroyHandler $destroyHandler,
+        CacheKeyManager $cacheKeyManager
     )
     {
-        parent::__construct($repository, $clearCacheByTagHandler);
+        parent::__construct(
+            $repository,
+            $clearCacheByTagHandler,
+            $cacheKeyManager
+        );
         $this->storeHandler = $storeHandler;
         $this->destroyHandler = $destroyHandler;
     }

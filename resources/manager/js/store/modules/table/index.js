@@ -99,6 +99,7 @@ const actions = {
             data,
             thenContent: (response) => {
                 const responseData = response.data;
+
                 commit('SET_PAGINATION', responseData);
                 commit('SET_FIELDS', { items: responseData.data, loading: false });
             }

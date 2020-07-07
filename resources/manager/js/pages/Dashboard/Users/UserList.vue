@@ -30,7 +30,7 @@
                             <md-table-cell md-label="Email">{{ item.email }}</md-table-cell>
 
                             <md-table-cell md-label="Роль">
-                                <span class="md-category-tag">{{ item.role_name }}</span>
+                                <span class="md-category-tag">{{ item.role.display_name }}</span>
                             </md-table-cell>
 
                             <md-table-cell md-label="Заказы" md-sort-by="orders_count">

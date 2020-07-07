@@ -6,6 +6,8 @@ namespace App\Services\Post;
 
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\KeyManager as CacheKeyManager;
+use App\Services\Cache\Tag;
 use App\Services\Post\Handlers\DeleteHandler;
 use App\Services\Post\Handlers\DeleteImageHandler;
 use App\Services\Post\Handlers\StoreHandler;
@@ -30,6 +32,7 @@ class CmsPostService extends CmsBaseResourceService
      * @param DeleteHandler $deleteHandler
      * @param UploadHandler $uploadHandler
      * @param DeleteImageHandler $deleteImageHandler
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsPostRepository $repository,
@@ -38,15 +41,17 @@ class CmsPostService extends CmsBaseResourceService
         UpdateHandler $updateHandler,
         DeleteHandler $deleteHandler,
         UploadHandler $uploadHandler,
-        DeleteImageHandler $deleteImageHandler
+        DeleteImageHandler $deleteImageHandler,
+        CacheKeyManager $cacheKeyManager
     )
     {
-        parent::__construct($repository, $clearCacheByTagHandler);
+        parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
         $this->storeHandler = $storeHandler;
         $this->updateHandler = $updateHandler;
         $this->uploadHandler = $uploadHandler;
         $this->deleteHandler = $deleteHandler;
         $this->deleteImageHandler = $deleteImageHandler;
+        $this->cacheTag = Tag::POSTS_TAG;
     }
 
     /**

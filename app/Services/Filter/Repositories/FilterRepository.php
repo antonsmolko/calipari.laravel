@@ -6,11 +6,6 @@ namespace App\Services\Filter\Repositories;
 
 use App\Models\Category;
 use App\Models\Format;
-use App\Models\Image;
-use App\Models\Tag;
-use Illuminate\Http\Request;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class FilterRepository
 {
@@ -23,6 +18,7 @@ class FilterRepository
         return Format::select(['id', 'title', 'alias'])
             ->whereImageKeysIn($keys)
             ->withImagesCountIn($keys)
+            ->orderBy('id', 'asc')
             ->get();
     }
 
@@ -38,6 +34,7 @@ class FilterRepository
             ->when($exceptId, fn ($query, $exceptId) => $query->where('id', '<>', $exceptId))
             ->whereImageKeysIn($keys)
             ->withImagesCountIn($keys)
+            ->orderBy('title', 'asc')
             ->get()
             ->groupBy('type');
 
@@ -57,6 +54,7 @@ class FilterRepository
             ->where('type', 'topics')
             ->whereImageKeysIn($keys)
             ->withImagesCountIn($keys)
+            ->orderBy('title', 'asc')
             ->get();
     }
 
@@ -73,6 +71,7 @@ class FilterRepository
             ->where('type', 'colors')
             ->whereImageKeysIn($keys)
             ->withImagesCountIn($keys)
+            ->orderBy('title', 'asc')
             ->get();
     }
 
@@ -89,6 +88,7 @@ class FilterRepository
             ->where('type', 'interiors')
             ->whereImageKeysIn($keys)
             ->withImagesCountIn($keys)
+            ->orderBy('title', 'asc')
             ->get();
     }
 
@@ -105,6 +105,7 @@ class FilterRepository
             ->where('type', 'tags')
             ->whereImageKeysIn($keys)
             ->withImagesCountIn($keys)
+            ->orderBy('title', 'asc')
             ->get();
     }
 }

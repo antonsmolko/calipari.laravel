@@ -21,7 +21,7 @@ class CmsOrderFromList extends JsonResource
             'email' => $this->user ? $this->user->email : null,
             'delivery' => json_decode($this->delivery, true)['title'],
             'price' => number_format($this->price, 0, '.', ' ') . ' ₽',
-            'statuses' => OrderStatusWithPivotDate::collection($this->statuses()->orderByDesc('order')->get()),
+            'statuses' => $this->statuses,
             'date' => $this->created_at->format('d.m.Y - H:i:s')
         ];
     }

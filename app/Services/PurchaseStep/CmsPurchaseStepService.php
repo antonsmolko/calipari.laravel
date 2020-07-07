@@ -7,6 +7,7 @@ namespace App\Services\PurchaseStep;
 use App\Models\PurchaseStep;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\PurchaseStep\Handlers\DeleteHandler;
 use App\Services\PurchaseStep\Handlers\StoreHandler;
 use App\Services\PurchaseStep\Repositories\CmsPurchaseStepRepository;
@@ -25,16 +26,18 @@ class CmsPurchaseStepService extends CmsBaseResourceService
      * @param StoreHandler $storeHandler
      * @param UpdateHandler $updateHandler
      * @param DeleteHandler $deleteHandler
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsPurchaseStepRepository $repository,
         ClearCacheHandler $clearCacheByTagHandler,
         StoreHandler $storeHandler,
         UpdateHandler $updateHandler,
-        DeleteHandler $deleteHandler
+        DeleteHandler $deleteHandler,
+        CacheKeyManager $cacheKeyManager
     )
     {
-        parent::__construct($repository, $clearCacheByTagHandler);
+        parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
         $this->storeHandler = $storeHandler;
         $this->updateHandler = $updateHandler;
         $this->deleteHandler = $deleteHandler;

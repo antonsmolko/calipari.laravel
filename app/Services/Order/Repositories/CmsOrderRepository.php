@@ -41,6 +41,7 @@ class CmsOrderRepository extends CmsBaseResourceRepository
             )
                 ->when(!empty($requestData['query']),
                     fn ($query) => $query->where('number', 'like', $requestData['query'] . '%'))
+                ->with(['statuses', 'user:id,email'])
                 ->orderBy($requestData['sort_by'], $requestData['sort_order'])
                 ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']));
     }
@@ -52,7 +53,7 @@ class CmsOrderRepository extends CmsBaseResourceRepository
      */
     public function getItemsByStatus(array $requestData, string $status)
     {
-        return new OrderFromListCollection($this->model::orderBy('id', 'desc')
+        return new OrderFromListCollection($this->model::with(['statuses', 'user:id,email'])
             ->whereHas('statuses', fn ($query) => $query->where('alias', $status))
             ->when(!empty($requestData['query']),
                 fn ($query) => $query->where('number', 'like', $requestData['query'] . '%'))
@@ -75,7 +76,13 @@ class CmsOrderRepository extends CmsBaseResourceRepository
      */
     public function getItemDetails(int $id)
     {
-        return new OrderResource($this->model::findOrFail($id));
+        return new OrderResource($this->model::where('id', $id)
+            ->with([
+                'user:id,email,name',
+                'items',
+                'statuses'
+            ])
+            ->firstOrFail());
     }
 
     /**

@@ -3,6 +3,9 @@
 namespace App\Models;
 
 
+use App\Events\Models\Post\PostDeleted;
+use App\Events\Models\Post\PostSaved;
+
 class Post extends Model
 {
     const TYPES = ['guide', 'news', 'stocks', 'events'];
@@ -11,6 +14,11 @@ class Post extends Model
      * @var array
      */
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    protected $dispatchesEvents = [
+        'saved' => PostSaved::class,
+        'deleted' => PostDeleted::class,
+    ];
 
     /**
      * @return string|null

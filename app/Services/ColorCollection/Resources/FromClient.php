@@ -2,7 +2,7 @@
 
 namespace App\Services\ColorCollection\Resources;
 
-use App\Services\Image\Resources\FromColorCollectionClient as FromCollectionResource;
+use App\Services\Image\Resources\FromCollectionClient as FromCollectionResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FromClient extends JsonResource

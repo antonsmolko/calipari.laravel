@@ -6,9 +6,10 @@ namespace App\Services\ArtCollection\Repositories;
 
 use App\Models\ArtCollection;
 use App\Models\Image;
+use App\Services\ArtCollection\Resources\FromEdit as FromEditResource;
 use App\Services\ArtCollection\Resources\FromList as FromListResource;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
-use App\Services\Image\Resources\FromColorCollectionCms as ImageToTableResource;
+use Illuminate\Database\Eloquent\Builder;
 
 class CmsArtCollectionRepository extends CmsBaseResourceRepository
 {
@@ -26,12 +27,30 @@ class CmsArtCollectionRepository extends CmsBaseResourceRepository
      */
     public function index()
     {
-        return FromListResource::collection($this->model::orderBy('id')->get());
+        return FromListResource::collection($this->model::orderBy('id')
+            ->with(['images', 'backgroundImage'])
+            ->withCount([
+                'images',
+                'images as published_count' => fn(Builder $query) => $query
+                    ->where('publish', Image::PUBLISHED)])
+            ->get());
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function getItemDetail(int $id)
+    {
+        return new FromEditResource($this->model::where('id', $id)
+            ->withCount(['images as published_count' => fn(Builder $query) => $query
+                ->where('publish', Image::PUBLISHED)])
+            ->firstOrFail());
     }
 
     /**
      * @param ArtCollection $collection
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getImages(ArtCollection $collection)
     {
@@ -71,5 +90,13 @@ class CmsArtCollectionRepository extends CmsBaseResourceRepository
                 fn ($query) => $query->where('id', 'like', $requestData['query'] . '%'))
             ->orderBy($requestData['sort_by'], $requestData['sort_order'])
             ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWithoutPublishedImagesItems()
+    {
+        return $this->model::withoutPublishedImages();
     }
 }

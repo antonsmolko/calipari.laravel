@@ -5,9 +5,13 @@ namespace App\Services\Post;
 
 
 use App\Services\Base\Resource\ClientBaseResourceService;
+use App\Services\Cache\Key;
 use App\Services\Cache\KeyManager as CacheKeyManager;
+use App\Services\Cache\Tag;
+use App\Services\Cache\TTL;
 use App\Services\Post\Handlers\GetPublishedTypesHandler;
 use App\Services\Post\Repositories\ClientPostRepository;
+use Illuminate\Support\Facades\Cache;
 
 class ClientPostService extends ClientBaseResourceService
 {
@@ -36,7 +40,17 @@ class ClientPostService extends ClientBaseResourceService
      */
     public function getItems(string $type, array $requestData)
     {
-        return $this->repository->getItems($type, $requestData);
+        $key = $this->cacheKeyManager
+            ->getResourceKey(
+                Key::POSTS_PREFIX,
+                ['client', 'list', 'type_' . $type],
+                ['pagination' => $requestData]);
+
+        return Cache::tags(Tag::POSTS_TAG)
+            ->remember(
+                $key,
+                TTL::POSTS_TTL,
+                fn () => $this->repository->getItems($type, $requestData));
     }
 
     /**

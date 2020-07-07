@@ -257,8 +257,6 @@
             async changePage (value) {
                 await this.setPaginationFieldAction({ field: 'current_page', value })
                 if (this.serverPagination) {
-                    console.log('changepage')
-
                     await this.postRequestItemsAction()
                 }
                 window.scrollTo(0, 0);

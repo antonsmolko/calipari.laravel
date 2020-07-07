@@ -33,8 +33,10 @@ const mutations = {
         }
     },
     SET_ITEM_FIELDS (state, payload) {
-        for(const field of Object.keys(state.fields)) {
-            state.fields[field] = payload[field] === null ? '' : payload[field];
+        for(const [field, value] of Object.entries(payload)) {
+            if (value && Object.hasOwnProperty.call(state.fields, field)) {
+                state.fields[field] = value;
+            }
         }
     }
 };
@@ -78,6 +80,9 @@ const actions = {
     },
     setItemField ({ commit }, payload) {
         commit('SET_ITEM_FIELD', payload);
+    },
+    setItemFields ({ commit }, payload) {
+        commit('SET_ITEM_FIELDS', payload);
     },
     togglePublishField({ commit }) {
         commit('TOGGLE_PUBLISH_FIELD');

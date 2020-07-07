@@ -6,6 +6,7 @@ namespace App\Services\Base\Resource;
 
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
+use App\Services\Cache\KeyManager as CacheKeyManager;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,8 +15,8 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 abstract class CmsBaseResourceService
 {
     protected CmsBaseResourceRepository $repository;
-
     protected ClearCacheHandler $clearCacheHandler;
+    protected CacheKeyManager $cacheKeyManager;
 
     protected string $cacheTag;
 
@@ -23,14 +24,17 @@ abstract class CmsBaseResourceService
      * CmsBaseResourceService constructor.
      * @param CmsBaseResourceRepository $repository
      * @param ClearCacheHandler $clearCacheHandler
+     * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsBaseResourceRepository $repository,
-        ClearCacheHandler $clearCacheHandler
+        ClearCacheHandler $clearCacheHandler,
+        CacheKeyManager $cacheKeyManager
     )
     {
         $this->repository = $repository;
         $this->clearCacheHandler = $clearCacheHandler;
+        $this->cacheKeyManager = $cacheKeyManager;
         $this->cacheTag = '';
     }
 

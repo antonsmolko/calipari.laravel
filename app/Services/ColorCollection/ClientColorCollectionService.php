@@ -5,6 +5,7 @@ namespace App\Services\ColorCollection;
 
 
 use App\Services\Base\Resource\ClientBaseResourceService;
+use App\Services\Cache\Key;
 use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Cache\Tag;
 use App\Services\Cache\TTL;
@@ -33,7 +34,7 @@ class ClientColorCollectionService extends ClientBaseResourceService
     public function getItemByAliasWithImages(string $alias)
     {
         $key = $this->cacheKeyManager
-            ->getResourceKey(Tag::COLOR_COLLECTIONS_TAG, ['client', $alias]);
+            ->getResourceKey(Key::COLOR_COLLECTIONS_PREFIX, ['client', $alias]);
 
         return Cache::tags(Tag::COLOR_COLLECTIONS_TAG)
             ->remember(

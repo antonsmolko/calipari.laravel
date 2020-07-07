@@ -70,7 +70,7 @@ abstract class CmsBaseResourceRepository
      */
     public function publish($item)
     {
-        $item->publish = +!$item->publish;
+        $item->publish = (int) !$item->publish;
         $item->save();
 
         return $item;

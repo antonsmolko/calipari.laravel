@@ -15,4 +15,8 @@ class Tag
     const SETTINGS_TAG = 'settings';
     const ORDERS_TAG = 'orders';
     const CDEK_TAG = 'cdek';
+    const FILTERS_TAG = 'filters';
+    const USERS_TAG = 'users';
+    const POSTS_TAG = 'posts';
+    const WORK_EXAMPLES_TAG = 'workExamples';
 }

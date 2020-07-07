@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Events\Models\User\UserDeleted;
+use App\Events\Models\User\UserSaved;
+use App\Events\Models\User\UserUpdated;
 use App\Notifications\MailEmailConfirmation;
 use App\Notifications\MailNewEmailConfirmation;
 use App\Notifications\MailResetPassword;
@@ -36,6 +39,14 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    protected $dispatchesEvents = [
+        'saved' => UserSaved::class,
+        'updated' => UserUpdated::class,
+        'deleted' => UserDeleted::class,
+    ];
+
+    protected $with = ['roles:id,name,display_name'];
 
 //    /**
 //     * The attributes that should be cast to native types.

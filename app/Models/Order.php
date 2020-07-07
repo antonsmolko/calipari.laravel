@@ -14,11 +14,11 @@ class Order extends Model
      */
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-//    protected $dispatchesEvents = [
-//        'saved' => OrderSaved::class,
-//        'updated' => OrderUpdated::class,
-//        'deleted' => OrderDeleted::class,
-//    ];
+    protected $dispatchesEvents = [
+        'saved' => OrderSaved::class,
+        'updated' => OrderUpdated::class,
+        'deleted' => OrderDeleted::class,
+    ];
 
     const DEFAULT_STATUS = 'processing';
     const CANCELED_STATUS = 'canceled';

@@ -16,4 +16,8 @@ class TTL
     const SETTINGS_TTL = self::LATEST_TTL_HOUR * 120;
     const ORDERS_TTL = self::LATEST_TTL_HOUR * 120;
     const CDEK_TTL = self::LATEST_TTL_HOUR * 120;
+    const FILTERS_TTL = self::LATEST_TTL_HOUR * 120;
+    const USERS_TTL = self::LATEST_TTL_HOUR * 120;
+    const POSTS_TTL = self::LATEST_TTL_HOUR * 1200;
+    const WORK_EXAMPLES_TTL = self::LATEST_TTL_HOUR * 1200;
 }

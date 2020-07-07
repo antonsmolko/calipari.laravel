@@ -4,6 +4,7 @@
 namespace App\Services\CDEK;
 
 
+use App\Services\Cache\Key;
 use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Cache\Tag;
 use App\Services\Cache\TTL;
@@ -47,7 +48,7 @@ class CDEKService
         $query = $requestData['query'];
 
         $key = $this->cacheKeyManager
-            ->getResourceKey(Tag::CDEK_TAG, ['client', 'cdek', 'pvzs', 'query:' . $query]);
+            ->getResourceKey(Key::CDEK_PREFIX, ['client', 'cdek', 'pvzs', 'query:' . $query]);
 
         return Cache::tags(Tag::CDEK_TAG)
             ->remember($key,TTL::CDEK_TTL, function() use ($query) {
@@ -65,7 +66,7 @@ class CDEKService
         $query = $requestData['query'];
 
         $key = $this->cacheKeyManager
-            ->getResourceKey(Tag::CDEK_TAG, ['client', 'cdek', 'settlements', 'query:' . $query]);
+            ->getResourceKey(Key::CDEK_PREFIX, ['client', 'cdek', 'settlements', 'query:' . $query]);
 
         return Cache::tags(Tag::CDEK_TAG)
             ->remember($key,TTL::CDEK_TTL, function() use ($query) {
