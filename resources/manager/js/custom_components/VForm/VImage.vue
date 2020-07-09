@@ -5,7 +5,7 @@
             <div class="file-input">
                 <div v-if="!imageData">
                     <div class="image-container">
-                        <img v-if="imgDefault" :src="`/image/widen/400/${imgDefault}`" alt="">
+                        <img v-if="imgDefault" :src="`${baseImageUrl}/${imgDefault}`" alt="">
                         <img v-else :src="imagePlaceholder" alt="">
                     </div>
                 </div>
@@ -77,15 +77,18 @@
                 default: false
             }
         },
-        data() {
-            return {
-                imageData: '',
-                imagePlaceholder: this.$config.imagePlaceholder
-            }
-        },
+        data: () => ({
+            imageData: ''
+        }),
         computed: {
-            storeModule() {
+            storeModule () {
                 return this.module ? `${this.module}/` : '';
+            },
+            imagePlaceholder () {
+                return this.$config.imagePlaceholder;
+            },
+            baseImageUrl () {
+                return `${this.$config.BASE_IMAGE_URL}/widen/400`;
             }
         },
         methods: {

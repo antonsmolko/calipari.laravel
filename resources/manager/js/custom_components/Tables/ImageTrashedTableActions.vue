@@ -6,7 +6,8 @@
                         color="md-info"
                         @click="onRestore" />
 
-        <control-button title="Удалить"
+        <control-button v-if="deleteEnabled"
+                        title="Удалить"
                         icon="delete_forever"
                         color="md-danger"
                         @click="onDelete" />
@@ -20,6 +21,10 @@
             item: {
                 type: Object,
                 default: null
+            },
+            deleteEnabled: {
+                type: Boolean,
+                default: false
             }
         },
         methods: {

@@ -48,6 +48,8 @@ const mutations = {
                 state.serverErrors.push(errors.ERROR_NOTFOUND);
                 break;
             case 400:
+            case 401:
+            case 403:
             case 422:
                 if (error.data.errors) {
                     for (const errors of Object.values(error.data.errors)) {

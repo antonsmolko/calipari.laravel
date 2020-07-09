@@ -11,9 +11,6 @@
 |
 */
 
-Route::get('/user/confirm/{token}', 'API\Auth\AuthController@emailConfirm')
-    ->name('user.verify');
-
 //Route::get('/', function () {
 //    return view('pages.index');
 //})->name('home');

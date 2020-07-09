@@ -4,7 +4,8 @@
             <md-card class="mt-0">
                 <md-card-content class="md-between">
                     <router-button-link title="В панель управления"/>
-                    <router-button-link title="Администрирование" icon="settings" color="md-success"
+                    <router-button-link v-if="authCheck('settings/administration')"
+                                        title="Администрирование" icon="settings" color="md-success"
                                         route="manager.settings.administration"/>
                 </md-card-content>
             </md-card>
@@ -57,7 +58,7 @@
     import SettingInput from '@/custom_components/Settings/SettingInput';
     import SettingImage from '@/custom_components/Settings/SettingImage';
 
-    import { pageTitle } from '@/mixins/base'
+    import { pageTitle, authCheck } from '@/mixins/base'
 
     export default {
         name: 'SettingList',
@@ -65,7 +66,7 @@
             SettingInput,
             SettingImage
         },
-        mixins: [ pageTitle ],
+        mixins: [ pageTitle, authCheck ],
         data: () => ({
             responseData: false
         }),

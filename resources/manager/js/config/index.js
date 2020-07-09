@@ -1,6 +1,7 @@
 export default {
     appUrl: 'https://manager.calipari.ru',
     baseUrl: '/api/manager',
+    BASE_IMAGE_URL: '/api/image',
     imagePlaceholder: '/img/image_placeholder.jpg',
     DEFAULT_ROLE: 'user',
 
@@ -24,5 +25,34 @@ export default {
         { index: 'stocks', title: 'Акции' },
         { index: 'events', title: 'События' }
     ],
-    defaultPostType: { index: 'guide', title: 'Гид'}
+    defaultPostType: { index: 'guide', title: 'Гид'},
+
+    /** Auth */
+    rolesMap: {
+        s: 'super_admin',
+        a: 'admin',
+        o: 'owner',
+        m: 'content_manager'
+    },
+
+    gates: {
+        404: 's,a,o,m',
+        catalog: 's,a,o,m',
+        dashboard: 's,a,o,m',
+        deliveries: 's,a,o',
+        images: 's,a,o,m',
+        'image-destroy': 's,a,o',
+        orders: 's,a,o',
+        'order-delete': 's,o',
+        'order-statuses': 's,a,o',
+        pages: 's,a,o,m',
+        permissions: 's',
+        roles: 's,a,o',
+        settings: 's,a,o,m',
+        'settings/administration': 's,a',
+        store: 's,a,o',
+        textures: 's,a,o,m',
+        users: 's,a,o',
+        'user-delete': 's,o'
+    }
 }

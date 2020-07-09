@@ -8,9 +8,10 @@ return [
         '7' => '### ## ##',
         '6' => '## ## ##'
     ],
-    'order_item_full_url' => 'order-full',
-    'mail_order_item_thumb_url' => 'mail-thumb',
-    'order_item_thumb_url' => 'thumb',
+    'base_image_url' => env('APP_URL') . '/api/image',
+    'order_item_full_url' => '/order-full',
+    'mail_order_item_thumb_url' => '/mail-thumb',
+    'order_item_thumb_url' => '/thumb',
     'slack' => [
         'emoji' => [
             'order' => [
@@ -31,5 +32,25 @@ return [
             'backcall' => 'telephone_receiver',
             'feedback' => 'incoming_envelope'
         ]
-    ]
+    ],
+//    'roles_map' => [
+//      'a' => 'admin',
+//      's' => 'super_admin',
+//      'o' => 'owner',
+//      'm' => 'content_manager'
+//    ],
+//    'gates' => [
+//        'dashboard' => 's,a,o,m',
+//        'images' => 's,a,o,m',
+//        'catalog' => 's,a,o,m',
+//        'textures' => 's,a,o,m',
+//        'orders' => 's,a,o,m',
+//        'pages' => 's,a,o,m',
+//        'users' => 's,a,o',
+//        'settings' => 's,a,o,m',
+//        'settings_admin' => 's,a',
+//        'store' => 's,a,o',
+//        'roles' => 's,o',
+//        'permissions' => 's'
+//    ]
 ];

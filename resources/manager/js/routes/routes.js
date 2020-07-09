@@ -1,5 +1,6 @@
 import DashboardLayout from '@/pages/Dashboard/Layout/DashboardLayout.vue'
 import Dashboard from '@/pages/Dashboard/Dashboard.vue'
+import { getPathMeta } from "@/helpers"
 
 /** Image pages */
 const ImageList = resolve => {
@@ -378,16 +379,30 @@ const ShippingPaymentPage = resolve => {
     })
 };
 
+/** Lock Pages */
+
+const LockLayout = resolve => {
+    require.ensure(['@/pages/Lock/Layout/LockLayout.vue'], () => {
+        resolve(require('@/pages/Lock/Layout/LockLayout.vue'))
+    })
+};
+
+/** Login page */
+const Login = resolve => {
+    require.ensure(['@/pages/Lock/Login.vue'], () => {
+        resolve(require('@/pages/Lock/Login.vue'))
+    })
+};
 
 /** Error pages */
 const Error404 = resolve => {
-    require.ensure(['@/pages/Dashboard/Errors/404.vue'], () => {
-        resolve(require('@/pages/Dashboard/Errors/404.vue'))
+    require.ensure(['@/pages/Lock/Errors/404.vue'], () => {
+        resolve(require('@/pages/Lock/Errors/404.vue'))
     })
 };
-const ErrorsLayout = resolve => {
-    require.ensure(['@/pages/Dashboard/Errors/ErrorsLayout.vue'], () => {
-        resolve(require('@/pages/Dashboard/Errors/ErrorsLayout.vue'))
+const Error403 = resolve => {
+    require.ensure(['@/pages/Lock/Errors/403.vue'], () => {
+        resolve(require('@/pages/Lock/Errors/403.vue'))
     })
 };
 
@@ -395,7 +410,8 @@ const managerDashboardPage = [
     {
         path: 'dashboard',
         name: 'manager.dashboard',
-        components: { default: Dashboard }
+        components: { default: Dashboard },
+        meta: getPathMeta('dashboard')
     }
 ];
 const managerImagePages = [
@@ -407,134 +423,156 @@ const managerImagePages = [
         beforeEnter(to, from, next) {
             to.params.category_type = 'images';
             next();
-        }
+        },
+        meta: getPathMeta('images')
     },
     {
         path: 'images/trashed',
         name: 'manager.images.trashed',
-        component: ImageTrashedList
+        component: ImageTrashedList,
+        meta: getPathMeta('images')
     },
     {
         path: 'images/:id',
         name: 'manager.images.edit',
         component: ImageEdit,
-        props: true
+        props: true,
+        meta: getPathMeta('images')
     }
 ];
 const managerCatalogPanel = [
     {
         path: 'catalog',
         name: 'manager.catalog',
-        component: CatalogPanel
+        component: CatalogPanel,
+        meta: getPathMeta('catalog')
     }
 ];
 const managerTexturesPages = [
     {
         path: 'textures',
         name: 'manager.textures',
-        component: TextureList
+        component: TextureList,
+        meta: getPathMeta('textures')
     },
     {
         path: 'textures/create',
         name: 'manager.textures.create',
-        component: TextureCreate
+        component: TextureCreate,
+        meta: getPathMeta('textures')
     },
     {
         path: 'textures/:id',
         name: 'manager.textures.edit',
         component: TextureEdit,
-        props: true
+        props: true,
+        meta: getPathMeta('textures')
     }
 ];
 const managerSettingsPages = [
     {
         path: 'settings',
         name: 'manager.settings',
-        component: SettingList
+        component: SettingList,
+        meta: getPathMeta('settings')
     },
     {
         path: 'settings/administration',
         name: 'manager.settings.administration',
-        component: SettingAdministrationList
+        component: SettingAdministrationList,
+        meta: getPathMeta('settings/administration')
     },
     {
         path: 'settings/create',
         name: 'manager.settings.create',
-        component: SettingCreate
+        component: SettingCreate,
+        meta: getPathMeta('settings')
     },
     {
         path: 'settings/:id',
         name: 'manager.settings.edit',
         component: SettingEdit,
-        props: true
+        props: true,
+        meta: getPathMeta('settings')
     },
     {
         path: 'settings/groups/create',
         name: 'manager.settings.groups.create',
-        component: SettingGroupCreate
+        component: SettingGroupCreate,
+        meta: getPathMeta('settings')
     },
     {
         path: 'settings/groups/:id',
         name: 'manager.settings.groups.edit',
         component: SettingGroupEdit,
-        props: true
+        props: true,
+        meta: getPathMeta('settings')
     }
 ];
 const managerUsersPages = [
     {
         path: 'users',
         name: 'manager.users',
-        component: UserList
+        component: UserList,
+        meta: getPathMeta('users')
     },
     {
         path: 'users/create',
         name: 'manager.users.create',
         component: UserCreate,
-        props: true
+        props: true,
+        meta: getPathMeta('users')
     },
     {
         path: 'users/:id',
         name: 'manager.users.edit',
         component: UserEdit,
-        props: true
+        props: true,
+        meta: getPathMeta('users')
     }
 ];
 const managerRolesPages = [
     {
         path: 'roles/',
         name: 'manager.roles',
-        component: RoleList
+        component: RoleList,
+        meta: getPathMeta('roles')
     },
     {
         path: 'roles/create',
         name: 'manager.roles.create',
         component: RoleCreate,
-        props: true
+        props: true,
+        meta: getPathMeta('roles')
     },
     {
         path: 'roles/:id',
         name: 'manager.roles.edit',
         component: RoleEdit,
-        props: true
+        props: true,
+        meta: getPathMeta('roles')
     }
 ];
 const managerPermissionsPages = [
     {
         path: 'permissions/',
         name: 'manager.permissions',
-        component: PermissionList
+        component: PermissionList,
+        meta: getPathMeta('permissions')
     },
     {
         path: 'permissions/create',
         name: 'manager.permissions.create',
         component: PermissionCreate,
-        props: true
+        props: true,
+        meta: getPathMeta('permissions')
     },
     {
         path: 'permissions/:id',
         name: 'manager.permissions.edit',
         component: PermissionEdit,
-        props: true
+        props: true,
+        meta: getPathMeta('permissions')
     }
 ];
 
@@ -542,7 +580,8 @@ const managerStorePanel = [
     {
         path: 'store',
         name: 'manager.store',
-        component: StorePanel
+        component: StorePanel,
+        meta: getPathMeta('store')
     }
 ];
 
@@ -550,7 +589,8 @@ const managerMenuPagesPanel = [
     {
         path: 'pages',
         name: 'manager.pages',
-        component: PagesPanel
+        component: PagesPanel,
+        meta: getPathMeta('pages')
     }
 ];
 
@@ -558,6 +598,7 @@ const managerPages = {
     path: '/manager',
     component: DashboardLayout,
     redirect: '/manager/dashboard',
+    meta: getPathMeta('dashboard'),
     children: [
         ...managerDashboardPage,
         ...managerImagePages,
@@ -575,6 +616,7 @@ const managerPages = {
 const managerCategoriesPages = {
     path: '/manager/catalog/categories',
     component: DashboardLayout,
+    meta: getPathMeta('catalog'),
     children: [
         {
             path: ':category_type',
@@ -612,6 +654,7 @@ const managerCategoriesPages = {
 const managerSubCategoriesPages = {
     path: '/manager/catalog/subcategories',
     component: DashboardLayout,
+    meta: getPathMeta('catalog'),
     children: [
         {
             path: ':category_type',
@@ -649,6 +692,7 @@ const managerSubCategoriesPages = {
 const managerColorCollectionsPages = {
     path: '/manager/catalog',
     component: DashboardLayout,
+    meta: getPathMeta('catalog'),
     children: [
         {
             path: 'color-collections',
@@ -679,6 +723,7 @@ const managerColorCollectionsPages = {
 const managerArtCollectionsPages = {
     path: '/manager/catalog',
     component: DashboardLayout,
+    meta: getPathMeta('catalog'),
     children: [
         {
             path: 'art-collections',
@@ -719,18 +764,21 @@ const managerDeliveriesPages = {
         {
             path: 'deliveries',
             name: 'manager.store.deliveries',
-            component: DeliveryList
+            component: DeliveryList,
+            meta: getPathMeta('deliveries')
         },
         {
             path: 'deliveries/create',
             name: 'manager.store.deliveries.create',
-            component: DeliveryCreate
+            component: DeliveryCreate,
+            meta: getPathMeta('deliveries')
         },
         {
             path: 'deliveries/:id',
             name: 'manager.store.deliveries.edit',
             component: DeliveryEdit,
-            props: true
+            props: true,
+            meta: getPathMeta('deliveries')
         }
     ]
 };
@@ -742,18 +790,21 @@ const managerOrderStatusPages = {
         {
             path: 'order-statuses',
             name: 'manager.store.orderStatuses',
-            component: OrderStatusList
+            component: OrderStatusList,
+            meta: getPathMeta('order-statuses'),
         },
         {
             path: 'order-statuses/create',
             name: 'manager.store.orderStatuses.create',
-            component: OrderStatusCreate
+            component: OrderStatusCreate,
+            meta: getPathMeta('order-statuses'),
         },
         {
             path: 'order-statuses/:id',
             name: 'manager.store.orderStatuses.edit',
             component: OrderStatusEdit,
-            props: true
+            props: true,
+            meta: getPathMeta('order-statuses')
         }
     ]
 };
@@ -761,17 +812,22 @@ const managerOrderStatusPages = {
 const managerOrderPages = {
     path: '/manager/store',
     component: DashboardLayout,
+    meta: {
+        auth: true
+    },
     children: [
         {
             path: 'orders',
             name: 'manager.store.orders',
-            component: OrderList
+            component: OrderList,
+            meta: getPathMeta('orders')
         },
         {
             path: 'orders/:id',
             name: 'manager.store.orders.order',
             component: Order,
-            props: true
+            props: true,
+            meta: getPathMeta('orders')
         }
     ]
 };
@@ -779,6 +835,7 @@ const managerOrderPages = {
 const managerMenuPages = {
     path: '/manager/pages',
     component: DashboardLayout,
+    meta: getPathMeta('pages'),
     children: [
         {
             path: 'home',
@@ -875,18 +932,35 @@ const managerMenuPages = {
             path: 'shipping-payment',
             name: 'manager.pages.shipping-payment',
             component: ShippingPaymentPage
-        },
+        }
     ]
 };
 
-const managerErrorPages = {
-    path: '/manager/errors',
-    component: ErrorsLayout,
+const managerLockPages = {
+    path: '/manager',
+    component: LockLayout,
     children: [
         {
-            path: '404',
+            path: 'login',
+            name: 'manager.login',
+            component: Login,
+            meta: {
+                auth: false,
+                redirect: '/manager/dashboard',
+                notFoundRedirect: { name: 'manager.errors.404' },
+                forbiddenRedirect: '/manager/errors/403'
+            }
+        },
+        {
+            path: 'errors/404',
             name: 'manager.errors.404',
-            component: Error404
+            component: Error404,
+            meta: getPathMeta(404)
+        },
+        {
+            path: 'errors/403',
+            name: 'manager.errors.403',
+            component: Error403
         }
     ]
 };
@@ -901,7 +975,7 @@ const routes = [
     managerOrderPages,
     managerOrderStatusPages,
     managerMenuPages,
-    managerErrorPages,
+    managerLockPages,
     {
         path: '*',
         redirect: {

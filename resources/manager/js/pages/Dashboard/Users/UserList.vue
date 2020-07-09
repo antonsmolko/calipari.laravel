@@ -49,8 +49,8 @@
 
                                 <table-actions :item="item"
                                                :subPath="storeModule"
+                                               :deleteDisabled="!authCheck('user-delete') || item.role.name === 'super_admin'"
                                                @delete="onDelete"/>
-
                             </md-table-cell>
 
                         </template>
@@ -63,46 +63,46 @@
 </template>
 
 <script>
-    import { mapActions, mapState } from 'vuex'
+import { mapActions } from 'vuex'
 
-    import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
-    import TableActions from "@/custom_components/Tables/TableActions";
+import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
+import TableActions from "@/custom_components/Tables/TableActions";
 
-    import { pageTitle } from '@/mixins/base'
-    import { deleteMethod } from '@/mixins/crudMethods'
+import { pageTitle, authCheck } from '@/mixins/base'
+import { deleteMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'UsersList',
-        components: { VExtendedTable, TableActions },
-        mixins: [ pageTitle, deleteMethod ],
-        data () {
-            return {
-                resourceUrl: '/users/paginate',
-                propsToSearch: ['name', 'email'],
-                responseData: false,
-                storeModule: 'users'
-            }
-        },
-        created() {
-            this.setPageTitle('Пользователи');
-        },
-        methods: {
-            ...mapActions({
-                togglePublishAction: 'table/togglePublish',
-            }),
-            onDelete (item) {
-                return this.delete({
-                    payload: item.id,
-                    title: item.name,
-                    alertText: `пользователя «${item.name}»`,
-                    storeModule: this.storeModule,
-                    successText: 'Пользователь удален!',
-                    tableMode: 'table'
-                })
-            },
-            onPublishChange (id) {
-                this.togglePublishAction(`/users/${id}/publish`);
-            },
+export default {
+    name: 'UsersList',
+    components: { VExtendedTable, TableActions },
+    mixins: [ pageTitle, deleteMethod, authCheck ],
+    data () {
+        return {
+            resourceUrl: '/users/paginate',
+            propsToSearch: ['name', 'email'],
+            responseData: false,
+            storeModule: 'users'
         }
+    },
+    created() {
+        this.setPageTitle('Пользователи');
+    },
+    methods: {
+        ...mapActions({
+            togglePublishAction: 'table/togglePublish',
+        }),
+        onDelete (item) {
+            return this.delete({
+                payload: item.id,
+                title: item.name,
+                alertText: `пользователя «${item.name}»`,
+                storeModule: this.storeModule,
+                successText: 'Пользователь удален!',
+                tableMode: 'table'
+            })
+        },
+        onPublishChange (id) {
+            this.togglePublishAction(`/users/${id}/publish`);
+        },
     }
+}
 </script>

@@ -42,7 +42,7 @@ class MailNewEmailConfirmation extends Notification
      */
     public function toMail($notifiable)
     {
-        $link = url('/user/confirm/' . $notifiable->emailConfirmation->token);
+        $link = url('api/auth/user/confirm/' . $notifiable->emailConfirmation->token);
         return ( new MailMessage )
             ->subject( 'Подтверждение нового адреса электронной почты - ' . $notifiable->emailConfirmation->email )
             ->greeting('Добро пожаловать, ' . $notifiable->name . '!')

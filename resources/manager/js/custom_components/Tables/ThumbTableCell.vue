@@ -7,28 +7,28 @@
 </template>
 
 <script>
-    export default {
-        name: "ThumbTableCell",
-        props: {
-            path: {
-                type: String,
-                required: true
-            },
-            width: {
-                type: Number,
-                default: 100
-            },
-            static: {
-                type: Boolean,
-                default: false
-            }
+export default {
+    name: "ThumbTableCell",
+    props: {
+        path: {
+            type: String,
+            required: true
         },
-        computed: {
-            url () {
-                return this.static ? this.path : `/image/widen/${this.width*1.5}/${this.path}`
-            }
+        width: {
+            type: Number,
+            default: 100
+        },
+        static: {
+            type: Boolean,
+            default: false
+        }
+    },
+    computed: {
+        url () {
+            return this.static ? this.path : `${this.$config.BASE_IMAGE_URL}/widen/${this.width*1.5}/${this.path}`
         }
     }
+}
 </script>
 
 <style scoped>

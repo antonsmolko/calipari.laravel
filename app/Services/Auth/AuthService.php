@@ -7,20 +7,21 @@ namespace App\Services\Auth;
 use App\Models\User;
 use App\Services\Base\Auth\BaseAuthService;
 use App\Services\User\Resources\UserClient as UserResource;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AuthService extends BaseAuthService
 {
-    /**
-     * @param Request $request
-     * @return UserResource
-     */
     public function me(Request $request)
     {
         $user = $request->user();
 
         if ($user && $user->isActive() && $user->isConfirmed()) {
-            return new UserResource(auth()->user());
+//            return new UserResource(auth()->user());
+            return [
+                'status' => 'success',
+                'data' => new UserResource(auth()->user())
+            ];
         }
 //        $this->logout();
     }
@@ -40,9 +41,9 @@ class AuthService extends BaseAuthService
     }
 
     /**
-     * @return array
+     * @return JsonResponse
      */
-    public function refresh(): array
+    public function refresh(): JsonResponse
     {
         return $this->respondWithRefreshToken(auth()->refresh(true, true));
     }
@@ -121,17 +122,26 @@ class AuthService extends BaseAuthService
 
     /**
      * @param string $token
-     * @return array
+     * @return JsonResponse
      */
-    public function respondWithRefreshToken(string $token)
+    public function respondWithRefreshToken(string $token): JsonResponse
     {
-        return [
-            'message' => 'Токен обновлен!',
-            'status' => 'success',
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => $this->expiresIn
-        ];
+//        return [
+//            'message' => 'Токен обновлен!',
+//            'status' => 'success',
+//            'access_token' => $token,
+//            'token_type' => 'bearer',
+//            'expires_in' => $this->expiresIn
+//        ];
+        return response()
+            ->json([
+                'message' => 'Токен обновлен!',
+                'status' => 'success',
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => $this->expiresIn
+            ], 200)
+            ->header('Authorization', $token);
     }
 
 //    /**

@@ -188,7 +188,6 @@
                 return this.$store.getters['orderStatuses/getRestItems'](this.currentStatus.order);
             },
             currentStatus () {
-                console.log(this.order.statuses)
                 return getCurrentStatus(this.order.statuses);
             },
             baseTableData () {

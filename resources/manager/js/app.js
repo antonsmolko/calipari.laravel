@@ -22,7 +22,11 @@ import Vuelidate from 'vuelidate'
 import App from "./App.vue";
 import Chartist from "chartist";
 import CKEditor from '@ckeditor/ckeditor5-vue';
-
+import 'es6-promise/auto'
+import axios from 'axios'
+import VueAuth from '@websanova/vue-auth'
+import VueAxios from 'vue-axios'
+import auth from './auth'
 import langLibrary from './lib/Validations';
 import config from "@/config";
 import helpers from "@/helpers";
@@ -31,7 +35,6 @@ import helpers from "@/helpers";
 import routes from "./routes/routes";
 
 // plugin setup
-Vue.use(VueRouter);
 Vue.use(DashboardPlugin);
 Vue.use(Vuelidate);
 Vue.use(CKEditor);
@@ -42,6 +45,7 @@ Vue.prototype.$helpers = helpers;
 
 // configure router
 const router = new VueRouter({
+    history: true,
     mode: 'history',
     routes, // short for routes: routes
     scrollBehavior: to => {
@@ -53,6 +57,15 @@ const router = new VueRouter({
     },
     linkExactActiveClass: "nav-item active"
 });
+
+// Set Vue router
+Vue.router = router
+Vue.use(VueRouter)
+
+// Set Vue authentication
+
+Vue.use(VueAxios, axios)
+Vue.use(VueAuth, auth)
 
 // global library setup
 Object.defineProperty(Vue.prototype, "$Chartist", {

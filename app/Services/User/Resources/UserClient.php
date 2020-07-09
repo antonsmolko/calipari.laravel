@@ -20,7 +20,7 @@ class UserClient extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'role' => $this->roles[0],
+            'roles' => $this->roles->pluck('name'),
             'gravatar_small' => Gravatar::get($this->email, 'small-secure'),
             'gravatar_medium' => Gravatar::get($this->email, 'medium')
         ];

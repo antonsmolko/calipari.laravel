@@ -1,6 +1,7 @@
 <template>
     <div class="md-layout" v-if="responseData">
         <panel-card-link
+            v-if="authCheck('images')"
             route="manager.images"
             icon="image"
             title="Изображения"
@@ -8,6 +9,7 @@
             color="danger" />
 
         <panel-card-link
+            v-if="authCheck('catalog')"
             route="manager.catalog"
             icon="category"
             title="Каталог"
@@ -15,6 +17,7 @@
             color="blue-grey" />
 
         <panel-card-link
+            v-if="authCheck('textures')"
             route="manager.textures"
             icon="style"
             title="Фактуры"
@@ -22,6 +25,7 @@
             color="primary" />
 
         <panel-card-link
+            v-if="authCheck('settings')"
             route="manager.settings"
             icon="settings"
             title="Конфигурация"
@@ -29,6 +33,7 @@
             color="deep-purple" />
 
         <panel-card-link
+            v-if="authCheck('store')"
             route="manager.store"
             icon="local_mall"
             title="Магазин"
@@ -36,6 +41,7 @@
             color="indigo"/>
 
         <panel-card-link
+            v-if="authCheck('users')"
             route="manager.users"
             icon="people"
             title="Пользователи"
@@ -43,6 +49,7 @@
             color="blue"/>
 
         <panel-card-link
+            v-if="authCheck('roles')"
             route="manager.roles"
             icon="business_center"
             title="Роли"
@@ -50,6 +57,7 @@
             color="light-blue" />
 
         <panel-card-link
+            v-if="authCheck('permissions')"
             route="manager.permissions"
             icon="vpn_key"
             title="Привилегии"
@@ -57,6 +65,7 @@
             color="cyan" />
 
         <panel-card-link
+            v-if="authCheck('pages')"
             route="manager.pages"
             icon="layers"
             title="Страницы"
@@ -68,31 +77,23 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 
-import {
-    ChartCard,
-    ProductCard,
-    AnimatedNumber,
-    GlobalSalesCard,
-    GlobalSalesTable
-} from "@/components";
-
 import PanelCardLink from '@/custom_components/Cards/PanelCardLink'
-import { pageTitle } from '@/mixins/base'
+import { pageTitle, authCheck } from '@/mixins/base'
 
 export default {
     components: {
         PanelCardLink
     },
-    mixins: [ pageTitle ],
+    mixins: [ pageTitle, authCheck ],
     data() {
         return {
             responseData: false
         }
     },
     computed: {
-      ...mapState('dashboard', {
+        ...mapState('dashboard', {
           resourcesCount: state => state.resourcesCount
-      })
+        })
     },
     created() {
         this.getResourcesCountAction({

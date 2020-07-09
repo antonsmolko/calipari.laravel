@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class LaratrustSeeder extends Seeder
+class  LaratrustSeeder extends Seeder
 {
     /**
      * Run the database seeds.

@@ -46,6 +46,7 @@ class AuthController extends BaseAuthController
      */
     public function refresh(): JsonResponse
     {
-        return response()->json($this->authService->refresh());
+//        return response()->json($this->authService->refresh());
+        return $this->authService->refresh();
     }
 }

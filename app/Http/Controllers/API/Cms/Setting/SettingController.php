@@ -10,6 +10,7 @@ use App\Http\Controllers\API\Cms\Setting\Requests\UpdateSettingRequest;
 use App\Services\Setting\CmsSettingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SettingController extends BaseResourceController
 {
@@ -53,6 +54,10 @@ class SettingController extends BaseResourceController
      */
     public function store(CreateSettingRequest $request): JsonResponse
     {
+        if (!Auth::user()->hasRole(['super_admin', 'admin'])) {
+            abort('403');
+        }
+
         return response()->json($this->service->store($request->all()));
     }
 
@@ -63,6 +68,10 @@ class SettingController extends BaseResourceController
      */
     public function update(UpdateSettingRequest $request, int $id): JsonResponse
     {
+        if (!Auth::user()->hasRole(['super_admin', 'admin'])) {
+            abort('403');
+        }
+
         return response()->json($this->service->update($id, $request->all()));
     }
 
@@ -88,5 +97,18 @@ class SettingController extends BaseResourceController
     public function getEntries(): JsonResponse
     {
         return response()->json($this->service->getEntries());
+    }
+
+    /**
+     * @param int $id
+     * @return int
+     * @throws \Exception
+     */
+    public function destroy(int $id): int {
+        if (!Auth::user()->hasRole(['super_admin', 'admin'])) {
+            abort('403');
+        }
+
+        return $this->service->destroy($id);
     }
 }

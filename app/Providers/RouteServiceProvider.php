@@ -73,9 +73,9 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::prefix('api')
-             ->middleware('api')
+            ->middleware('api')
             ->namespace('App\Http\Controllers\API')
-             ->group(base_path('routes/api.php'));
+            ->group(base_path('routes/api.php'));
     }
 
     /**
@@ -87,8 +87,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapImageRoutes()
     {
-        Route::middleware('web')
-            ->namespace($this->namespace)
+        Route::prefix('api/image')
+            ->middleware('api')
+            ->namespace('App\Http\Controllers\ImageResize')
             ->group(base_path('routes/image.php'));
     }
 }

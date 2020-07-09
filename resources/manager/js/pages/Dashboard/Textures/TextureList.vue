@@ -25,7 +25,7 @@
                                     </md-table-cell>
 
                                     <md-table-cell md-label="Превью">
-                                        <img class="md-table-thumb img-raised rounded" :src="`/image/crop/500/300/${item.sample_path}`" :alt="item.name">
+                                        <img class="md-table-thumb img-raised rounded" :src="`${baseSamplePath}/${item.sample_path}`" :alt="item.name">
                                     </md-table-cell>
 
                                     <md-table-cell md-label="Название">
@@ -65,27 +65,26 @@
 
 <script>
     import { mapState, mapActions } from 'vuex'
-
     import TableActions from "@/custom_components/Tables/TableActions";
-
     import { pageTitle } from '@/mixins/base'
     import { deleteMethod } from '@/mixins/crudMethods'
 
     export default {
         name: 'TextureList',
-        data () {
-            return {
-                storeModule: 'textures',
-                responsive: false,
-                responseData: false
-            }
-        },
+        data: () => ({
+            storeModule: 'textures',
+            responsive: false,
+            responseData: false
+        }),
         components: { TableActions },
         mixins: [ pageTitle, deleteMethod ],
         computed: {
             ...mapState('textures', {
                 items: state => state.items
-            })
+            }),
+            baseSamplePath () {
+                return `${this.$config.BASE_IMAGE_URL}/crop/500/300`
+            }
         },
         methods: {
             ...mapActions('textures', {

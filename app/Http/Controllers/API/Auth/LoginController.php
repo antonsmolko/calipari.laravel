@@ -51,7 +51,8 @@ class LoginController extends BaseLoginController
 
         return $token
             ? response()
-                ->json($this->authService->respondWithToken($request->user(), $token))
+                ->json($this->authService->respondWithToken($request->user(), $token), 200)
+                ->header('Authorization', $token)
             : response()->json([
                 'message' => __('auth.wrong_login_pass'),
                 'status' => 'danger'], 401);

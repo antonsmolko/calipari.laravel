@@ -6,7 +6,7 @@
                 <div class="file-input">
                     <div v-if="!imageData">
                         <div class="image-container">
-                            <img v-if="value" :src="`/image/widen/400/${value}`" alt="">
+                            <img v-if="value" :src="`${baseImageUrl}/${value}`" alt="">
                             <img v-else src="/img/image_placeholder.jpg" alt="">
                         </div>
                     </div>
@@ -45,10 +45,15 @@ export default {
             type: String
         }
     },
-    data () {
-        return {
-            imageData: '',
-            imagePlaceholder: '/img/image_placeholder.jpg'
+    data: () => ({
+        imageData: ''
+    }),
+    computed: {
+        imagePlaceholder () {
+            return this.$config.imagePlaceholder;
+        },
+        baseImageUrl () {
+            return `${this.$config.BASE_IMAGE_URL}/widen/400`;
         }
     },
     methods: {

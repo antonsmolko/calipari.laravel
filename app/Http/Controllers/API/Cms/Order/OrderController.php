@@ -8,6 +8,7 @@ use App\Http\Controllers\API\Cms\Order\Requests\ChangeStatusRequest;
 use App\Http\Requests\FormRequest;
 use App\Services\Order\CmsOrderService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends BaseResourceController
 {
@@ -81,5 +82,18 @@ class OrderController extends BaseResourceController
     public function changeStatus(ChangeStatusRequest $request, int $id ): JsonResponse
     {
         return response()->json($this->service->changeStatus($id, $request->all()));
+    }
+
+    /**
+     * @param int $id
+     * @return int
+     * @throws \Exception
+     */
+    public function destroy(int $id): int {
+        if (!Auth::user()->hasRole(['super_admin', 'owner'])) {
+            abort('403');
+        }
+
+        return $this->service->destroy($id);
     }
 }

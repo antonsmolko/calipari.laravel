@@ -41,6 +41,10 @@ Route::group(['prefix' => '/auth', ['middleware' => 'throttle:20,5']], function(
 
     Route::post('/reset-password', 'Auth\ForgotPasswordController@sendPasswordResetLink');
     Route::post('/reset/password', 'Auth\ResetPasswordController@callResetPassword');
+
+    /** User email confirmation */
+    Route::get('/user/confirm/{token}', 'Auth\AuthController@emailConfirm')
+        ->name('user.verify');
 });
 
 Route::group([
@@ -84,8 +88,6 @@ Route::prefix('catalog')
         Route::get('categories', 'Client\Category\CategoryController@index');
 
         Route::get('categories/{category}', 'Client\Category\CategoryController@getItemByAlias');
-//        Route::post('categories/{id}/images', 'Client\Category\CategoryController@getImages')
-//            ->where('id', '[0-9]+');
 
         Route::get('categories/{id}/tags', 'Client\Category\CategoryController@getItemTags')
             ->where('id', '[0-9]+');
@@ -100,8 +102,6 @@ Route::prefix('catalog')
 
         Route::get('color-collections/{collection}', 'Client\ColorCollection\ColorCollectionController@getItemByAliasWithImages')
             ->where('collection', '^([a-z0-9]+-?)+[a-z0-9]$');
-//        Route::get('color-collections/{id}/tags', 'Client\ColorCollection\ColorCollectionController@getItemTags')
-//            ->where('id', '[0-9]+');
 
         /** Art Collections */
 
@@ -220,7 +220,9 @@ Route::prefix('profile')
  * CMS
  */
 
-Route::group(['prefix' => 'manager'], function() {
+Route::prefix('manager')
+    ->middleware('role:super_admin|admin|content_manger|owner')
+    ->group(function() {
 
 
     /** Images */
@@ -231,7 +233,8 @@ Route::group(['prefix' => 'manager'], function() {
         ->name('images.trashed.list');
     Route::get('images/{id}/force-delete', 'Cms\Image\ImageController@forceDelete')
         ->where('id', '[0-9]+')
-        ->name('images.force.delete');
+        ->name('images.force.delete')
+        ->middleware('role:super_admin|admin|owner');
     Route::get('images/{id}/restore', 'Cms\Image\ImageController@restore')
         ->where('id', '[0-9]+')
         ->name('images.restore');
@@ -346,7 +349,8 @@ Route::group(['prefix' => 'manager'], function() {
         Route::get('entries', 'Cms\Setting\SettingController@getEntries');
         Route::post('set-image', 'Cms\Setting\SettingController@setImageValue');
         Route::post('{id}', 'Cms\Setting\SettingController@update')
-            ->where('id', '[0-9]+');
+            ->where('id', '[0-9]+')
+            ->middleware('role:super_admin|admin');
 
         Route::get('with-types', 'Cms\Setting\SettingController@getItemsWithTypes');
         Route::get('with-group', 'Cms\Setting\SettingController@getItemsWithGroup');
@@ -361,7 +365,8 @@ Route::group(['prefix' => 'manager'], function() {
     Route::group(['prefix' => 'setting-groups'], function() {
         Route::get('with-settings', 'Cms\SettingGroup\SettingGroupController@getItemsWithSettings');
         Route::post('{id}', 'Cms\SettingGroup\SettingGroupController@update')
-            ->where('id', '[0-9]+');
+            ->where('id', '[0-9]+')
+            ->middleware('role:super_admin|admin');
     });
     Route::apiResource('setting-groups', 'Cms\SettingGroup\SettingGroupController')
         ->except(['create', 'edit', 'update']);
@@ -369,47 +374,57 @@ Route::group(['prefix' => 'manager'], function() {
 
     /** Users */
 
-    Route::group(['prefix' => 'users'], function() {
-        Route::post('/paginate', 'Cms\User\UserController@getItems')
-            ->name('users');
-        Route::post('{id}', 'Cms\User\UserController@update')
-            ->where('id', '[0-9]+')
-            ->name('users.update');
-        Route::get('{id}/publish', 'Cms\User\UserController@publish')
-            ->where('id', '[0-9]+')
-            ->name('users.publish');
-        Route::post('{id}/password-change', 'Cms\User\UserController@passwordChange')
-            ->where('id', '[0-9]+')
-            ->name('users.password');
-    });
+    Route::prefix('users')
+        ->middleware('role:super_admin|admin|owner')
+        ->group(function() {
+
+            Route::post('/paginate', 'Cms\User\UserController@getItems')
+                ->name('users');
+            Route::post('{id}', 'Cms\User\UserController@update')
+                ->where('id', '[0-9]+')
+                ->name('users.update');
+            Route::get('{id}/publish', 'Cms\User\UserController@publish')
+                ->where('id', '[0-9]+')
+                ->name('users.publish');
+            Route::post('{id}/password-change', 'Cms\User\UserController@passwordChange')
+                ->where('id', '[0-9]+')
+                ->name('users.password');
+        });
+
     Route::apiResource('users', 'Cms\User\UserController')
         ->except(['index', 'create', 'edit', 'update']);
 
 
     /** Roles */
 
-    Route::group(['prefix' => 'roles'], function() {
-        Route::post('{id}', 'Cms\Role\RoleController@update')
-            ->where('id', '[0-9]+');
-        Route::get('{id}', 'Cms\Role\RoleController@getItemWithPermissions')
-            ->where('id', '[0-9]+');
-    });
+    Route::prefix('roles')
+        ->middleware('role:super_admin|admin|owner')
+        ->group(function() {
+
+            Route::post('{id}', 'Cms\Role\RoleController@update')
+                ->where('id', '[0-9]+');
+            Route::get('{id}', 'Cms\Role\RoleController@getItemWithPermissions')
+                ->where('id', '[0-9]+');
+        });
     Route::apiResource('roles', 'Cms\Role\RoleController')->except(['show', 'create', 'edit', 'update']);
 
 
     /** Permissions */
 
-    Route::group(['prefix' => 'permissions'], function() {
-        Route::post('{id}', 'Cms\Permission\PermissionController@update')
-            ->where('id', '[0-9]+');
-    });
+    Route::prefix('permissions')
+        ->middleware('role:super_admin')
+        ->group(function() {
+            Route::post('{id}', 'Cms\Permission\PermissionController@update')
+                ->where('id', '[0-9]+');
+        });
     Route::apiResource('permissions', 'Cms\Permission\PermissionController')->except(['create', 'edit', 'update']);
 
 
     /** Store */
 
-    Route::group(['prefix' => 'store'], function() {
-
+    Route::prefix('store')
+        ->middleware('role:super_admin|admin|owner')
+        ->group(function() {
 
         /** Deliveries */
 
@@ -434,7 +449,8 @@ Route::group(['prefix' => 'manager'], function() {
             Route::post('current', 'Cms\Order\OrderController@getCurrentItems');
             Route::post('completed', 'Cms\Order\OrderController@getCompletedItems');
             Route::post('canceled', 'Cms\Order\OrderController@getCanceledItems');
-            Route::delete('{id}', 'Cms\Order\OrderController@destroy');
+            Route::delete('{id}', 'Cms\Order\OrderController@destroy')
+                ->middleware('role:super_admin|owner');
         });
 
 

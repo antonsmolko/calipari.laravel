@@ -7,3 +7,13 @@ export const pageTitle = {
         ])
     }
 }
+
+export const authCheck = {
+    methods: {
+        authCheck (sector) {
+            const roles = this.$helpers.getGates(sector);
+
+            return this.$auth.check(roles);
+        }
+    }
+}

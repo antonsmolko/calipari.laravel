@@ -8,6 +8,7 @@ use App\Http\Controllers\API\Cms\User\Requests\UpdateRequest;
 use App\Http\Requests\FormRequest;
 use App\Services\User\CmsUserService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends BaseResourceController
 {
@@ -55,5 +56,18 @@ class UserController extends BaseResourceController
     public function update(UpdateRequest $request, int $id): JsonResponse
     {
         return response()->json($this->service->update($id, $request->all()));
+    }
+
+    /**
+     * @param int $id
+     * @return int
+     * @throws \Exception
+     */
+    public function destroy(int $id): int {
+        if (!Auth::user()->hasRole(['super_admin', 'owner'])) {
+            abort('403');
+        }
+
+        return $this->service->destroy($id);
     }
 }

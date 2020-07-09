@@ -21,6 +21,7 @@
                                 <md-table-cell v-if="item" md-label="Действия">
                                     <image-trashed-table-actions :item="item"
                                                          @restore="onRestore"
+                                                         :deleteEnabled="authCheck('image-destroy')"
                                                          @delete="onDelete"/>
                                 </md-table-cell>
                             </template>
@@ -37,7 +38,7 @@
 <script>
     import { mapActions } from 'vuex'
 
-    import { pageTitle } from '@/mixins/base'
+    import { pageTitle, authCheck } from '@/mixins/base'
     import { deleteMethod } from '@/mixins/crudMethods'
 
     import ImageTrashedListTable from "@/custom_components/Tables/ImageTrashedListTable";
@@ -48,7 +49,8 @@
         name: 'ImageTrashedList',
         mixins: [
             pageTitle,
-            deleteMethod
+            deleteMethod,
+            authCheck
         ],
         components: {
             ImageTrashedListTable,

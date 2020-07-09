@@ -7,28 +7,36 @@
                 </md-card-content>
             </md-card>
         </div>
-        <panel-card-link route="manager.store.deliveries" icon="local_shipping" title="Доставка" color="teal"/>
-        <panel-card-link route="manager.store.orderStatuses" icon="update" title="Статусы заказа" color="blue"/>
-        <panel-card-link route="manager.store.orders" icon="shopping_cart" title="Заказы" color="deep-purple"/>
+        <panel-card-link v-if="authCheck('deliveries')"
+                         route="manager.store.deliveries"
+                         icon="local_shipping"
+                         title="Доставка"
+                         color="teal"/>
+        <panel-card-link v-if="authCheck('order-statuses')"
+                         route="manager.store.orderStatuses"
+                         icon="update"
+                         title="Статусы заказа"
+                         color="blue"/>
+        <panel-card-link v-if="authCheck('orders')"
+                         route="manager.store.orders"
+                         icon="shopping_cart"
+                         title="Заказы"
+                         color="deep-purple"/>
     </div>
 </template>
 
 <script>
-    import PanelCardLink from '@/custom_components/Cards/PanelCardLink'
-    import { pageTitle } from '@/mixins/base'
+import PanelCardLink from '@/custom_components/Cards/PanelCardLink'
+import { pageTitle, authCheck } from '@/mixins/base'
 
-    export default{
-        components: {
-            PanelCardLink
-        },
-        mixins: [ pageTitle ],
-        data () {
-            return {
-            }
-        },
-        created() {
-            this.setPageTitle('Категории');
-        }
+export default{
+    components: {
+        PanelCardLink
+    },
+    mixins: [ pageTitle, authCheck ],
+    created() {
+        this.setPageTitle('Категории');
     }
+}
 </script>
 
