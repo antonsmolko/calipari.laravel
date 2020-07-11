@@ -35,12 +35,17 @@ export default {
     },
     methods: {
         async login() {
+            let redirect = this.$auth.redirect();
+
             await this.$auth.login({
                 data: {
                     email: this.email,
                     password: this.password
                 },
-                success: () => this.$router.push({name: 'manager.dashboard'}),
+                redirect: {
+                    name: redirect ? redirect.from.name : 'manager.dashboard'
+                },
+                // success: () => this.$router.push({name: 'manager.dashboard'}),
                 error: (error) => this.$store.commit('UPDATE_ERRORS', error.response),
                 rememberMe: true,
                 fetchUser: true

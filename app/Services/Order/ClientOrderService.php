@@ -4,7 +4,7 @@
 namespace App\Services\Order;
 
 
-use App\Events\Models\Order\OrderSaved;
+use App\Events\Models\Order\OrderCreated;
 use App\Notifications\ReceivedAnOrder;
 use App\Services\Base\Resource\ClientBaseResourceService;
 use App\Services\Cache\KeyManager as CacheKeyManager;
@@ -49,7 +49,7 @@ class ClientOrderService extends ClientBaseResourceService
             $this->cartService->update([]);
         }
 
-        event(new OrderSaved($order));
+        event(new OrderCreated($order));
         Notification::route('slack', env('ORDERS_SLACK_WEBHOOK_URL'))
             ->notify(new ReceivedAnOrder($order));
 

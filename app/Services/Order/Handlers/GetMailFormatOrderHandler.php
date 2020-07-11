@@ -60,15 +60,15 @@ class GetMailFormatOrderHandler
     private function getFormattedItems(Collection $items)
     {
         return $items->map(fn ($item) => [
-           'article' => getImageArticle($item->image_id),
-           'dimensions' => $item->width_cm . ' см × ' . $item->height_cm . ' см',
-           'texture' => $item->texture->name,
-           'filter' => $item->filter_details,
-           'qty' => $item->qty,
-           'price' => $item->price,
-           'thumb' => env('APP_URL') . '/image/' .
-               config('settings.mail_order_item_thumb_url') .
-               getOrderItemPath($item)
-       ]);
+            'article' => getImageArticle($item->image_id),
+            'dimensions' => $item->width_cm . ' см × ' . $item->height_cm . ' см',
+            'texture' => $item->texture->name,
+            'filter' => $item->filter_details,
+            'qty' => $item->qty,
+            'price' => $item->price,
+            'thumb_path' => config('settings.base_image_url') .
+                config('settings.mail_order_item_thumb_url') .
+                getOrderItemPath($item)
+        ]);
     }
 }

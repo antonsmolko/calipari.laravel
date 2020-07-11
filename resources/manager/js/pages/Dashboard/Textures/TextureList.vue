@@ -1,64 +1,60 @@
 <template>
-    <div v-if="responseData">
-        <div class="md-layout">
-            <div class="md-layout-item">
-                <md-card>
-                    <md-card-content class="md-between">
-                        <router-button-link title="В панель управления" />
-                        <router-button-link title="Создать фактуру" icon="add" color="md-success"
-                                            route="manager.textures.create" />
-                    </md-card-content>
-                </md-card>
-            </div>
-        </div>
-        <div class="md-layout">
-            <div class="md-layout-item">
-                <md-card>
-                    <card-icon-header title="Список фактур" icon="style" />
-                    <md-card-content>
-                        <template v-if="items.length">
-                            <md-table v-model="items" class="paginated-table table-striped table-hover">
-                                <md-table-row slot="md-table-row" slot-scope="{ item }">
+    <div class="md-layout" v-if="responseData">
+        <div class="md-layout-item">
+            <md-card class="mt-0">
+                <md-card-content class="md-between">
+                    <router-button-link title="В панель управления" />
+                    <router-button-link title="Создать фактуру" icon="add" color="md-success"
+                                        route="manager.textures.create" />
+                </md-card-content>
+            </md-card>
 
-                                    <md-table-cell md-label="#" class="width-small">
-                                        {{ item.id }}
-                                    </md-table-cell>
+            <div class="space-1"></div>
+            <md-card>
+                <card-icon-header title="Список фактур" icon="style" />
+                <md-card-content>
+                    <template v-if="items.length">
+                        <md-table v-model="items" class="paginated-table table-striped table-hover">
+                            <md-table-row slot="md-table-row" slot-scope="{ item }">
 
-                                    <md-table-cell md-label="Превью">
-                                        <img class="md-table-thumb img-raised rounded" :src="`${baseSamplePath}/${item.sample_path}`" :alt="item.name">
-                                    </md-table-cell>
+                                <md-table-cell md-label="#" class="width-small">
+                                    {{ item.id }}
+                                </md-table-cell>
 
-                                    <md-table-cell md-label="Название">
-                                        <span class="md-subheading">{{ item.name }}</span>
-                                    </md-table-cell>
+                                <md-table-cell md-label="Превью">
+                                    <img class="md-table-thumb img-raised rounded" :src="`${baseSamplePath}/${item.sample_path}`" :alt="item.name">
+                                </md-table-cell>
 
-                                    <md-table-cell md-label="Заказы">
-                                        <md-icon>shopping_cart</md-icon> {{ item.orders_count }}
-                                    </md-table-cell>
+                                <md-table-cell md-label="Название">
+                                    <span class="md-subheading">{{ item.name }}</span>
+                                </md-table-cell>
 
-                                    <md-table-cell md-label="Опубликован">
-                                        <md-switch :value="!item.publish" @change="onPublishChange(item.id)" />
-                                    </md-table-cell>
+                                <md-table-cell md-label="Заказы">
+                                    <md-icon>shopping_cart</md-icon> {{ item.orders_count }}
+                                </md-table-cell>
 
-                                    <md-table-cell md-label="Действия">
+                                <md-table-cell md-label="Опубликован">
+                                    <md-switch :value="!item.publish" @change="onPublishChange(item.id)" />
+                                </md-table-cell>
 
-                                        <table-actions :item="item"
-                                                       :subPath="storeModule"
-                                                       @delete="onDelete"/>
+                                <md-table-cell md-label="Действия">
 
-                                    </md-table-cell>
+                                    <table-actions :item="item"
+                                                   :subPath="storeModule"
+                                                   @delete="onDelete"/>
 
-                                </md-table-row>
-                            </md-table>
-                        </template>
-                        <template v-else>
-                            <div class="alert alert-info">
-                                <span><h3>У Вас еще нет фактур!</h3></span>
-                            </div>
-                        </template>
-                    </md-card-content>
-                </md-card>
-            </div>
+                                </md-table-cell>
+
+                            </md-table-row>
+                        </md-table>
+                    </template>
+                    <template v-else>
+                        <div class="alert alert-info">
+                            <span><h3>У Вас еще нет фактур!</h3></span>
+                        </div>
+                    </template>
+                </md-card-content>
+            </md-card>
         </div>
     </div>
 </template>

@@ -20,7 +20,7 @@ const config = {
     loginData: {
         url: '/api/auth/login',
         method: 'POST',
-        redirect: '',
+        redirect: '/manager/dashboard',
         fetchUser: true
     },
     logoutData: {

@@ -6,6 +6,8 @@ namespace App\Services\User\Handlers;
 
 use App\Models\User;
 use App\Services\User\Repositories\CmsUserRepository;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class CmsCreateHandler
@@ -22,13 +24,19 @@ class CmsCreateHandler
     }
 
     /**
-     * @param array $requestData
-     * @return User
+     * @param array $storeData
+     * @return mixed
      */
-    public function handle(array $requestData): User
+    public function handle(array $storeData)
     {
-        $requestData['password'] = Hash::make($requestData['password']);
+        $storeData['password'] = Hash::make($storeData['password']);
 
-        return  $this->repository->store($requestData);
+        $user = $this->repository->store(Arr::except($storeData, 'role'));
+
+        if (!Auth::user()->canSetRole()) {
+            $storeData['role'] = User::DEFAULT_ROLE;
+        }
+
+        return $this->repository->syncRole($user, $storeData['role']);
     }
 }

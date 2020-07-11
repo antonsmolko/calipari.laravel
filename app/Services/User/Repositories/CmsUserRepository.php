@@ -72,21 +72,27 @@ class CmsUserRepository extends CmsBaseResourceRepository
      */
     public function store(array $storeData): User
     {
-        return $this->model::create(Arr::except($storeData, 'role'))
-            ->attachRole($storeData['role']);
+        return $this->model::create($storeData);
     }
 
     /**
      * @param $item
      * @param array $updateData
-     * @return User
+     * @return mixed
      */
-    public function update($item, array $updateData): User
+    public function update($item, array $updateData)
     {
-        $item->update(Arr::except($updateData, 'role'));
-        $item->syncRoles([$updateData['role']]);
+        return $item->update($updateData);
+    }
 
-        return $item;
+    /**
+     * @param $item
+     * @param int $role
+     * @return mixed
+     */
+    public function syncRole($item, int $role)
+    {
+        return $item->syncRoles([$role]);
     }
 
     /**

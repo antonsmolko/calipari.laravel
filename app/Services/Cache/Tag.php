@@ -19,4 +19,5 @@ class Tag
     const USERS_TAG = 'users';
     const POSTS_TAG = 'posts';
     const WORK_EXAMPLES_TAG = 'workExamples';
+    const TEXTURES_TAG = 'textures';
 }

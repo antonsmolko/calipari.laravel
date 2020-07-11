@@ -18,7 +18,7 @@ class UserActive
     {
         $user = $request->user();
 
-        if (! $user->publish) {
+        if (!$user->publish) {
             return response()->json([
                 'message' => __('auth.locked_out'),
                 'status' => 'danger'

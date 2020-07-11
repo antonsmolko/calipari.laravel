@@ -54,7 +54,7 @@ class ImageResizeRepository
      * @param string $height
      * @param string $x
      * @param string $y
-     * @return Image
+     * @return \Intervention\Image\Image
      */
     public function orderCrop(string $imgPath, string $width, string $height, string $x, string $y)
     {

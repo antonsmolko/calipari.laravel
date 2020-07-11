@@ -69,4 +69,27 @@ class CmsRoleRepository extends CmsBaseResourceRepository
 
         return $item;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getItemsFromOwner()
+    {
+        return $this->model::whereNotIn('name', [
+            config('settings.super_admin_role_name'),
+            config('settings.owner_role_name'),
+        ])
+            ->orderBy('id')
+            ->get();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemsFromSuperAdmin()
+    {
+        return $this->model::where('name', '<>', config('settings.super_admin_role_name'))
+            ->orderBy('id')
+            ->get();
+    }
 }

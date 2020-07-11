@@ -47,6 +47,18 @@ const actions = {
             thenContent: response => commit('SET_ITEMS', response.data)
         })
     },
+    getItemsFromOwner({ commit }) {
+        return axiosAction('get', commit, {
+            url: '/roles/from-owner',
+            thenContent: response => commit('SET_ITEMS', response.data)
+        })
+    },
+    getItemsFromSuperAdmin({ commit }) {
+        return axiosAction('get', commit, {
+            url: '/roles/from-super-admin',
+            thenContent: response => commit('SET_ITEMS', response.data)
+        })
+    },
     getItem ({ commit }, id) {
         return axiosAction('get', commit, {
             url: `/roles/${id}`,

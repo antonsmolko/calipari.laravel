@@ -8,7 +8,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class OrderSaved
+class OrderCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

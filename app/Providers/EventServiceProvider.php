@@ -129,7 +129,7 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Clear\DeliveryCacheClear::class,
         ],
 
-        \App\Events\Models\Order\OrderSaved::class => [
+        \App\Events\Models\Order\OrderCreated::class => [
             \App\Listeners\Cache\Clear\OrderCacheClear::class,
             \App\Listeners\Mail\Order\SendCreated::class,
         ],

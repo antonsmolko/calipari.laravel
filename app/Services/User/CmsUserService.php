@@ -72,22 +72,53 @@ class CmsUserService extends CmsBaseResourceService
 
     /**
      * @param array $storeData
-     * @return User
+     * @return mixed
      */
-    public function store(array $storeData): User
+    public function store(array $storeData)
     {
         return $this->storeHandler->handle($storeData);
     }
 
     /**
-     * @param array $updateData
      * @param int $id
-     * @return User
+     * @param array $updateData
+     * @return mixed
      */
-    public function update(int $id, array $updateData): User
+    public function update(int $id, array $updateData)
     {
         $user = $this->repository->getItem($id);
 
         return $this->updateHandler->handle($user, $updateData);
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function publish(int $id)
+    {
+        $item = $this->repository->getItem($id);
+
+        if (!$item->isEditable()) {
+            abort(403);
+        }
+
+        return $this->repository->publish($item);
+    }
+
+    /**
+     * @param int $id
+     * @return int
+     * @throws \Exception
+     */
+    public function destroy(int $id): int
+    {
+        $item = $this->repository->getItem($id);
+
+        if (!$item->removable()) {
+            abort(403);
+        }
+
+        return $this->repository->destroy($item);
     }
 }

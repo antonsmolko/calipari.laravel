@@ -1,4 +1,5 @@
 import { axiosAction } from "../../mixins/actions";
+import { uniqueFieldEditMixin, uniqueFieldMixin } from "../../mixins/getters";
 
 const state = {
     fields: {
@@ -71,7 +72,7 @@ const actions = {
     delete ({ commit, dispatch }, { payload, tableMode = false  }) {
         return axiosAction('delete', commit, {
             url: `/users/${payload}`,
-            thenContent: response => {
+            thenContent: (response) => {
                 if (tableMode === 'table') {
                     dispatch('table/updateItemsPost', null, { root: true });
                 }

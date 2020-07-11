@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 use Laratrust\Traits\LaratrustUserTrait;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -21,6 +22,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     use Notifiable;
 
     public const DEFAULT_ROLE  = 1;
+    public const SUPER_ADMIN_ROLE = 3;
 
     /**
      * The attributes that are mass assignable.
@@ -149,6 +151,65 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function isActive(): bool
     {
         return (bool) $this->publish;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole(config('settings.super_admin_role_name'));
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOwner(): bool
+    {
+        return $this->hasRole(config('settings.owner_role_name'));
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEditable(): bool
+    {
+        return $this->isOwnAccount() ||
+            !$this->isAn(config('settings.super_admin_role_name')) &&
+            !(Auth::user()->isAn(config('settings.admin_role_name')) && !$this->isAn('user'));
+    }
+
+    public function isRoleChangeable(): bool
+    {
+        return !$this->isAn('super_admin') &&
+            Auth::user()->hasRole([
+                config('settings.super_admin_role_name'),
+                config('settings.owner_role_name')
+            ]) &&
+            !$this->isOwnAccount();
+    }
+
+    public function canSetRole(): bool
+    {
+        return $this->hasRole([
+            config('settings.super_admin_role_name'),
+            config('settings.owner_role_name'),
+        ]);
+    }
+
+    public function removable(): bool
+    {
+        return !$this->isOwnAccount() &&
+            !$this->hasRole(config('settings.super_admin_role_name')) &&
+            !Auth::user()->hasRole(config('settings.admin_role_name'));
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOwnAccount(): bool
+    {
+        return $this->id === Auth::user()->id;
     }
 
     /**

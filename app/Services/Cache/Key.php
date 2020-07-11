@@ -19,4 +19,5 @@ class Key
     const USERS_PREFIX = 'users';
     const POSTS_PREFIX = 'posts';
     const WORK_EXAMPLES_PREFIX = 'workExamples';
+    const TEXTURES_PREFIX = 'textures';
 }

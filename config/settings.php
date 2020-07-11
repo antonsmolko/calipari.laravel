@@ -33,6 +33,9 @@ return [
             'feedback' => 'incoming_envelope'
         ]
     ],
+    'admin_role_name' => 'admin',
+    'super_admin_role_name' => 'super_admin',
+    'owner_role_name' => 'owner',
 //    'roles_map' => [
 //      'a' => 'admin',
 //      's' => 'super_admin',

@@ -3,7 +3,6 @@ export default {
     baseUrl: '/api/manager',
     BASE_IMAGE_URL: '/api/image',
     imagePlaceholder: '/img/image_placeholder.jpg',
-    DEFAULT_ROLE: 'user',
 
     ALIAS_REGEXP: /^([a-z0-9]+[-]?)+[a-z0-9]$/,
 
@@ -28,11 +27,14 @@ export default {
     defaultPostType: { index: 'guide', title: 'Гид'},
 
     /** Auth */
+    DEFAULT_ROLE: 'user',
+
     rolesMap: {
         s: 'super_admin',
         a: 'admin',
         o: 'owner',
-        m: 'content_manager'
+        m: 'content_manager',
+        u: 'user'
     },
 
     gates: {

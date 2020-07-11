@@ -12,7 +12,7 @@
                                 v-show="controlSaveVisibilities && $v.$anyDirty && !$v.$invalid">
                                 <control-button title="Сохранить" @click="onUpdate" />
                             </slide-y-down-transition>
-                            <control-button v-if="authCheck('user-delete')"
+                            <control-button v-if="authCheck('user-delete') && !isSuperAdmin && !isOwnAccount"
                                             title="Удалить"
                                             @click="onDelete"
                                             icon="delete"
@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="md-layout">
-            <div class="md-layout-item md-medium-size-50 md-small-size-100">
+            <div class="md-layout-item md-small-size-100">
                 <md-card>
                     <card-icon-header />
                     <md-card-content>
@@ -47,17 +47,20 @@
                                  :module="storeModule"
                                  :vRules="{ required: true, email: true, minLength: true }" />
 
-                        <v-switch title="Активен"
+                        <v-switch v-if="!isSuperAdmin"
+                                  title="Активен"
                                   :value="publish"
                                   :vField="$v.publish"
                                   :differ="true"
                                   :module="storeModule" />
 
+                        <div class="mt-3" v-else></div>
+
                     </md-card-content>
                 </md-card>
             </div>
-            <div class="md-layout-item md-medium-size-50 md-small-size-100">
-                <template v-if="roles.length">
+            <div class="md-layout-item md-small-size-100" v-if="canChangeRole || isOwnAccount">
+                <template v-if="roles.length && canChangeRole">
                     <md-card>
                         <card-icon-header icon="business_center" title="Роли" />
                         <md-card-content>
@@ -75,7 +78,7 @@
                     </md-card>
                     <div class="space-1"></div>
                 </template>
-                <md-card>
+                <md-card v-if="isOwnAccount">
                     <card-icon-header v-if="!changePassword" icon="lock" title="Смена пароля" />
                     <card-icon-header v-else icon="lock_open" title="Смена пароля" color="md-card-header-danger"/>
                     <md-card-content>
@@ -201,20 +204,32 @@ export default {
             passwordConfirmation: state => state.users.fields.password_confirmation,
             roles: state => state.roles.items
         }),
-        isPasswordChange() {
+        isPasswordChange () {
             return this.changePassword;
+        },
+        canChangeRole () {
+            const roleKeys = this.$config.rolesMap;
+
+            return !this.isOwnAccount && this.$auth.check([roleKeys.s, roleKeys.o]);
+        },
+        isOwnAccount () {
+            return this.$auth.user().id === Number(this.id);
+        },
+        isSuperAdmin () {
+            return this.isOwnAccount && this.$auth.check(this.$config.rolesMap.s);
         }
     },
     methods: {
         ...mapActions({
             getItemAction: 'users/getItem',
             setFieldsAction: 'users/setItemFields',
-            getRolesAction: 'roles/getItems'
+            getRolesFromOwnerAction: 'roles/getItemsFromOwner',
+            getRolesFromSuperAdminAction: 'roles/getItemsFromSuperAdmin'
         }),
-        onChangePassword() {
+        onChangePassword () {
             this.changePassword = true;
         },
-        cancelOldPasswordChange() {
+        cancelOldPasswordChange () {
             this.changePassword = false;
             this.setFieldsAction({
                 old_password: '',
@@ -225,7 +240,7 @@ export default {
             this.$v.password.$reset();
             this.$v.passwordConfirmation.$reset();
         },
-        onUpdate() {
+        onUpdate () {
             const updateData = {
                 name: this.name,
                 email: this.email,
@@ -238,6 +253,7 @@ export default {
                     old_password: this.oldPassword,
                     password_confirmation: this.passwordConfirmation }
                 : updateData;
+
             return this.update({
                 sendData: {
                     formData,
@@ -247,9 +263,10 @@ export default {
                 successText: 'Пользователь обновлен!',
                 storeModule: this.storeModule,
                 redirectRoute: this.redirectRoute
-            });
+            })
+                .then(() => this.$auth.fetch());
         },
-        onDelete() {
+        onDelete () {
             return this.delete({
                 payload: this.id,
                 title: this.name,
@@ -260,9 +277,13 @@ export default {
             })
         }
     },
-    created() {
+    created () {
+        const getRolesAction = this.$auth.check(this.$config.rolesMap.s)
+            ? this.getRolesFromSuperAdminAction
+            : this.getRolesFromOwnerAction
+
         Promise.all([
-            this.getRolesAction(),
+            getRolesAction(),
             this.getItemAction(this.id)
         ])
             .then(() => {

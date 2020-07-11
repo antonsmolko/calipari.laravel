@@ -48,4 +48,20 @@ class CmsRoleService extends CmsBaseResourceService
 
         return $this->repository->update($item, $updateData);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getItemsFromOwner()
+    {
+        return $this->repository->getItemsFromOwner();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemsFromSuperAdmin()
+    {
+        return $this->repository->getItemsFromSuperAdmin();
+    }
 }

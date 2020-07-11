@@ -38,7 +38,10 @@
                             </md-table-cell>
 
                             <md-table-cell md-label="Активен">
-                                <md-switch :value="!item.publish" @change="onPublishChange(item.id)" />
+                                <md-switch
+                                    v-if="isEditable(item) && !isSuperAdmin(item)"
+                                    :value="!item.publish"
+                                    @change="onPublishChange(item.id)" />
                             </md-table-cell>
 
                             <md-table-cell md-label="Дата регистрации" md-sort-by="created_at">
@@ -48,8 +51,9 @@
                             <md-table-cell md-label="Действия">
 
                                 <table-actions :item="item"
+                                               v-if="isEditable(item)"
                                                :subPath="storeModule"
-                                               :deleteDisabled="!authCheck('user-delete') || item.role.name === 'super_admin'"
+                                               :deleteDisabled="!authCheck('user-delete') || isSuperAdmin(item)"
                                                @delete="onDelete"/>
                             </md-table-cell>
 
@@ -103,6 +107,16 @@ export default {
         onPublishChange (id) {
             this.togglePublishAction(`/users/${id}/publish`);
         },
+        isEditable (item) {
+            const roleKeys = this.$config.rolesMap;
+
+            return this.$auth.user().id === item.id ||
+                item.role.name !== roleKeys.s &&
+                !(this.$auth.check(roleKeys.a) && item.role.name !== roleKeys.u)
+        },
+        isSuperAdmin (item) {
+            return item.role.name === this.$config.rolesMap.s
+        }
     }
 }
 </script>

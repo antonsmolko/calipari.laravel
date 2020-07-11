@@ -41,21 +41,21 @@ class UserController extends BaseResourceController
 
     /**
      * @param CreateRequest $request
-     * @return JsonResponse
+     * @return mixed
      */
-    public function store(CreateRequest $request): JsonResponse
+    public function store(CreateRequest $request)
     {
-        return response()->json($this->service->store($request->all()));
+        return $this->service->store($request->all());
     }
 
     /**
      * @param UpdateRequest $request
      * @param int $id
-     * @return JsonResponse
+     * @return mixed
      */
-    public function update(UpdateRequest $request, int $id): JsonResponse
+    public function update(UpdateRequest $request, int $id)
     {
-        return response()->json($this->service->update($id, $request->all()));
+        return $this->service->update($id, $request->all());
     }
 
     /**

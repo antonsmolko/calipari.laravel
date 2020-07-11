@@ -103,6 +103,7 @@ Route::prefix('catalog')
         Route::get('color-collections/{collection}', 'Client\ColorCollection\ColorCollectionController@getItemByAliasWithImages')
             ->where('collection', '^([a-z0-9]+-?)+[a-z0-9]$');
 
+
         /** Art Collections */
 
         Route::get('art-collections/{collection}', 'Client\ArtCollection\ArtCollectionController@getItemByAliasWithImages')
@@ -127,25 +128,25 @@ Route::prefix('catalog')
     });
 
 
-/** Delivery */
+/** Textures */
+Route::get('/textures', 'Client\Texture\TextureController@getItems');
 
+
+/** Delivery */
 Route::get('delivery', 'Client\Delivery\DeliveryController@index');
 
 
 /** Settings */
-
 Route::get('settings', 'Client\SettingGroup\SettingGroupController@index');
 
 
 /** Orders */
-
 Route::group(['prefix' => 'orders'], function() {
     Route::post('/', 'Client\Order\OrderController@store');
 });
 
 
 /** Carts */
-
 Route::prefix('carts')
     ->group(function() {
         Route::post('/', 'Client\Cart\CartController@update')
@@ -405,6 +406,8 @@ Route::prefix('manager')
                 ->where('id', '[0-9]+');
             Route::get('{id}', 'Cms\Role\RoleController@getItemWithPermissions')
                 ->where('id', '[0-9]+');
+            Route::get('from-owner', 'Cms\Role\RoleController@getItemsFromOwner');
+            Route::get('from-super-admin', 'Cms\Role\RoleController@getItemsFromSuperAdmin');
         });
     Route::apiResource('roles', 'Cms\Role\RoleController')->except(['show', 'create', 'edit', 'update']);
 

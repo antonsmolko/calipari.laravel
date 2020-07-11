@@ -47,4 +47,20 @@ class RoleController extends BaseResourceController
     {
         return response()->json($this->service->update($id, $request->all()));
     }
+
+    /**
+     * @return JsonResponse
+     */
+    public function getItemsFromOwner()
+    {
+        return response()->json($this->service->getItemsFromOwner());
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function getItemsFromSuperAdmin()
+    {
+        return response()->json($this->service->getItemsFromSuperAdmin());
+    }
 }

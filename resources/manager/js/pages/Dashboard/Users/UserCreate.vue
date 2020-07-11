@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="md-layout">
-            <div class="md-layout-item md-medium-size-50 md-small-size-100">
+            <div class="md-layout-item md-small-size-100">
                 <md-card>
                     <card-icon-header />
                     <md-card-content>
@@ -59,8 +59,8 @@
                     </md-card-content>
                 </md-card>
             </div>
-            <template v-if="roleList.length">
-                <div class="md-layout-item md-medium-size-50 md-small-size-100">
+            <template v-if="roleList.length && canSetRole">
+                <div class="md-layout-item md-small-size-100">
                     <md-card>
                         <card-icon-header icon="business_center" title="Роли" />
                         <md-card-content>
@@ -109,10 +109,7 @@
             email: {
                 required,
                 email,
-                touch: false,
-                // isUnique (value) {
-                //     return (value.trim() === '') && !this.$v.email.$dirty || !this.isUniqueEmail
-                // }
+                touch: false
             },
             password: {
                 required,
@@ -139,18 +136,36 @@
                 passwordConfirmation: state => state.users.fields.password_confirmation,
                 roleList: state => state.roles.items
             }),
-            isUniqueEmail() {
-                return !!this.$store.getters['users/isUniqueEmail'](this.email);
-            },
             defaultRole () {
                 return this.$store.getters['roles/defaultRole'];
+            },
+            canSetRole () {
+                const roleKeys = this.$config.rolesMap;
+
+                return this.$auth.check([roleKeys.s, roleKeys.o])
             }
+        },
+        created () {
+            const getRolesAction = this.$auth.check(this.$config.rolesMap.s)
+                ? this.getRolesFromSuperAdminAction
+                : this.getRolesFromOwnerAction
+
+            this.clearFieldsAction();
+
+            getRolesAction()
+                .then(() => {
+                    this.setFieldAction({ field: 'role', value: this.defaultRole})
+                    this.setPageTitle('Новый Пользователь');
+                    this.responseData = true;
+                })
+                .catch(() => this.$router.push(this.redirectRoute));
         },
         methods: {
             ...mapActions({
                 clearFieldsAction: 'users/clearItemFields',
-                getRolesAction: 'roles/getItems',
-                setFieldAction: 'users/setItemField'
+                setFieldAction: 'users/setItemField',
+                getRolesFromOwnerAction: 'roles/getItemsFromOwner',
+                getRolesFromSuperAdminAction: 'roles/getItemsFromSuperAdmin'
             }),
             onCreate() {
                 return this.create({
@@ -168,16 +183,6 @@
                     redirectRoute: this.redirectRoute
                 })
             }
-        },
-        created() {
-            this.clearFieldsAction();
-            this.getRolesAction()
-                .then(() => {
-                    this.setFieldAction({ field: 'role', value: this.defaultRole})
-                    this.setPageTitle('Новый Пользователь');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
         }
     }
 </script>
