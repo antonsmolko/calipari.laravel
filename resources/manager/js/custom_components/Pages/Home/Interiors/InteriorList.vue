@@ -113,7 +113,7 @@ export default {
         handleItemOrderChange (id, value) {
             _debounce(this.updateInteriorOrderAction.bind(this, {
                 id,
-                data: { order: value }
+                data: { order: Number(value) }
             }));
         },
         handleItemSlideOrderChange (item, value) {

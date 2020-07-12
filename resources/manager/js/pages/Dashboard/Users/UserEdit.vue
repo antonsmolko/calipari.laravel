@@ -97,6 +97,7 @@
                                      icon="lock"
                                      name="password"
                                      type="password"
+                                     :min="6"
                                      :vField="$v.password"
                                      :module="storeModule"
                                      :vRules="{ required: true, minLength: true }" />

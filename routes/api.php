@@ -336,6 +336,8 @@ Route::prefix('manager')
     Route::group(['prefix' => 'textures'], function() {
         Route::post('{id}', 'Cms\Texture\TextureController@update')
             ->where('id', '[0-9]+');
+        Route::patch('{id}/patch', 'Cms\Texture\TextureController@patch')
+            ->where('id', '[0-9]+');
         Route::get('{id}/publish', 'Cms\Texture\TextureController@publish')
             ->where('id', '[0-9]+');
     });

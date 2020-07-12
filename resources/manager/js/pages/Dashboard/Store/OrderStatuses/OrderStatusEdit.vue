@@ -107,9 +107,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty
-                        ? true
-                        : !this.isUniqueTitleEdit
+                    return (value.trim() === '') && !this.$v.title.$dirty || this.isUniqueTitleEdit
                 },
             },
             alias: {
@@ -117,7 +115,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.alias.$dirty) || !this.isUniqueAliasEdit
+                    return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAliasEdit
                 },
                 testAlias (value) {
                     return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
@@ -143,10 +141,10 @@
                 description: state => state.fields.description
             }),
             isUniqueTitleEdit() {
-                return !!this.$store.getters['orderStatuses/isUniqueTitleEdit'](this.title, this.id);
+                return this.$store.getters['orderStatuses/isUniqueTitleEdit'](this.title, this.id);
             },
             isUniqueAliasEdit () {
-                return !!this.$store.getters['orderStatuses/isUniqueAliasEdit'](this.alias, this.id);
+                return this.$store.getters['orderStatuses/isUniqueAliasEdit'](this.alias, this.id);
             }
         },
         methods: {

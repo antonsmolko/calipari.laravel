@@ -35,7 +35,8 @@ class TexturesTableSeeder extends Seeder
                 'width' => $texture['width'],
                 'price' => $texture['price'],
                 'description' => $texture['description'],
-                'publish' => 1
+                'publish' => 1,
+                'order' => $texture['order']
             ]);
         }
 

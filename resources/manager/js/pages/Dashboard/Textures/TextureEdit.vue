@@ -53,6 +53,16 @@
                                          :module="storeModule"
                                          :vRules="{ required: true, numeric: true }" />
                             </div>
+                            <div class="md-layout-item">
+                                <v-input title="Порядок"
+                                         icon="sort"
+                                         name="order"
+                                         :value="order"
+                                         :maxlength="5"
+                                         :vField="$v.order"
+                                         :module="storeModule"
+                                         :vRules="{ numeric: true }" />
+                            </div>
                         </div>
                         <div class="md-layout md-gutter mt-2">
                             <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-large-size-33 md-size-25">
@@ -156,7 +166,11 @@
             },
             publish: {
                 touch: false
-            }
+            },
+            order: {
+                numeric,
+                touch: false
+            },
         },
         computed: {
             ...mapState('textures', {
@@ -168,7 +182,8 @@
                 sample: state => state.fields.sample,
                 background: state => state.fields.background,
                 description: state => state.fields.description,
-                publish: state => state.fields.publish
+                publish: state => state.fields.publish,
+                order: state => state.fields.order
             }),
             isUniqueNameEdit() {
                 return this.$store.getters['textures/isUniqueNameEdit'](this.name, this.id);
@@ -202,7 +217,8 @@
                             sample: this.sample,
                             background: this.background,
                             description: this.description,
-                            publish: +this.publish
+                            publish: Number(this.publish),
+                            order: Number(this.order)
                         },
                         id: this.id
                     },

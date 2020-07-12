@@ -23,7 +23,7 @@ class CmsTextureRepository extends CmsBaseResourceRepository
      */
     public function index(): Collection
     {
-        return $this->model::orderBy('id')
+        return $this->model::orderBy('order')
             ->withCount('orders')
             ->get();
     }

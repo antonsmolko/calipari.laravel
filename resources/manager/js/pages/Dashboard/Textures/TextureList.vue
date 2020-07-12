@@ -37,6 +37,18 @@
                                     <md-switch :value="!item.publish" @change="onPublishChange(item.id)" />
                                 </md-table-cell>
 
+                                <md-table-cell>
+                                    <md-field>
+                                        <md-icon>sort</md-icon>
+                                        <md-input
+                                            name="order"
+                                            :value="item.order"
+                                            type="number"
+                                            min="1"
+                                            @input="handleItemOrderChange(item.id, $event)"/>
+                                    </md-field>
+                                </md-table-cell>
+
                                 <md-table-cell md-label="Действия">
 
                                     <table-actions :item="item"
@@ -60,55 +72,64 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
-    import TableActions from "@/custom_components/Tables/TableActions";
-    import { pageTitle } from '@/mixins/base'
-    import { deleteMethod } from '@/mixins/crudMethods'
+import { mapState, mapActions } from 'vuex'
+import debounce from 'lodash/debounce'
+import TableActions from "@/custom_components/Tables/TableActions";
+import { pageTitle } from '@/mixins/base'
+import { deleteMethod } from '@/mixins/crudMethods'
+const _debounce = debounce(value => value(), 1000)
 
-    export default {
-        name: 'TextureList',
-        data: () => ({
-            storeModule: 'textures',
-            responsive: false,
-            responseData: false
+export default {
+    name: 'TextureList',
+    data: () => ({
+        storeModule: 'textures',
+        responsive: false,
+        responseData: false
+    }),
+    components: { TableActions },
+    mixins: [ pageTitle, deleteMethod ],
+    computed: {
+        ...mapState('textures', {
+            items: state => state.items
         }),
-        components: { TableActions },
-        mixins: [ pageTitle, deleteMethod ],
-        computed: {
-            ...mapState('textures', {
-                items: state => state.items
-            }),
-            baseSamplePath () {
-                return `${this.$config.BASE_IMAGE_URL}/crop/500/300`
-            }
-        },
-        methods: {
-            ...mapActions('textures', {
-                getItemsAction: 'getItems',
-                publishAction: 'publish'
-            }),
-            onPublishChange(id) {
-                this.publishAction(id);
-            },
-            onDelete(item) {
-                return this.delete({
-                    payload: item.id,
-                    title: item.title,
-                    alertText: `фактура «${item.name}»`,
-                    storeModule: this.storeModule,
-                    successText: 'Фактура удалена!'
-                })
-            }
-        },
-        created() {
-            this.getItemsAction()
-                .then(() => {
-                    this.setPageTitle('Фактуры');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push({ name: 'manager.dashboard' }));
+        baseSamplePath () {
+            return `${this.$config.BASE_IMAGE_URL}/crop/500/300`
         }
+    },
+    methods: {
+        ...mapActions('textures', {
+            getItemsAction: 'getItems',
+            publishAction: 'publish',
+            setOrderAction: 'setOrder'
+        }),
+        onPublishChange(id) {
+            this.publishAction(id);
+        },
+        onDelete(item) {
+            return this.delete({
+                payload: item.id,
+                title: item.title,
+                alertText: `фактура «${item.name}»`,
+                storeModule: this.storeModule,
+                successText: 'Фактура удалена!'
+            })
+        },
+        handleItemOrderChange (id, value) {
+            _debounce(this.setOrderAction.bind(this, {
+                id,
+                data: { order: value }
+            }));
+        },
+    },
+    created() {
+        this.getItemsAction()
+            .then(() => {
+                this.setPageTitle('Фактуры');
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push({ name: 'manager.dashboard' }));
     }
+}
 </script>
 
 <style lang="scss" scoped>

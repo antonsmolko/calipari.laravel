@@ -1,5 +1,6 @@
+import maxBy from 'lodash/maxBy'
 import { uniqueFieldEditMixin, uniqueFieldMixin } from "../../mixins/getters";
-import { axiosAction } from "../../mixins/actions";
+import { axiosAction, axiosPatch } from "../../mixins/actions";
 
 const state = {
     fields: {
@@ -11,7 +12,8 @@ const state = {
         background_path: '',
         background: '',
         publish: '',
-        description: ''
+        description: '',
+        order: ''
     },
     items: []
 };
@@ -90,6 +92,14 @@ const actions = {
             data
         })
     },
+    setOrder({ commit, dispatch }, { id, data }) {
+        return axiosPatch({
+            commit,
+            url: `/textures/${id}/patch`,
+            data,
+            thenContent: response => dispatch('getItems')
+        })
+    },
     delete ({ commit }, { payload }) {
         return axiosAction('delete', commit, {
             url: `/textures/${payload}`,
@@ -109,7 +119,8 @@ const actions = {
 
 const getters = {
     isUniqueName: state => name => uniqueFieldMixin(state.items, 'name', name),
-    isUniqueNameEdit: state => (name, id) => uniqueFieldEditMixin(state.items, 'name', name, id)
+    isUniqueNameEdit: state => (name, id) => uniqueFieldEditMixin(state.items, 'name', name, id),
+    nextOrderNumber: state => maxBy(state.items, 'order').order + 1
 };
 
 export default {

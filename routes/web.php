@@ -41,7 +41,8 @@
 //})->name('reset-password');
 
 
-Route::group(['prefix' => 'manager'], function() {
+Route::prefix('manager')
+    ->group(function() {
     Route::get('/{any?}', function() {
         return view('manager/main');
     })

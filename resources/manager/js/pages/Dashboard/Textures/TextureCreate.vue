@@ -44,6 +44,16 @@
                                          :vField="$v.width"
                                          :vRules="{ required: true, numeric: true }" />
                             </div>
+                            <div class="md-layout-item">
+                                <v-input title="Порядок"
+                                         icon="sort"
+                                         name="order"
+                                         :value="nextOrderNumber"
+                                         :maxlength="5"
+                                         :vField="$v.order"
+                                         :module="storeModule"
+                                         :vRules="{ numeric: true }" />
+                            </div>
                         </div>
                         <div class="md-layout md-gutter mt-2">
                             <div class="md-layout-item md-xsmall-size-100 md-small-size-50 md-large-size-33 md-size-25">
@@ -77,104 +87,113 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
-    import { required, numeric, minLength } from 'vuelidate/lib/validators'
+import { required, numeric, minLength } from 'vuelidate/lib/validators'
 
-    import { pageTitle } from '@/mixins/base'
-    import { changePublish } from '@/mixins/changingFields'
-    import { createMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base'
+import { changePublish } from '@/mixins/changingFields'
+import { createMethod } from '@/mixins/crudMethods'
 
-    import TextEditor from '@/custom_components/Editors/TextEditor'
+import TextEditor from '@/custom_components/Editors/TextEditor'
 
-    export default {
-        name: 'TextureCreate',
-        mixins: [
-            pageTitle,
-            changePublish,
-            createMethod
-        ],
-        components: { 'text-editor': TextEditor },
-        data() {
-            return {
-                storeModule: 'textures',
-                responseData: false,
-                redirectRoute: { name: 'manager.textures' }
-            }
-        },
-        validations: {
-            name: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return (value.trim() === '') && !this.$v.name.$dirty || this.isUniqueName
-                }
-            },
-            price: {
-                required,
-                numeric,
-                touch: false
-            },
-            width: {
-                required,
-                numeric,
-                touch: false
-            },
-            sample: {
-                required,
-                touch: false
-            },
-            background: {
-                required,
-                touch: false
-            }
-        },
-        computed: {
-            ...mapState('textures', {
-                name: state => state.fields.name,
-                price: state => state.fields.price,
-                width: state => state.fields.width,
-                sample: state => state.fields.sample,
-                background: state => state.fields.background,
-                publish: state => state.fields.publish,
-                description: state => state.fields.description
-            }),
-            isUniqueName() {
-                return this.$store.getters['textures/isUniqueName'](this.name);
-            },
-        },
-        methods: {
-            ...mapActions('textures', {
-                getItemsAction: 'getItems',
-                clearFieldsAction: 'clearItemFields'
-            }),
-            onCreate() {
-                return this.create({
-                    sendData: {
-                        name: this.name,
-                        price: this.price,
-                        width: this.width,
-                        sample: this.sample,
-                        background: this.background,
-                        description: this.description,
-                        publish: +this.publish
-                    },
-                    title: this.name,
-                    successText: 'Фактура создана!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                })
-            }
-        },
-        created() {
-            this.clearFieldsAction();
-            this.getItemsAction()
-                .then(() => {
-                    this.setPageTitle('Новая фактура');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
+export default {
+    name: 'TextureCreate',
+    mixins: [
+        pageTitle,
+        changePublish,
+        createMethod
+    ],
+    components: { 'text-editor': TextEditor },
+    data() {
+        return {
+            storeModule: 'textures',
+            responseData: false,
+            redirectRoute: { name: 'manager.textures' }
         }
+    },
+    validations: {
+        name: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return (value.trim() === '') && !this.$v.name.$dirty || this.isUniqueName
+            }
+        },
+        price: {
+            required,
+            numeric,
+            touch: false
+        },
+        width: {
+            required,
+            numeric,
+            touch: false
+        },
+        sample: {
+            required,
+            touch: false
+        },
+        background: {
+            required,
+            touch: false
+        },
+        order: {
+            numeric,
+            touch: false
+        },
+    },
+    computed: {
+        ...mapState('textures', {
+            name: state => state.fields.name,
+            price: state => state.fields.price,
+            width: state => state.fields.width,
+            sample: state => state.fields.sample,
+            background: state => state.fields.background,
+            publish: state => state.fields.publish,
+            description: state => state.fields.description,
+            order: state => state.fields.order
+        }),
+        ...mapGetters('textures', [
+           'nextOrderNumber'
+        ]),
+        isUniqueName() {
+            return this.$store.getters['textures/isUniqueName'](this.name);
+        },
+    },
+    methods: {
+        ...mapActions('textures', {
+            getItemsAction: 'getItems',
+            clearFieldsAction: 'clearItemFields'
+        }),
+        onCreate() {
+            return this.create({
+                sendData: {
+                    name: this.name,
+                    price: this.price,
+                    width: this.width,
+                    sample: this.sample,
+                    background: this.background,
+                    description: this.description,
+                    publish: Number(this.publish),
+                    order: Number(this.order)
+                },
+                title: this.name,
+                successText: 'Фактура создана!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            })
+        }
+    },
+    created() {
+        this.clearFieldsAction();
+        this.getItemsAction()
+            .then(() => {
+                this.setPageTitle('Новая фактура');
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push(this.redirectRoute));
     }
+}
 </script>
