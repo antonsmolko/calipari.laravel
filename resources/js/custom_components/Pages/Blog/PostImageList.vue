@@ -26,7 +26,7 @@
                 </md-table-cell>
 
                 <md-table-cell md-label="URL">
-                    {{ baseImagePath }}/{{ item.path }}
+                    {{ baseUrl }}{{ transformationPath }}{{ getImagePath(item.path) }}
                 </md-table-cell>
 
                 <md-table-cell md-label="Действия">
@@ -83,8 +83,21 @@ export default {
             fileProgress: state => state.images.fileProgress,
             settings: state => state.settings.entries
         }),
-        baseImagePath () {
-            return `${this.settings.app_url}/image/widen/1000`
+        baseUrl () {
+            switch (this.$config.IMAGE_PROVIDER) {
+                case 'local':
+                    return this.$config.LOCAL_IMAGE_API_ENDPOINT;
+                case 's3':
+                    return this.$config.S3_IMAGE_API_ENDPOINT;
+            }
+        },
+        transformationPath () {
+            switch (this.$config.IMAGE_PROVIDER) {
+                case 'local':
+                    return '/widen/1000';
+                case 's3':
+                    return '/fit-in/1000x3000';
+            }
         }
     },
     created() {
@@ -109,6 +122,14 @@ export default {
                 successText: 'Изображение удалено!',
                 storeModule: this.storeModule
             });
+        },
+        getImagePath (path) {
+            switch (this.$config.IMAGE_PROVIDER) {
+                case 'local':
+                    return `/${path}`
+                case 's3':
+                    return `/${path.slice(0,1)}/${path.slice(0,3)}/${path}`
+            }
         }
     }
 }
