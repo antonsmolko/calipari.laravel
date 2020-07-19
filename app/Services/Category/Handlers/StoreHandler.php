@@ -34,6 +34,7 @@ class StoreHandler
     public function handle(array $storeData)
     {
         $uploadAttributes = uploader()->upload($storeData['image']);
+
         $storeData = Arr::add(Arr::except($storeData, ['image']),'image_path', $uploadAttributes['path']);
 
         $category = $this->repository->store($storeData);

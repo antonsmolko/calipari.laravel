@@ -1,12 +1,14 @@
 <?php
 
 return [
-    'storagePath' => 'storage/',
-    'image_upload_path' => 'storage/uploads/images/',
-    'image_default_path' => 'storage/uploads/no_image/no_image.png',
+    's3_api_endpoint' => 'https://d33ghnif9htj1j.cloudfront.net',
+    'default_max_print_width' => 250,
+    'image_upload_path' => 'public/uploads/images',
+    'image_storage_path' => 'storage/uploads/images',
+    'no_image_path' => 'storage/uploads/no_image/no_image.png',
     'storage_permissions' => 0755,
     'image_resize_quality' => 90,
-    'image_cache_time' => 86400,
+    'image_cache_time' => 60 * 60 * 24 * 7,
     'image_upload_rules' => [
         'max_size' => 5242880,
         'min_size' => 3072,

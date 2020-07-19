@@ -5,19 +5,26 @@ namespace App\Services\Image\Handlers;
 
 
 use App\Models\Image;
+use App\Services\Image\Repositories\CmsImageRepository;
 use Illuminate\Http\UploadedFile;
 
 class UpdateImagePathHandler
 {
     private Image $uploadModel;
+    private CmsImageRepository $repository;
 
     /**
-     * UploadImageHandler constructor.
+     * UpdateImagePathHandler constructor.
      * @param Image $uploadModel
+     * @param CmsImageRepository $repository
      */
-    public function __construct(Image $uploadModel)
+    public function __construct(
+        Image $uploadModel,
+        CmsImageRepository $repository
+    )
     {
         $this->uploadModel = $uploadModel;
+        $this->repository = $repository;
     }
 
     /**
@@ -28,17 +35,16 @@ class UpdateImagePathHandler
     {
         $uploader = uploader();
 
-        if ($uploader->isEqualSizes($imageFile, $image)) {
+        if (!$uploader->isEqualSizes($imageFile, $image)) {
             abort(422, __('image_validation.dimensions_should_be_same_as_previous', [
                 'width' => $image->width,
                 'height' => $image->height
             ]));
         }
 
-        $uploadAttributes = $uploader
-            ->refresh($image->path)
-            ->upload($imageFile);
+        $uploadAttributes = $uploader->upload($imageFile, $image->path);
 
-        $uploader->update($image, $uploadAttributes);
+        return $this->repository
+            ->update($image, ['path' => $uploadAttributes['path']]);
     }
 }

@@ -27,7 +27,6 @@ class InteriorSlideStoreHandler
     public function handle(array $storeData)
     {
         $imageAttributes = uploader()->upload($storeData['image']);
-
         $nextOrderNumber = $this->repository->getNextOrderNumber($storeData['interior_id']);
 
         $storeData = Arr::collapse([

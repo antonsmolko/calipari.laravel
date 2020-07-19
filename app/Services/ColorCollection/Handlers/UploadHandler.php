@@ -7,27 +7,32 @@ namespace App\Services\ColorCollection\Handlers;
 use App\Models\ColorCollection;
 use App\Models\Image;
 use App\Services\ColorCollection\Repositories\CmsColorCollectionRepository;
+use App\Services\Image\Repositories\CmsImageRepository;
 
 class UploadHandler
 {
     private CmsColorCollectionRepository $repository;
     private Image $uploadModel;
     private SnapImageHandler $snapImageHandler;
+    private CmsImageRepository $imageRepository;
 
     /**
      * UploadHandler constructor.
      * @param CmsColorCollectionRepository $repository
+     * @param CmsImageRepository $imageRepository
      * @param Image $uploadModel
      * @param SnapImageHandler $snapImageHandler
      */
     public function __construct(
         CmsColorCollectionRepository $repository,
+        CmsImageRepository $imageRepository,
         Image $uploadModel,
         SnapImageHandler $snapImageHandler)
     {
         $this->repository = $repository;
         $this->uploadModel = $uploadModel;
         $this->snapImageHandler = $snapImageHandler;
+        $this->imageRepository = $imageRepository;
     }
 
     /**
@@ -45,7 +50,8 @@ class UploadHandler
                 ]));
             }
 
-            $image = uploader()->store($file, $this->uploadModel);
+            $imageData = uploader()->upload($file);
+            $image = $this->imageRepository->store($imageData);
 
             return $this->snapImageHandler->handle($colorCollection, $image);
         }, $uploadFiles);

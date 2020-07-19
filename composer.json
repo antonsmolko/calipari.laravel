@@ -10,8 +10,8 @@
     "require": {
         "php": "^7.4",
         "ext-gd": "*",
-        "ext-memcached": "*",
         "ext-json": "*",
+        "ext-memcached": "*",
         "algolia/algoliasearch-client-php": "^2.2",
         "creativeorange/gravatar": "~1.0",
         "fideloper/proxy": "^4.0",
@@ -27,6 +27,8 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "laravelcollective/html": "^6.0",
+        "league/flysystem-aws-s3-v3": "^1.0",
+        "league/flysystem-cached-adapter": "^1.0",
         "phpunit/php-code-coverage": "^7.0.7",
         "sanmai/cdek-sdk": "^0.6.39",
         "santigarcor/laratrust": "5.2.*",
@@ -41,7 +43,6 @@
         "barryvdh/laravel-ide-helper": "^2.6",
         "beyondcode/laravel-dump-server": "^1.4",
         "facade/ignition": "^2.0",
-        "laravel/telescope": "^3.5",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^4.1",
         "phpunit/phpunit": "^8.5"

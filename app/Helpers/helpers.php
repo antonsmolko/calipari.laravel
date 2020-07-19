@@ -1,7 +1,6 @@
 <?php
 
 use App\Services\Uploader\ImageValidationBuilder;
-use App\Services\User\UserValidator;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\UploadedFile;
@@ -28,6 +27,7 @@ if (! function_exists('uploader')) {
     function uploader()
     {
         return app()->make(Uploader::class);
+//        return app()->make(\App\Services\Uploader\UploadService::class);
     }
 }
 
@@ -262,5 +262,42 @@ if (! function_exists('getRandomEmoji')) {
         $randIndex = array_rand($emoji);
 
         return $emoji[$randIndex];
+    }
+}
+
+if (! function_exists('getCloudinaryPath')) {
+    /**
+     * @param string $name
+     * @param string|null $prefix
+     * @return string
+     */
+    function getCloudinaryPath(string $name): string
+    {
+        $basePath = config('uploads.cloudinary_prefix');
+        $path = getBaseImagePath($name) . '/' . $name;
+
+        return $basePath . '/' . $path;
+    }
+}
+
+if (! function_exists('getS3Path')) {
+    /**
+     * @param string $name
+     * @return string
+     */
+    function getImagePath(string $name): string
+    {
+        return getBaseImagePath($name) . '/' . $name;
+    }
+}
+
+if (! function_exists('getBaseImagePath')) {
+    /**
+     * @param string $name
+     * @return string
+     */
+    function getBaseImagePath(string $name): string
+    {
+        return substr($name, 0, 1) . '/' . substr($name, 0, 3);
     }
 }

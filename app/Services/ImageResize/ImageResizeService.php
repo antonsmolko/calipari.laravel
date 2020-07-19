@@ -202,10 +202,10 @@ class ImageResizeService
     }
 
     /**
-     * @param $path
+     * @param string $path
      * @return mixed
      */
-    public function show($path)
+    public function show(string $path)
     {
         list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
         $img = $this->repository->show($imgPath);

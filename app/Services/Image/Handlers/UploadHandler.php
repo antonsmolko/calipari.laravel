@@ -4,19 +4,22 @@
 namespace App\Services\Image\Handlers;
 
 
-use App\Models\Image;
+use App\Services\Image\Repositories\CmsImageRepository;
+use Illuminate\Http\UploadedFile;
 
 class UploadHandler
 {
-    private Image $uploadModel;
+    private CmsImageRepository $repository;
 
     /**
-     * UploadImageHandler constructor.
-     * @param Image $uploadModel
+     * UploadHandler constructor.
+     * @param CmsImageRepository $repository
      */
-    public function __construct(Image $uploadModel)
+    public function __construct(
+        CmsImageRepository $repository
+    )
     {
-        $this->uploadModel = $uploadModel;
+        $this->repository = $repository;
     }
 
     /**
@@ -25,10 +28,13 @@ class UploadHandler
      */
     public function handle(array $files): array
     {
-        return array_map(function ($file) {
-            $image = uploader()->store($file, $this->uploadModel);
+        $imagesData = uploader()->multipleUpload($files);
+
+        return array_map(function (array $imageData) {
+            $image = $this->repository->store($imageData);
 
             return $image->id;
-        }, $files);
+        }, $imagesData);
     }
 }
+

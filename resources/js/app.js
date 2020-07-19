@@ -1,62 +1,85 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+// =========================================================
+// * Vue Material Dashboard PRO - v1.3.1
+// =========================================================
+//
+// * Product Page: https://www.creative-tim.com/product/vue-material-dashboard-pro
+// * Copyright 2019 Creative Tim (https://www.creative-tim.com)
+//
+// * Coded by Creative Tim
+//
+// =========================================================
+//
+// * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-// require('./bootstrap');
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-window.Vue = require('vue');
+import store from './store'
 
-import UIkit from 'uikit';
-import Icons from 'uikit/dist/js/uikit-icons';
+// Plugins
+import DashboardPlugin from "./material-dashboard";
+import Vuelidate from 'vuelidate'
+import App from "./App.vue";
+import Chartist from "chartist";
+import CKEditor from '@ckeditor/ckeditor5-vue';
+import 'es6-promise/auto'
+import axios from 'axios'
+import VueAuth from '@websanova/vue-auth'
+import VueAxios from 'vue-axios'
+import auth from './auth'
+import langLibrary from './lib/Validations';
+import config from "@/config";
+import helpers from "@/helpers";
 
-UIkit.use(Icons);
+// router setup
+import routes from "./routes/routes";
 
-/**
- * Device detect
- */
-import MobileDetect from 'mobile-detect';
-const md = new MobileDetect(window.navigator.userAgent);
-const html = document.querySelector('html');
-if (md.phone() || md.tablet()) {
-    html.classList.add('touch');
-}
+// plugin setup
+Vue.use(DashboardPlugin);
+Vue.use(Vuelidate);
+Vue.use(CKEditor);
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+Vue.prototype.$langLib = langLibrary;
+Vue.prototype.$config = config;
+Vue.prototype.$helpers = helpers;
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
-// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('navbar-component', require('./components/NavbarComponent.vue').default);
-Vue.component('footer-component', require('./components/FooterComponent.vue').default);
-Vue.component('consultation-component', require('./components/ConsultationComponent.vue').default);
-Vue.component('hero-home', require('./components/Home/HeroHome.vue').default);
-Vue.component('albums-home', require('./components/Home/AlbumsHome.vue').default);
-Vue.component('materials-home', require('./components/Home/MaterialsHome.vue').default);
-Vue.component('chronometer-home', require('./components/Home/ChronometerHome.vue').default);
-Vue.component('interiors-home', require('./components/Home/InteriorsHome.vue').default);
-Vue.component('topics-home', require('./components/Home/TopicsHome.vue').default);
-Vue.component('you-get-home', require('./components/Home/YouGetHome.vue').default);
-Vue.component('buying-scheme-home', require('./components/Home/BuyingSchemeHome.vue').default);
-
-Vue.component('hero-materials', require('./components/Materials/HeroMaterials.vue').default);
-
-import App from './App.vue';
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
-const app = new Vue({
-    el: '#app',
-    // render: h => h(App),
+// configure router
+const router = new VueRouter({
+    history: true,
+    mode: 'history',
+    routes, // short for routes: routes
+    scrollBehavior: to => {
+        if (to.hash) {
+            return { selector: to.hash };
+        } else {
+            return { x: 0, y: 0 };
+        }
+    },
+    linkExactActiveClass: "nav-item active"
 });
+
+// Set Vue router
+Vue.router = router
+Vue.use(VueRouter)
+
+// Set Vue authentication
+
+Vue.use(VueAxios, axios)
+Vue.use(VueAuth, auth)
+
+// global library setup
+Object.defineProperty(Vue.prototype, "$Chartist", {
+    get() {
+        return this.$root.Chartist;
+    }
+});
+
+/* eslint-disable no-new */
+new Vue({
+    store,
+    render: h => h(App),
+    router,
+    data: {
+        Chartist: Chartist
+    }
+}).$mount('#app');

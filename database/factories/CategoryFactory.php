@@ -5,21 +5,18 @@
 use App\Models\Category;
 use Faker\Generator as Faker;
 
-$factory->define(Category::class, function (Faker $faker) {
+$factory->define(Category::class, function (Faker $faker)
+{
+    $seedsUploadImagePath = config('seed_settings.seeds_data_path') . 'images';
+    $seedsImagePath = config('seed_settings.seeds_uploads_path');
 
-    $uploadDir = public_path(config('uploads.image_upload_path'));
+    $seedsImageDir = storage_path("app/" . $seedsImagePath);
 
-    $seedsUploadImageDir = config('seeds.seeds_data_path') . 'images';
-    $seedsImageDir = public_path(config('seeds.seeds_uploads_path'));
+    $images = getImagesFromLocal($seedsUploadImagePath);
 
-    File::deleteDirectory($seedsImageDir);
-    File::makeDirectory($seedsImageDir, config('uploads.storage_permissions', 0755));
+    $uploadedImage = getFakerImageFromLocal($images, $seedsUploadImagePath, $seedsImageDir);
 
-    $images = getImagesFromLocal($seedsUploadImageDir);
-
-    $uploadedImage = getFakerImageFromLocal($images, $seedsUploadImageDir, $seedsImageDir);
-
-    $imageAttributes = uploader()->upload($uploadedImage, $uploadDir);
+    $imageAttributes = uploader()->store($uploadedImage);
 
     return [
         "image_path" => $imageAttributes['path']

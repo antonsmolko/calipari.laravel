@@ -221,8 +221,8 @@ Route::prefix('profile')
  * CMS
  */
 
-Route::prefix('manager')
-    ->middleware('role:super_admin|admin|content_manger|owner')
+Route::prefix('cms')
+    ->middleware('role:super_admin|admin|content_manager|owner')
     ->group(function() {
 
 

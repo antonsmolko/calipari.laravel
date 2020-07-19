@@ -98,7 +98,7 @@ class CmsImageService extends CmsBaseResourceService
             ->remember(
                 $key,
                 TTL::IMAGES_TTL,
-                fn() => $this->repository->getTrashedItems($requestData));
+                fn() => new FromListCollection($this->repository->getTrashedItems($requestData)));
     }
 
     /**
@@ -163,7 +163,10 @@ class CmsImageService extends CmsBaseResourceService
      */
     public function forceDelete(int $id)
     {
-        return $this->repository->forceDelete($id);
+        $item = $this->repository->getTrashedItem($id);
+        uploader()->remove($item->path);
+
+        return $this->repository->forceDelete($item);
     }
 
     /**

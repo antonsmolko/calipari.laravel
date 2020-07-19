@@ -10,6 +10,7 @@ use App\Services\Cache\Tag;
 use App\Services\Cache\TTL;
 use App\Services\Image\Handlers\UploadHandler;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Image\Resources\FromListCmsCollection as FromListCollection;
 use App\Services\Image\CmsImageService;
 use App\Services\Owner\Repositories\OwnerRepository;
 use App\Services\SubCategory\SubCategoryService;
@@ -83,7 +84,7 @@ class OwnerService extends SubCategoryService
                 function() use ($categoryId, $pagination) {
                     $category = $this->repository->getItem($categoryId);
 
-                    return $this->repository->getImages($category, $pagination);
+                    return new FromListCollection($this->repository->getImages($category, $pagination));
                 });
     }
 
@@ -104,7 +105,7 @@ class OwnerService extends SubCategoryService
                 function() use ($categoryId, $pagination) {
                     $category = $this->repository->getItem($categoryId);
 
-                    return $this->repository->getExcludedImages($category, $pagination);
+                    return new FromListCollection($this->repository->getExcludedImages($category, $pagination));
                 });
     }
 }

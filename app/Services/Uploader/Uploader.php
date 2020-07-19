@@ -6,30 +6,31 @@ use App\Models\Image;
 use App\Services\Format\FormatService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class Uploader
 {
+    private UploadedFile $uploadedFile;
     private array $fileProps = [];
-    private string $baseStoragePath;
+    private string $storagePath;
+    private string $uploadPath;
     private array $uploadRules;
-    private bool $refresh = false;
-
-    /** @var string|null $name */
-    private $name = null;
-
+    private int $defaultMaxPrintWidth;
     private ImageValidationBuilder $imageValidationBuilder;
-
-    private FormatService $formatService;
+    private Collection $formats;
 
     public function __construct(
         ImageValidationBuilder $imageValidationBuilder,
         FormatService $formatService
     ) {
         $this->imageValidationBuilder = $imageValidationBuilder;
-        $this->formatService = $formatService;
-        $this->baseStoragePath = ltrim(config('uploads.image_upload_path', ''));
+        $this->formats = $formatService->index();
+        $this->storagePath = ltrim(config('uploads.image_storage_path', ''));
+        $this->uploadPath = ltrim(config('uploads.image_upload_path', ''));
         $this->uploadRules = config('uploads.image_upload_rules', '');
+        $this->defaultMaxPrintWidth = config('uploads.default_max_print_width');
     }
 
     protected function setProps($name, $value)
@@ -40,46 +41,46 @@ class Uploader
     /**
      * @param int $width
      * @param int $height
-     * @param Collection $formats
      * @return int|void
      */
-    protected function getFormatId(int $width, int $height, Collection $formats)
+    protected function getFormatId(int $width, int $height)
     {
-        return $height != 0
-            ? $this->defineImageFormat($width, $height, $formats)
-            : abort(422, trans('image_validation.wrong_proportions', ['file_name' => $this->fileProps['original_name']]));
+        return $height > 0
+            ? $this->defineImageFormat($width, $height)
+            : abort(
+                422,
+                trans('image_validation.wrong_proportions', ['file_name' => $this->fileProps['original_name']])
+            );
     }
 
     /**
      * @param int $width
      * @param int $height
-     * @param Collection $formats
      * @return int
      */
-    protected function defineImageFormat(int $width, int $height, Collection $formats): int
+    protected function defineImageFormat(int $width, int $height): int
     {
         $ratio = $width / $height;
-        foreach($formats as $format) {
-            if(($ratio >= $format->min) && ($ratio < $format->max)) {
+        $format = $this->formats->first(fn ($f) => (($f->min <= $ratio) && ($f->max > $ratio)));
 
-                return $format->id;
-            }
-        }
+        return $format->id;
     }
 
     /**
-     * @param UploadedFile $uploadFile
+     * @param UploadedFile|null $file
      * @return bool
      */
-    public function validate(UploadedFile $uploadFile): bool
+    public function validate(UploadedFile $file = null): bool
     {
-        if (!$uploadFile->isValid()) {
+        $uploadedFile = $file ?? $this->uploadedFile;
+
+        if (!$uploadedFile->isValid()) {
             abort(422, trans('image_validation.loading_failed', [
-                'file_name' => $this->getOriginalName($uploadFile)
+                'file_name' => $uploadedFile->getClientOriginalName()
             ]));
         }
 
-        $this->setValidatedProps($uploadFile);
+        $this->setValidatedProps($uploadedFile);
 
         return $this->imageValidationBuilder
             ->init($this->fileProps, $this->uploadRules)
@@ -93,7 +94,7 @@ class Uploader
     /**
      * @param UploadedFile $file
      * @param string $removePath
-     * @return array|void
+     * @return Uploader|void
      */
     public function change(UploadedFile $file, string $removePath)
     {
@@ -104,98 +105,85 @@ class Uploader
     }
 
     /**
-     * @param UploadedFile $uploadFile
-     * @param null $pathStorage
+     * @param array $files
+     * @return array|array[]|void[]
+     */
+    public function multipleUpload(array $files)
+    {
+        $imagesData = array_map(fn (UploadedFile $file) => $this->store($file), $files);
+        $this->syncStorageFromLocalToS3();
+
+        return $imagesData;
+    }
+
+    /**
+     * @param UploadedFile $uploadedFile
+     * @param string|null $name
      * @return array|void
      */
-    public function upload(UploadedFile $uploadFile, $pathStorage = null)
+    public function upload(UploadedFile $uploadedFile, string $name = null)
+    {
+        $imageData = $this->store($uploadedFile, $name);
+        $this->syncStorageFromLocalToS3();
+
+        return $imageData;
+    }
+
+    /**
+     * @param UploadedFile $uploadedFile
+     * @param string $name
+     * @return array|void
+     */
+    public function store(UploadedFile $uploadedFile, string $name = null)
     {
         $this->clearState();
+        $this->uploadedFile = $uploadedFile;
+        $this->validate();
+        $this->setQuantitativeProps($uploadedFile, $this->storagePath, $name);
 
-        $this->validate($uploadFile);
-
-        $storagePath = $pathStorage ?? $this->baseStoragePath;
-
-        $this->setQuantitativeProps($uploadFile, $storagePath);
-
-        $this->makeDirectory($this->fileProps['path']);
-
-        if ($this->refresh) {
-            $this->remove($this->fileProps['name']);
+        if ($name) {
+            $this->remove($name);
         }
 
-        $uploadFile->move($this->fileProps['path'], $this->fileProps['name']);
+        $this->localStore();
 
-        return File::exists($this->fileProps['path'] . '/' . $this->fileProps['name'])
-            ? $this->getArrayOfAttributesForRecord()
-            : abort(422, trans('image_validation.error_image_upload'));
+        return $this->getStorageUploadedFileData();
     }
 
-    /**
-     * @param $uploadModel
-     * @param array $recordAttributes
-     * @return mixed
-     */
-    public function register($uploadModel, array $recordAttributes)
+    private function localStore()
     {
-        return $uploadModel
-            ->create($recordAttributes);
-    }
+        $baseDirPath = $this->getUploadedBaseDirPath($this->fileProps['name']);
+        $path = $this->uploadPath . '/' . $baseDirPath; // public/uploads/images
 
-    /**
-     * @param UploadedFile $uploadFile
-     * @param $uploadModel
-     * @param null $pathStorage
-     * @return mixed
-     */
-    public function store(UploadedFile $uploadFile, $uploadModel, $pathStorage = null)
-    {
-        $recordAttributes = $this->upload($uploadFile, $pathStorage);
+        $filePath = $this->uploadedFile->storeAs($path, $this->fileProps['name']);
 
-        return $this->register($uploadModel, $recordAttributes);
-    }
-
-    /**
-     * @param string $name
-     * @return $this
-     */
-    public function refresh(string $name): Uploader
-    {
-        $this->refresh = true;
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @param $uploadModel
-     * @param array $recordAttributes
-     * @return mixed
-     */
-    public function update($uploadModel, array $recordAttributes)
-    {
-        return $uploadModel
-            ->fill($recordAttributes)
-            ->save();
+        Storage::exists($filePath)
+        ||
+        abort(400, __('image_validation.error_image_upload'));
     }
 
     protected function clearState()
     {
-        unset($this->request, $this->fileProps);
+        unset(
+            $this->request,
+            $this->fileProps,
+            $this->uploadedFile,
+            $cloudinaryResponse);
     }
 
     /**
-     * @param string $uploadPath
-     * @param string|null $pathStorage
+     * @param string $path
      * @return bool
      */
-    public function remove(string $uploadPath, string $pathStorage = null): bool
+    public function remove(string $path): bool
     {
-        $storagePath = $pathStorage ?? $this->baseStoragePath;
-        $dir = substr($uploadPath, 0, 1) . '/' . substr($uploadPath, 0, 3);
-        $pathToDelete = $storagePath . $dir . '/' . $uploadPath;
+        $dir = $this->getUploadedBaseDirPath($path);
+        $filePath = $dir . '/' . $path;
+        $storageFilePath = $this->storagePath . '/' . $filePath;
 
-        return File::delete($pathToDelete);
+        Storage::disk('s3')->delete($filePath);
+
+        return File::delete($storageFilePath);
     }
 
     /**
@@ -211,87 +199,107 @@ class Uploader
     }
 
     /**
-     * Returns the original name of uploaded file
-     *
-     * @param UploadedFile $uploadFile
-     * @return string|string[]|null
-     */
-    protected function getOriginalName(UploadedFile $uploadFile) : string
-    {
-        return preg_replace('/\.' . $uploadFile->getClientOriginalExtension() . '$/', '', $uploadFile->getClientOriginalName());
-    }
-
-    /**
      * Sets the properties of the uploaded image file that will be validated
      *
-     * @param UploadedFile $uploadFile
+     * @param UploadedFile $uploadedFile
      */
-    protected function setValidatedProps(UploadedFile $uploadFile)
+    protected function setValidatedProps(UploadedFile $uploadedFile)
     {
-        $this->setProps('original_name', $this->getOriginalName($uploadFile));
-        $this->setProps('size', $uploadFile->getSize());
-        $this->setProps('extension', mb_strtolower($uploadFile->getClientOriginalExtension()));
-        $this->setProps('mime', $uploadFile->getMimeType());
+        $this->setProps('original_name', $this->getOriginalName($uploadedFile));
+        $this->setProps('size', $uploadedFile->getSize());
+        $this->setProps('extension', $this->getExtension($uploadedFile));
+        $this->setProps('mime', $uploadedFile->getMimeType());
     }
 
     /**
      * Set the quantitative properties of the uploaded image file
      *
-     * @param UploadedFile $uploadFile
+     * @param UploadedFile $uploadedFile
      * @param string $pathStorage
+     * @param string $refreshName
      */
-    protected function setQuantitativeProps(UploadedFile $uploadFile, string $pathStorage)
+    protected function setQuantitativeProps(UploadedFile $uploadedFile, string $pathStorage, string $refreshName = null)
     {
-        $this->setProps('width', getImageSize($uploadFile)[0]);
-        $this->setProps('height', getImageSize($uploadFile)[1]);
-        $this->setProps('format_id', $this->getFormatId(getImageSize($uploadFile)[0], getImageSize($uploadFile)[1], $this->formatService->index()));
-        $this->setProps('name', $this->name ?? sha1($this->fileProps['original_name'] . microtime(true)) . '.' . $this->fileProps['extension']); // 3e89bc7b416ccce075e0fca2f2cc1172feb6dc24.jpg
-        $this->setProps('directory', substr($this->fileProps['name'], 0, 1) . '/' . substr($this->fileProps['name'], 0, 3)); // 3/3e8
-        $this->setProps('path', $pathStorage . $this->fileProps['directory']);
+        list($width, $height) = getImageSize($uploadedFile);
+        $formatId = $this->getFormatId($width, $height);
+        $name = $refreshName ?? $this->generateSha1Name($uploadedFile);
+        $dir = $this->getUploadedBaseDirPath($name);
+
+        $this->setProps('width', $width);
+        $this->setProps('height', $height);
+        $this->setProps('format_id', $formatId);
+        $this->setProps('name', $name); // 3e89bc7b416ccce075e0fca2f2cc1172feb6dc24.jpg
+        $this->setProps('directory', $dir); // 3/3e8
+        $this->setProps('path', $pathStorage . '/' . $dir);
     }
 
     /**
-     * Checks if it is possible to create a file or directory and make directory
-     *
-     * @param string $path
-     * @return bool
+     * @param UploadedFile $uploadedFile
+     * @return string
      */
-    protected function makeDirectory(string $path): bool
+    protected function generateSha1Name(UploadedFile $uploadedFile): string
     {
-        if (!File::exists($path) && !File::makeDirectory($path, config('uploads.storage_permissions', 0755), true)) {
-            abort(500, trans('image_validation.can_not_create_directory', ['path' => $path]));
-        }
+        $name = $this->getOriginalName($uploadedFile);
+        $ext = $this->getExtension($uploadedFile);
 
-        return $this->isWritableDirectory($path);
+        return sha1($name . microtime(true)) . '.' . $ext; // 3e89bc7b416ccce075e0fca2f2cc1172feb6dc24.jpg
     }
 
     /**
-     * Check if the directory is writable
+     * Returns the original name of uploaded file
      *
-     * @param string $path
-     * @return bool
+     * @param UploadedFile $uploadedFile
+     * @return string|string[]|null
      */
-    protected function isWritableDirectory(string $path): bool
+    protected function getOriginalName(UploadedFile $uploadedFile) : string
     {
-        if (!File::isDirectory($path) || !File::isWritable($path)) {
-            abort(500, trans('image_validation.not_writable_directory', ['path' => $path]));
-        }
+        $ext = $uploadedFile->getClientOriginalExtension();
+        $name = $uploadedFile->getClientOriginalName();
 
-        return true;
+        return preg_replace('/\.' . $ext . '$/', '', $name);
+    }
+
+    /**
+     * @param UploadedFile $uploadedFile
+     * @return string
+     */
+    protected function getExtension(UploadedFile $uploadedFile): string
+    {
+        return mb_strtolower($uploadedFile->getClientOriginalExtension());
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    public function getUploadedBaseDirPath(string $name): string
+    {
+        return getBaseImagePath($name); // 3/3e8
     }
 
     /**
      * @return array
      */
-    protected function getArrayOfAttributesForRecord(): array
+    public function getStorageUploadedFileData(): array
     {
+        $maxPrintWidth = round(
+            $this->defaultMaxPrintWidth *
+            $this->fileProps['width'] /
+            $this->fileProps['height'] /
+            10) * 10;
+
         return [
             'path' => $this->fileProps['name'],
             'extension' => $this->fileProps['extension'],
-            'mime' => $this->fileProps['mime'],
             'width' => $this->fileProps['width'],
             'height' => $this->fileProps['height'],
-            'format_id' => $this->fileProps['format_id']
+            'format_id' => $this->fileProps['format_id'],
+            'max_print_width' => $maxPrintWidth
         ];
+    }
+
+    public function syncStorageFromLocalToS3(bool $delete = false)
+    {
+        return Artisan::call('storage:sync', ['--delete' => $delete]);
     }
 }

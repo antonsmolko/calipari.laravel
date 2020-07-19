@@ -24,7 +24,7 @@ class FromEdit extends JsonResource
             'description' => $this->description,
             'publish' => $this->publish,
             'keywords' => $this->keywords,
-            'has_published_images' => !!$this->publishedImages->count(),
+            'has_published_images' => (bool) $this->publishedImages->count(),
         ];
     }
 }

@@ -5,20 +5,15 @@
 use App\Models\Post;
 use Faker\Generator as Faker;
 
-$factory->define(Post::class, function (Faker $faker) {
-    $uploadDir = public_path(config('uploads.image_upload_path'));
+$factory->define(Post::class, function (Faker $faker)
+{
+    $seedsUploadImagePath = config('seed_settings.seeds_data_path') . 'images';
+    $seedsImagePath = config('seed_settings.seeds_uploads_path');
 
-    $seedsUploadImageDir = config('seeds.seeds_data_path') . 'images';
-    $seedsImageDir = public_path(config('seeds.seeds_uploads_path'));
-
-    File::deleteDirectory($seedsImageDir);
-    File::makeDirectory($seedsImageDir, config('uploads.storage_permissions', 0755));
-
-    $images = getImagesFromLocal($seedsUploadImageDir);
-
-    $uploadedImage = getFakerImageFromLocal($images, $seedsUploadImageDir, $seedsImageDir);
-
-    $imageAttributes = uploader()->upload($uploadedImage, $uploadDir);
+    $seedsImageDir = storage_path("app/" . $seedsImagePath);
+    $images = getImagesFromLocal($seedsUploadImagePath);
+    $uploadedImage = getFakerImageFromLocal($images, $seedsUploadImagePath, $seedsImageDir);
+    $imageAttributes = uploader()->store($uploadedImage);
 
     return [
         'title' => $faker->sentence($nbWords = 6, $variableNbWords = true),

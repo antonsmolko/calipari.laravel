@@ -30,8 +30,8 @@ class UpdateHandler
     {
         if (array_key_exists('image', $updateData) && !empty($updateData['image'])) {
             $attributes = $page->image_path
-                ? uploader()->change($updateData['image'], $page->image_path)
-                : uploader()->upload($updateData['image']);
+                ? uploader()->change($updateData['image'], $page->image_path, true)
+                : uploader()->upload($updateData['image'], true);
 
             $updateData = Arr::add($updateData, 'image_path', $attributes['path']);
         }

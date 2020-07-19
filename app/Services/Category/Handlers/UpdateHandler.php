@@ -37,7 +37,8 @@ class UpdateHandler
     public function handle(Category $item, array $updateData)
     {
         if(array_key_exists('image', $updateData) && !empty($updateData['image'])) {
-            $uploadAttributes = uploader()->change($updateData['image'], $item->image_path);
+            $uploadAttributes = uploader()
+                ->change($updateData['image'], $item->image_path);
             $updateData = Arr::add(Arr::except($updateData, ['image']), 'image_path', $uploadAttributes['path']);
         }
 

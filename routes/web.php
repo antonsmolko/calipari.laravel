@@ -41,11 +41,11 @@
 //})->name('reset-password');
 
 
-Route::prefix('manager')
+Route::prefix('cms')
     ->group(function() {
     Route::get('/{any?}', function() {
-        return view('manager/main');
+        return view('cms/main');
     })
         ->where('any', '.*')
-        ->name('manager');
+        ->name('cms');
 });

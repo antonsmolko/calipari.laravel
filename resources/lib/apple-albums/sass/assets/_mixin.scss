@@ -1,5 +1,0 @@
-@mixin media($break) {
-    @media screen and (min-width: $break){
-        @content;
-    }
-}

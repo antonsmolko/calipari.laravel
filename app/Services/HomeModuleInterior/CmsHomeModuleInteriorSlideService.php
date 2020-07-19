@@ -7,7 +7,7 @@ namespace App\Services\HomeModuleInterior;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\Cache\KeyManager as CacheKeyManager;
-use App\Services\HomeModuleInterior\Handlers\InteriorSlideDeleteHandler;
+use App\Services\HomeModuleInterior\Handlers\InteriorSlideDestroyHandler;
 use App\Services\HomeModuleInterior\Handlers\InteriorSlideStoreHandler;
 use App\Services\HomeModuleInterior\Handlers\InteriorSlideUpdateHandler;
 use App\Services\HomeModuleInterior\Repositories\CmsHomeModuleInteriorSlideRepository;
@@ -16,7 +16,7 @@ class CmsHomeModuleInteriorSlideService extends CmsBaseResourceService
 {
     private InteriorSlideStoreHandler $storeHandler;
     private InteriorSlideUpdateHandler $updateHandler;
-    private InteriorSlideDeleteHandler $deleteHandler;
+    private InteriorSlideDestroyHandler $destroyHandler;
 
     /**
      * CmsHomeModuleInteriorSlideService constructor.
@@ -24,7 +24,7 @@ class CmsHomeModuleInteriorSlideService extends CmsBaseResourceService
      * @param ClearCacheHandler $clearCacheByTagHandler
      * @param InteriorSlideStoreHandler $storeHandler
      * @param InteriorSlideUpdateHandler $updateHandler
-     * @param InteriorSlideDeleteHandler $deleteHandler
+     * @param InteriorSlideDestroyHandler $destroyHandler
      * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
@@ -32,7 +32,7 @@ class CmsHomeModuleInteriorSlideService extends CmsBaseResourceService
         ClearCacheHandler $clearCacheByTagHandler,
         InteriorSlideStoreHandler $storeHandler,
         InteriorSlideUpdateHandler $updateHandler,
-        InteriorSlideDeleteHandler $deleteHandler,
+        InteriorSlideDestroyHandler $destroyHandler,
         CacheKeyManager $cacheKeyManager
     )
     {
@@ -43,7 +43,7 @@ class CmsHomeModuleInteriorSlideService extends CmsBaseResourceService
         );
         $this->storeHandler = $storeHandler;
         $this->updateHandler = $updateHandler;
-        $this->deleteHandler = $deleteHandler;
+        $this->destroyHandler = $destroyHandler;
     }
 
     /**
@@ -75,6 +75,6 @@ class CmsHomeModuleInteriorSlideService extends CmsBaseResourceService
     {
         $item = $this->repository->getItem($id);
 
-        return $this->deleteHandler->handle($item);
+        return $this->destroyHandler->handle($item);
     }
 }

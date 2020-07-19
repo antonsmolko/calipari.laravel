@@ -12,32 +12,24 @@ class ImagesTableSeeder extends Seeder
      */
     public function run()
     {
-        $uploadDir = public_path(config('uploads.image_upload_path'));
-        $seedsUploadImageDir = config('seeds.seeds_data_path') . 'images';
-        $seedsImageDir = public_path(config('seeds.seeds_uploads_path'));
+        $uploadDir = config('uploads.image_upload_path');
+        Storage::deleteDirectory($uploadDir);
 
-        File::deleteDirectory($uploadDir);
-        if (!file_exists($uploadDir)) {
-            File::makeDirectory($uploadDir, config('uploads.storage_permissions', 0755));
-        }
-
-        File::deleteDirectory($seedsImageDir);
-        if (!file_exists($seedsImageDir)) {
-            File::makeDirectory($seedsImageDir, config('uploads.storage_permissions', 0755));
-        }
+        $seedsUploadImageDir = config('seed_settings.seeds_data_path') . 'images';
+        $seedsImagePath = config('seed_settings.seeds_uploads_path');
+        Storage::deleteDirectory($seedsImagePath);
+        Storage::makeDirectory($seedsImagePath);
 
         $images = getImagesFromLocal($seedsUploadImageDir);
+        $seedsImageDir = storage_path("app/" . $seedsImagePath);
 
         $i = 0;
         while ($i < config('seed_settings.images_count')) {
-
-            $uploadedImage = getFakerImageFromLocal($images, $seedsUploadImageDir, $seedsImageDir);
-
-            factory(App\Models\Image::class)->create(uploader()->upload($uploadedImage, $uploadDir));
-
+            $uploadImage = getFakerImageFromLocal($images, $seedsUploadImageDir, $seedsImageDir);
+            factory(App\Models\Image::class)->create(uploader()->store($uploadImage));
             $i++;
         }
 
-        File::deleteDirectory($seedsImageDir);
+        Storage::deleteDirectory($seedsImagePath);
     }
 }

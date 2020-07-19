@@ -30,6 +30,5 @@ class UpdateHandler
     {
         $this->repository->syncCategories($image, $syncData);
         $this->repository->update($image, $updateData);
-//        event(new ImageUpdated());
     }
 }

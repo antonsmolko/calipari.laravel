@@ -4,15 +4,13 @@ use Illuminate\Database\Seeder;
 
 class PurchaseStepsTableSeeder extends Seeder
 {
-    private string $uploadDir;
-    private string $seedsUploadImageDir;
-    private string $seedsImageDir;
+    private string $seedsUploadImagePath;
+    private string $seedsImagePath;
 
     public function __construct()
     {
-        $this->uploadDir = public_path(config('uploads.image_upload_path'));
-        $this->seedsUploadImageDir = config('seeds.seeds_data_path') . 'purchase-steps';
-        $this->seedsImageDir = public_path(config('seeds.seeds_uploads_path'));
+        $this->seedsUploadImagePath = config('seed_settings.seeds_data_path') . 'purchase-steps';
+        $this->seedsImagePath = config('seed_settings.seeds_uploads_path');
     }
 
     /**
@@ -22,7 +20,9 @@ class PurchaseStepsTableSeeder extends Seeder
      */
     public function run()
     {
-        $images = getImagesFromLocal($this->seedsUploadImageDir);
+        Storage::deleteDirectory($this->seedsImagePath);
+        Storage::makeDirectory($this->seedsImagePath);
+        $images = getImagesFromLocal($this->seedsUploadImagePath);
 
         foreach (config('seeds.purchase-steps') as $item) {
             DB::table('purchase_steps')->insert([
@@ -32,14 +32,16 @@ class PurchaseStepsTableSeeder extends Seeder
             ]);
         }
 
-        File::deleteDirectory($this->seedsImageDir);
+        Storage::deleteDirectory($this->seedsImagePath);
     }
 
     protected function getPurchaseStepImagePath(array $images, string $imageKey)
     {
         $imageName = 'purchase-step-' . $imageKey . '.jpg';
-        $imageUploadFile = getImageByNameFromLocal($images, $imageName, $this->seedsUploadImageDir, $this->seedsImageDir);
-        $imageAttributes = uploader()->upload($imageUploadFile, $this->uploadDir);
+        $seedsImageDir = storage_path("app/" . $this->seedsImagePath);
+
+        $imageUploadFile = getImageByNameFromLocal($images, $imageName, $this->seedsUploadImagePath, $seedsImageDir);
+        $imageAttributes = uploader()->store($imageUploadFile);
 
         return $imageAttributes['path'];
     }

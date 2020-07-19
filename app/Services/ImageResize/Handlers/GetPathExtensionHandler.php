@@ -7,18 +7,16 @@ use File;
 
 class GetPathExtensionHandler
 {
-    private $uploadPath;
-    private $noImagePath;
-    private $noImageExtension;
+    private string $storagePath;
+    private string $noImagePath;
 
     /**
      * GetPathExtensionHandler constructor.
      */
     public function __construct()
     {
-        $this->uploadPath = config('uploads.image_upload_path');
-        $this->noImagePath = config('uploads.image_no_image_path');
-        $this->noImageExtension = config('uploads.image_no_image_path');
+        $this->storagePath = config('uploads.image_storage_path');
+        $this->noImagePath = config('uploads.no_image_path');
     }
 
     /**
@@ -27,14 +25,13 @@ class GetPathExtensionHandler
      */
     public function handle(string $path): array
     {
-        $nameArray = explode('.', $path);
-        $ext = array_pop($nameArray);
-        $file = implode('.', $nameArray);
-        $filePath = $this->uploadPath . implode('/', [$path[0], $path[0] . $path[1] . $path[2], $file . '.' . $ext]);
+        $filePath = $this->storagePath . '/' . implode('/', [$path[0], $path[0] . $path[1] . $path[2], $path]);
+
         if (!File::isFile($filePath)) {
             $filePath = $this->noImagePath;
-            $ext = $this->noImageExtension;
         }
+
+        list(, $ext) = explode('.', $path);
 
         return [$filePath, $ext];
     }

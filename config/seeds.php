@@ -311,8 +311,6 @@ return [
             'description' => ''
         ],
     ],
-    'seeds_data_path' => 'seed_data/',
-    'seeds_uploads_path' => 'storage/uploads/seed_uploads/',
     'categories' => [
         'topics' => [
             [

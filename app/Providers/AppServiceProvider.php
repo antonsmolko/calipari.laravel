@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,12 +14,11 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         if ($this->app->isLocal()) {
-            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
-            $this->app->register(TelescopeServiceProvider::class);
+            //
         }
 
         // Предотвращение ошибки SQL 1071 Specified key was too long, возникающей при миграции строки с индексом
-        Schema::defaultStringLength(191);
+        // Schema::defaultStringLength(191);
 
         // Подключение хелперов
         require_once(app_path() . '/Helpers/helpers.php');

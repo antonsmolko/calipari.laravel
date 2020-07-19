@@ -46,6 +46,15 @@ class CmsTextureService extends CmsBaseResourceService
     }
 
     /**
+     * @param int $id
+     * @return mixed
+     */
+    public function getItem(int $id)
+    {
+        return $this->repository->getItemFromEdit($id);
+    }
+
+    /**
      * @param array $storeData
      * @return Texture
      */

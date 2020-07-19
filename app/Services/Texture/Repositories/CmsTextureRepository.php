@@ -5,7 +5,8 @@ namespace App\Services\Texture\Repositories;
 
 use App\Models\Texture;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
-use Illuminate\Support\Collection;
+use App\Services\Texture\Resources\CmsFromEdit as FromEditResource;
+use App\Services\Texture\Resources\CmsFromList as FromListResource;
 
 class CmsTextureRepository extends CmsBaseResourceRepository
 {
@@ -19,12 +20,21 @@ class CmsTextureRepository extends CmsBaseResourceRepository
     }
 
     /**
-     * @return Collection
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Contracts\Pagination\Paginator|\Illuminate\Database\Eloquent\Collection|\Illuminate\Http\Resources\Json\AnonymousResourceCollection|\Illuminate\Http\Resources\Json\ResourceCollection
      */
-    public function index(): Collection
+    public function index()
     {
-        return $this->model::orderBy('order')
+        return FromListResource::collection($this->model::orderBy('order')
             ->withCount('orders')
-            ->get();
+            ->get());
+    }
+
+    /**
+     * @param int $id
+     * @return FromEditResource|mixed
+     */
+    public function getItemFromEdit(int $id)
+    {
+        return new FromEditResource($this->model::findOrFail($id));
     }
 }

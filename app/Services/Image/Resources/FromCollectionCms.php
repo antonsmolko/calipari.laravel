@@ -16,7 +16,7 @@ class FromCollectionCms extends JsonResource
     {
         return [
             'id' => $this->id,
-            'path' => $this->path,
+            'path' => getImagePath($this->path),
             'colors' => $this->colors,
             'owner' => $this->owner,
             'format' => $this->format,

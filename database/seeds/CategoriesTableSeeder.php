@@ -11,6 +11,10 @@ class CategoriesTableSeeder extends Seeder
      */
     public function run()
     {
+        $seedsImagePath = config('seed_settings.seeds_uploads_path');
+        Storage::deleteDirectory($seedsImagePath);
+        Storage::makeDirectory($seedsImagePath);
+
         foreach (config('seeds.categories.topics') as $category) {
             $category = factory(App\Models\Category::class)->create($category);
             $images = $this->getAttachData(config('seed_settings.group_images_count'));
@@ -56,6 +60,8 @@ class CategoriesTableSeeder extends Seeder
             $category->publish = 1;
             $category->save();
         }
+
+        Storage::deleteDirectory($seedsImagePath);
     }
 
     /**

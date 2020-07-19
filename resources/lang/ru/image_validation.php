@@ -1,7 +1,9 @@
 <?php
 
 return [
-    'error_image_upload' => 'Ошибка загрузки изображений!',
+    'error_image_upload' => 'Ошибка загрузки изображения!',
+    'error_local_image_upload' => 'Ошибка локальной загрузки изображения!',
+    'error_s3_image_upload' => 'Ошибка загрузки изображения сервиса «AWS S3!»',
     'error_rule_config' => 'Ошибка конфигурации правил загрузки изображений - «app/config/uploads.php/image_upload_rules/:rule_name»!',
     'wrong_extension' => 'Файл «:file_name» имеет недопустимое расширение. Разрешены только следующие расширения: :extensions!',
     'wrong_mime' => 'Файл «:file_name» недопустимого типа. Разрешены только следующие MIME типы: :mime_types!',

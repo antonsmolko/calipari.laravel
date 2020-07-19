@@ -24,7 +24,7 @@ class FromList extends JsonResource
             'owner' => $this->owner,
             'thumb' => $this->mainImage ? $this->mainImage->path : null,
             'images_count' => $this->images->count(),
-            'has_published_images' => !!$this->publishedImages->count(),
+            'has_published_images' => (bool) $this->publishedImages->count(),
             'publish' => $this->publish
         ];
     }

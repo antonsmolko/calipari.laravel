@@ -30,8 +30,8 @@ class DatabaseSeeder extends Seeder
 //        array_shift($csv);
 
         $this->call([
-//            UsersTableSeeder::class,
             LaratrustSeeder::class,
+            UsersTableSeeder::class,
             DeliveriesTableSeeder::class,
             SettingGroupsTableSeeder::class,
             SettingsTableSeeder::class,
@@ -45,5 +45,8 @@ class DatabaseSeeder extends Seeder
             CategoriesTableSeeder::class, // ! after ImagesTableSeeder::class
             PurchaseStepsTableSeeder::class, // ! after ImagesTableSeeder::class
         ]);
+
+        $this->command->info('Sync image storage to AWS S3');
+        uploader()->syncStorageFromLocalToS3(true);
     }
 }

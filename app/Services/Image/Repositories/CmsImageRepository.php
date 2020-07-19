@@ -23,6 +23,15 @@ class CmsImageRepository extends CmsBaseResourceRepository
 
     /**
      * @param int $id
+     * @return Image|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder
+     */
+    public function getTrashedItem(int $id)
+    {
+        return $this->model::onlyTrashed()->where('id', $id)->firstOrFail();
+    }
+
+    /**
+     * @param int $id
      * @return JsonResource
      */
     public function getItemToEdit(int $id): JsonResource
@@ -99,14 +108,12 @@ class CmsImageRepository extends CmsBaseResourceRepository
     }
 
     /**
-     * @param int $id
-     * @return bool|mixed|null
+     * @param Image $item
+     * @return bool|null
      */
-    public function forceDelete(int $id)
+    public function forceDelete(Image $item)
     {
-        return $this->model::onlyTrashed()
-            ->where('id', $id)
-            ->forceDelete();
+        return $item->forceDelete();
     }
 
     /**

@@ -28,19 +28,14 @@ class UpdateTextureHandler
      */
     public function handle(Texture $item, array $updateData): Texture
     {
-        if(array_key_exists('image', $updateData) && !empty($updateData['image'])) {
-            $uploadAttributes = uploader()->change($updateData['image'], $item->image_path);
-            $updateData = Arr::add(Arr::except($updateData, ['image']), 'image_path', $uploadAttributes['path']);
-        }
-
         if (array_key_exists('sample', $updateData) && !empty($updateData['sample'])) {
-            $sampleAttributes = uploader()->change($updateData['sample'], $item->image_path);
+            $sampleAttributes = uploader()->change($updateData['sample'], $item->sample_path);
             $updateData['sample_path'] = $sampleAttributes['path'];
         }
 
         if (array_key_exists('background', $updateData) && !empty($updateData['background'])) {
-            $backgroundAttributes = uploader()->change($updateData['background'], $item->image_path);
-            $updateData['sample_path'] = $backgroundAttributes['path'];
+            $backgroundAttributes = uploader()->change($updateData['background'], $item->background_path);
+            $updateData['background_path'] = $backgroundAttributes['path'];
         }
 
         return $this->repository->update($item, Arr::except($updateData, ['sample', 'background']));
