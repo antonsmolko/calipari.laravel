@@ -56,7 +56,7 @@
                                  :module="storeModule"
                                  :vField="$v.intro" />
 
-                        <v-image title="Фоновое изображение"
+                        <v-image title="Основное изображение"
                                  name="image"
                                  :imgDefault="imagePath"
                                  :vField="$v.image"

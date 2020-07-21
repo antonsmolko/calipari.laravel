@@ -167,8 +167,7 @@ class Uploader
         unset(
             $this->request,
             $this->fileProps,
-            $this->uploadedFile,
-            $cloudinaryResponse);
+            $this->uploadedFile);
     }
 
     /**

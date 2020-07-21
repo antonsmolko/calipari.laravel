@@ -29,9 +29,10 @@ class DeleteImageHandler
     public function handle(Post $item, int $imageIndex)
     {
         $images = json_decode($item->images, true);
+
         $deletedImage = Arr::first($images, fn ($image) => $image['index'] === $imageIndex);
 
-        uploader()->remove($deletedImage->path);
+        uploader()->remove($deletedImage['path']);
 
         $filteredImages = array_filter($images, fn($image) => $image['index'] !== $imageIndex);
         $updateData['images'] = json_encode(array_values($filteredImages));

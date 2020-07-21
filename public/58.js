@@ -1,1 +1,753 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[58],{180:function(t,e,r){var n=r(11),o=r(370);"string"==typeof(o=o.__esModule?o.default:o)&&(o=[[t.i,o,""]]);var i={insert:"head",singleton:!1};n(o,i);t.exports=o.locals||{}},369:function(t,e,r){"use strict";var n=r(180);r.n(n).a},370:function(t,e,r){(t.exports=r(16)(!1)).push([t.i,".md-file-input[data-v-ac179fc0] {\n  display: none;\n}\n.md-between[data-v-ac179fc0] {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: justify;\n      -ms-flex-pack: justify;\n          justify-content: space-between;\n}",""])},4:function(t,e,r){"use strict";r.d(e,"a",(function(){return s})),r.d(e,"f",(function(){return u})),r.d(e,"c",(function(){return d})),r.d(e,"b",(function(){return l})),r.d(e,"g",(function(){return m})),r.d(e,"d",(function(){return g})),r.d(e,"e",(function(){return h}));var n=r(17),o=r.n(n),i=r(52),c=r.n(i);function a(t,e,r,n,o,i,c){try{var a=t[i](c),s=a.value}catch(t){return void r(t)}a.done?e(s):Promise.resolve(s).then(n,o)}var s={methods:{create:function(t){var e=this,r=t.sendData,n=t.title,o=t.successText,i=t.redirectRoute,a=t.storeModule,s=void 0===a?null:a,u=s?"".concat(s,"/"):"";return this.$store.dispatch("".concat(u,"store"),r).then((function(){return window.history.length>1?e.$router.go(-1):e.$router.push(i),c.a.fire({title:o,text:"«".concat(n,"»"),timer:2e3,showConfirmButton:!1,icon:"success"})}))}}},u={methods:{update:function(t){var e=this,r=t.sendData,n=t.title,o=t.redirectRoute,i=t.successText,a=t.storeModule,s=void 0===a?null:a,u=s?"".concat(s,"/"):"";return this.$store.dispatch("".concat(u,"update"),r).then((function(){return window.history.length>1?e.$router.go(-1):e.$router.push(o),c.a.fire({title:i,text:"«".concat(n,"»"),timer:2e3,showConfirmButton:!1,icon:"success"})}))}}},d={methods:{delete:function(t){var e=this,r=t.payload,n=t.title,o=t.alertText,i=t.successText,c=t.storeModule,a=void 0===c?null:c,s=t.redirectRoute,u=void 0===s?null:s,d=t.tableMode,l=void 0!==d&&d,m=t.force,g=void 0!==m&&m,h=a?"".concat(a,"/"):"",b=g?"forceDelete":"delete";return f(o).then((function(t){if(t.value)return e.$store.dispatch("".concat(h).concat(b),{payload:r,tableMode:l}).then((function(){return u&&(window.history.length>1?e.$router.go(-1):e.$router.push(u)),p(i,n)}))}))}}},l={methods:{deleteImageByIndex:function(t){var e=this,r=t.id,n=t.index,o=t.alertText,i=t.successText,c=t.storeModule,a=void 0===c?null:c;return f(o).then((function(t){if(t.value)return e.$store.dispatch("".concat(a,"/deleteImageByIndex"),{id:r,index:n}).then((function(){return p(i,n)}))}))}}},f=function(t){return c.a.fire({title:"Вы уверены?",text:"Данное действие удалит ".concat(t," безвозвратно!"),icon:"warning",showCancelButton:!0,customClass:{confirmButton:"md-button md-success btn-fill",cancelButton:"md-button md-danger btn-fill"},confirmButtonText:"Удалить",cancelButtonText:"Отменить",buttonsStyling:!1})},p=function(t,e){return c.a.fire({title:t,text:"«".concat(e,"»"),timer:2e3,icon:"success",showConfirmButton:!1})},m={methods:{upload:function(t){var e,r=this;return(e=o.a.mark((function e(){var n,i,a,s,u,d,l,f,p;return o.a.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:if(n=t.uploadFiles,i=t.type,a=void 0===i?null:i,s=t.id,u=void 0===s?null:s,d=t.storeModule,l=void 0===d?null:d,f=Array.from(n),p=l||"categories",!u){e.next=8;break}return e.next=6,r.$store.dispatch("".concat(p,"/uploadImages"),{files:f,id:u,type:a});case 6:e.next=10;break;case 8:return e.next=10,r.$store.dispatch("images/store",f);case 10:return e.next=12,c.a.fire({title:"Изображения загружены!",text:"",timer:2e3,showConfirmButton:!1,icon:"success"});case 12:return e.abrupt("return",e.sent);case 13:case"end":return e.stop()}}),e)})),function(){var t=this,r=arguments;return new Promise((function(n,o){var i=e.apply(t,r);function c(t){a(i,n,o,c,s,"next",t)}function s(t){a(i,n,o,c,s,"throw",t)}c(void 0)}))})()}}},g={methods:{addImages:function(t){var e=this,r=t.id,n=t.data;this.$store.dispatch("categories/addSelectedImages",{id:r,data:n}).then((function(){return e.$router.push({name:"cms.catalog.categories.images",params:{id:r}}),c.a.fire({title:"Изображения добавлены!",text:"",timer:2e3,showConfirmButton:!1,icon:"success"})}))}}},h={methods:{addImages:function(t){var e=this,r=t.type,n=t.id,o=t.data,i=t.redirectRoute;this.$store.dispatch("subCategories/addSelectedImages",{type:r,id:n,data:o}).then((function(){return e.$router.push(i),c.a.fire({title:"Изображения добавлены!",text:"",timer:2e3,showConfirmButton:!1,icon:"success"})}))}}}},58:function(t,e,r){"use strict";r.d(e,"a",(function(){return s})),r.d(e,"b",(function(){return u})),r.d(e,"c",(function(){return d}));var n={topics:{PAGE_TITLE:"Темы",CREATE_PAGE_TITLE:"Новая тема",TABLE_TITLE:"Список тем"},colors:{PAGE_TITLE:"Цвета",CREATE_PAGE_TITLE:"Новый цвет",TABLE_TITLE:"Список цветов"},interiors:{PAGE_TITLE:"Интерьеры",CREATE_PAGE_TITLE:"Новый интерьер",TABLE_TITLE:"Список интерьеров"},tags:{PAGE_TITLE:"Теги",CREATE_PAGE_TITLE:"Новый тег",TABLE_TITLE:"Список тегов",DELETE_CONFIRM_TEXT:function(t){return"тэг «".concat(t,"»")},DELETE_SUCCESS_TEXT:"Тег удален!",CREATE_SUCCESS_TEXT:"Тег создан!",UPDATE_SUCCESS_TEXT:"Тег обновлен!"},owners:{PAGE_TITLE:"Владельцы",CREATE_PAGE_TITLE:"Новый владелец",TABLE_TITLE:"Список владельцев",DELETE_CONFIRM_TEXT:function(t){return"владельца «".concat(t,"»")},DELETE_SUCCESS_TEXT:"Владелец удален!",CREATE_SUCCESS_TEXT:"Владелец создан!",UPDATE_SUCCESS_TEXT:"Владелец обновлен!"}},o=r(2);function i(t,e){var r=Object.keys(t);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(t);e&&(n=n.filter((function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable}))),r.push.apply(r,n)}return r}function c(t){for(var e=1;e<arguments.length;e++){var r=null!=arguments[e]?arguments[e]:{};e%2?i(Object(r),!0).forEach((function(e){a(t,e,r[e])})):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(r)):i(Object(r)).forEach((function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(r,e))}))}return t}function a(t,e,r){return e in t?Object.defineProperty(t,e,{value:r,enumerable:!0,configurable:!0,writable:!0}):t[e]=r,t}var s={props:{category_type:{type:String,require:!0}},data:function(){return{pageProps:n,storeModule:"categories",redirectRoute:{name:"cms.catalog.categories.list",params:{category_type:this.category_type}}}},computed:c({},Object(o.d)({pageTitle:function(t){return t.pageTitle}})),methods:c({},Object(o.b)(["setPageTitle"]))},u={props:{category_type:{type:String,require:!0}},data:function(){return{pageProps:n,storeModule:"subCategories",redirectRoute:{name:"cms.catalog.subcategories.list",params:{category_type:this.category_type}}}},computed:c({},Object(o.d)({pageTitle:function(t){return t.pageTitle}}))},d={computed:{tableTitle:function(){return n[this.category_type].TABLE_TITLE}}}},643:function(t,e,r){"use strict";r.r(e);var n=r(2),o=r(58),i=r(4),c=r(94);function a(t,e){var r=Object.keys(t);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(t);e&&(n=n.filter((function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable}))),r.push.apply(r,n)}return r}function s(t){for(var e=1;e<arguments.length;e++){var r=null!=arguments[e]?arguments[e]:{};e%2?a(Object(r),!0).forEach((function(e){u(t,e,r[e])})):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(r)):a(Object(r)).forEach((function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(r,e))}))}return t}function u(t,e,r){return e in t?Object.defineProperty(t,e,{value:r,enumerable:!0,configurable:!0,writable:!0}):t[e]=r,t}var d={name:"ExcludedImageList",mixins:[o.a,i.d],components:{ImageListTable:c.a},props:{id:{type:[Number,String],required:!0},category_type:{type:String,default:null}},data:function(){return{storeModule:"images",resourceUrl:"/catalog/categories/".concat(this.id,"/images/excluded"),selected:[],loading:!1}},computed:s({},Object(n.d)({category:function(t){return t.categories.item}})),created:function(){var t=this;this.getCategoryAction(this.id).then((function(){return t.setPageTitle("Изображения каталога доступные для добавления в категорию «".concat(t.category.title,"»."))})).catch((function(){return t.$router.push(t.redirectRoute)}))},methods:s(s({},Object(n.b)({getCategoryAction:"categories/getItem",togglePublishAction:"table/togglePublish"})),{},{togglePublish:function(t){this.togglePublishAction("/images/".concat(t,"/publish"))},onImagesAdd:function(){return this.addImages({id:this.category.id,data:this.selected})}})},l=(r(369),r(0)),f=Object(l.a)(d,(function(){var t=this,e=t.$createElement,r=t._self._c||e;return r("div",[r("div",{staticClass:"md-layout"},[r("div",{staticClass:"md-layout-item"},[r("md-card",{staticClass:"mt-0"},[r("md-card-content",{staticClass:"md-between"},[r("router-button-link",{attrs:{route:"cms.catalog.categories.images",params:{category_type:t.category_type,id:t.id}}}),t._v(" "),t.selected.length?r("div",[r("control-button",{attrs:{title:"Добавить изображения",icon:"check"},on:{click:t.onImagesAdd}})],1):t._e()],1)],1)],1)]),t._v(" "),r("div",{staticClass:"md-layout"},[r("div",{staticClass:"md-layout-item"},[r("md-card",[r("card-icon-header",{attrs:{title:"Каталог изображений",icon:"image"}}),t._v(" "),r("md-card-content",[r("image-list-table",{attrs:{resourceUrl:t.resourceUrl,emptyContent:"Пока нет других изображений!"},on:{publish:t.togglePublish},scopedSlots:t._u([{key:"first-column",fn:function(e){var n=e.item;return[r("md-table-cell",{staticStyle:{width:"50px"},attrs:{"md-label":"#","md-sort-by":"id"}},[t._v("\n                                "+t._s(n.id)+"\n                            ")])]}},{key:"actions-column",fn:function(e){var n=e.item;return[r("md-table-cell",{attrs:{"md-label":"Выбрать"}},[r("md-checkbox",{attrs:{value:n.id},model:{value:t.selected,callback:function(e){t.selected=e},expression:"selected"}})],1)]}}])})],1)],1)],1)])])}),[],!1,null,"ac179fc0",null);e.default=f.exports}}]);
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[58],{
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/Dashboard/Roles/RoleCreate.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/pages/Dashboard/Roles/RoleCreate.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _custom_components_InputNotifications__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/custom_components/InputNotifications */ "./resources/js/custom_components/InputNotifications/index.js");
+/* harmony import */ var _mixins_base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/mixins/base */ "./resources/js/mixins/base.js");
+/* harmony import */ var _mixins_crudMethods__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/mixins/crudMethods */ "./resources/js/mixins/crudMethods.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'RoleCreate',
+  components: {
+    InputNotificationRequire: _custom_components_InputNotifications__WEBPACK_IMPORTED_MODULE_2__["InputNotificationRequire"]
+  },
+  mixins: [_mixins_base__WEBPACK_IMPORTED_MODULE_3__["pageTitle"], _mixins_crudMethods__WEBPACK_IMPORTED_MODULE_4__["createMethod"]],
+  data: function data() {
+    return {
+      responseData: false,
+      redirectRoute: {
+        name: 'cms.roles'
+      },
+      storeModule: 'roles',
+      permissions: []
+    };
+  },
+  validations: {
+    name: {
+      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
+      touch: false,
+      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(2),
+      isUnique: function isUnique(value) {
+        return value.trim() === '' && !this.$v.name.$dirty || !this.isUniqueName;
+      },
+      testAlias: function testAlias(value) {
+        return value.trim() === '' || this.$config.ALIAS_REGEXP.test(value);
+      }
+    },
+    displayName: {
+      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
+      touch: false,
+      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(2),
+      isUnique: function isUnique(value) {
+        return value.trim() === '' && !this.$v.displayName.$dirty || !this.isUniqueDisplayName;
+      }
+    },
+    description: {
+      touch: false
+    },
+    permissions: {
+      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
+      touch: false
+    }
+  },
+  computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
+    name: function name(state) {
+      return state.roles.fields.name;
+    },
+    displayName: function displayName(state) {
+      return state.roles.fields.display_name;
+    },
+    description: function description(state) {
+      return state.roles.fields.description;
+    },
+    permissionList: function permissionList(state) {
+      return state.permissions.items;
+    }
+  })), {}, {
+    isUniqueName: function isUniqueName() {
+      return !!this.$store.getters['roles/isUniqueName'](this.name);
+    },
+    isUniqueDisplayName: function isUniqueDisplayName() {
+      return !!this.$store.getters['roles/isUniqueDisplayName'](this.displayName);
+    }
+  }),
+  created: function created() {
+    var _this = this;
+
+    this.clearFieldsAction();
+    Promise.all([this.getItemsAction(), this.getPermissionsAction()]).then(function () {
+      _this.setPageTitle('Новая Роль');
+
+      _this.responseData = true;
+    })["catch"](function () {
+      return _this.$router.push(_this.redirectRoute);
+    });
+  },
+  methods: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])({
+    getItemsAction: 'roles/getItems',
+    clearFieldsAction: 'roles/clearItemFields',
+    getPermissionsAction: 'permissions/getItems'
+  })), {}, {
+    onPermissionsChange: function onPermissionsChange() {
+      this.$v.permissions.$touch();
+    },
+    onCreate: function onCreate() {
+      return this.create({
+        sendData: {
+          name: this.name,
+          display_name: this.displayName,
+          description: this.description,
+          permissions: this.permissions
+        },
+        title: this.displayName,
+        successText: 'Роль создана!',
+        storeModule: this.storeModule,
+        redirectRoute: this.redirectRoute
+      });
+    }
+  })
+});
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/Dashboard/Roles/RoleCreate.vue?vue&type=template&id=eea3ba70&":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/pages/Dashboard/Roles/RoleCreate.vue?vue&type=template&id=eea3ba70& ***!
+  \************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.responseData
+    ? _c("div", [
+        _c("div", { staticClass: "md-layout" }, [
+          _c(
+            "div",
+            { staticClass: "md-layout-item" },
+            [
+              _c(
+                "md-card",
+                [
+                  _c(
+                    "md-card-content",
+                    { staticClass: "md-between" },
+                    [
+                      _c("router-button-link", {
+                        attrs: { title: "К списку ролей", route: "cms.roles" }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "slide-y-down-transition",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: !_vm.$v.$invalid,
+                              expression: "!$v.$invalid"
+                            }
+                          ]
+                        },
+                        [
+                          _c("control-button", {
+                            on: {
+                              click: function($event) {
+                                return _vm.onCreate("auto-close")
+                              }
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "md-layout" }, [
+          _c(
+            "div",
+            {
+              staticClass: "md-layout-item md-medium-size-50 md-small-size-100"
+            },
+            [
+              _c(
+                "md-card",
+                [
+                  _c("card-icon-header"),
+                  _vm._v(" "),
+                  _c(
+                    "md-card-content",
+                    [
+                      _c("v-input", {
+                        attrs: {
+                          title: "Имя",
+                          icon: "title",
+                          name: "display_name",
+                          vField: _vm.$v.displayName,
+                          module: _vm.storeModule,
+                          vRules: {
+                            required: true,
+                            unique: true,
+                            minLength: true
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("v-input", {
+                        attrs: {
+                          title: "Алиас",
+                          icon: "code",
+                          name: "name",
+                          vField: _vm.$v.name,
+                          module: _vm.storeModule,
+                          vRules: {
+                            required: true,
+                            unique: true,
+                            alias: true,
+                            minLength: true
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("v-textarea", {
+                        attrs: {
+                          name: "description",
+                          vField: _vm.$v.description,
+                          module: _vm.storeModule
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "space-30" })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "md-layout-item md-medium-size-50 md-small-size-100"
+            },
+            [
+              _c(
+                "md-card",
+                [
+                  _c("card-icon-header", {
+                    attrs: { icon: "vpn_key", title: "Разрешения" }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "md-card-content",
+                    [
+                      _vm._l(_vm.permissionList, function(permission) {
+                        return _c(
+                          "md-switch",
+                          {
+                            key: permission.id,
+                            attrs: { value: permission.id },
+                            on: { change: _vm.onPermissionsChange },
+                            model: {
+                              value: _vm.permissions,
+                              callback: function($$v) {
+                                _vm.permissions = $$v
+                              },
+                              expression: "permissions"
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(permission.display_name) +
+                                "\n                    "
+                            )
+                          ]
+                        )
+                      }),
+                      _vm._v(" "),
+                      _vm.$v.permissions.$error
+                        ? _c("input-notification-require", {
+                            attrs: { name: "Привелегии" }
+                          })
+                        : _vm._e()
+                    ],
+                    2
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "space-30" })
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ])
+      ])
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./resources/js/mixins/crudMethods.js":
+/*!********************************************!*\
+  !*** ./resources/js/mixins/crudMethods.js ***!
+  \********************************************/
+/*! exports provided: createMethod, updateMethod, deleteMethod, deleteImageByIndexMethod, uploadMethod, imageAddMethod, subCategoryImageAddMethod */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createMethod", function() { return createMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMethod", function() { return updateMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteMethod", function() { return deleteMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteImageByIndexMethod", function() { return deleteImageByIndexMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "uploadMethod", function() { return uploadMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageAddMethod", function() { return imageAddMethod; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subCategoryImageAddMethod", function() { return subCategoryImageAddMethod; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+var createMethod = {
+  methods: {
+    create: function create(_ref) {
+      var _this = this;
+
+      var sendData = _ref.sendData,
+          title = _ref.title,
+          successText = _ref.successText,
+          redirectRoute = _ref.redirectRoute,
+          _ref$storeModule = _ref.storeModule,
+          storeModule = _ref$storeModule === void 0 ? null : _ref$storeModule;
+      var module = storeModule ? "".concat(storeModule, "/") : '';
+      return this.$store.dispatch("".concat(module, "store"), sendData).then(function () {
+        // this.$router.push(redirectRoute);
+        window.history.length > 1 ? _this.$router.go(-1) : _this.$router.push(redirectRoute);
+        return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+          title: successText,
+          text: "\xAB".concat(title, "\xBB"),
+          timer: 2000,
+          showConfirmButton: false,
+          icon: 'success'
+        });
+      });
+    }
+  }
+};
+var updateMethod = {
+  methods: {
+    update: function update(_ref2) {
+      var _this2 = this;
+
+      var sendData = _ref2.sendData,
+          title = _ref2.title,
+          redirectRoute = _ref2.redirectRoute,
+          successText = _ref2.successText,
+          _ref2$storeModule = _ref2.storeModule,
+          storeModule = _ref2$storeModule === void 0 ? null : _ref2$storeModule;
+      var module = storeModule ? "".concat(storeModule, "/") : '';
+      return this.$store.dispatch("".concat(module, "update"), sendData).then(function () {
+        // this.$router.push(redirectRoute);
+        window.history.length > 1 ? _this2.$router.go(-1) : _this2.$router.push(redirectRoute);
+        return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+          title: successText,
+          text: "\xAB".concat(title, "\xBB"),
+          timer: 2000,
+          showConfirmButton: false,
+          icon: 'success'
+        });
+      });
+    }
+  }
+};
+var deleteMethod = {
+  methods: {
+    "delete": function _delete(_ref3) {
+      var _this3 = this;
+
+      var payload = _ref3.payload,
+          title = _ref3.title,
+          alertText = _ref3.alertText,
+          successText = _ref3.successText,
+          _ref3$storeModule = _ref3.storeModule,
+          storeModule = _ref3$storeModule === void 0 ? null : _ref3$storeModule,
+          _ref3$redirectRoute = _ref3.redirectRoute,
+          redirectRoute = _ref3$redirectRoute === void 0 ? null : _ref3$redirectRoute,
+          _ref3$tableMode = _ref3.tableMode,
+          tableMode = _ref3$tableMode === void 0 ? false : _ref3$tableMode,
+          _ref3$force = _ref3.force,
+          force = _ref3$force === void 0 ? false : _ref3$force;
+      var module = storeModule ? "".concat(storeModule, "/") : '';
+      var method = force ? 'forceDelete' : 'delete';
+      return deleteSwalFireConfirm(alertText).then(function (result) {
+        if (result.value) {
+          return _this3.$store.dispatch("".concat(module).concat(method), {
+            payload: payload,
+            tableMode: tableMode
+          }).then(function () {
+            if (redirectRoute) {
+              // this.$router.push(redirectRoute);
+              window.history.length > 1 ? _this3.$router.go(-1) : _this3.$router.push(redirectRoute);
+            }
+
+            return deleteSwalFireAlert(successText, title);
+          });
+        }
+      });
+    }
+  }
+};
+var deleteImageByIndexMethod = {
+  methods: {
+    deleteImageByIndex: function deleteImageByIndex(_ref4) {
+      var _this4 = this;
+
+      var id = _ref4.id,
+          index = _ref4.index,
+          alertText = _ref4.alertText,
+          successText = _ref4.successText,
+          _ref4$storeModule = _ref4.storeModule,
+          storeModule = _ref4$storeModule === void 0 ? null : _ref4$storeModule;
+      return deleteSwalFireConfirm(alertText).then(function (result) {
+        if (result.value) {
+          return _this4.$store.dispatch("".concat(storeModule, "/deleteImageByIndex"), {
+            id: id,
+            index: index
+          }).then(function () {
+            return deleteSwalFireAlert(successText, index);
+          });
+        }
+      });
+    }
+  }
+};
+
+var deleteSwalFireConfirm = function deleteSwalFireConfirm(alertText) {
+  return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+    title: 'Вы уверены?',
+    text: "\u0414\u0430\u043D\u043D\u043E\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0443\u0434\u0430\u043B\u0438\u0442 ".concat(alertText, " \u0431\u0435\u0437\u0432\u043E\u0437\u0432\u0440\u0430\u0442\u043D\u043E!"),
+    icon: 'warning',
+    showCancelButton: true,
+    customClass: {
+      confirmButton: 'md-button md-success btn-fill',
+      cancelButton: 'md-button md-danger btn-fill'
+    },
+    confirmButtonText: 'Удалить',
+    cancelButtonText: 'Отменить',
+    buttonsStyling: false
+  });
+};
+
+var deleteSwalFireAlert = function deleteSwalFireAlert(successText, title) {
+  return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+    title: successText,
+    text: "\xAB".concat(title, "\xBB"),
+    timer: 2000,
+    icon: 'success',
+    showConfirmButton: false
+  });
+};
+
+var uploadMethod = {
+  methods: {
+    upload: function upload(_ref5) {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var uploadFiles, _ref5$type, type, _ref5$id, id, _ref5$storeModule, storeModule, files, module;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                uploadFiles = _ref5.uploadFiles, _ref5$type = _ref5.type, type = _ref5$type === void 0 ? null : _ref5$type, _ref5$id = _ref5.id, id = _ref5$id === void 0 ? null : _ref5$id, _ref5$storeModule = _ref5.storeModule, storeModule = _ref5$storeModule === void 0 ? null : _ref5$storeModule;
+                files = Array.from(uploadFiles);
+                module = storeModule ? storeModule : 'categories';
+
+                if (!id) {
+                  _context.next = 8;
+                  break;
+                }
+
+                _context.next = 6;
+                return _this5.$store.dispatch("".concat(module, "/uploadImages"), {
+                  files: files,
+                  id: id,
+                  type: type
+                });
+
+              case 6:
+                _context.next = 10;
+                break;
+
+              case 8:
+                _context.next = 10;
+                return _this5.$store.dispatch('images/store', files);
+
+              case 10:
+                _context.next = 12;
+                return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+                  title: 'Изображения загружены!',
+                  text: '',
+                  timer: 2000,
+                  showConfirmButton: false,
+                  icon: 'success'
+                });
+
+              case 12:
+                return _context.abrupt("return", _context.sent);
+
+              case 13:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    }
+  }
+};
+var imageAddMethod = {
+  methods: {
+    addImages: function addImages(_ref6) {
+      var _this6 = this;
+
+      var id = _ref6.id,
+          data = _ref6.data;
+      this.$store.dispatch('categories/addSelectedImages', {
+        id: id,
+        data: data
+      }).then(function () {
+        _this6.$router.push({
+          name: 'cms.catalog.categories.images',
+          params: {
+            id: id
+          }
+        });
+
+        return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+          title: 'Изображения добавлены!',
+          text: '',
+          timer: 2000,
+          showConfirmButton: false,
+          icon: 'success'
+        });
+      });
+    }
+  }
+};
+var subCategoryImageAddMethod = {
+  methods: {
+    addImages: function addImages(_ref7) {
+      var _this7 = this;
+
+      var type = _ref7.type,
+          id = _ref7.id,
+          data = _ref7.data,
+          redirectRoute = _ref7.redirectRoute;
+      this.$store.dispatch('subCategories/addSelectedImages', {
+        type: type,
+        id: id,
+        data: data
+      }).then(function () {
+        _this7.$router.push(redirectRoute);
+
+        return sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+          title: 'Изображения добавлены!',
+          text: '',
+          timer: 2000,
+          showConfirmButton: false,
+          icon: 'success'
+        });
+      });
+    }
+  }
+};
+
+/***/ }),
+
+/***/ "./resources/js/pages/Dashboard/Roles/RoleCreate.vue":
+/*!***********************************************************!*\
+  !*** ./resources/js/pages/Dashboard/Roles/RoleCreate.vue ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _RoleCreate_vue_vue_type_template_id_eea3ba70___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RoleCreate.vue?vue&type=template&id=eea3ba70& */ "./resources/js/pages/Dashboard/Roles/RoleCreate.vue?vue&type=template&id=eea3ba70&");
+/* harmony import */ var _RoleCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RoleCreate.vue?vue&type=script&lang=js& */ "./resources/js/pages/Dashboard/Roles/RoleCreate.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _RoleCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RoleCreate_vue_vue_type_template_id_eea3ba70___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _RoleCreate_vue_vue_type_template_id_eea3ba70___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/pages/Dashboard/Roles/RoleCreate.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/pages/Dashboard/Roles/RoleCreate.vue?vue&type=script&lang=js&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/pages/Dashboard/Roles/RoleCreate.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoleCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./RoleCreate.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/Dashboard/Roles/RoleCreate.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoleCreate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/pages/Dashboard/Roles/RoleCreate.vue?vue&type=template&id=eea3ba70&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/pages/Dashboard/Roles/RoleCreate.vue?vue&type=template&id=eea3ba70& ***!
+  \******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoleCreate_vue_vue_type_template_id_eea3ba70___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./RoleCreate.vue?vue&type=template&id=eea3ba70& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/Dashboard/Roles/RoleCreate.vue?vue&type=template&id=eea3ba70&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoleCreate_vue_vue_type_template_id_eea3ba70___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RoleCreate_vue_vue_type_template_id_eea3ba70___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ })
+
+}]);

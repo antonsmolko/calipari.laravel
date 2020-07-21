@@ -265,21 +265,6 @@ if (! function_exists('getRandomEmoji')) {
     }
 }
 
-if (! function_exists('getCloudinaryPath')) {
-    /**
-     * @param string $name
-     * @param string|null $prefix
-     * @return string
-     */
-    function getCloudinaryPath(string $name): string
-    {
-        $basePath = config('uploads.cloudinary_prefix');
-        $path = getBaseImagePath($name) . '/' . $name;
-
-        return $basePath . '/' . $path;
-    }
-}
-
 if (! function_exists('getS3Path')) {
     /**
      * @param string $name

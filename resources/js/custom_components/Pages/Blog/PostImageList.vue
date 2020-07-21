@@ -4,8 +4,12 @@
             <h4>Изображения контента</h4>
             <upload-button @change="fileInputChange" />
         </div>
-        <div class="md-layout-item md-progress-bar__container">
-            <md-progress-bar v-if="fileProgress" class="md-info" :md-value="fileProgress" />
+        <div class="md-layout-item md-progress-bar__container mb-1">
+            <md-progress-bar
+                v-if="fileProgress"
+                class="md-info"
+                md-mode="indeterminate"
+                :md-value="fileProgress" />
         </div>
         <md-table
             v-if="images.length"

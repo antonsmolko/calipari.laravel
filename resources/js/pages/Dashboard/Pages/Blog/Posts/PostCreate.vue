@@ -42,7 +42,7 @@
                                  :module="storeModule"
                                  :vField="$v.intro" />
 
-                        <v-image title="Изображение"
+                        <v-image title="Основное изображение"
                                  name="image"
                                  :vField="$v.image"
                                  :vRules="{ required: true }"
