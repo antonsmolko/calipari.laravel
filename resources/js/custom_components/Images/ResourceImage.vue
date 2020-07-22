@@ -26,15 +26,15 @@ export default {
                 : this.$config.imagePlaceholder;
         },
         baseUrl () {
-            switch (this.$config.IMAGE_PROVIDER) {
+            switch (this.$config.imageProvider) {
                 case 'local':
-                    return this.$config.LOCAL_IMAGE_API_ENDPOINT;
+                    return this.$config.localImageApiEndpoint;
                 case 's3':
-                    return this.$config.S3_IMAGE_API_ENDPOINT;
+                    return this.$config.s3ImageApiEndpoint;
             }
         },
         transformationPath () {
-            switch (this.$config.IMAGE_PROVIDER) {
+            switch (this.$config.imageProvider) {
                 case 'local':
                     return this.height
                         ? `/crop/${this.width}/${this.height}`
@@ -46,7 +46,7 @@ export default {
             }
         },
         imagePath () {
-            switch (this.$config.IMAGE_PROVIDER) {
+            switch (this.$config.imageProvider) {
                 case 'local':
                     return `/${this.src}`
                 case 's3':

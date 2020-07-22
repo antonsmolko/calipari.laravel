@@ -91,9 +91,6 @@ export default {
         },
         imagePlaceholder () {
             return this.$config.imagePlaceholder;
-        },
-        baseImageUrl () {
-            return `${this.$config.BASE_IMAGE_URL}/widen/400`;
         }
     },
     methods: {

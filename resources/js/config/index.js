@@ -1,10 +1,16 @@
+const appUrl = process.env.VUE_APP_API_URL || 'https://manager.local.calipari.ru/api';
+const baseUrl = process.env.VUE_APP_BASE_URL || '/api/cms';
+const imageProvider = process.env.VUE_APP_IMAGE_PROVIDER || 's3'; // 'local', 's3'
+const localImageApiEndpoint = process.env.VUE_APP_LOCAL_IMAGE_API_ENDPOINT || '/api/image';
+const s3ImageApiEndpoint = process.env.VUE_APP_S3_ENDPOINT || 'https://d38w12trhxpmo3.cloudfront.net'
+
 export default {
-    appUrl: process.env.VUE_APP_API_URL,
-    baseUrl: process.env.VUE_APP_BASE_URL,
+    appUrl,
+    baseUrl,
     imagePlaceholder: '/img/image_placeholder.jpg',
-    IMAGE_PROVIDER: process.env.VUE_APP_IMAGE_PROVIDER, // 'local', 's3',
-    LOCAL_IMAGE_API_ENDPOINT: `${process.env.VUE_APP_API_URL}/${process.env.VUE_APP_LOCAL_IMAGE_API_ENDPOINT}`,
-    S3_IMAGE_API_ENDPOINT: process.env.VUE_APP_S3_ENDPOINT,
+    imageProvider,
+    localImageApiEndpoint,
+    s3ImageApiEndpoint,
 
     ALIAS_REGEXP: /^([a-z0-9]+[-]?)+[a-z0-9]$/,
 
