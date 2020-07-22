@@ -1,10 +1,10 @@
 export default {
-    appUrl: 'https://manager.calipari.ru',
-    baseUrl: '/api/cms',
+    appUrl: process.env.VUE_APP_API_URL,
+    baseUrl: process.env.VUE_APP_BASE_URL,
     imagePlaceholder: '/img/image_placeholder.jpg',
-    IMAGE_PROVIDER: 's3', // 'local', 's3',
-    LOCAL_IMAGE_API_ENDPOINT: 'https://manager.calipari.ru/api/image',
-    S3_IMAGE_API_ENDPOINT: 'https://d33ghnif9htj1j.cloudfront.net',
+    IMAGE_PROVIDER: process.env.VUE_APP_IMAGE_PROVIDER, // 'local', 's3',
+    LOCAL_IMAGE_API_ENDPOINT: `${process.env.VUE_APP_API_URL}/${process.env.VUE_APP_LOCAL_IMAGE_API_ENDPOINT}`,
+    S3_IMAGE_API_ENDPOINT: process.env.VUE_APP_S3_ENDPOINT,
 
     ALIAS_REGEXP: /^([a-z0-9]+[-]?)+[a-z0-9]$/,
 

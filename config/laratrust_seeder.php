@@ -37,7 +37,7 @@ return [
             'posts' => 'c,r,u,d',
             'roles' => 'c,r,u,d'
         ],
-        config('settings.super_admin_role_name') => [
+        'super_admin' => [
             'users' => 'c,r,u,d',
             'profile' => 'r,u',
             'images' => 'c,r,u,d,x',
