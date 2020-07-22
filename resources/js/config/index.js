@@ -4,6 +4,8 @@ const imageProvider = process.env.MIX_IMAGE_PROVIDER || 's3'; // 'local', 's3'
 const localImageApiEndpoint = process.env.MIX_LOCAL_IMAGE_API_ENDPOINT || '/api/image';
 const s3ImageApiEndpoint = process.env.MIX_S3_ENDPOINT || 'https://d38w12trhxpmo3.cloudfront.net'
 
+
+console.log(process.env.MIX_S3_ENDPOINT)
 export default {
     appUrl,
     baseUrl,
