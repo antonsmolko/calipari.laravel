@@ -76,8 +76,7 @@
     "prefer-stable": true,
     "scripts": {
         "post-install-cmd": [
-            "php artisan cache:clear",
-            "php artisan migrate"
+            "php artisan cache:clear"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
