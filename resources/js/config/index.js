@@ -1,5 +1,5 @@
 const isProd = process.env.NODE_ENV === 'production'
-console.log(isProd)
+
 const appUrl = isProd ? process.env.MIX_API_URL : 'https://manager.local.calipari.ru/api';
 const baseUrl = isProd ? process.env.MIX_BASE_URL : '/api/cms';
 const imageProvider = isProd ? process.env.MIX_IMAGE_PROVIDER : 'local'; // 'local', 's3'
