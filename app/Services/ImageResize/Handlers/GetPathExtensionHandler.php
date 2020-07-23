@@ -30,9 +30,10 @@ class GetPathExtensionHandler
         dump('filePath');
         dump($filePath);
         if (!File::isFile($filePath)) {
-            dump('isFile === false');
             $filePath = $this->noImagePath;
         }
+        dump('isFile');
+        dump(File::isFile($filePath));
 
         list(, $ext) = explode('.', $path);
 
