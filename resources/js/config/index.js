@@ -1,11 +1,11 @@
-const appUrl = process.env.MIX_API_URL || 'https://manager.local.calipari.ru/api';
-const baseUrl = process.env.MIX_BASE_URL || '/api/cms';
-const imageProvider = process.env.MIX_IMAGE_PROVIDER || 's3'; // 'local', 's3'
-const localImageApiEndpoint = process.env.MIX_LOCAL_IMAGE_API_ENDPOINT || '/api/image';
-const s3ImageApiEndpoint = process.env.MIX_S3_ENDPOINT || 'https://d38w12trhxpmo3.cloudfront.net'
+const isProd = process.env.NODE_ENV === 'production'
+console.log(isProd)
+const appUrl = isProd ? process.env.MIX_API_URL : 'https://manager.local.calipari.ru/api';
+const baseUrl = isProd ? process.env.MIX_BASE_URL : '/api/cms';
+const imageProvider = isProd ? process.env.MIX_IMAGE_PROVIDER : 'local'; // 'local', 's3'
+const localImageApiEndpoint = isProd ? process.env.MIX_LOCAL_IMAGE_API_ENDPOINT : '/api/image';
+const s3ImageApiEndpoint = isProd ? process.env.MIX_S3_ENDPOINT : 'https://d38w12trhxpmo3.cloudfront.net'
 
-
-console.log(process.env.MIX_S3_ENDPOINT)
 export default {
     appUrl,
     baseUrl,

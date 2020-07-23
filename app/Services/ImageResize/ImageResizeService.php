@@ -68,6 +68,9 @@ class ImageResizeService
     public function crop(string $width, string $height, string $path)
     {
         list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
+        dump('$imgPath / $ext');
+        dump($imgPath);
+        dump($ext);
         $img = $this->repository->crop($imgPath, $width, $height);
 
         return $this->createResponseHandler->handle($img, $ext);

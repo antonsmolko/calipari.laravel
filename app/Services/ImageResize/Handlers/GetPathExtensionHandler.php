@@ -27,6 +27,8 @@ class GetPathExtensionHandler
     {
         $filePath = $this->storagePath . '/' . implode('/', [$path[0], $path[0] . $path[1] . $path[2], $path]);
 
+        dump('filePath');
+        dump($filePath);
         if (!File::isFile($filePath)) {
             $filePath = $this->noImagePath;
         }
