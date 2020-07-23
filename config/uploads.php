@@ -4,7 +4,7 @@ return [
     's3_api_endpoint' => 'https://d33ghnif9htj1j.cloudfront.net',
     'default_max_print_width' => 250,
     'image_upload_path' => 'public/uploads/images',
-    'image_storage_path' => 'storage/uploads/images',
+    'image_storage_path' => '/storage/uploads/images',
     'no_image_path' => 'storage/uploads/no_image/image_placeholder.jpg',
     'storage_permissions' => 0755,
     'image_resize_quality' => 90,
