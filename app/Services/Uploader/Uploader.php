@@ -14,7 +14,6 @@ class Uploader
 {
     private UploadedFile $uploadedFile;
     private array $fileProps = [];
-    private string $storagePath;
     private string $uploadPath;
     private array $uploadRules;
     private int $defaultMaxPrintWidth;
@@ -27,7 +26,6 @@ class Uploader
     ) {
         $this->imageValidationBuilder = $imageValidationBuilder;
         $this->formats = $formatService->index();
-        $this->storagePath = ltrim(config('uploads.image_storage_path', ''));
         $this->uploadPath = ltrim(config('uploads.image_upload_path', ''));
         $this->uploadRules = config('uploads.image_upload_rules', '');
         $this->defaultMaxPrintWidth = config('uploads.default_max_print_width');
@@ -139,7 +137,7 @@ class Uploader
         $this->clearState();
         $this->uploadedFile = $uploadedFile;
         $this->validate();
-        $this->setQuantitativeProps($uploadedFile, $this->storagePath, $name);
+        $this->setQuantitativeProps($uploadedFile, $name);
 
         if ($name) {
             $this->remove($name);
@@ -178,11 +176,10 @@ class Uploader
     {
         $dir = $this->getUploadedBaseDirPath($path);
         $filePath = $dir . '/' . $path;
-        $storageFilePath = $this->storagePath . '/' . $filePath;
 
         Storage::disk('s3')->delete($filePath);
 
-        return File::delete($storageFilePath);
+        return Storage::delete($this->uploadPath . '/' . $filePath);
     }
 
     /**
@@ -214,10 +211,9 @@ class Uploader
      * Set the quantitative properties of the uploaded image file
      *
      * @param UploadedFile $uploadedFile
-     * @param string $pathStorage
      * @param string $refreshName
      */
-    protected function setQuantitativeProps(UploadedFile $uploadedFile, string $pathStorage, string $refreshName = null)
+    protected function setQuantitativeProps(UploadedFile $uploadedFile, string $refreshName = null)
     {
         list($width, $height) = getImageSize($uploadedFile);
         $formatId = $this->getFormatId($width, $height);
@@ -229,7 +225,6 @@ class Uploader
         $this->setProps('format_id', $formatId);
         $this->setProps('name', $name); // 3e89bc7b416ccce075e0fca2f2cc1172feb6dc24.jpg
         $this->setProps('directory', $dir); // 3/3e8
-        $this->setProps('path', $pathStorage . '/' . $dir);
     }
 
     /**
