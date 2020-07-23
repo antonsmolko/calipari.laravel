@@ -76,7 +76,7 @@
     "prefer-stable": true,
     "scripts": {
         "post-install-cmd": [
-            "chmod -Rvc 777 app/storage",
+            "chmod -Rvc 777 storage",
             "chmod -R 777 public",
             "php artisan cache:clear"
         ],
