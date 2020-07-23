@@ -28,7 +28,6 @@ class GetPathExtensionHandler
     {
         $filePath = 'public/uploads/images' . '/' . implode('/', [$path[0], $path[0] . $path[1] . $path[2], $path]);
 
-        dump(Storage::exists($filePath));
         if (!Storage::exists($filePath)) {
             $filePath = $this->noImagePath;
         }
