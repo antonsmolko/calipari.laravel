@@ -28,11 +28,11 @@ class GetPathExtensionHandler
         $filePath = $this->uploadsPath . '/' . implode('/', [$path[0], $path[0] . $path[1] . $path[2], $path]);
 
         $file = Storage::exists($filePath)
-            ? $this->noImagePath
-            : Storage::get($filePath);
+            ? $filePath
+            : $this->noImagePath;
 
         list(, $ext) = explode('.', $path);
 
-        return [$file, $ext];
+        return [Storage::get($file), $ext];
     }
 }
