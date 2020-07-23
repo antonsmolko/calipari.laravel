@@ -3,16 +3,16 @@
 namespace App\Services\ImageResize;
 
 use App\Services\ImageResize\Handlers\CreateResponseHandler;
+use App\Services\ImageResize\Handlers\GetFileEntriesHandler;
 use App\Services\ImageResize\Handlers\GetOrderImageHandler;
 use App\Services\ImageResize\Handlers\GetMailOrderImageThumbHandler;
 use App\Services\ImageResize\Handlers\GetOrderImageThumbHandler;
-use App\Services\ImageResize\Handlers\GetPathExtensionHandler;
 use App\Services\ImageResize\Repositories\ImageResizeRepository;
 
 class ImageResizeService
 {
     private ImageResizeRepository $repository;
-    private GetPathExtensionHandler $pathExtensionHandler;
+    private GetFileEntriesHandler $getFileEntriesHandler;
     private CreateResponseHandler $createResponseHandler;
     private GetOrderImageHandler $getOrderImageHandler;
     private GetMailOrderImageThumbHandler $getMailOrderImageThumbHandler;
@@ -22,7 +22,7 @@ class ImageResizeService
     /**
      * ImageResizeService constructor.
      * @param ImageResizeRepository $repository
-     * @param GetPathExtensionHandler $getPathExtensionHandler
+     * @param GetFileEntriesHandler $getFileEntriesHandler
      * @param CreateResponseHandler $createResponseHandler
      * @param GetOrderImageHandler $getOrderImageHandler
      * @param GetMailOrderImageThumbHandler $getMailOrderImageThumbHandler
@@ -30,7 +30,7 @@ class ImageResizeService
      */
     public function __construct(
         ImageResizeRepository $repository,
-        GetPathExtensionHandler $getPathExtensionHandler,
+        GetFileEntriesHandler $getFileEntriesHandler,
         CreateResponseHandler $createResponseHandler,
         GetOrderImageHandler $getOrderImageHandler,
         GetMailOrderImageThumbHandler $getMailOrderImageThumbHandler,
@@ -38,7 +38,7 @@ class ImageResizeService
     )
     {
         $this->repository = $repository;
-        $this->pathExtensionHandler = $getPathExtensionHandler;
+        $this->getFileEntriesHandler = $getFileEntriesHandler;
         $this->createResponseHandler = $createResponseHandler;
         $this->getOrderImageHandler = $getOrderImageHandler;
         $this->getMailOrderImageThumbHandler = $getMailOrderImageThumbHandler;
@@ -53,8 +53,8 @@ class ImageResizeService
      */
     public function resize(string $width, string $height, string $path)
     {
-        list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
-        $img = $this->repository->resize($imgPath, $width, $height);
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+        $img = $this->repository->resize($file, $width, $height);
 
         return $this->createResponseHandler->handle($img, $ext);
     }
@@ -67,8 +67,8 @@ class ImageResizeService
      */
     public function crop(string $width, string $height, string $path)
     {
-        list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
-        $img = $this->repository->crop($imgPath, $width, $height);
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+        $img = $this->repository->crop($file, $width, $height);
 
         return $this->createResponseHandler->handle($img, $ext);
     }
@@ -95,9 +95,9 @@ class ImageResizeService
         string $colorize
     )
     {
-        list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
-
-        $img = $this->getOrderImageHandler->handle($imgPath, $width, $height, $x, $y, $flipH, $flipV, $colorize);
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+        $img = $this->getOrderImageHandler
+            ->handle($file, $width, $height, $x, $y, $flipH, $flipV, $colorize);
 
         return $this->createResponseHandler->handle($img, $ext);
     }
@@ -124,9 +124,9 @@ class ImageResizeService
         string $colorize
     )
     {
-        list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
-
-        $img = $this->getMailOrderImageThumbHandler->handle($imgPath, $width, $height, $x, $y, $flipH, $flipV, $colorize);
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+        $img = $this->getMailOrderImageThumbHandler
+            ->handle($file, $width, $height, $x, $y, $flipH, $flipV, $colorize);
 
         return $this->createResponseHandler->handle($img, $ext);
     }
@@ -153,9 +153,9 @@ class ImageResizeService
         string $colorize
     )
     {
-        list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
-
-        $img = $this->getOrderImageThumbHandler->handle($imgPath, $width, $height, $x, $y, $flipH, $flipV, $colorize);
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+        $img = $this->getOrderImageThumbHandler
+            ->handle($file, $width, $height, $x, $y, $flipH, $flipV, $colorize);
 
         return $this->createResponseHandler->handle($img, $ext);
     }
@@ -168,8 +168,8 @@ class ImageResizeService
      */
     public function fit($width, $height, $path)
     {
-        list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
-        $img = $this->repository->fit($imgPath, $width, $height);
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+        $img = $this->repository->fit($file, $width, $height);
 
         return $this->createResponseHandler->handle($img, $ext);
     }
@@ -181,9 +181,8 @@ class ImageResizeService
      */
     public function widen(int $width, string $path)
     {
-        list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
-
-        $img = $this->repository->widen($imgPath, $width);
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+        $img = $this->repository->widen($file, $width);
 
         return $this->createResponseHandler->handle($img, $ext);
     }
@@ -195,8 +194,8 @@ class ImageResizeService
      */
     public function heighten($height, $path)
     {
-        list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
-        $img = $this->repository->heighten($imgPath, $height);
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+        $img = $this->repository->heighten($file, $height);
 
         return $this->createResponseHandler->handle($img, $ext);
     }
@@ -207,8 +206,8 @@ class ImageResizeService
      */
     public function show(string $path)
     {
-        list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
-        $img = $this->repository->show($imgPath);
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+        $img = $this->repository->show($file);
 
         return $this->createResponseHandler->handle($img, $ext);
     }
@@ -219,8 +218,8 @@ class ImageResizeService
      */
     public function showGrayscale($path)
     {
-        list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
-        $img = $this->repository->showGrayscale($imgPath);
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+        $img = $this->repository->showGrayscale($file);
 
         return $this->createResponseHandler->handle($img, $ext);
     }

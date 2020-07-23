@@ -5,7 +5,7 @@ namespace App\Services\ImageResize\Handlers;
 
 use Illuminate\Support\Facades\Storage;
 
-class GetPathExtensionHandler
+class GetFileEntriesHandler
 {
     private string $uploadsPath;
     private string $noImagePath;
@@ -25,14 +25,14 @@ class GetPathExtensionHandler
      */
     public function handle(string $path): array
     {
-        $filePath = $this->uploadsPath . '/' . implode('/', [$path[0], $path[0] . $path[1] . $path[2], $path]);
+        $pathToFile = $this->uploadsPath . '/' . implode('/', [$path[0], $path[0] . $path[1] . $path[2], $path]);
 
-        $file = Storage::exists($filePath)
-            ? $filePath
+        $filePath = Storage::exists($pathToFile)
+            ? $pathToFile
             : $this->noImagePath;
 
         list(, $ext) = explode('.', $path);
 
-        return [Storage::get($file), $ext];
+        return [Storage::get($filePath), $ext];
     }
 }

@@ -24,7 +24,7 @@ class GetMailOrderImageThumbHandler
     }
 
     /**
-     * @param string $imgPath
+     * @param string $file
      * @param string $width
      * @param string $height
      * @param string $x
@@ -35,7 +35,7 @@ class GetMailOrderImageThumbHandler
      * @return \Intervention\Image\Image
      */
     public function handle(
-        string $imgPath,
+        string $file,
         string $width,
         string $height,
         string $x,
@@ -46,7 +46,7 @@ class GetMailOrderImageThumbHandler
     )
     {
         return $this->imageProcessingBuilder
-            ->make($imgPath)
+            ->make($file)
             ->flipH($flipH)
             ->flipV($flipV)
             ->crop($width, $height, $x, $y)

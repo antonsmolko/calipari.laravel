@@ -55,7 +55,6 @@
     "extra": {
         "laravel": {
             "dont-discover": [
-                "laravel/telescope"
             ]
         }
     },
@@ -76,6 +75,11 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
+        "post-install-cmd": [
+            "php artisan optimize",
+            "php artisan cache:clear",
+            "php artisan migrate"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"

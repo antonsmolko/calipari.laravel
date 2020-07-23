@@ -21,58 +21,58 @@ class ImageResizeRepository
     }
 
     /**
-     * @param string $imgPath
+     * @param string $file
      * @param string $width
      * @param string $height
-     * @return mixed
+     * @return \Intervention\Image\Image
      */
-    public function resize(string $imgPath, string $width, string $height)
+    public function resize(string $file, string $width, string $height)
     {
-        return Image::cache(function ($image) use ($imgPath, $width, $height) {
-            $image->make($imgPath)->resize($width, $height, function ($constraint) {
+        return Image::cache(function ($image) use ($file, $width, $height) {
+            $image->make($file)->resize($width, $height, function ($constraint) {
                 $constraint->aspectRatio();
             });
         }, $this->cacheTime, true);
     }
 
     /**
-     * @param string $imgPath
+     * @param string $file
      * @param string $width
      * @param string $height
-     * @return mixed
+     * @return \Intervention\Image\Image
      */
-    public function crop(string $imgPath, string $width, string $height)
+    public function crop(string $file, string $width, string $height)
     {
-        return Image::cache(function ($image) use ($imgPath, $width, $height) {
-            $image->make($imgPath)->crop($width, $height);
+        return Image::cache(function ($image) use ($file, $width, $height) {
+            $image->make($file)->crop($width, $height);
         }, $this->cacheTime, true);
     }
 
     /**
-     * @param string $imgPath
+     * @param string $file
      * @param string $width
      * @param string $height
      * @param string $x
      * @param string $y
      * @return \Intervention\Image\Image
      */
-    public function orderCrop(string $imgPath, string $width, string $height, string $x, string $y)
+    public function orderCrop(string $file, string $width, string $height, string $x, string $y)
     {
-        return Image::cache(function ($image) use ($imgPath, $width, $height, $x, $y) {
-            $image->make($imgPath)->crop($width, $height, $x, $y);
+        return Image::cache(function ($image) use ($file, $width, $height, $x, $y) {
+            $image->make($file)->crop($width, $height, $x, $y);
         }, $this->cacheTime, true);
     }
 
     /**
-     * @param string $imgPath
+     * @param string $file
      * @param string $width
      * @param string $height
-     * @return mixed
+     * @return \Intervention\Image\Image
      */
-    public function fit(string $imgPath, string $width, string $height)
+    public function fit(string $file, string $width, string $height)
     {
-        return  Image::cache(function ($image) use ($imgPath, $width, $height) {
-            $image->make($imgPath)->fit($width, $height, function ($constraint) {
+        return  Image::cache(function ($image) use ($file, $width, $height) {
+            $image->make($file)->fit($width, $height, function ($constraint) {
                 $constraint->upsize();
             });
         }, $this->cacheTime, true);
@@ -104,28 +104,28 @@ class ImageResizeRepository
     }
 
     /**
-     * @param string $imgPath
+     * @param string $file
      * @param string $width
      * @return mixed
      */
-    public function widen(string $imgPath, string $width)
+    public function widen(string $file, string $width)
     {
-        return Image::cache(function ($image) use ($imgPath, $width) {
-            $image->make($imgPath)->widen($width, function ($constraint) {
+        return Image::cache(function ($image) use ($file, $width) {
+            $image->make($file)->widen($width, function ($constraint) {
                 $constraint->upsize();
             });
         }, $this->cacheTime, true);
     }
 
     /**
-     * @param string $imgPath
+     * @param string $file
      * @param string $height
      * @return mixed
      */
-    public function heighten(string $imgPath, string $height)
+    public function heighten(string $file, string $height)
     {
-        return Image::cache(function ($image) use ($imgPath, $height) {
-            $image->make($imgPath)->heighten($height, function ($constraint) {
+        return Image::cache(function ($image) use ($file, $height) {
+            $image->make($file)->heighten($height, function ($constraint) {
                 $constraint->upsize();
             });
         }, $this->cacheTime, true);
@@ -141,23 +141,23 @@ class ImageResizeRepository
     }
 
     /**
-     * @param string $imgPath
+     * @param string $file
      * @return mixed
      */
-    public function showGrayscale(string $imgPath)
+    public function showGrayscale(string $file)
     {
-        return Image::cache(function ($image) use ($imgPath) {
-            $image->make($imgPath)->greyscale();
+        return Image::cache(function ($image) use ($file) {
+            $image->make($file)->greyscale();
         }, $this->cacheTime, true);
     }
 
     /**
-     * @param string $imagePath
+     * @param string $file
      * @return \Intervention\Image\Image
      */
-    public function make(string $imagePath): \Intervention\Image\Image
+    public function make(string $file): \Intervention\Image\Image
     {
-        return Image::make($imagePath);
+        return Image::make($file);
     }
 
     /**

@@ -36,7 +36,7 @@ class ImageProcessingHandler
     }
 
     public function handle(
-        string $imgPath,
+        string $file,
         string $width,
         string $height,
         string $x,
@@ -46,7 +46,7 @@ class ImageProcessingHandler
     )
     {
         $this
-            ->init($imgPath, $width, $height, $x, $y, $flip, $colorize)
+            ->init($file, $width, $height, $x, $y, $flip, $colorize)
             ->make()
             ->flip()
             ->crop()
@@ -58,7 +58,7 @@ class ImageProcessingHandler
     }
 
     /**
-     * @param string $imgPath
+     * @param string $file
      * @param string $width
      * @param string $height
      * @param string $x
@@ -68,7 +68,7 @@ class ImageProcessingHandler
      * @return ImageProcessingHandler
      */
     protected function init(
-        string $imgPath,
+        string $file,
         string $width,
         string $height,
         string $x,
@@ -77,7 +77,7 @@ class ImageProcessingHandler
         string $colorize
     ): ImageProcessingHandler
     {
-        $this->imgPath = $imgPath;
+        $this->imgPath = $file;
         $this->width = $width;
         $this->height = $height;
         $this->x = $x;
