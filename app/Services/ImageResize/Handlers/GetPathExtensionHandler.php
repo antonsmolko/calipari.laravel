@@ -35,6 +35,6 @@ class GetPathExtensionHandler
 
         list(, $ext) = explode('.', $path);
 
-        return [Storage::url($filePath), $ext];
+        return [Storage::get($filePath), $ext];
     }
 }
