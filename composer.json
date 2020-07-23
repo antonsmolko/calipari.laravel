@@ -76,7 +76,6 @@
     "prefer-stable": true,
     "scripts": {
         "post-install-cmd": [
-            "php artisan optimize",
             "php artisan cache:clear",
             "php artisan migrate"
         ],
