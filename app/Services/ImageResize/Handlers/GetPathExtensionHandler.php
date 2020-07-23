@@ -34,6 +34,9 @@ class GetPathExtensionHandler
         }
         dump('isFile');
         dump(File::isFile($filePath));
+        $local = storage_path("app/" . config('uploads.image_upload_path'));
+        dump('upload path');
+        dump($local);
 
         list(, $ext) = explode('.', $path);
 
