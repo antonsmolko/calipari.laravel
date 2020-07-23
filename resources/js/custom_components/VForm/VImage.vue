@@ -7,7 +7,7 @@
                     <div class="image-container">
                         <resource-image
                             v-if="imgDefault"
-                            :src="imgDefault"
+                            :name="imgDefault"
                             :width="300"/>
                         <img v-else :src="imagePlaceholder" alt="">
                     </div>

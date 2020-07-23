@@ -1,11 +1,9 @@
 <template>
-    <div v-if="path">
-        <resource-image
-            class="md-table-thumb img-raised rounded"
-            :style="`width: ${width}px; height: ${width*0.6}px`"
-            :src="path"
-            :width="width*2"/>
-    </div>
+    <resource-image
+        class="md-table-thumb img-raised rounded"
+        :style="`width: ${width}px; height: ${width*0.6}px`"
+        :name="path"
+        :width="width*2"/>
 </template>
 
 <script>
@@ -18,7 +16,7 @@ export default {
     props: {
         path: {
             type: String,
-            required: true
+            default: null
         },
         width: {
             type: Number,

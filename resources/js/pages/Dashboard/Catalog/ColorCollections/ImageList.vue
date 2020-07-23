@@ -127,7 +127,7 @@
                 mainImage: null,
                 responseData: false,
                 storeModule: 'images',
-                redirectRoute: 'manager.catalog.color-collections'
+                redirectRoute: 'cms.catalog.color-collections'
             }
         },
         computed: {

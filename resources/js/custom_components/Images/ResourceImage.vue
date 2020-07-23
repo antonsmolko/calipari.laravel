@@ -3,10 +3,13 @@
 </template>
 
 <script>
+import { getS3ImageUrl } from "@/helpers";
+import $config from "@/config"
+
 export default {
     name: "ResourceImage",
     props: {
-        src: {
+        name: {
             type: String,
             default: null
         },
@@ -21,37 +24,9 @@ export default {
     },
     computed: {
         url () {
-            return this.src
-                ? `${this.baseUrl}${this.transformationPath}${this.imagePath}`
-                : this.$config.imagePlaceholder;
-        },
-        baseUrl () {
-            switch (this.$config.imageProvider) {
-                case 'local':
-                    return this.$config.localImageApiEndpoint;
-                case 's3':
-                    return this.$config.s3ImageApiEndpoint;
-            }
-        },
-        transformationPath () {
-            switch (this.$config.imageProvider) {
-                case 'local':
-                    return this.height
-                        ? `/crop/${this.width}/${this.height}`
-                        : `/widen/${this.width}`;
-                case 's3':
-                    const height = this.height ? this.height : this.width * 5;
-
-                    return `/fit-in/${this.width}x${height}`;
-            }
-        },
-        imagePath () {
-            switch (this.$config.imageProvider) {
-                case 'local':
-                    return `/${this.src}`
-                case 's3':
-                    return `/${this.src.slice(0,1)}/${this.src.slice(0,3)}/${this.src}`
-            }
+            return this.name
+                ? getS3ImageUrl({ name: this.name, width: this.width, height: this.height })
+                : $config.imagePlaceholder
         }
     }
 }

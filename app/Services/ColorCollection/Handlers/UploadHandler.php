@@ -42,7 +42,7 @@ class UploadHandler
      */
     public function handle(ColorCollection $colorCollection, array $uploadFiles)
     {
-        return array_map(function ($file) use ($colorCollection) {
+        $imageKeys = array_map(function ($file) use ($colorCollection) {
             if ($colorCollection->mainImage && !uploader()->isEqualSizes($file, $colorCollection->mainImage)) {
                 abort(422, __('image_validation.dimensions_should_be_same_as_previous', [
                     'width' => $colorCollection->mainImage->width,
@@ -50,10 +50,14 @@ class UploadHandler
                 ]));
             }
 
-            $imageData = uploader()->upload($file);
+            $imageData = uploader()->store($file);
             $image = $this->imageRepository->store($imageData);
 
             return $this->snapImageHandler->handle($colorCollection, $image);
         }, $uploadFiles);
+
+        uploader()->syncStorageFromLocalToS3();
+
+        return $imageKeys;
     }
 }

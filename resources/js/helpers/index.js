@@ -55,6 +55,47 @@ export const getGates = (page) => {
         .map((key) => rolesMap[key]))
 }
 
+const getS3ImageRequest = ({ name, fit, width, height, grayscale }) => {
+    const key = `${name.slice(0, 1)}/${name.slice(0, 3)}/${name}`
+
+    const request = {
+        bucket: $config.awsBucket,
+        key,
+        edits: {
+            resize: {
+                fit: 'cover'
+            }
+        }
+    }
+
+    if (width || height) {
+        request.edits.resize.fit = fit
+
+        if (width) {
+            request.edits.resize.width = width
+        }
+
+        if (height) {
+            request.edits.resize.height = height
+        }
+    }
+
+    request.edits.grayscale = grayscale
+
+    return request
+}
+
+export const getS3ImageUrl = ({ name, fit = 'cover', width = null, height = null, grayscale = false }) => {
+    if (!name) {
+        return ''
+    }
+
+    const request = getS3ImageRequest({ name, fit, width, height, grayscale })
+    const encodeRequest = btoa(JSON.stringify(request))
+
+    return `${$config.s3ImageEndpoint}/${encodeRequest}`
+}
+
 export default {
     getFormatPrice,
     getArticle,
