@@ -68,8 +68,6 @@ class ImageResizeService
     public function crop(string $width, string $height, string $path)
     {
         list($imgPath, $ext) = $this->pathExtensionHandler->handle($path);
-        dump('full storage path');
-        dump(app_path(storage_path('uploads/images')));
         $img = $this->repository->crop($imgPath, $width, $height);
 
         return $this->createResponseHandler->handle($img, $ext);
