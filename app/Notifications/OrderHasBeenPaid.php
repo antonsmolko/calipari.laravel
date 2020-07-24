@@ -47,7 +47,7 @@ class OrderHasBeenPaid extends Notification
         $paymentData = $this->paymentData;
 
         return (new SlackMessage)
-            ->from('Calipari', ':moneybag:')
+            ->from('calipari.ru', ':moneybag:')
             ->to('#orders')
             ->content( $paymentData['description'])
             ->attachment(function ($attachment) use ($paymentData) {

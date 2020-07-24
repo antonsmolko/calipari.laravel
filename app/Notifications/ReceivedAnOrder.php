@@ -47,7 +47,7 @@ class ReceivedAnOrder extends Notification
         $order = $this->order;
 
         return (new SlackMessage)
-            ->from('Calipari', ':package:')
+            ->from('calipari.ru', ':package:')
             ->to('#orders')
             ->content('Поступил новый заказ № ' . $order->number)
             ->attachment(function ($attachment) use ($order) {

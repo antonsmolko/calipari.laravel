@@ -49,7 +49,7 @@ class PaymentController extends Controller
     {
         if ($request->event === 'payment.succeeded') {
             Notification::route('slack', env('ORDERS_SLACK_WEBHOOK_URL'))
-                ->notify(new OrderHasBeenPaid($request->all()));
+                ->notify(new OrderHasBeenPaid($request->object));
         }
     }
 }
