@@ -51,7 +51,7 @@ class OrderHasBeenPaid extends Notification
             ->to('#orders')
             ->content( $paymentData['description'])
             ->attachment(function ($attachment) use ($paymentData) {
-                $cardRegExp = '/[0-9*]{4}/g';
+                $cardRegExp = "/[0-9*]{4}/g";
                 $cardPattern = '${1} ${2} ${3} ${4}';
                 $cardNumber = $paymentData['payment_method']['card']['first6'] . '******' . $paymentData['payment_method']['card']['last4'];
                 $formatCardNumber = preg_replace($cardRegExp, $cardPattern, $cardNumber);
