@@ -5,8 +5,9 @@ namespace App\Http\Controllers\API\Payment;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FormRequest;
 use App\Models\Order;
+use App\Notifications\OrderHasBeenPaid;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use YandexCheckout\Client;
 
 class PaymentController extends Controller
@@ -20,7 +21,6 @@ class PaymentController extends Controller
         }
 
         $order = Order::where('number', $orderNumber)->firstOrFail();
-
         $client = new Client();
         $client->setAuth('701629', 'test_1Qi2WQ4f0vD8EgDvJUMZqs8CqFFLWSxIea4ZM5-SpV8');
 
@@ -47,6 +47,7 @@ class PaymentController extends Controller
 
     public function notify(FormRequest $request)
     {
-        dd($request);
+        Notification::route('slack', env('ORDERS_SLACK_WEBHOOK_URL'))
+            ->notify(new OrderHasBeenPaid($request->all()));
     }
 }
