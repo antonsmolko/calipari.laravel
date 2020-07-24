@@ -50,6 +50,7 @@ class ClientOrderService extends ClientBaseResourceService
         }
 
         event(new OrderCreated($order));
+
         Notification::route('slack', env('ORDERS_SLACK_WEBHOOK_URL'))
             ->notify(new ReceivedAnOrder($order));
 

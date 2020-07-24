@@ -13,16 +13,16 @@ class OrderHasBeenPaid extends Notification
 {
     use Queueable;
 
-    private array $data;
+    private array $paymentData;
 
     /**
      * Create a new notification instance.
      *
-     * @param array $data
+     * @param array $paymentData
      */
-    public function __construct(array $data)
+    public function __construct(array $paymentData)
     {
-        $this->data = $data;
+        $this->paymentData = $paymentData;
     }
 
     /**
@@ -44,10 +44,27 @@ class OrderHasBeenPaid extends Notification
      */
     public function toSlack($notifiable)
     {
+        $paymentData = $this->paymentData;
+
         return (new SlackMessage)
             ->from('Calipari', ':moneybag:')
             ->to('#orders')
-            ->content(json_encode($this->data));
+            ->content( $paymentData['description'])
+            ->attachment(function ($attachment) use ($paymentData) {
+                $cardRegExp = '/[0-9*]{4}/g';
+                $cardPattern = '${1} ${2} ${3} ${4}';
+                $cardNumber = $paymentData['payment_method']['card']['first'] . '******' . $paymentData['payment_method']['card']['last'];
+                $formatCardNumber = preg_replace($cardRegExp, $cardPattern, $cardNumber);
+                /** Не форматировать. Оставить так. !!! */
+                $attachment
+                    ->content(
+                        '*ID платежа* - ' . $paymentData['id'] . '
+*Сумма* - ' . $paymentData['amount']['value'] . ' ₽
+*Карта: номер* - ' . $formatCardNumber . '
+*Карта: месяц/год* - ' . $paymentData['payment_method']['card']['expiry_month'] . '/' . $paymentData['payment_method']['card']['expiry_year'] . '
+*Карта: платежная система* - ' . $paymentData['payment_method']['card']['card_type'])
+                    ->markdown(['text']);
+            });
     }
 
     /**
