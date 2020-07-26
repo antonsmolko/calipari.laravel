@@ -10,7 +10,7 @@ use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
 
-class OrderHasBeenPaid extends Notification
+class OrderHasBeenCanceled extends Notification
 {
     use Queueable;
 
@@ -48,22 +48,16 @@ class OrderHasBeenPaid extends Notification
         $paymentData = $this->paymentData;
 
         return (new SlackMessage)
-            ->from('calipari.ru', ':moneybag:')
+            ->from('calipari.ru', ':x:')
             ->to('#orders')
-            ->content($paymentData['description'] . ' - оплачен')
+            ->content($paymentData['description'] . 'отменен')
             ->attachment(function ($attachment) use ($paymentData) {
-                $cardRegExp = '/[0-9*]{4}/';
-                $cardNumber = $paymentData['payment_method']['card']['first6'] . '******' . $paymentData['payment_method']['card']['last4'];
-                $formattedCardNumber = Str::of($cardNumber)
-                    ->matchAll($cardRegExp)
-                    ->join(' ');
                 /** Не форматировать. Оставить так. !!! */
                 $attachment
                     ->content(
                         '*ID* - ' . $paymentData['id'] . '
 *Сумма* - ' . $paymentData['amount']['value'] . ' ₽
-*Карта: номер* - ' . $formattedCardNumber . '
-*Карта: месяц/год* - ' . $paymentData['payment_method']['card']['expiry_month'] . '/' . $paymentData['payment_method']['card']['expiry_year'] . '
+*Причина* - ' . $paymentData['payment_method']['card']['expiry_month'] . '/' . $paymentData['payment_method']['card']['expiry_year'] . '
 *Карта: платежная система* - ' . $paymentData['payment_method']['card']['card_type'])
                     ->markdown(['text']);
             });

@@ -9,6 +9,7 @@ use App\Models\OrderStatus;
 use App\Models\User;
 use App\Services\Order\Resources\ClientOrder as ClientOrderResource;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
+use App\Services\Order\Resources\ForPaymentClient as ForPaymentResource;
 
 class ClientOrderRepository extends ClientBaseResourceRepository
 {
@@ -45,6 +46,16 @@ class ClientOrderRepository extends ClientBaseResourceRepository
     }
 
     /**
+     * @param Order|ForPaymentResource $order
+     * @param array $updateData
+     * @return mixed
+     */
+    public function update($order, array $updateData)
+    {
+        return $order->update($updateData);
+    }
+
+    /**
      * @param Order $order
      * @param int $status
      * @return ClientOrderResource
@@ -54,5 +65,23 @@ class ClientOrderRepository extends ClientBaseResourceRepository
         $order->statuses()->syncWithoutDetaching([$status]);
 
         return new ClientOrderResource($order);
+    }
+
+    /**
+     * @param int $number
+     * @return ForPaymentResource
+     */
+    public function getItemForPayment(int $number)
+    {
+        return new ForPaymentResource($this->model::where('number', $number)->firstOrFail());
+    }
+
+    /**
+     * @param string $token
+     * @return mixed
+     */
+    public function getItemByCompletionToken(string $token)
+    {
+        return $this->model::where('completion_token', $token)->firstOrFail();
     }
 }

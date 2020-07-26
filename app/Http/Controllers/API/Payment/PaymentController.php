@@ -2,54 +2,74 @@
 
 namespace App\Http\Controllers\API\Payment;
 
+use App\Http\Controllers\API\Payment\Requests\CreateRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FormRequest;
-use App\Models\Order;
-use App\Notifications\OrderHasBeenPaid;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Notification;
-use YandexCheckout\Client;
+use App\Services\Payment\PaymentService;
+use Illuminate\Http\JsonResponse;
 
 class PaymentController extends Controller
 {
-    public function create(string $hashNumber)
+    private PaymentService $service;
+
+    /**
+     * PaymentController constructor.
+     * @param PaymentService $service
+     */
+    public function __construct(PaymentService $service)
     {
-        try {
-            $orderNumber = decrypt($hashNumber);
-        } catch (DecryptException $e) {
-            //
-        }
-
-        $order = Order::where('number', $orderNumber)->firstOrFail();
-        $client = new Client();
-        $client->setAuth('701629', 'test_1Qi2WQ4f0vD8EgDvJUMZqs8CqFFLWSxIea4ZM5-SpV8');
-
-        $payment = $client->createPayment(
-            array(
-                'amount' => array(
-                    'value' => $order->price,
-                    'currency' => 'RUB',
-                ),
-                'confirmation' => array(
-                    'type' => 'embedded'
-                ),
-                'capture' => true,
-                'description' => 'Заказ № ' . $orderNumber,
-                'metadata' => array(
-                    'order_id' => $order->id,
-                )
-            ),
-            uniqid('', true)
-        );
-
-        return response()->json($payment);
+        $this->service = $service;
     }
 
+    /**
+     * @param CreateRequest $request
+     * @return JsonResponse
+     * @throws \YandexCheckout\Common\Exceptions\ApiException
+     * @throws \YandexCheckout\Common\Exceptions\BadApiRequestException
+     * @throws \YandexCheckout\Common\Exceptions\ForbiddenException
+     * @throws \YandexCheckout\Common\Exceptions\InternalServerError
+     * @throws \YandexCheckout\Common\Exceptions\NotFoundException
+     * @throws \YandexCheckout\Common\Exceptions\ResponseProcessingException
+     * @throws \YandexCheckout\Common\Exceptions\TooManyRequestsException
+     * @throws \YandexCheckout\Common\Exceptions\UnauthorizedException
+     */
+    public function create(CreateRequest $request): JsonResponse
+    {
+        return response()->json($this->service->create($request->all()));
+    }
+
+    /**
+     * @param FormRequest $request
+     */
     public function notify(FormRequest $request)
     {
-        if ($request->event === 'payment.succeeded') {
-            Notification::route('slack', env('ORDERS_SLACK_WEBHOOK_URL'))
-                ->notify(new OrderHasBeenPaid($request->object));
-        }
+        $this->service->notify($request->all());
+    }
+
+    /**
+     * @param string $token
+     * @return int
+     */
+    public function confirmCompletion(string $token): int
+    {
+        return $this->service->confirmCompletion($token);
+    }
+
+    /**
+     * @param string $paymentId
+     * @return JsonResponse
+     * @throws \YandexCheckout\Common\Exceptions\ApiException
+     * @throws \YandexCheckout\Common\Exceptions\BadApiRequestException
+     * @throws \YandexCheckout\Common\Exceptions\ExtensionNotFoundException
+     * @throws \YandexCheckout\Common\Exceptions\ForbiddenException
+     * @throws \YandexCheckout\Common\Exceptions\InternalServerError
+     * @throws \YandexCheckout\Common\Exceptions\NotFoundException
+     * @throws \YandexCheckout\Common\Exceptions\ResponseProcessingException
+     * @throws \YandexCheckout\Common\Exceptions\TooManyRequestsException
+     * @throws \YandexCheckout\Common\Exceptions\UnauthorizedException
+     */
+    public function getPaymentResponse(string $paymentId): JsonResponse
+    {
+        return response()->json($this->service->getPaymentResponse($paymentId));
     }
 }

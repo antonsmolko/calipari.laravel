@@ -24,6 +24,7 @@ class CreateUserDetailsTable extends Migration
             $table->json('locality')->nullable();
             $table->string('street')->nullable();
             $table->string('apartments')->nullable();
+            $table->string('payment_method_id')->nullable();
             $table->timestamps();
         });
 

@@ -11,6 +11,7 @@ use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Cart\ClientCartService;
 use App\Services\Order\Handlers\StoreHandler;
 use App\Services\Order\Repositories\ClientOrderRepository;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Notification;
 
 class ClientOrderService extends ClientBaseResourceService

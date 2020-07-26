@@ -22,9 +22,12 @@ Route::post('/cdek/price', 'CDEK\CDEKController@getPrice');
 
 /** Payment */
 
-Route::get('/payment/create/{hash_number}', 'Payment\PaymentController@create');
-Route::post('/payment/notifications', 'Payment\PaymentController@notify');
-
+Route::group(['prefix' => 'payment'], function() {
+    Route::post('create', 'Payment\PaymentController@create');
+    Route::post('notifications', 'Payment\PaymentController@notify');
+    Route::get('completion-confirmation/{token}', 'Payment\PaymentController@confirmCompletion');
+    Route::get('{id}', 'Payment\PaymentController@getPaymentResponse');
+});
 
 /** Authorisation */
 
