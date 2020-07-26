@@ -149,18 +149,16 @@ class PaymentService
      */
     public function notify(array $requestData)
     {
-        if ($requestData['event'] === 'payment.succeeded') {
-            Notification::route('slack', env('ORDERS_SLACK_WEBHOOK_URL'))
-                ->notify(new OrderHasBeenPaid($requestData['object']));
-        }
-        switch ($requestData['event']) {
-            case 'payment.succeeded':
-                $notify = new OrderHasBeenPaid($requestData['object']);
-                break;
-            case 'payment.canceled':
-                $notify = new OrderHasBeenCanceled($requestData['object']);
-                break;
-        }
+//        switch ($requestData['event']) {
+//            case 'payment.succeeded':
+//                // change order status to paid
+//                $notify = new OrderHasBeenPaid($requestData['object']);
+//                break;
+//            case 'payment.canceled':
+//                $notify = new OrderHasBeenCanceled($requestData['object']);
+//                break;
+//        }
+        $notify = new OrderHasBeenCanceled($requestData);
 
         Notification::route('slack', env('ORDERS_SLACK_WEBHOOK_URL'))
             ->notify($notify);

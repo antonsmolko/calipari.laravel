@@ -57,4 +57,9 @@ class ClientOrderService extends ClientBaseResourceService
 
         return $order->number;
     }
+
+    public function changeStatus()
+    {
+
+    }
 }

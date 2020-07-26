@@ -50,15 +50,17 @@ class OrderHasBeenCanceled extends Notification
         return (new SlackMessage)
             ->from('calipari.ru', ':x:')
             ->to('#orders')
-            ->content($paymentData['description'] . 'отменен')
+            ->content('Заказ отменен')
+//            ->content($paymentData['description'] . 'отменен')
             ->attachment(function ($attachment) use ($paymentData) {
                 /** Не форматировать. Оставить так. !!! */
                 $attachment
                     ->content(
-                        '*ID* - ' . $paymentData['id'] . '
-*Сумма* - ' . $paymentData['amount']['value'] . ' ₽
-*Причина* - ' . $paymentData['payment_method']['card']['expiry_month'] . '/' . $paymentData['payment_method']['card']['expiry_year'] . '
-*Карта: платежная система* - ' . $paymentData['payment_method']['card']['card_type'])
+                        json_encode($paymentData, true))
+//                        '*ID* - ' . $paymentData['id'] . '
+//*Сумма* - ' . $paymentData['amount']['value'] . ' ₽
+//*Причина* - ' . $paymentData['payment_method']['card']['expiry_month'] . '/' . $paymentData['payment_method']['card']['expiry_year'] . '
+//*Карта: платежная система* - ' . $paymentData['payment_method']['card']['card_type'])
                     ->markdown(['text']);
             });
     }
