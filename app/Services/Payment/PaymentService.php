@@ -93,7 +93,7 @@ class PaymentService
 
     /**
      * @param string $paymentId
-     * @return array|string[]
+     * @return \YandexCheckout\Model\PaymentInterface|PaymentResponse|null
      * @throws \YandexCheckout\Common\Exceptions\ApiException
      * @throws \YandexCheckout\Common\Exceptions\BadApiRequestException
      * @throws \YandexCheckout\Common\Exceptions\ExtensionNotFoundException
@@ -104,44 +104,45 @@ class PaymentService
      * @throws \YandexCheckout\Common\Exceptions\TooManyRequestsException
      * @throws \YandexCheckout\Common\Exceptions\UnauthorizedException
      */
-    public function getPaymentResponse(string $paymentId): array
+    public function getPaymentResponse(string $paymentId)
     {
         /** @var PaymentResponse $paymentInfo */
-        $paymentInfo = $this->client->getPaymentInfo($paymentId);
+//        $paymentInfo = $this->client->getPaymentInfo($paymentId);
+        return $this->client->getPaymentInfo($paymentId);
 
-        if (!$paymentInfo) {
-            return [
-                'status' => 'warning',
-                'message' => __('yandex_kassa.no_payment_respond'),
-                'timeout' => 10000
-            ];
-        }
-
-        switch ($paymentInfo->getStatus()) {
-            case 'succeeded':
-                $paymentMethod = $paymentInfo->getPaymentMethod();
-
-                return [
-                    'status' => 'success',
-                    'message' => $paymentInfo->getDescription() . ' успешно оплачен!',
-                    'timeout' => 10000,
-                    'paymentMethodId' => $paymentMethod->saved ? $paymentMethod->id : null
-                ];
-            case 'canceled':
-                $metadata = $paymentInfo->getMetadata();
-                return [
-                    'status' => 'canceled',
-                    'title' => 'Платеж отменен!',
-                    'content' => __('yandex_kassa.' . $paymentInfo->getCancellationDetails()->getReason()),
-                    'hash' => $metadata->orderHash
-                ];
-            default:
-                return [
-                    'status' => 'warning',
-                    'message' => __('yandex_kassa.response_status_unknown'),
-                    'timeout' => 10000
-                ];
-        }
+//        if (!$paymentInfo) {
+//            return [
+//                'status' => 'warning',
+//                'message' => __('yandex_kassa.no_payment_respond'),
+//                'timeout' => 10000
+//            ];
+//        }
+//
+//        switch ($paymentInfo->getStatus()) {
+//            case 'succeeded':
+//                $paymentMethod = $paymentInfo->getPaymentMethod();
+//
+//                return [
+//                    'status' => 'success',
+//                    'message' => $paymentInfo->getDescription() . ' успешно оплачен!',
+//                    'timeout' => 10000,
+//                    'paymentMethodId' => $paymentMethod->saved ? $paymentMethod->id : null
+//                ];
+//            case 'canceled':
+//                $metadata = $paymentInfo->getMetadata();
+//                return [
+//                    'status' => 'canceled',
+//                    'title' => 'Платеж отменен!',
+//                    'content' => __('yandex_kassa.' . $paymentInfo->getCancellationDetails()->getReason()),
+//                    'hash' => $metadata->orderHash
+//                ];
+//            default:
+//                return [
+//                    'status' => 'warning',
+//                    'message' => __('yandex_kassa.response_status_unknown'),
+//                    'timeout' => 10000
+//                ];
+//        }
     }
 
     /**

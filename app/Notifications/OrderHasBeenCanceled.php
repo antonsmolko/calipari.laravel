@@ -50,7 +50,7 @@ class OrderHasBeenCanceled extends Notification
         return (new SlackMessage)
             ->from('calipari.ru', ':x:')
             ->to('#orders')
-            ->content('Заказ отменен')
+            ->content('Test')
 //            ->content($paymentData['description'] . 'отменен')
             ->attachment(function ($attachment) use ($paymentData) {
                 /** Не форматировать. Оставить так. !!! */
