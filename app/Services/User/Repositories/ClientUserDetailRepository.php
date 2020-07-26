@@ -17,6 +17,6 @@ class ClientUserDetailRepository
     {
         $user = auth()->user();
 
-        return $user->details()->update($updateData);
+        return $user->details()->updateOrCreate(['user_id' => $user->id], $updateData);
     }
 }
