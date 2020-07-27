@@ -32,6 +32,7 @@ class CreateHandler
                 'type' => 'embedded'
             ),
             'capture' => true,
+            'save_payment_method' => false,
             'description' => 'Заказ № ' . $order->number,
             'metadata' => array(
                 'orderId' => $order->id,
@@ -40,9 +41,9 @@ class CreateHandler
             )
         );
 
-        if ($paymentMethodId) {
-            $paymentOptions = Arr::collapse([$paymentOptions, ['payment_method_id' => $paymentMethodId]]);
-        }
+//        if ($paymentMethodId) {
+//            $paymentOptions = Arr::collapse([$paymentOptions, ['payment_method_id' => $paymentMethodId]]);
+//        }
 
         return $client->createPayment($paymentOptions, uniqid('', true));
     }

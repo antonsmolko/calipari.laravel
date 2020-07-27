@@ -26,9 +26,9 @@ class GetPaymentReportHandler
                     'card_type' => $paymentMethod['card']['card_type']
                 ]]);
             }
-            $additionReport = Arr::collapse([$additionReport, [
-                'saved' => $paymentMethod['saved'] ? 'Да' : 'Нет'
-            ]]);
+//            $additionReport = Arr::collapse([$additionReport, [
+//                'saved' => $paymentMethod['saved'] ? 'Да' : 'Нет'
+//            ]]);
         }
 
         if (!empty($paymentInfo['cancellation_details'])) {
@@ -41,7 +41,6 @@ class GetPaymentReportHandler
             'id' => $paymentInfo['id'],
             'status' => $paymentInfo['status'],
             'description' => $paymentInfo['description'],
-            'order_number' => $paymentInfo['metadata']['orderNumber'],
             'amount' => $paymentInfo['amount']['value'] . ' ₽',
         ], $additionReport]);
     }
