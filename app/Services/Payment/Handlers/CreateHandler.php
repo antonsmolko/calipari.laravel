@@ -26,7 +26,7 @@ class CreateHandler
     {
         $paymentOptions = array(
             'amount' => array(
-                'value' => 1
+                'value' => $order->price
             ),
             'confirmation' => array(
                 'type' => 'embedded'
