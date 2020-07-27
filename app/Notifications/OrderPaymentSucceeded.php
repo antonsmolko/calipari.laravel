@@ -55,7 +55,7 @@ class OrderPaymentSucceeded extends Notification
         return (new SlackMessage)
             ->from('calipari.ru', ':moneybag:')
             ->to('#payment')
-            ->content($paymentReport['description'] . ' оплачен!')
+            ->content('Заказ № ' . $paymentReport['order_number'] . ' оплачен!')
             ->attachment(function ($attachment) use ($content) {
                 $attachment->content($content)->markdown(['text']);
             });
