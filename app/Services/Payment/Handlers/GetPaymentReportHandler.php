@@ -37,11 +37,15 @@ class GetPaymentReportHandler
             ]]);
         }
 
+        if (!empty($paymentInfo['metadata']['order_number'])) {
+            $additionReport = Arr::collapse([[
+                'order_number' => $paymentInfo['metadata']['order_number'],
+            ], $additionReport]);
+        }
+
         return Arr::collapse([[
             'id' => $paymentInfo['id'],
             'status' => $paymentInfo['status'],
-            'description' => $paymentInfo['description'],
-            'order_number' => $paymentInfo['metadata']['order_number'],
             'amount' => $paymentInfo['amount']['value'] . ' ₽',
         ], $additionReport]);
     }
