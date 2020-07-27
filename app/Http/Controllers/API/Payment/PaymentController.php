@@ -41,9 +41,9 @@ class PaymentController extends Controller
     }
 
     /**
-     * @param PaymentResponse $response
+     * @param $response
      */
-    public function notify(PaymentResponse $response)
+    public function notify($response)
     {
         $this->service->notify($response);
     }
