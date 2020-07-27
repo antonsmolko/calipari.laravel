@@ -119,7 +119,6 @@ class PaymentService
      */
     public function getPaymentResponse(string $paymentId)
     {
-        /** @var PaymentResponse $paymentInfo */
         $paymentInfo = $this->client->getPaymentInfo($paymentId);
 
         if (!$paymentInfo) {
