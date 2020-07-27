@@ -46,7 +46,7 @@ class OrderPaymentSucceeded extends Notification
     public function toSlack($notifiable)
     {
         $paymentData = $this->paymentData;
-        $content = array_reduce($paymentData, function ($carry, $key) use ($paymentData) {
+        $content = array_reduce(array_keys($paymentData), function ($carry, $key) use ($paymentData) {
             /** Не форматировать. Оставить так. !!! */
             return $carry . '
 *' . __('yandex_kassa.payment_info.' . $key) . '* - ' .$paymentData[$key];

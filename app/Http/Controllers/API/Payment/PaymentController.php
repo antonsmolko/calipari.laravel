@@ -4,11 +4,9 @@ namespace App\Http\Controllers\API\Payment;
 
 use App\Http\Controllers\API\Payment\Requests\CreateRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FormRequest;
 use App\Services\Payment\PaymentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use YandexCheckout\Request\Payments\PaymentResponse;
 
 class PaymentController extends Controller
 {
@@ -45,7 +43,8 @@ class PaymentController extends Controller
      */
     public function notify(Request $request)
     {
-        $this->service->notify($request['object']);
+        $paymentInfo = json_decode(json_encode($request->object), true);
+        $this->service->notify($paymentInfo);
     }
 
     /**
