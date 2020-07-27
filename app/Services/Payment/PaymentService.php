@@ -177,7 +177,7 @@ class PaymentService
                 break;
             case 'canceled':
 //                $notify = new OrderPaymentCanceled($paymentReport);
-                $notify = new OrderPaymentUnknownStatus(json_decode(json_encode($paymentInfo), true));
+                $notify = new OrderPaymentUnknownStatus($paymentInfo);
                 break;
             default:
                 $notify = new OrderPaymentUnknownStatus(json_decode(json_encode($paymentInfo), true));

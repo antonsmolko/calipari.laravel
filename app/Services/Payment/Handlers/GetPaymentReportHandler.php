@@ -15,12 +15,12 @@ class GetPaymentReportHandler
      */
     public function handle(array $paymentInfo): array
     {
-        $paymentMethod = isset($paymentInfo['payment_method']) ? $paymentInfo['payment_method'] : null;
+        $paymentMethod = !empty($paymentInfo['payment_method']) ? $paymentInfo['payment_method'] : null;
 
         $method = [];
 
         if ($paymentMethod && $paymentMethod['type'] === 'bank_card') {
-            if (isset($paymentMethod['card'])) {
+            if (!empty($paymentMethod['card'])) {
                 Arr::collapse([$method, [
                     'card_number' => $this->getFormatCardNumber($paymentMethod),
                     'card_expiry' => $paymentMethod['card']['expiry_month'] . '/' . $paymentMethod['card']['expiry_year'],

@@ -53,7 +53,7 @@ class OrderPaymentUnknownStatus extends Notification
             ->content('НЕИЗВЕСТНЫЙ СТАТУС')
             ->attachment(function ($attachment) use ($paymentData) {
                 $attachment
-                    ->content($paymentData, true)
+                    ->content(json_encode($paymentData, true), true)
                     ->markdown(['text']);
             });
     }
