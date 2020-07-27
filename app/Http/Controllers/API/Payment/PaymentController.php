@@ -41,11 +41,11 @@ class PaymentController extends Controller
     }
 
     /**
-     * @param $response
+     * @param array $paymentInfo
      */
-    public function notify($response)
+    public function notify(array $paymentInfo)
     {
-        $this->service->notify($response);
+        $this->service->notify($paymentInfo);
     }
 
     /**

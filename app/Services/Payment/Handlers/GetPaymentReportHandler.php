@@ -6,36 +6,34 @@ namespace App\Services\Payment\Handlers;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use YandexCheckout\Request\Payments\PaymentResponse;
 
 class GetPaymentReportHandler
 {
     /**
-     * @param PaymentResponse $response
+     * @param array $paymentInfo
      * @return array
      */
-    public function handle(PaymentResponse $response): array
+    public function handle(array $paymentInfo): array
     {
-        $paymentMethod = $response->getPaymentMethod();
-        $jsonSerializePaymentMethod = $paymentMethod->jsonSerialize();
+        $paymentMethod = $paymentInfo['payment_method'];
 
         $method = [];
 
-        if ($paymentMethod && $paymentMethod->getType() === 'bank_card') {
+        if (!empty($paymentMethod) && $paymentMethod['type'] === 'bank_card') {
             Arr::collapse([$method, [
-                'card_number' => $this->getFormatCardNumber($jsonSerializePaymentMethod),
-                'card_expiry' => $jsonSerializePaymentMethod['expiry_month'] . '/' . $jsonSerializePaymentMethod['expiry_year'],
-                'card_type' => $jsonSerializePaymentMethod['card_type'],
-                'saved' => $jsonSerializePaymentMethod['saved'] ? 'Да' : 'Нет'
+                'card_number' => $this->getFormatCardNumber($paymentMethod),
+                'card_expiry' => $paymentMethod['card']['expiry_month'] . '/' . $paymentMethod['card']['expiry_year'],
+                'card_type' => $paymentMethod['card']['card_type'],
+                'saved' => $paymentMethod['saved'] ? 'Да' : 'Нет'
             ]]);
         }
 
         return [
-            'id' => $response->getId(),
-            'status' => $response->getStatus(),
-            'description' => $response->getDescription(),
-            'order_number' => $response->getMetadata()->orderNumber,
-            'amount' => $response->getAmount()->value . ' ₽',
+            'id' => $paymentInfo['id'],
+            'status' => $paymentInfo['status'],
+            'description' => $paymentInfo['description'],
+            'order_number' => $paymentInfo['metadata']['orderNumber'],
+            'amount' => $paymentInfo['amount']['value'] . ' ₽',
             ...$method
         ];
     }
@@ -47,7 +45,7 @@ class GetPaymentReportHandler
     private function getFormatCardNumber(array $paymentMethod): string
     {
         $cardRegExp = '/[0-9*]{4}/';
-        $cardNumber = $paymentMethod['first6'] . '******' . $paymentMethod['last4'];
+        $cardNumber = $paymentMethod['card']['first6'] . '******' . $paymentMethod['card']['last4'];
 
         return Str::of($cardNumber)->matchAll($cardRegExp)->join(' ');
     }

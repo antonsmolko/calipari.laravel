@@ -163,23 +163,23 @@ class PaymentService
     }
 
     /**
-     * @param $response
+     * @param array $paymentInfo
      */
-    public function notify($response)
+    public function notify(array $paymentInfo)
     {
-        $paymentReport = $this->getPaymentReportHandler->handle($response);
+        $paymentReport = $this->getPaymentReportHandler->handle($paymentInfo['object']);
 
-        switch ($response->getStatus()) {
-            case 'succeeded':
-                $orderId = $response->getMetadata()->orderId;
+        switch ($paymentInfo['event']) {
+            case 'payment.succeeded':
+                $orderId = $paymentInfo['object']['metadata']['orderId'];
                 $this->orderService->changeStatus($orderId, Order::PAID_STATUS);
                 $notify = new OrderPaymentSucceeded($paymentReport);
                 break;
-            case 'canceled':
+            case 'payment.canceled':
                 $notify = new OrderPaymentCanceled($paymentReport);
                 break;
             default:
-                $notify = new OrderPaymentUnknownStatus(json_decode(json_encode($response), true));
+                $notify = new OrderPaymentUnknownStatus(json_decode(json_encode($paymentInfo), true));
         }
 
         Notification::route('slack', env('ORDERS_SLACK_WEBHOOK_URL'))
