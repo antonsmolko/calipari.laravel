@@ -16,30 +16,28 @@ class GetPaymentReportHandler
     public function handle(array $paymentInfo): array
     {
         $paymentMethod = !empty($paymentInfo['payment_method']) ? $paymentInfo['payment_method'] : null;
-
-        $method = [];
+        $methodReport = [];
 
         if ($paymentMethod && $paymentMethod['type'] === 'bank_card') {
             if (!empty($paymentMethod['card'])) {
-                $method = Arr::collapse([$method, [
+                $methodReport = Arr::collapse([$methodReport, [
                     'card_number' => $this->getFormatCardNumber($paymentMethod),
                     'card_expiry' => $paymentMethod['card']['expiry_month'] . '/' . $paymentMethod['card']['expiry_year'],
                     'card_type' => $paymentMethod['card']['card_type']
                 ]]);
             }
-            $method = Arr::collapse([$method, [
+            $methodReport = Arr::collapse([$methodReport, [
                 'saved' => $paymentMethod['saved'] ? 'Да' : 'Нет'
             ]]);
         }
 
-        return [
+        return Arr::collapse([[
             'id' => $paymentInfo['id'],
             'status' => $paymentInfo['status'],
             'description' => $paymentInfo['description'],
             'order_number' => $paymentInfo['metadata']['orderNumber'],
             'amount' => $paymentInfo['amount']['value'] . ' ₽',
-            ...$method
-        ];
+        ], $methodReport]);
     }
 
     /**
