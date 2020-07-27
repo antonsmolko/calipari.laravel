@@ -20,10 +20,14 @@ class GetPaymentReportHandler
         $method = [];
 
         if ($paymentMethod && $paymentMethod['type'] === 'bank_card') {
+            if (isset($paymentMethod['card'])) {
+                Arr::collapse([$method, [
+                    'card_number' => $this->getFormatCardNumber($paymentMethod),
+                    'card_expiry' => $paymentMethod['card']['expiry_month'] . '/' . $paymentMethod['card']['expiry_year'],
+                    'card_type' => $paymentMethod['card']['card_type']
+                ]]);
+            }
             Arr::collapse([$method, [
-                'card_number' => $this->getFormatCardNumber($paymentMethod),
-                'card_expiry' => $paymentMethod['card']['expiry_month'] . '/' . $paymentMethod['card']['expiry_year'],
-                'card_type' => $paymentMethod['card']['card_type'],
                 'saved' => $paymentMethod['saved'] ? 'Да' : 'Нет'
             ]]);
         }
