@@ -14,16 +14,16 @@ class OrderPaymentCanceled extends Notification
 {
     use Queueable;
 
-    private array $paymentData;
+    private array $paymentReport;
 
     /**
      * Create a new notification instance.
      *
-     * @param array $paymentData
+     * @param array $paymentReport
      */
-    public function __construct(array $paymentData)
+    public function __construct(array $paymentReport)
     {
-        $this->paymentData = $paymentData;
+        $this->paymentReport = $paymentReport;
     }
 
     /**
@@ -45,17 +45,18 @@ class OrderPaymentCanceled extends Notification
      */
     public function toSlack($notifiable)
     {
-        $paymentData = $this->paymentData;
-        $content = array_reduce(array_keys($paymentData), function ($carry, $key) use ($paymentData) {
+        $paymentReport = $this->paymentReport;
+
+        $content = array_reduce(array_keys($paymentReport), function ($carry, $key) use ($paymentReport) {
             /** Не форматировать. Оставить так. !!! */
             return $carry . '
-*' . __('yandex_kassa.payment_info.' . $key) . '* - ' .$paymentData[$key];
+*' . __('yandex_kassa.payment_info.' . $key) . '* - ' . $paymentReport[$key];
         }, '');
 
         return (new SlackMessage)
             ->from('calipari.ru', ':x:')
             ->to('#payment')
-            ->content('Оплата заказа № ' . $paymentData['order_number'] . ' отменена!')
+            ->content('Оплата заказа № ' . $paymentReport['order_number'] . ' отменена!')
             ->attachment(function ($attachment) use ($content) {
                 $attachment->content($content)->markdown(['text']);
             });
