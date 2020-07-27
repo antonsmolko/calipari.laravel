@@ -11,23 +11,26 @@ use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Cart\ClientCartService;
 use App\Services\Order\Handlers\StoreHandler;
 use App\Services\Order\Repositories\ClientOrderRepository;
-use Illuminate\Contracts\Encryption\DecryptException;
+use App\Services\OrderStatus\Repositories\OrderStatusRepository;
 use Illuminate\Support\Facades\Notification;
 
 class ClientOrderService extends ClientBaseResourceService
 {
     private StoreHandler $storeHandler;
     private ClientCartService $cartService;
+    private OrderStatusRepository $orderStatusRepository;
 
     /**
-     * OrderService constructor.
+     * ClientOrderService constructor.
      * @param ClientOrderRepository $repository
+     * @param OrderStatusRepository $orderStatusRepository
      * @param CacheKeyManager $cacheKeyManager
      * @param StoreHandler $storeHandler
      * @param ClientCartService $cartService
      */
     public function __construct(
         ClientOrderRepository $repository,
+        OrderStatusRepository $orderStatusRepository,
         CacheKeyManager $cacheKeyManager,
         StoreHandler $storeHandler,
         ClientCartService $cartService
@@ -36,6 +39,7 @@ class ClientOrderService extends ClientBaseResourceService
         parent::__construct($repository, $cacheKeyManager);
         $this->storeHandler = $storeHandler;
         $this->cartService = $cartService;
+        $this->orderStatusRepository = $orderStatusRepository;
     }
 
     /**
@@ -58,8 +62,23 @@ class ClientOrderService extends ClientBaseResourceService
         return $order->number;
     }
 
-    public function changeStatus()
+    public function update(string $id, array $updateData)
     {
+        $order = $this->repository->getItem($id);
 
+        return $this->repository->update($order, $updateData);
+    }
+
+    /**
+     * @param int $id
+     * @param string $statusAlias
+     * @return mixed
+     */
+    public function changeStatus(int $id, string $statusAlias)
+    {
+        $order = $this->repository->getItem($id);
+        $status = $this->orderStatusRepository->getItemByAlias($statusAlias);
+
+        return $this->repository->changeStatus($order, $status->id);
     }
 }

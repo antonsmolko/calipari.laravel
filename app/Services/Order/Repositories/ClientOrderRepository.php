@@ -68,10 +68,10 @@ class ClientOrderRepository extends ClientBaseResourceRepository
     }
 
     /**
-     * @param int $number
+     * @param string $number
      * @return ForPaymentResource
      */
-    public function getItemForPayment(int $number)
+    public function getItemForPayment(string $number)
     {
         return new ForPaymentResource($this->model::where('number', $number)->firstOrFail());
     }

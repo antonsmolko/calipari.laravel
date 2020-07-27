@@ -10,7 +10,7 @@ use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
 
-class OrderHasBeenPaid extends Notification
+class OrderPaymentUnknownStatus extends Notification
 {
     use Queueable;
 
@@ -48,26 +48,12 @@ class OrderHasBeenPaid extends Notification
         $paymentData = $this->paymentData;
 
         return (new SlackMessage)
-            ->from('calipari.ru', ':moneybag:')
-            ->to('#orders')
-            ->content('Заказ оплачен')
-//            ->content($paymentData['description'] . ' - оплачен')
+            ->from('НЕИЗВЕСТНЫЙ СТАТУС ЗАКАЗА', ':question:')
+            ->to('#payment')
+            ->content('НЕИЗВЕСТНЫЙ СТАТУС')
             ->attachment(function ($attachment) use ($paymentData) {
                 $attachment
-                    ->content(json_encode($paymentData, true))
-//                $cardRegExp = '/[0-9*]{4}/';
-//                $cardNumber = $paymentData['payment_method']['card']['first6'] . '******' . $paymentData['payment_method']['card']['last4'];
-//                $formattedCardNumber = Str::of($cardNumber)
-//                    ->matchAll($cardRegExp)
-//                    ->join(' ');
-//                /** Не форматировать. Оставить так. !!! */
-//                $attachment
-//                    ->content(
-//                        '*ID* - ' . $paymentData['id'] . '
-//*Сумма* - ' . $paymentData['amount']['value'] . ' ₽
-//*Карта: номер* - ' . $formattedCardNumber . '
-//*Карта: месяц/год* - ' . $paymentData['payment_method']['card']['expiry_month'] . '/' . $paymentData['payment_method']['card']['expiry_year'] . '
-//*Карта: платежная система* - ' . $paymentData['payment_method']['card']['card_type'])
+                    ->content($paymentData, true)
                     ->markdown(['text']);
             });
     }

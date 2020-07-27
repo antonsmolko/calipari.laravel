@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FormRequest;
 use App\Services\Payment\PaymentService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use YandexCheckout\Request\Payments\PaymentResponse;
 
 class PaymentController extends Controller
 {
@@ -39,11 +41,11 @@ class PaymentController extends Controller
     }
 
     /**
-     * @param FormRequest $request
+     * @param PaymentResponse $response
      */
-    public function notify(FormRequest $request)
+    public function notify(PaymentResponse $response)
     {
-        $this->service->notify($request->all());
+        $this->service->notify($response);
     }
 
     /**

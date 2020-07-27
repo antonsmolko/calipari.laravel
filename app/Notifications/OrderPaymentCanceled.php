@@ -10,7 +10,7 @@ use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
 
-class OrderHasBeenCanceled extends Notification
+class OrderPaymentCanceled extends Notification
 {
     use Queueable;
 
@@ -46,22 +46,18 @@ class OrderHasBeenCanceled extends Notification
     public function toSlack($notifiable)
     {
         $paymentData = $this->paymentData;
+        $content = array_reduce($paymentData, function ($carry, $key) use ($paymentData) {
+            /** Не форматировать. Оставить так. !!! */
+            return $carry . '
+*' . __('yandex_kassa.payment_info.' . $key) . '* - ' .$paymentData[$key];
+        }, '');
 
         return (new SlackMessage)
             ->from('calipari.ru', ':x:')
-            ->to('#orders')
-            ->content('Test')
-//            ->content($paymentData['description'] . 'отменен')
-            ->attachment(function ($attachment) use ($paymentData) {
-                /** Не форматировать. Оставить так. !!! */
-                $attachment
-                    ->content(
-                        json_encode($paymentData, true))
-//                        '*ID* - ' . $paymentData['id'] . '
-//*Сумма* - ' . $paymentData['amount']['value'] . ' ₽
-//*Причина* - ' . $paymentData['payment_method']['card']['expiry_month'] . '/' . $paymentData['payment_method']['card']['expiry_year'] . '
-//*Карта: платежная система* - ' . $paymentData['payment_method']['card']['card_type'])
-                    ->markdown(['text']);
+            ->to('#payment')
+            ->content('Оплата заказа № ' . $paymentData['order_number'] . ' отменена!')
+            ->attachment(function ($attachment) use ($content) {
+                $attachment->content($content)->markdown(['text']);
             });
     }
 

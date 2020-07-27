@@ -4,10 +4,14 @@
 namespace App\Services\Payment;
 
 
-use App\Notifications\OrderHasBeenCanceled;
-use App\Notifications\OrderHasBeenPaid;
+use App\Models\Order;
+use App\Notifications\OrderPaymentCanceled;
+use App\Notifications\OrderPaymentSucceeded;
+use App\Notifications\OrderPaymentUnknownStatus;
+use App\Services\Order\ClientOrderService;
 use App\Services\Order\Repositories\ClientOrderRepository;
 use App\Services\Payment\Handlers\CreateHandler;
+use App\Services\Payment\Handlers\GetPaymentReportHandler;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Notification;
 use YandexCheckout\Client;
@@ -17,22 +21,30 @@ class PaymentService
 {
     private Client $client;
     private ClientOrderRepository $orderRepository;
+    private ClientOrderService $orderService;
     private CreateHandler $createHandler;
+    private GetPaymentReportHandler $getPaymentReportHandler;
 
     /**
      * PaymentService constructor.
      * @param Client $client
      * @param ClientOrderRepository $orderRepository
+     * @param ClientOrderService $orderService
      * @param CreateHandler $createHandler
+     * @param GetPaymentReportHandler $getPaymentReportHandler
      */
     public function __construct(
         Client $client,
         ClientOrderRepository $orderRepository,
-        CreateHandler $createHandler
+        ClientOrderService $orderService,
+        CreateHandler $createHandler,
+        GetPaymentReportHandler $getPaymentReportHandler
     )
     {
         $this->orderRepository = $orderRepository;
+        $this->orderService = $orderService;
         $this->createHandler = $createHandler;
+        $this->getPaymentReportHandler = $getPaymentReportHandler;
         $this->client = $client;
         $this->client->setAuth(env('YANDEX_KASSA_SHOP_ID'), env('YANDEX_KASSA_PASSWORD'));
     }
@@ -68,7 +80,8 @@ class PaymentService
             ];
         }
 
-        $payment = $this->createHandler->handle($order, $this->client, $requestData['paymentMethodId']);
+        $payment = $this->createHandler
+            ->handle($order, $this->client, $requestData['paymentMethodId']);
 
         $this->orderRepository
             ->update($order, ['completion_token' => $payment->confirmation->confirmation_token]);
@@ -93,7 +106,7 @@ class PaymentService
 
     /**
      * @param string $paymentId
-     * @return \YandexCheckout\Model\PaymentInterface|PaymentResponse|null
+     * @return array
      * @throws \YandexCheckout\Common\Exceptions\ApiException
      * @throws \YandexCheckout\Common\Exceptions\BadApiRequestException
      * @throws \YandexCheckout\Common\Exceptions\ExtensionNotFoundException
@@ -107,59 +120,68 @@ class PaymentService
     public function getPaymentResponse(string $paymentId)
     {
         /** @var PaymentResponse $paymentInfo */
-//        $paymentInfo = $this->client->getPaymentInfo($paymentId);
-        return $this->client->getPaymentInfo($paymentId);
+        $paymentInfo = $this->client->getPaymentInfo($paymentId);
 
-//        if (!$paymentInfo) {
-//            return [
-//                'status' => 'warning',
-//                'message' => __('yandex_kassa.no_payment_respond'),
-//                'timeout' => 10000
-//            ];
-//        }
-//
-//        switch ($paymentInfo->getStatus()) {
-//            case 'succeeded':
-//                $paymentMethod = $paymentInfo->getPaymentMethod();
-//
-//                return [
-//                    'status' => 'success',
-//                    'message' => $paymentInfo->getDescription() . ' успешно оплачен!',
-//                    'timeout' => 10000,
-//                    'paymentMethodId' => $paymentMethod->saved ? $paymentMethod->id : null
-//                ];
-//            case 'canceled':
-//                $metadata = $paymentInfo->getMetadata();
-//                return [
-//                    'status' => 'canceled',
-//                    'title' => 'Платеж отменен!',
-//                    'content' => __('yandex_kassa.' . $paymentInfo->getCancellationDetails()->getReason()),
-//                    'hash' => $metadata->orderHash
-//                ];
-//            default:
-//                return [
-//                    'status' => 'warning',
-//                    'message' => __('yandex_kassa.response_status_unknown'),
-//                    'timeout' => 10000
-//                ];
-//        }
+        if (!$paymentInfo) {
+            return [
+                'status' => 'warning',
+                'message' => __('yandex_kassa.no_payment_respond'),
+                'timeout' => 10000
+            ];
+        }
+
+        switch ($paymentInfo->getStatus()) {
+            case 'succeeded':
+                $paymentMethod = $paymentInfo->getPaymentMethod();
+                return [
+                    'status' => 'success',
+                    'message' => $paymentInfo->getDescription() . ' успешно оплачен!',
+                    'timeout' => 10000,
+                    'paymentMethodId' => $paymentMethod->saved ? $paymentMethod->id : null
+                ];
+            case 'canceled':
+                $metadata = $paymentInfo->getMetadata();
+                return [
+                    'status' => 'canceled',
+                    'title' => 'Платеж отменен!',
+                    'content' => __('yandex_kassa.' . $paymentInfo->getCancellationDetails()->getReason()),
+                    'hash' => $metadata->orderHash
+                ];
+            case 'pending':
+                return [
+                    'status' => 'success',
+                    'title' => 'Платеж обрабатывается!',
+                    'message' => __('yandex_kassa.payment_panding'),
+                    'timeout' => 10000
+                ];
+            default:
+                return [
+                    'status' => 'warning',
+                    'message' => __('yandex_kassa.response_status_unknown'),
+                    'timeout' => 10000
+                ];
+        }
     }
 
     /**
-     * @param array $requestData
+     * @param PaymentResponse $response
      */
-    public function notify(array $requestData)
+    public function notify(PaymentResponse $response)
     {
-//        switch ($requestData['event']) {
-//            case 'payment.succeeded':
-//                // change order status to paid
-//                $notify = new OrderHasBeenPaid($requestData['object']);
-//                break;
-//            case 'payment.canceled':
-//                $notify = new OrderHasBeenCanceled($requestData['object']);
-//                break;
-//        }
-        $notify = new OrderHasBeenCanceled($requestData);
+        $paymentReport = $this->getPaymentReportHandler->handle($response);
+
+        switch ($response->getStatus()) {
+            case 'succeeded':
+                $orderId = $response->getMetadata()->orderId;
+                $this->orderService->changeStatus($orderId, Order::PAID_STATUS);
+                $notify = new OrderPaymentSucceeded($paymentReport);
+                break;
+            case 'canceled':
+                $notify = new OrderPaymentCanceled($paymentReport);
+                break;
+            default:
+                $notify = new OrderPaymentUnknownStatus(json_decode(json_encode($response), true));
+        }
 
         Notification::route('slack', env('ORDERS_SLACK_WEBHOOK_URL'))
             ->notify($notify);
