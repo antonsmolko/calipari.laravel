@@ -167,15 +167,15 @@ class PaymentService
      */
     public function notify(array $paymentInfo)
     {
-        $paymentReport = $this->getPaymentReportHandler->handle($paymentInfo['object']);
+        $paymentReport = $this->getPaymentReportHandler->handle($paymentInfo);
 
-        switch ($paymentInfo['event']) {
-            case 'payment.succeeded':
-                $orderId = $paymentInfo['object']['metadata']['orderId'];
+        switch ($paymentInfo['status']) {
+            case 'succeeded':
+                $orderId = $paymentInfo['metadata']['orderId'];
                 $this->orderService->changeStatus($orderId, Order::PAID_STATUS);
                 $notify = new OrderPaymentSucceeded($paymentReport);
                 break;
-            case 'payment.canceled':
+            case 'canceled':
                 $notify = new OrderPaymentCanceled($paymentReport);
                 break;
             default:
