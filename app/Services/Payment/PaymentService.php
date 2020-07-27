@@ -149,7 +149,7 @@ class PaymentService
                     'content' =>
                         __('yandex_kassa.' . $cancellationReason) .
                         __('yandex_kassa.' . $cancellationReason . '_solution') ,
-                    'hash' => $metadata->orderHash
+                    'hash' => $metadata->order_hash
                 ];
             case 'pending':
                 return [
