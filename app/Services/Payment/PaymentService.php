@@ -131,7 +131,7 @@ class PaymentService
         switch ($paymentInfo->getStatus()) {
             case 'succeeded':
                 $paymentMethod = $paymentInfo->getPaymentMethod();
-                $orderId = $paymentInfo->getMetadata()->orderId;
+                $orderId = $paymentInfo->getMetadata()->order_id;
                 $this->orderService->changeStatus($orderId, Order::PAID_STATUS);
 
                 return [
