@@ -16,18 +16,24 @@ class GetPaymentReportHandler
     public function handle(array $paymentInfo): array
     {
         $paymentMethod = !empty($paymentInfo['payment_method']) ? $paymentInfo['payment_method'] : null;
-        $methodReport = [];
+        $additionReport = [];
 
         if ($paymentMethod && $paymentMethod['type'] === 'bank_card') {
             if (!empty($paymentMethod['card'])) {
-                $methodReport = Arr::collapse([$methodReport, [
+                $additionReport = Arr::collapse([$additionReport, [
                     'card_number' => $this->getFormatCardNumber($paymentMethod),
                     'card_expiry' => $paymentMethod['card']['expiry_month'] . '/' . $paymentMethod['card']['expiry_year'],
                     'card_type' => $paymentMethod['card']['card_type']
                 ]]);
             }
-            $methodReport = Arr::collapse([$methodReport, [
+            $additionReport = Arr::collapse([$additionReport, [
                 'saved' => $paymentMethod['saved'] ? 'Да' : 'Нет'
+            ]]);
+        }
+
+        if (!empty($paymentInfo['cancellation_details'])) {
+            $additionReport = Arr::collapse([$additionReport, [
+                'cancellation_reason' => __('yandex_kassa.' . $paymentInfo['cancellation_details']['reason'])
             ]]);
         }
 
@@ -37,7 +43,7 @@ class GetPaymentReportHandler
             'description' => $paymentInfo['description'],
             'order_number' => $paymentInfo['metadata']['orderNumber'],
             'amount' => $paymentInfo['amount']['value'] . ' ₽',
-        ], $methodReport]);
+        ], $additionReport]);
     }
 
     /**

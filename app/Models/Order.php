@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Events\Models\Order\OrderDeleted;
-use App\Events\Models\Order\OrderSaved;
 use App\Events\Models\Order\OrderUpdated;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,8 +17,6 @@ class Order extends Model
         'updated' => OrderUpdated::class,
         'deleted' => OrderDeleted::class,
     ];
-
-    protected $with = ['paid'];
 
     const DEFAULT_STATUS = 'processing';
     const CANCELED_STATUS = 'canceled';

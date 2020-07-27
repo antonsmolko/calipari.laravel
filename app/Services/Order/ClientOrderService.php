@@ -63,6 +63,11 @@ class ClientOrderService extends ClientBaseResourceService
         return $order->number;
     }
 
+    /**
+     * @param string $id
+     * @param array $updateData
+     * @return mixed
+     */
     public function update(string $id, array $updateData)
     {
         $order = $this->repository->getItem($id);

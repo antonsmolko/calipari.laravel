@@ -15,7 +15,6 @@ use App\Services\Payment\Handlers\GetPaymentReportHandler;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Notification;
 use YandexCheckout\Client;
-use YandexCheckout\Request\Payments\PaymentResponse;
 
 class PaymentService
 {
@@ -143,10 +142,13 @@ class PaymentService
                 ];
             case 'canceled':
                 $metadata = $paymentInfo->getMetadata();
+                $cancellationReason = $paymentInfo->getCancellationDetails()->getReason();
                 return [
                     'status' => 'canceled',
                     'title' => 'Платеж отменен!',
-                    'content' => __('yandex_kassa.' . $paymentInfo->getCancellationDetails()->getReason()),
+                    'content' =>
+                        __('yandex_kassa.' . $cancellationReason) .
+                        __('yandex_kassa.' . $cancellationReason . '_solution') ,
                     'hash' => $metadata->orderHash
                 ];
             case 'pending':
