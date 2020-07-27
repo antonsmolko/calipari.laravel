@@ -56,7 +56,7 @@ class OrderPaymentCanceled extends Notification
         return (new SlackMessage)
             ->from('calipari.ru', ':x:')
             ->to('#payment')
-            ->content('Оплата заказа № ' . $paymentReport['metadata']['order_number'] . ' отменена!')
+            ->content('Оплата заказа № ' . $paymentReport['order_number'] . ' отменена!')
             ->attachment(function ($attachment) use ($content) {
                 $attachment->content($content)->markdown(['text']);
             });
