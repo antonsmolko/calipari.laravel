@@ -132,6 +132,9 @@ class PaymentService
         switch ($paymentInfo->getStatus()) {
             case 'succeeded':
                 $paymentMethod = $paymentInfo->getPaymentMethod();
+                $orderId = $paymentInfo->getMetadata()->orderId;
+                $this->orderService->changeStatus($orderId, Order::PAID_STATUS);
+
                 return [
                     'status' => 'success',
                     'message' => $paymentInfo->getDescription() . ' успешно оплачен!',
@@ -176,11 +179,10 @@ class PaymentService
                 $notify = new OrderPaymentSucceeded($paymentReport);
                 break;
             case 'canceled':
-//                $notify = new OrderPaymentCanceled($paymentReport);
-                $notify = new OrderPaymentUnknownStatus($paymentInfo);
+                $notify = new OrderPaymentCanceled($paymentReport);
                 break;
             default:
-                $notify = new OrderPaymentUnknownStatus(json_decode(json_encode($paymentInfo), true));
+                $notify = new OrderPaymentUnknownStatus($paymentInfo);
         }
 
         Notification::route('slack', env('ORDERS_SLACK_WEBHOOK_URL'))

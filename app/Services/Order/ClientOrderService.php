@@ -11,6 +11,7 @@ use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Cart\ClientCartService;
 use App\Services\Order\Handlers\StoreHandler;
 use App\Services\Order\Repositories\ClientOrderRepository;
+use App\Services\Order\Resources\ClientOrder as ClientOrderResource;
 use App\Services\OrderStatus\Repositories\OrderStatusRepository;
 use Illuminate\Support\Facades\Notification;
 
@@ -72,11 +73,16 @@ class ClientOrderService extends ClientBaseResourceService
     /**
      * @param int $id
      * @param string $statusAlias
-     * @return mixed
+     * @return ClientOrderResource|null
      */
     public function changeStatus(int $id, string $statusAlias)
     {
         $order = $this->repository->getItem($id);
+
+        if ($order->paid) {
+            return null;
+        }
+
         $status = $this->orderStatusRepository->getItemByAlias($statusAlias);
 
         return $this->repository->changeStatus($order, $status->id);

@@ -25,7 +25,8 @@ class ClientOrder extends JsonResource
             'customer' => json_decode($this->customer, true),
             'price' => $this->price,
             'comment' => $this->comment,
-            'status' => $this->statuses->last()
+            'status' => $this->statuses->last(),
+            'paid' => $this->paid
         ];
     }
 }

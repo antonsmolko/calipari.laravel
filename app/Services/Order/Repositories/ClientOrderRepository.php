@@ -60,7 +60,7 @@ class ClientOrderRepository extends ClientBaseResourceRepository
      * @param int $status
      * @return ClientOrderResource
      */
-    public function changeStatus(Order $order, int $status)
+    public function changeStatus(Order $order, int $status): ClientOrderResource
     {
         $order->statuses()->syncWithoutDetaching([$status]);
 

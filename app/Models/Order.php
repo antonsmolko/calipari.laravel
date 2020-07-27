@@ -19,6 +19,8 @@ class Order extends Model
         'deleted' => OrderDeleted::class,
     ];
 
+    protected $with = ['paid'];
+
     const DEFAULT_STATUS = 'processing';
     const CANCELED_STATUS = 'canceled';
     const PAID_STATUS = 'paid';
