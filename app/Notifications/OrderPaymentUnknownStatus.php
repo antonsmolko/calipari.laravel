@@ -48,7 +48,7 @@ class OrderPaymentUnknownStatus extends Notification
         $paymentData = $this->paymentData;
 
         return (new SlackMessage)
-            ->from('НЕИЗВЕСТНЫЙ СТАТУС ЗАКАЗА', ':question:')
+            ->from('НЕИЗВЕСТНЫЙ СТАТУС ОПЛАТЫ', ':question:')
             ->to('#payment')
             ->content('НЕИЗВЕСТНЫЙ СТАТУС')
             ->attachment(function ($attachment) use ($paymentData) {
