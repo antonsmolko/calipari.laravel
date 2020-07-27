@@ -163,9 +163,9 @@ class PaymentService
     }
 
     /**
-     * @param PaymentResponse $response
+     * @param $response
      */
-    public function notify(PaymentResponse $response)
+    public function notify($response)
     {
         $paymentReport = $this->getPaymentReportHandler->handle($response);
 
