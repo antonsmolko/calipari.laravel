@@ -41,6 +41,7 @@ class GetPaymentReportHandler
             'id' => $paymentInfo['id'],
             'status' => $paymentInfo['status'],
             'description' => $paymentInfo['description'],
+            'order_number' => $paymentInfo['metadata']['order_number'],
             'amount' => $paymentInfo['amount']['value'] . ' ₽',
         ], $additionReport]);
     }

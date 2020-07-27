@@ -35,9 +35,9 @@ class CreateHandler
             'save_payment_method' => false,
             'description' => 'Заказ № ' . $order->number,
             'metadata' => array(
-                'orderId' => $order->id,
-                'orderNumber' => $order->number,
-                'orderHash' => encrypt($order->number)
+                'order_id' => $order->id,
+                'order_number' => $order->number,
+                'order_hash' => encrypt($order->number)
             )
         );
 

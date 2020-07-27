@@ -176,7 +176,7 @@ class PaymentService
 
         switch ($paymentInfo['status']) {
             case 'succeeded':
-                $orderId = $paymentInfo['metadata']['orderId'];
+                $orderId = $paymentInfo['metadata']['order_id'];
                 $this->orderService->changeStatus($orderId, Order::PAID_STATUS);
                 $notify = new OrderPaymentSucceeded($paymentReport);
                 break;
