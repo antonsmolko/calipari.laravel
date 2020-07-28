@@ -187,7 +187,7 @@ class PaymentService
                 $notify = new OrderPaymentUnknownStatus($paymentInfo);
         }
 
-        Notification::route('slack', env('ORDERS_SLACK_WEBHOOK_URL'))
+        Notification::route('slack', env('SLACK_WEBHOOK_URL_PAYMENT'))
             ->notify($notify);
     }
 }

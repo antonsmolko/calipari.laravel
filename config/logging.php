@@ -56,7 +56,7 @@ return [
 
         'slack' => [
             'driver' => 'slack',
-            'url' => env('LOG_SLACK_WEBHOOK_URL'),
+            'url' => env('SLACK_WEBHOOK_URL_LOG'),
             'username' => 'Calipari Log',
             'emoji' => ':fire:',
             'level' => 'info',

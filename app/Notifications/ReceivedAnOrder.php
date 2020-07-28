@@ -48,7 +48,6 @@ class ReceivedAnOrder extends Notification
 
         return (new SlackMessage)
             ->from('calipari.ru', ':package:')
-            ->to('#orders')
             ->content('Поступил новый заказ № ' . $order->number)
             ->attachment(function ($attachment) use ($order) {
                 $customer = json_decode($order->customer, true);
