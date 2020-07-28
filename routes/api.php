@@ -23,9 +23,7 @@ Route::post('/cdek/price', 'CDEK\CDEKController@getPrice');
 /** Payment */
 
 Route::group(['prefix' => 'payment'], function() {
-    Route::post('create', 'Payment\PaymentController@create');
     Route::post('notifications', 'Payment\PaymentController@notify');
-    Route::get('completion-confirmation/{token}', 'Payment\PaymentController@confirmCompletion');
     Route::get('{id}', 'Payment\PaymentController@getPaymentResponse');
 });
 
@@ -146,6 +144,8 @@ Route::get('settings', 'Client\SettingGroup\SettingGroupController@index');
 /** Orders */
 Route::group(['prefix' => 'orders'], function() {
     Route::post('/', 'Client\Order\OrderController@store');
+    Route::post('pay', 'Client\Order\OrderController@pay');
+    Route::get('payment-confirmation/{token}', 'Client\Order\OrderController@confirmPaymentCompletion');
 });
 
 
@@ -442,7 +442,8 @@ Route::prefix('cms')
             Route::get('{id}/publish', 'Cms\Delivery\DeliveryController@publish')
                 ->where('id', '[0-9]+');
         });
-        Route::apiResource('deliveries', 'Cms\Delivery\DeliveryController')->except(['create', 'edit', 'update']);
+        Route::apiResource('deliveries', 'Cms\Delivery\DeliveryController')
+            ->except(['create', 'edit', 'update']);
 
 
         /** Orders */
@@ -453,6 +454,9 @@ Route::prefix('cms')
             Route::get('{id}/details', 'Cms\Order\OrderController@getItemDetails')
                 ->where('id', '[0-9]+');
             Route::post('{id}/status', 'Cms\Order\OrderController@changeStatus')
+                ->where('id', '[0-9]+');
+            Route::post('{id}/refund', 'Cms\Order\OrderController@refund')
+                ->middleware('role:super_admin|owner')
                 ->where('id', '[0-9]+');
             Route::post('current', 'Cms\Order\OrderController@getCurrentItems');
             Route::post('completed', 'Cms\Order\OrderController@getCompletedItems');

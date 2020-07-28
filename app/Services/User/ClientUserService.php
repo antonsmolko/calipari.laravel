@@ -194,8 +194,7 @@ class ClientUserService
      */
     public function cancelOrder(int $number)
     {
-        return new OrderResource($this->cancelOrderHandler
-            ->handle(auth()->user(), $number));
+        return new OrderResource($this->cancelOrderHandler->handle($number));
     }
 
     /**

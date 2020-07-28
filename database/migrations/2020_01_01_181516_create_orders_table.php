@@ -22,6 +22,9 @@ class CreateOrdersTable extends Migration
             $table->json('delivery');
             $table->json('customer');
             $table->text('comment')->nullable();
+            $table->string('payment_id')->nullable();
+            $table->string('refund_reason')->nullable();
+            $table->unsignedInteger('refund_amount')->nullable();
             $table->string('completion_token')->nullable();
             $table->timestamps();
         });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Cms\Order;
 
 use App\Http\Controllers\API\Cms\Base\BaseResourceController;
 use App\Http\Controllers\API\Cms\Order\Requests\ChangeStatusRequest;
+use App\Http\Controllers\API\Cms\Order\Requests\RefundRequest;
 use App\Http\Requests\FormRequest;
 use App\Services\Order\CmsOrderService;
 use Illuminate\Http\JsonResponse;
@@ -95,5 +96,15 @@ class OrderController extends BaseResourceController
         }
 
         return $this->service->destroy($id);
+    }
+
+    /**
+     * @param RefundRequest $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function refund(RefundRequest $request, int $id): JsonResponse
+    {
+        return response()->json($this->service->makeRefund($id, $request->all()));
     }
 }

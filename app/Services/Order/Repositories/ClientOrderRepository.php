@@ -71,7 +71,7 @@ class ClientOrderRepository extends ClientBaseResourceRepository
      * @param string $number
      * @return ForPaymentResource
      */
-    public function getItemForPayment(string $number)
+    public function getItemForPayment(string $number): ForPaymentResource
     {
         return new ForPaymentResource($this->model::where('number', $number)->firstOrFail());
     }

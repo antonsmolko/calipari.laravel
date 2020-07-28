@@ -9,20 +9,25 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
-class OrderPaymentSucceeded extends Notification
+class PaymentNotification extends Notification
 {
     use Queueable;
 
     private array $paymentReport;
+    private string $title;
+    private string $emoji;
 
     /**
-     * Create a new notification instance.
-     *
+     * PaymentNotification constructor.
      * @param array $paymentReport
+     * @param string $title
+     * @param string $emoji
      */
-    public function __construct(array $paymentReport)
+    public function __construct(array $paymentReport, string $title, string $emoji = 'moneybag')
     {
         $this->paymentReport = $paymentReport;
+        $this->title = $title;
+        $this->emoji = $emoji;
     }
 
     /**
@@ -45,16 +50,18 @@ class OrderPaymentSucceeded extends Notification
     public function toSlack($notifiable)
     {
         $paymentReport = $this->paymentReport;
+        $title = $this->title;
+        $emoji = $this->emoji;
 
-        $content = array_reduce(array_keys($paymentReport), function ($carry, $key) use ($paymentReport) {
+        $content = array_reduce(array_keys($paymentReport), function ($carry, $key) use ($paymentReport, $title, $emoji) {
             /** Не форматировать. Оставить так. !!! */
             return $carry . '
 *' . __('yandex_kassa.payment_info.' . $key) . '* - ' . $paymentReport[$key];
         }, '');
 
         return (new SlackMessage)
-            ->from('calipari.ru', ':moneybag:')
-            ->content('Заказ № ' . $paymentReport['order_number'] . ' оплачен!')
+            ->from('calipari.ru', ':' . $emoji . ':')
+            ->content($title)
             ->attachment(function ($attachment) use ($content) {
                 $attachment->content($content)->markdown(['text']);
             });

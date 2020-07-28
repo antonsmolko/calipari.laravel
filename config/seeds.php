@@ -796,6 +796,11 @@ return [
             'title' => 'Выполнен',
             'alias' => 'completed',
             'order' => 6
+        ],
+        [
+            'title' => 'Возмещен',
+            'alias' => 'refunded',
+            'order' => 7
         ]
     ]
 ];

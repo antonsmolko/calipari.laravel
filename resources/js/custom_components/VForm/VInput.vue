@@ -4,7 +4,15 @@
         <div class="form-group">
             <md-field :class="[{ 'md-error': vField.$error }, { 'md-valid': !vField.$invalid }]">
                 <md-icon v-if="icon">{{ icon }}</md-icon>
-                <md-input :type="type" :name="name" @input="onInput" :value="value" :min="min" :maxlength="maxlength" />
+                <label v-if="placeholder">{{ placeholder }}</label>
+                <md-input
+                    :type="type"
+                    :name="name"
+                    @input="onInput"
+                    :value="value"
+                    :min="min"
+                    :maxlength="maxlength"
+                    :disabled="disabled" />
                 <slide-y-down-transition v-show="vField.$error">
                     <md-icon class="error">close</md-icon>
                 </slide-y-down-transition>
@@ -22,133 +30,159 @@
                 <input-notification-alpha-num v-else-if="!vField.alphaNum && vRules.alphaNum" :name="title"/>
                 <input-notification-email v-else-if="!vField.email && vRules.email"/>
                 <input-notification-same-as-password v-else-if="!vField.sameAsPassword && vRules.sameAsPassword"/>
+                <input-notification-same-as v-else-if="!vField.sameAs && vRules.sameAs" :name="title" :sameName="sameName"/>
+                <input-notification-between v-else-if="!vField.between && vRules.between" :name="title" :min="rangeMin" :max="rangeMax"/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    const touchMap = new WeakMap();
+const touchMap = new WeakMap();
 
-    import {
+import {
+    InputNotificationRequire,
+    InputNotificationUnique,
+    InputNotificationMinString,
+    InputNotificationAlias,
+    InputNotificationKey,
+    InputNotificationAlphaNum,
+    InputNotificationNum,
+    InputNotificationSameAsPassword,
+    InputNotificationSameAs,
+    InputNotificationEmail,
+    InputNotificationBetween
+} from '@/custom_components/InputNotifications'
+
+export default {
+    name: "VInput",
+    components: {
         InputNotificationRequire,
         InputNotificationUnique,
         InputNotificationMinString,
         InputNotificationAlias,
-        InputNotificationKey,
-        InputNotificationAlphaNum,
         InputNotificationNum,
         InputNotificationSameAsPassword,
-        InputNotificationEmail
-    } from '@/custom_components/InputNotifications'
+        InputNotificationSameAs,
+        InputNotificationAlphaNum,
+        InputNotificationEmail,
+        InputNotificationKey,
+        InputNotificationBetween
+    },
+    props: {
+        title: {
+            type: String,
+            required: true
+        },
+        name: {
+            type: String,
+            required: true
+        },
+        vField: {
+            type: Object,
+            required: true
+        },
+        vDelay: {
+            type: Boolean,
+            default: false
+        },
+        vRules: {
+            type: Object,
+            default: null
+        },
+        value: {
+            type: [ String, Number ],
+            default: ''
+        },
+        min: {
+            type: Number,
+            default: 2
+        },
+        maxlength: {
+            type: Number,
+            default: 30
+        },
+        icon: {
+            type: String,
+            default: null
+        },
+        type: {
+            type: String,
+            default: 'text'
+        },
+        module: {
+            type: String,
+            default: null
+        },
+        differ: {
+            type: Boolean,
+            default: false
+        },
+        sameName: {
+            type: String,
+            default: null
+        },
+        rangeMin: {
+            type: Number,
+            default: 0
+        },
+        rangeMax: {
+            type: Number,
+            default: 100
+        },
+        placeholder: {
+            type: String,
+            default: null
+        },
+        disabled: {
+            type: Boolean,
+            default: false
+        }
+    },
+    data() {
+        return {
+            referenceValue: ''
+        }
+    },
+    computed: {
+        storeModule() {
+            return this.module ? `${this.module}/` : '';
+        }
+    },
+    created() {
+        this.referenceValue = this.value;
+    },
+    methods: {
+        onInput(value) {
+            if (this.vField && this.vDelay) {
+                this.setValidationDelay(this.vField, value);
+            } else if (this.vField) {
+                this.touched(this.vField, value);
+            }
 
-    export default {
-        name: "VInput",
-        components: {
-            InputNotificationRequire,
-            InputNotificationUnique,
-            InputNotificationMinString,
-            InputNotificationAlias,
-            InputNotificationNum,
-            InputNotificationSameAsPassword,
-            InputNotificationAlphaNum,
-            InputNotificationEmail,
-            InputNotificationKey
+            this.$store.dispatch(`${this.storeModule}setItemField`, {
+                field: this.name,
+                value: value.trim()
+            });
         },
-        props: {
-            title: {
-                type: String,
-                required: true
-            },
-            name: {
-                type: String,
-                required: true
-            },
-            vField: {
-                type: Object,
-                required: true
-            },
-            vDelay: {
-                type: Boolean,
-                default: false
-            },
-            vRules: {
-                type: Object,
-                default: null
-            },
-            value: {
-                type: [ String, Number ],
-                default: ''
-            },
-            min: {
-                type: Number,
-                default: 2
-            },
-            maxlength: {
-                type: Number,
-                default: 30
-            },
-            icon: {
-                type: String,
-                default: null
-            },
-            type: {
-                type: String,
-                default: 'text'
-            },
-            module: {
-                type: String,
-                default: null
-            },
-            differ: {
-                type: Boolean,
-                default: false
+        setValidationDelay(v, value) {
+            v.$reset();
+            if (touchMap.has(v)) {
+                clearTimeout(touchMap.get(v));
             }
+            touchMap.set(v, setTimeout(() => this.touched(this.vField, value), 500));
         },
-        data() {
-            return {
-                referenceValue: ''
-            }
+        touched(v, value) {
+            this.differ ? this.touchedDifferent(v, value) : v.$touch();
         },
-        computed: {
-            storeModule() {
-                return this.module ? `${this.module}/` : '';
-            }
+        touchedDifferent(v, value) {
+            this.isDiffer(value, this.referenceValue)
+                ? v.$touch()
+                : v.$reset()
         },
-        created() {
-            this.referenceValue = this.value;
-        },
-        methods: {
-            onInput(value) {
-                if (this.vField && this.vDelay) {
-                    this.setValidationDelay(this.vField, value);
-                } else if (this.vField) {
-                    this.touched(this.vField, value);
-                }
-
-                this.$store.dispatch(`${this.storeModule}setItemField`, {
-                    field: this.name,
-                    value: value.trim()
-                });
-            },
-            setValidationDelay(v, value) {
-                v.$reset();
-                if (touchMap.has(v)) {
-                    clearTimeout(touchMap.get(v));
-                }
-                touchMap.set(v, setTimeout(() => this.touched(this.vField, value), 500));
-            },
-            touched(v, value) {
-                this.differ ? this.touchedDifferent(v, value) : v.$touch();
-            },
-            touchedDifferent(v, value) {
-                this.isDiffer(value, this.referenceValue)
-                    ? v.$touch()
-                    : v.$reset()
-            },
-            isDiffer(a, b) {
-                return a != b;
-            }
+        isDiffer(a, b) {
+            return a != b;
         }
     }
+}
 </script>

@@ -13,32 +13,47 @@ use App\Services\Cache\Tag;
 use App\Services\Cache\TTL;
 use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Order\Handlers\GetMailFormatOrderHandler;
+use App\Services\Order\Handlers\RefundHandler;
 use App\Services\Order\Repositories\CmsOrderRepository;
-use App\Services\Order\Resources\CmsOrder as OrderResource;
-use App\Services\Order\Resources\CmsOrderFromList as OrderFromListResource;
+use App\Services\OrderStatus\Repositories\OrderStatusRepository;
+use App\Services\Payment\PaymentService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
+use App\Services\Order\Resources\CmsOrder as OrderResource;
+use App\Services\Order\Resources\CmsOrderFromList as OrderFromListResource;
 
 class CmsOrderService extends CmsBaseResourceService
 {
     private GetMailFormatOrderHandler $getMailFormatOrderHandler;
+    private RefundHandler $refundHandler;
+    private PaymentService $paymentService;
+    private OrderStatusRepository $orderStatusRepository;
 
     /**
      * CmsOrderService constructor.
      * @param CmsOrderRepository $repository
      * @param ClearCacheHandler $clearCacheByTagHandler
      * @param GetMailFormatOrderHandler $getMailFormatOrderHandler
+     * @param RefundHandler $refundHandler
+     * @param PaymentService $paymentService
      * @param CacheKeyManager $cacheKeyManager
+     * @param OrderStatusRepository $orderStatusRepository
      */
     public function __construct(
         CmsOrderRepository $repository,
         ClearCacheHandler $clearCacheByTagHandler,
         GetMailFormatOrderHandler $getMailFormatOrderHandler,
-        CacheKeyManager $cacheKeyManager
+        RefundHandler $refundHandler,
+        PaymentService $paymentService,
+        CacheKeyManager $cacheKeyManager,
+        OrderStatusRepository $orderStatusRepository
     )
     {
         parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
         $this->getMailFormatOrderHandler = $getMailFormatOrderHandler;
+        $this->refundHandler = $refundHandler;
+        $this->paymentService = $paymentService;
+        $this->orderStatusRepository = $orderStatusRepository;
         $this->cacheTag = Tag::ORDERS_TAG;
     }
 
@@ -133,20 +148,18 @@ class CmsOrderService extends CmsBaseResourceService
     /**
      * @param int $id
      * @param array $requestData
-     * @return Resources\CmsOrder|Resources\CmsOrderFromList
+     * @return OrderFromListResource|OrderResource
      */
     public function changeStatus(int $id, array $requestData)
     {
         $order = $this->repository->getItem($id);
-
-        $changeStatusOrder = $this->repository
-            ->changeStatus($order, $requestData['status']);
+        $changeStatusOrder = $this->repository->changeStatus($order, $requestData['status']);
 
         $this->sendMail(\App\Mail\ChangeOrderStatus::class, $changeStatusOrder);
 
         event(new OrderUpdated());
 
-        return $requestData['list']
+        return !empty($requestData['list'])
             ? new OrderFromListResource($changeStatusOrder)
             : new OrderResource($changeStatusOrder);
     }
@@ -162,5 +175,48 @@ class CmsOrderService extends CmsBaseResourceService
         $email = $order->user ? $order->user->email : $order['customer']['email'];
         $mail = app()->makeWith($mailClass, ['order' => $orderData]);
         Mail::to($email)->queue($mail);
+    }
+
+    /**
+     * @param int $id
+     * @param array $refundData
+     * @return OrderResource|bool
+     * @throws \YandexCheckout\Common\Exceptions\ApiException
+     * @throws \YandexCheckout\Common\Exceptions\BadApiRequestException
+     * @throws \YandexCheckout\Common\Exceptions\ForbiddenException
+     * @throws \YandexCheckout\Common\Exceptions\InternalServerError
+     * @throws \YandexCheckout\Common\Exceptions\NotFoundException
+     * @throws \YandexCheckout\Common\Exceptions\ResponseProcessingException
+     * @throws \YandexCheckout\Common\Exceptions\TooManyRequestsException
+     * @throws \YandexCheckout\Common\Exceptions\UnauthorizedException
+     */
+    public function makeRefund(int $id, array $refundData)
+    {
+        $order = $this->repository->getItem($id);
+
+        if ($refundData['payment_id'] !== $order->payment_id) {
+            abort(422, __('order.wrong_payment_id'));
+        }
+
+        if ((int) $refundData['refund_amount'] > $order->price) {
+            abort(422, __('order.refund_cannot_be_more_than_payment'));
+        }
+
+        $refundResponse = $this->paymentService
+            ->refund($order->payment_id, $refundData['refund_amount'], $refundData['refund_reason']);
+
+        if ($refundResponse->getStatus() !== 'succeeded' || $refundResponse->paymentId !== $order->payment_id) {
+            return false;
+        }
+
+        $status = $this->orderStatusRepository->getItemByAlias(Order::REFUNDED_STATUS);
+        $this->repository->update($order, [
+            'refund_amount' => $refundData['refund_amount'],
+            'refund_reason' => $refundData['refund_reason']
+        ]);
+
+        $this->repository->changeStatus($order, $status->id);
+
+        return $this->repository->getItemDetails($order->id);
     }
 }

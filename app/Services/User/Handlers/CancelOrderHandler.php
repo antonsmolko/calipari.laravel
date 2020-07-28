@@ -6,7 +6,6 @@ namespace App\Services\User\Handlers;
 
 use App\Events\Models\Order\OrderCanceled;
 use App\Models\Order;
-use App\Models\User;
 use App\Services\Order\Repositories\ClientOrderRepository;
 use App\Services\OrderStatus\Repositories\OrderStatusRepository;
 use App\Services\User\Repositories\ClientUserRepository;
@@ -35,14 +34,19 @@ class CancelOrderHandler
     }
 
     /**
-     * @param \Illuminate\Contracts\Auth\Authenticatable|User $user
      * @param int $number
-     * @return \App\Services\Order\Resources\ClientOrder|void
+     * @return mixed
      */
-    public function handle($user, int $number)
+    public function handle(int $number)
     {
-        $canceledStatus = $this->orderStatusRepository->getItemByAlias(Order::CANCELED_STATUS);
+        $user = auth()->user();
         $order = $this->orderRepository->getUserItemByNumber($user, $number);
+
+        if (!$user->orders->contain($order->id)) {
+            abort(403);
+        }
+
+        $canceledStatus = $this->orderStatusRepository->getItemByAlias(Order::CANCELED_STATUS);
         $lastOrderStatus = $order->statuses->last();
 
         $canceledStatus->order > $lastOrderStatus->order

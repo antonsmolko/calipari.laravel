@@ -9,24 +9,20 @@
 </template>
 
 <script>
-    export default {
-        name: "FormWrap",
-        props: {
-            title: {
-                type: String
-            },
-            placeholder: {
-                type: String
-            }
+export default {
+    name: "FormWrap",
+    props: {
+        title: {
+            type: String
         },
-        methods: {
-            onSelect (value) {
-                this.$emit('selected', value);
-            }
+        placeholder: {
+            type: String
+        }
+    },
+    methods: {
+        onSelect (value) {
+            this.$emit('selected', value);
         }
     }
+}
 </script>
-
-<style scoped>
-
-</style>

@@ -146,178 +146,302 @@
                         </md-table>
                     </md-card-content>
                 </md-card>
+                <md-card v-if="order.paid">
+                    <card-icon-header v-if="!refundEnabled" icon="lock" title="Возврат денежных средств" />
+                    <card-icon-header v-else icon="lock_open" title="Возврат денежных средств" color="md-card-header-danger"/>
+                    <md-card-content>
+                        <md-button v-if="!refundEnabled" class="md-success" @click.native="handleRefundEnable">Вернуть средста покупателю</md-button>
+                        <div class="form-group" v-else>
+                            <v-input title="ID"
+                                     icon="qr_code"
+                                     name="paymentId"
+                                     :vField="$v.paymentId"
+                                     :module="storeModule"
+                                     :maxlength="50"
+                                     :value="paymentId"
+                                     :disabled="true" />
+
+                            <v-input title="Сумма"
+                                     icon="payment"
+                                     name="refundAmount"
+                                     :vField="$v.refundAmount"
+                                     :module="storeModule"
+                                     :placeholder="`До ${order.price} ₽`"
+                                     :maxlength="6"
+                                     :rangeMin="1"
+                                     :rangeMax="order.price"
+                                     :vRules="{ required: true, numeric: true, between: true }" />
+
+                            <v-input title="Причина возврата"
+                                     icon="notes"
+                                     name="refundReason"
+                                     :maxlength="255"
+                                     :vField="$v.refundReason"
+                                     :module="storeModule" />
+
+                            <v-input title="ID платежа"
+                                     placeholder="Скопируйте ID платежа"
+                                     icon="qr_code_scanner"
+                                     name="comparedPaymentId"
+                                     sameName="ID"
+                                     :maxlength="50"
+                                     :vField="$v.comparedPaymentId"
+                                     :module="storeModule"
+                                     :vRules="{ sameAs: true }" />
+
+                            <div class="mt-2">
+                                <md-button class="md-info" @click.native="cancelRefund">Отменить</md-button>
+                                <md-button class="md-danger" @click.native="refundOrder" :disabled="$v.$invalid">Выполнить возврат</md-button>
+                            </div>
+                        </div>
+                    </md-card-content>
+                </md-card>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import { mapActions, mapState } from 'vuex';
-    import { getFormatPrice, getArticle, getCurrentStatus } from "@/helpers";
+import { mapActions, mapState } from 'vuex';
+import { numeric, sameAs, requiredIf, between } from 'vuelidate/lib/validators'
+import { getFormatPrice, getArticle, getCurrentStatus } from "@/helpers";
 
-    import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
-    import ProductCard from "@/components/Cards/ProductCard";
+import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
+import ProductCard from "@/components/Cards/ProductCard";
+import FieldWrap from "@/custom_components/Form/FieldWrap";
 
-    import { pageTitle } from '@/mixins/base';
-    import { updateMethod, deleteMethod } from '@/mixins/crudMethods';
-    import swal from "sweetalert2";
+import { pageTitle } from '@/mixins/base';
+import { updateMethod, deleteMethod } from '@/mixins/crudMethods';
+import swal from "sweetalert2";
 
-    export default {
-        name: 'Order',
-        components: { ProductCard, ThumbTableCell },
-        mixins: [pageTitle, updateMethod, deleteMethod],
-        props: {
-            id: {
-                type: [ String, Number ],
-                required: true
-            }
-        },
-        data() {
-            return {
-                redirectRoute: { name: 'cms.store.orders' },
-                responseData: false,
-                storeModule: 'orders',
-                controlSaveVisibilities: false
-            }
-        },
-        computed: {
-            ...mapState({
-                order: state => state.orders.item
-            }),
-            restStatuses () {
-                return this.$store.getters['orderStatuses/getRestItems'](this.currentStatus.order);
+export default {
+    name: 'Order',
+    components: {
+        ProductCard,
+        ThumbTableCell,
+        FieldWrap
+    },
+    mixins: [pageTitle, updateMethod, deleteMethod],
+    props: {
+        id: {
+            type: [ String, Number ],
+            required: true
+        }
+    },
+    data: () =>  ({
+        redirectRoute: { name: 'cms.store.orders' },
+        responseData: false,
+        storeModule: 'orders',
+        controlSaveVisibilities: false,
+        refundEnabled: false
+    }),
+    validations() {
+        return {
+            paymentId: {
+                touch: false
             },
-            currentStatus () {
-                return getCurrentStatus(this.order.statuses);
+            refundAmount: {
+                required: requiredIf(function () {
+                    return this.refundEnabled
+                }),
+                between: between(1, this.order.price),
+                numeric,
+                touch: false
             },
-            baseTableData () {
-                return [
-                    { title: 'Номер', content: this.order.number },
-                    { title: 'Дата', content: this.order.date },
-                    { title: 'Статус', content: this.currentStatus.title }
-                ];
+            refundReason: {
+                touch: false
             },
-            priceTableData () {
-                return [
-                    { title: 'Цена заказа', content: getFormatPrice(this.order.price - this.order.delivery.price) },
-                    { title: 'Цена доставки', content: getFormatPrice(this.order.delivery.price) },
-                    { title: 'Итого', content: getFormatPrice(this.order.price) }
-                ];
-            },
-            deliveryTableData () {
-                return [
-                    { title: 'Способ доставки', content: this.order.delivery.title },
-                    { title: 'Регион доставки', content: this.order.delivery.locality },
-                    { title: 'Адресс', content: this.order.delivery.address }
-                ];
-            },
-            customerTableData () {
-                return [
-                    { title: 'Имя', content: this.order.customer.name },
-                    { title: 'Email', content: this.order.customer.email },
-                    { title: 'Телефон', content: this.order.customer.phone },
-                    { title: 'Комментарий к заказу', content: this.order.comment || '-' }
-                ];
-            },
-            userTableData () {
-                const user = this.order.user
-                return user
-                    ? [
-                        { title: 'ID', content: user.id},
-                        { title: 'Имя', content: user.name},
-                        { title: 'Email', content: user.email}
-                    ]
-                    : null;
-            }
-        },
-        created() {
-            Promise.all([
-                this.getStatusesAction(),
-                this.getItemAction(this.id)
-            ])
-                .then(() => {
-                    this.setPageTitle(this.title);
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
-        },
-        methods: {
-            ...mapActions({
-                getStatusesAction: 'orderStatuses/getItems',
-                getItemAction: 'orders/getItem',
-                changeStatusAction: 'orders/changeStatus'
-            }),
-            onUpdate() {
-                return this.update({
-                    sendData: {
-                        status: this.currentStatus.id,
-                        id: this.id
-                    },
-                    title: this.order.number,
-                    successText: 'Заказ обновлен!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                });
-            },
-            onDelete() {
-                return this.delete({
-                    payload: this.id,
-                    title: this.title,
-                    alertText: `заказ № «${this.order.number}»`,
-                    successText: 'Заказ удален!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                })
-            },
-            onStatusChange (value) {
-                const status = this.getStatusById(value);
-
-                return this.changeStatusConfirm()
-                    .then(response => {
-                        if (response.value) {
-                            return this.changeStatusAction({
-                                id: this.order.id,
-                                status: value,
-                                list: false
-                            })
-                                .then(() => {
-                                    return swal.fire({
-                                        title: `Заказ № ${this.order.number} обновлен!`,
-                                        text: `Установлен статус «${status.title}»`,
-                                        timer: 2000,
-                                        icon: 'success',
-                                        showConfirmButton: false
-                                    })
-                                });
-                        }
-                    })
-            },
-            changeStatusConfirm () {
-                return swal.fire({
-                    title: 'Внимание?',
-                    text: 'Смена статуса вызывает отправку уведомления клиенту!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    customClass: {
-                        confirmButton: 'md-button md-success btn-fill',
-                        cancelButton: 'md-button md-danger btn-fill'
-                    },
-                    confirmButtonText: 'Подтвердить',
-                    cancelButtonText: 'Отменить',
-                    buttonsStyling: false
-                })
-            },
-            getStatusById (id) {
-                return this.$store.getters['orderStatuses/getItemById'](id);
-            },
-            getFormatPrice (price) {
-                return getFormatPrice(price);
-            },
-            getArticle (imageId) {
-                return getArticle(imageId);
+            comparedPaymentId: {
+                sameAs: sameAs('paymentId'),
+                touch: false
             }
         }
+    },
+    computed: {
+        ...mapState('orders', {
+            order: state => state.item,
+            paymentId: state => state.item.payment_id,
+            comparedPaymentId: state => state.fields.comparedPaymentId,
+            refundAmount: state => state.fields.refundAmount,
+            refundReason: state => state.fields.refundReason
+        }),
+        restStatuses () {
+            return this.$store.getters['orderStatuses/getRestItems'](this.currentStatus.order);
+        },
+        currentStatus () {
+            return getCurrentStatus(this.order.statuses);
+        },
+        baseTableData () {
+            return [
+                { title: 'Номер', content: this.order.number },
+                { title: 'Дата', content: this.order.date },
+                { title: 'Статус', content: this.currentStatus.title }
+            ];
+        },
+        priceTableData () {
+            return [
+                { title: 'Цена заказа', content: getFormatPrice(this.order.price - this.order.delivery.price) },
+                { title: 'Цена доставки', content: getFormatPrice(this.order.delivery.price) },
+                { title: 'Итого', content: getFormatPrice(this.order.price) }
+            ];
+        },
+        deliveryTableData () {
+            return [
+                { title: 'Способ доставки', content: this.order.delivery.title },
+                { title: 'Регион доставки', content: this.order.delivery.locality },
+                { title: 'Адресс', content: this.order.delivery.address }
+            ];
+        },
+        customerTableData () {
+            return [
+                { title: 'Имя', content: this.order.customer.name },
+                { title: 'Email', content: this.order.customer.email },
+                { title: 'Телефон', content: this.order.customer.phone },
+                { title: 'Комментарий к заказу', content: this.order.comment || '-' }
+            ];
+        },
+        userTableData () {
+            const user = this.order.user
+            return user
+                ? [
+                    { title: 'ID', content: user.id},
+                    { title: 'Имя', content: user.name},
+                    { title: 'Email', content: user.email}
+                ]
+                : null;
+        }
+    },
+    created() {
+        Promise.all([
+            this.getStatusesAction(),
+            this.getItemAction(this.id)
+        ])
+            .then(() => {
+                this.setPageTitle(this.title);
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push(this.redirectRoute));
+    },
+    beforeDestroy () {
+        this.setOrderFieldsAction({
+            comparedPaymentId: null,
+            refundAmount: 0,
+            refundReason: '',
+        })
+    },
+    methods: {
+        ...mapActions({
+            getStatusesAction: 'orderStatuses/getItems',
+            getItemAction: 'orders/getItem',
+            changeStatusAction: 'orders/changeStatus',
+            refundAction: 'orders/refund',
+            setOrderFieldAction: 'orders/setItemField',
+            setOrderFieldsAction: 'orders/setItemFields'
+        }),
+        onUpdate() {
+            return this.update({
+                sendData: {
+                    status: this.currentStatus.id,
+                    id: this.id
+                },
+                title: this.order.number,
+                successText: 'Заказ обновлен!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            });
+        },
+        onDelete() {
+            return this.delete({
+                payload: this.id,
+                title: this.title,
+                alertText: `заказ № «${this.order.number}»`,
+                successText: 'Заказ удален!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            })
+        },
+        onStatusChange (value) {
+            const status = this.getStatusById(value);
+
+            return this.confirm('Смена статуса вызывает отправку уведомления клиенту!')
+                .then(response => {
+                    if (response.value) {
+                        return this.changeStatusAction({
+                            id: this.order.id,
+                            status: value,
+                            list: false
+                        })
+                            .then(() => {
+                                return swal.fire({
+                                    title: `Заказ № ${this.order.number} обновлен!`,
+                                    text: `Установлен статус «${status.title}»`,
+                                    timer: 2000,
+                                    icon: 'success',
+                                    showConfirmButton: false
+                                })
+                            });
+                    }
+                })
+        },
+        confirm (text) {
+            return swal.fire({
+                title: 'Внимание?',
+                text,
+                icon: 'warning',
+                showCancelButton: true,
+                customClass: {
+                    confirmButton: 'md-button md-success btn-fill',
+                    cancelButton: 'md-button md-danger btn-fill'
+                },
+                confirmButtonText: 'Подтвердить',
+                cancelButtonText: 'Отменить',
+                buttonsStyling: false
+            })
+        },
+        getStatusById (id) {
+            return this.$store.getters['orderStatuses/getItemById'](id);
+        },
+        getFormatPrice (price) {
+            return getFormatPrice(price);
+        },
+        getArticle (imageId) {
+            return getArticle(imageId);
+        },
+        handleRefundEnable () {
+            this.setOrderFieldsAction({
+                comparedPaymentId: '',
+                refundAmount: '',
+                refundReason: '',
+            });
+            this.refundEnabled = true;
+        },
+        refundOrder () {
+            const data = {
+                payment_id: this.comparedPaymentId,
+                refund_amount: this.refundAmount,
+                refund_reason: this.refundReason
+            };
+            return this.confirm('Возврат средств невозможно отменить!')
+                .then(response => {
+                    if (response.value) {
+                        return this.refundAction({ id: this.id, data })
+                            .then(() => {
+                                return swal.fire({
+                                    title: `Заказ № ${this.order.number} возмещен!`,
+                                    text: `Cумма возмещения - ${this.refundAmount} ₽`,
+                                    timer: 5000,
+                                    icon: 'success',
+                                    showConfirmButton: false
+                                })
+                            });
+                    }
+                });
+        },
+        cancelRefund () {
+            this.refundEnabled = false;
+        }
     }
+}
 </script>
 
 <style lang="scss">

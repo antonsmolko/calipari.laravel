@@ -1,12 +1,14 @@
-import InputNotificationRequire from "./InputNotificationRequire.vue";
-import InputNotificationUnique from "./InputNotificationUnique.vue";
-import InputNotificationMinString from "./InputNotificationMinString.vue";
-import InputNotificationAlias from "./InputNotificationAlias.vue";
-import InputNotificationNum from "./InputNotificationNum.vue";
-import InputNotificationAlphaNum from "./InputNotificationAlphaNum.vue";
-import InputNotificationKey from "./InputNotificationKey.vue";
-import InputNotificationSameAsPassword from "./InputNotificationSameAsPassword.vue";
-import InputNotificationEmail from "./InputNotificationEmail.vue";
+import InputNotificationRequire from "./InputNotificationRequire";
+import InputNotificationUnique from "./InputNotificationUnique";
+import InputNotificationMinString from "./InputNotificationMinString";
+import InputNotificationAlias from "./InputNotificationAlias";
+import InputNotificationNum from "./InputNotificationNum";
+import InputNotificationAlphaNum from "./InputNotificationAlphaNum";
+import InputNotificationKey from "./InputNotificationKey";
+import InputNotificationSameAsPassword from "./InputNotificationSameAsPassword";
+import InputNotificationSameAs from "./InputNotificationSameAs";
+import InputNotificationEmail from "./InputNotificationEmail";
+import InputNotificationBetween from "./InputNotificationBetween";
 
 
 export {
@@ -17,6 +19,8 @@ export {
     InputNotificationNum,
     InputNotificationAlphaNum,
     InputNotificationSameAsPassword,
+    InputNotificationSameAs,
     InputNotificationEmail,
-    InputNotificationKey
+    InputNotificationKey,
+    InputNotificationBetween
 }

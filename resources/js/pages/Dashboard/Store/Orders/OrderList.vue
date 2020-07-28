@@ -203,99 +203,99 @@
 </template>
 
 <script>
-    import { mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
-    import { getCurrentStatus } from "@/helpers";
-    import { pageTitle } from '@/mixins/base'
-    import { deleteMethod } from '@/mixins/crudMethods'
-    import Tabs from '@/custom_components/Tabs.vue'
-    import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
-    import TableActions from "@/custom_components/Tables/TableActions";
-    import swal from "sweetalert2";
+import { getCurrentStatus } from "@/helpers";
+import { pageTitle } from '@/mixins/base'
+import { deleteMethod } from '@/mixins/crudMethods'
+import Tabs from '@/custom_components/Tabs.vue'
+import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
+import TableActions from "@/custom_components/Tables/TableActions";
+import swal from "sweetalert2";
 
-    export default {
-        name: 'OrderList',
-        mixins: [ pageTitle, deleteMethod ],
-        components: { Tabs, VExtendedTable, TableActions },
-        data() {
-            return {
-                activeTab: '',
-                currentResourceUrl: '/store/orders/current',
-                completedResourceUrl: '/store/orders/completed',
-                canceledResourceUrl: '/store/orders/canceled',
-                responseData: false,
-                redirectRoute: { name: 'cms.store' },
-                storeModule: 'orders'
-            }
+export default {
+    name: 'OrderList',
+    mixins: [ pageTitle, deleteMethod ],
+    components: { Tabs, VExtendedTable, TableActions },
+    data() {
+        return {
+            activeTab: '',
+            currentResourceUrl: '/store/orders/current',
+            completedResourceUrl: '/store/orders/completed',
+            canceledResourceUrl: '/store/orders/canceled',
+            responseData: false,
+            redirectRoute: { name: 'cms.store' },
+            storeModule: 'orders'
+        }
+    },
+    created() {
+        this.getStatusesAction()
+            .then(() => {
+                this.setPageTitle('Заказы');
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push(this.redirectRoute));
+    },
+    methods: {
+        ...mapActions({
+            getStatusesAction: 'orderStatuses/getItems',
+            changeStatusAction: 'orders/changeStatus'
+        }),
+        onStatusChange (value, item) {
+            const status = this.getStatusById(value);
+
+            return this.changeStatusConfirm()
+                .then(response => {
+                    if (response.value) {
+                        return this.changeStatusAction({ id: item.id, status: value })
+                            .then(() => {
+                                return swal.fire({
+                                    title: `Заказ № ${item.number} обновлен!`,
+                                    text: `Установлен статус «${status.title}»`,
+                                    timer: 3000,
+                                    icon: 'success',
+                                    showConfirmButton: false
+                                })
+                            });
+                    }
+                })
         },
-        created() {
-            this.getStatusesAction()
-                .then(() => {
-                    this.setPageTitle('Заказы');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
+        changeStatusConfirm () {
+            return swal.fire({
+                title: 'Внимание?',
+                text: 'Смена статуса вызывает отправку уведомления клиенту!',
+                icon: 'warning',
+                showCancelButton: true,
+                customClass: {
+                    confirmButton: 'md-button md-success btn-fill',
+                    cancelButton: 'md-button md-danger btn-fill'
+                },
+                confirmButtonText: 'Подтвердить',
+                cancelButtonText: 'Отменить',
+                buttonsStyling: false
+            })
         },
-        methods: {
-            ...mapActions({
-                getStatusesAction: 'orderStatuses/getItems',
-                changeStatusAction: 'orders/changeStatus'
-            }),
-            onStatusChange (value, item) {
-                const status = this.getStatusById(value);
+        onDelete(item) {
+            return this.delete({
+                payload: item.id,
+                title: item.number,
+                alertText: `заказ «${item.number}»`,
+                storeModule: this.storeModule,
+                successText: 'Заказ удален!',
+                tableMode: 'table'
+            })
+        },
+        getStatusById (id) {
+            return this.$store.getters['orderStatuses/getItemById'](id);
+        },
+        getRestItems (item) {
+            const currentStatus = this.getCurrentStatus(item)
 
-                return this.changeStatusConfirm()
-                    .then(response => {
-                        if (response.value) {
-                            return this.changeStatusAction({ id: item.id, status: value })
-                                .then(() => {
-                                    return swal.fire({
-                                        title: `Заказ № ${item.number} обновлен!`,
-                                        text: `Установлен статус «${status.title}»`,
-                                        timer: 3000,
-                                        icon: 'success',
-                                        showConfirmButton: false
-                                    })
-                                });
-                        }
-                    })
-            },
-            changeStatusConfirm () {
-                return swal.fire({
-                    title: 'Внимание?',
-                    text: 'Смена статуса вызывает отправку уведомления клиенту!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    customClass: {
-                        confirmButton: 'md-button md-success btn-fill',
-                        cancelButton: 'md-button md-danger btn-fill'
-                    },
-                    confirmButtonText: 'Подтвердить',
-                    cancelButtonText: 'Отменить',
-                    buttonsStyling: false
-                })
-            },
-            onDelete(item) {
-                return this.delete({
-                    payload: item.id,
-                    title: item.number,
-                    alertText: `заказ «${item.number}»`,
-                    storeModule: this.storeModule,
-                    successText: 'Заказ удален!',
-                    tableMode: 'table'
-                })
-            },
-            getStatusById (id) {
-                return this.$store.getters['orderStatuses/getItemById'](id);
-            },
-            getRestItems (item) {
-                const currentStatus = this.getCurrentStatus(item)
-
-                return this.$store.getters['orderStatuses/getRestItems'](currentStatus.order);
-            },
-            getCurrentStatus (item) {
-                return getCurrentStatus(item.statuses);
-            }
+            return this.$store.getters['orderStatuses/getRestItems'](currentStatus.order);
+        },
+        getCurrentStatus (item) {
+            return getCurrentStatus(item.statuses);
         }
     }
+}
 </script>

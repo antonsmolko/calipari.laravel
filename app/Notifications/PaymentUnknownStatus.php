@@ -8,9 +8,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Str;
 
-class OrderPaymentUnknownStatus extends Notification
+class PaymentUnknownStatus extends Notification
 {
     use Queueable;
 
@@ -49,7 +48,6 @@ class OrderPaymentUnknownStatus extends Notification
 
         return (new SlackMessage)
             ->from('НЕИЗВЕСТНЫЙ СТАТУС ОПЛАТЫ', ':question:')
-            ->to('#payment')
             ->content('НЕИЗВЕСТНЫЙ СТАТУС')
             ->attachment(function ($attachment) use ($paymentData) {
                 $attachment
