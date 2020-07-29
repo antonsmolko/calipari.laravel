@@ -38,10 +38,10 @@ class PaymentNotificationService
         $paymentInfo = $paymentRequest['object'];
         $event = $paymentRequest['event'];
         $paymentReport = $this->getPaymentReportHandler->handle($paymentInfo);
-        $orderId = $paymentInfo['metadata']['order_id'];
 
         switch ($event) {
             case 'payment.succeeded':
+                $orderId = $paymentInfo['metadata']['order_id'];
                 $this->clientOrderService->makePaid($orderId, $paymentInfo['id']);
 
                 $title = 'Заказ № ' . $paymentInfo['order_number'] . ' оплачен!';
@@ -55,7 +55,7 @@ class PaymentNotificationService
 
             case 'refund.succeeded':
                 $title = 'Заказ № ' . $paymentInfo['order_number'] . ' возмещен!';
-                $notify = new PaymentUnknownStatus($paymentInfo);
+                $notify = new PaymentUnknownStatus($paymentRequest);
                 break;
 
             default:
