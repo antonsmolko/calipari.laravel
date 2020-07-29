@@ -54,7 +54,7 @@ class PaymentNotificationService
                 break;
 
             case 'refund.succeeded':
-                $title = 'Заказ № ' . $paymentInfo['order_number'] . ' возмещен!';
+//                $title = 'Заказ № ' . $paymentInfo['order_number'] . ' возмещен!';
                 $notify = new PaymentUnknownStatus($paymentRequest);
                 break;
 
