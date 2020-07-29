@@ -66,99 +66,97 @@
             </div>
         </div>
         <div class="md-layout-item md-xsmall-size-100 md-medium-size-50 md-large-size-66 md-xlarge-size-75">
-            <div class="md-layout-item">
-                <md-card>
-                    <card-icon-header title="Основная информация" icon="info"/>
-                    <md-card-content>
-                        <md-table :value="baseTableData" class="tm-order-item__table table-striped table-hover">
-                            <md-table-row slot="md-table-row" slot-scope="{ item }">
-                                <md-table-cell class="tm-width-1-2"><h4 class="card-title mb-0 mt-0">{{ item.title }}</h4></md-table-cell>
-                                <md-table-cell><span class="md-title"><small>{{ item.content }}</small></span></md-table-cell>
-                            </md-table-row>
-                        </md-table>
-                    </md-card-content>
-                </md-card>
-                <md-card>
-                    <card-icon-header class="mt-3"title="Цена" icon="account_balance_wallet"/>
-                    <md-card-content>
-                        <md-table :value="priceTableData" class="tm-order-item__table table-striped table-hover">
-                            <md-table-row slot="md-table-row" slot-scope="{ item }">
-                                <md-table-cell class="tm-width-1-2"><h4 class="card-title mb-0 mt-0">{{ item.title }}</h4></md-table-cell>
-                                <md-table-cell><span class="md-title"><small>{{ item.content }}</small></span></md-table-cell>
-                            </md-table-row>
-                        </md-table>
-                    </md-card-content>
-                </md-card>
-                <md-card>
-                    <card-icon-header title="Доставка" icon="local_shipping"/>
-                    <md-card-content>
-                        <md-table :value="deliveryTableData" class="tm-order-item__table table-striped table-hover">
-                            <md-table-row slot="md-table-row" slot-scope="{ item }">
-                                <md-table-cell class="tm-width-1-2"><h4 class="card-title mb-0 mt-0">{{ item.title }}</h4></md-table-cell>
-                                <md-table-cell><span class="md-title"><small>{{ item.content }}</small></span></md-table-cell>
-                            </md-table-row>
-                        </md-table>
-                    </md-card-content>
-                </md-card>
-                <md-card>
-                    <card-icon-header title="Получатель" icon="face"/>
-                    <md-card-content>
-                        <md-table :value="customerTableData" class="tm-order-item__table table-striped table-hover">
-                            <md-table-row slot="md-table-row" slot-scope="{ item }">
-                                <md-table-cell class="tm-width-1-2"><h4 class="card-title mb-0 mt-0">{{ item.title }}</h4></md-table-cell>
-                                <md-table-cell><span class="md-title"><small>{{ item.content }}</small></span></md-table-cell>
-                            </md-table-row>
-                        </md-table>
-                    </md-card-content>
-                </md-card>
-                <md-card>
-                    <card-icon-header title="Пользователь" icon="person"/>
-                    <md-card-content>
-                        <md-table v-if="userTableData" :value="userTableData" class="tm-order-item__table table-striped table-hover">
-                            <md-table-row slot="md-table-row" slot-scope="{ item }">
-                                <md-table-cell class="tm-width-1-2"><h4 class="card-title mb-0 mt-0">{{ item.title }}</h4></md-table-cell>
-                                <md-table-cell><span class="md-title"><small>{{ item.content }}</small></span></md-table-cell>
-                            </md-table-row>
-                        </md-table>
-                        <span v-else class="md-title"><small>Незарегистрированный</small></span>
-                    </md-card-content>
-                </md-card>
-                <md-card>
-                    <card-icon-header title="Статусы" icon="update"/>
-                    <md-card-content v-if="restStatuses.length">
-                        <h4 class="card-title mb-0">Текущий статус</h4>
-                        <md-field v-if="restStatuses.length && currentStatus.alias !== 'canceled'">
-                            <md-select
-                                @md-selected="onStatusChange"
-                                :value="currentStatus.id">
-                                <md-option :value="currentStatus.id" :key="currentStatus.id">
-                                    {{ currentStatus.title }}
-                                </md-option>
-                                <md-option v-for="status in restStatuses" :value="status.id" :key="status.id">
-                                    {{ status.title }}
-                                </md-option>
-                            </md-select>
-                        </md-field>
-                        <span v-else class="md-title">{{ currentStatus.title }}</span>
-                    </md-card-content>
-                    <md-card-content>
-                        <md-table
-                            md-sort="date"
-                            md-sort-order="desc"
-                            :value="order.statuses"
-                            class="tm-order-item__table table-striped table-hover">
-                            <md-table-row slot="md-table-row" slot-scope="{ item }">
-                                <md-table-cell class="tm-width-1-2">
-                                    <h4 class="card-title mb-0 mt-0">{{ item.title }}</h4>
-                                </md-table-cell>
-                                <md-table-cell>
-                                    <span class="md-title"><small>{{ item.date }}</small></span>
-                                </md-table-cell>
-                            </md-table-row>
-                        </md-table>
-                    </md-card-content>
-                </md-card>
-            </div>
+            <md-card>
+                <card-icon-header title="Основная информация" icon="info"/>
+                <md-card-content>
+                    <md-table :value="baseTableData" class="tm-order-item__table table-striped table-hover">
+                        <md-table-row slot="md-table-row" slot-scope="{ item }">
+                            <md-table-cell class="tm-width-1-2"><h4 class="card-title mb-0 mt-0">{{ item.title }}</h4></md-table-cell>
+                            <md-table-cell><span class="md-title"><small>{{ item.content }}</small></span></md-table-cell>
+                        </md-table-row>
+                    </md-table>
+                </md-card-content>
+            </md-card>
+            <md-card>
+                <card-icon-header class="mt-3"title="Цена" icon="account_balance_wallet"/>
+                <md-card-content>
+                    <md-table :value="priceTableData" class="tm-order-item__table table-striped table-hover">
+                        <md-table-row slot="md-table-row" slot-scope="{ item }">
+                            <md-table-cell class="tm-width-1-2"><h4 class="card-title mb-0 mt-0">{{ item.title }}</h4></md-table-cell>
+                            <md-table-cell><span class="md-title"><small>{{ item.content }}</small></span></md-table-cell>
+                        </md-table-row>
+                    </md-table>
+                </md-card-content>
+            </md-card>
+            <md-card>
+                <card-icon-header title="Доставка" icon="local_shipping"/>
+                <md-card-content>
+                    <md-table :value="deliveryTableData" class="tm-order-item__table table-striped table-hover">
+                        <md-table-row slot="md-table-row" slot-scope="{ item }">
+                            <md-table-cell class="tm-width-1-2"><h4 class="card-title mb-0 mt-0">{{ item.title }}</h4></md-table-cell>
+                            <md-table-cell><span class="md-title"><small>{{ item.content }}</small></span></md-table-cell>
+                        </md-table-row>
+                    </md-table>
+                </md-card-content>
+            </md-card>
+            <md-card>
+                <card-icon-header title="Получатель" icon="face"/>
+                <md-card-content>
+                    <md-table :value="customerTableData" class="tm-order-item__table table-striped table-hover">
+                        <md-table-row slot="md-table-row" slot-scope="{ item }">
+                            <md-table-cell class="tm-width-1-2"><h4 class="card-title mb-0 mt-0">{{ item.title }}</h4></md-table-cell>
+                            <md-table-cell><span class="md-title"><small>{{ item.content }}</small></span></md-table-cell>
+                        </md-table-row>
+                    </md-table>
+                </md-card-content>
+            </md-card>
+            <md-card>
+                <card-icon-header title="Пользователь" icon="person"/>
+                <md-card-content>
+                    <md-table v-if="userTableData" :value="userTableData" class="tm-order-item__table table-striped table-hover">
+                        <md-table-row slot="md-table-row" slot-scope="{ item }">
+                            <md-table-cell class="tm-width-1-2"><h4 class="card-title mb-0 mt-0">{{ item.title }}</h4></md-table-cell>
+                            <md-table-cell><span class="md-title"><small>{{ item.content }}</small></span></md-table-cell>
+                        </md-table-row>
+                    </md-table>
+                    <span v-else class="md-title"><small>Незарегистрированный</small></span>
+                </md-card-content>
+            </md-card>
+            <md-card>
+                <card-icon-header title="Статусы" icon="update"/>
+                <md-card-content v-if="restStatuses.length">
+                    <h4 class="card-title mb-0">Текущий статус</h4>
+                    <md-field v-if="restStatuses.length && currentStatus.alias !== 'canceled'">
+                        <md-select
+                            @md-selected="onStatusChange"
+                            :value="currentStatus.id">
+                            <md-option :value="currentStatus.id" :key="currentStatus.id">
+                                {{ currentStatus.title }}
+                            </md-option>
+                            <md-option v-for="status in restStatuses" :value="status.id" :key="status.id">
+                                {{ status.title }}
+                            </md-option>
+                        </md-select>
+                    </md-field>
+                    <span v-else class="md-title">{{ currentStatus.title }}</span>
+                </md-card-content>
+                <md-card-content>
+                    <md-table
+                        md-sort="date"
+                        md-sort-order="desc"
+                        :value="order.statuses"
+                        class="tm-order-item__table table-striped table-hover">
+                        <md-table-row slot="md-table-row" slot-scope="{ item }">
+                            <md-table-cell class="tm-width-1-2">
+                                <h4 class="card-title mb-0 mt-0">{{ item.title }}</h4>
+                            </md-table-cell>
+                            <md-table-cell>
+                                <span class="md-title"><small>{{ item.date }}</small></span>
+                            </md-table-cell>
+                        </md-table-row>
+                    </md-table>
+                </md-card-content>
+            </md-card>
         </div>
     </div>
 </template>

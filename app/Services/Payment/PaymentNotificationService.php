@@ -36,11 +36,11 @@ class PaymentNotificationService
     public function notify(array $paymentRequest)
     {
         $paymentInfo = $paymentRequest['object'];
-        $eventStatus = $paymentRequest['event']['status'];
+        $event = $paymentRequest['event'];
         $paymentReport = $this->getPaymentReportHandler->handle($paymentInfo);
         $orderId = $paymentInfo['metadata']['order_id'];
 
-        switch ($eventStatus) {
+        switch ($event) {
             case 'payment.succeeded':
                 $this->clientOrderService->makePaid($orderId, Order::PAID_STATUS);
 
