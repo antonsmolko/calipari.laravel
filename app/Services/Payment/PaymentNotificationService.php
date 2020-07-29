@@ -65,7 +65,7 @@ class PaymentNotificationService
 
                 $title = 'Заказ № ' . $order->number . $titlePrefix;
 
-                $notify = new PaymentNotification($paymentReport, $title);
+                $notify = new PaymentNotification($paymentReport, $title, 'money_with_wings');
                 break;
 
             default:
