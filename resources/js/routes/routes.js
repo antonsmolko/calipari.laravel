@@ -275,6 +275,12 @@ const Order = resolve => {
     })
 };
 
+const OrderRefund = resolve => {
+    require.ensure(['@/pages/Dashboard/Store/Orders/OrderRefund.vue'], () => {
+        resolve(require('@/pages/Dashboard/Store/Orders/OrderRefund.vue'))
+    })
+};
+
 /** Pages */
 const PagesPanel = resolve => {
     require.ensure(['@/pages/Dashboard/Pages/PagesPanel.vue'], () => {
@@ -828,6 +834,13 @@ const cmsOrderPages = {
             component: Order,
             props: true,
             meta: getPathMeta('orders')
+        },
+        {
+            path: 'orders/:id/refund',
+            name: 'cms.store.orders.order.refund',
+            component: OrderRefund,
+            props: true,
+            meta: getPathMeta('order-refund')
         }
     ]
 };

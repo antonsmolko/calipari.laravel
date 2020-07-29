@@ -91,11 +91,9 @@
                 default: null
             }
         },
-        data () {
-            return {
-                storeModule: 'images'
-            }
-        },
+        data: () => ({
+            storeModule: 'images'
+        }),
         computed: {
             ...mapState({
                 category: state => state.categories.item,

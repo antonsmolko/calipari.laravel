@@ -59,6 +59,7 @@ export default {
         'image-destroy': 's,a,o',
         orders: 's,a,o',
         'order-delete': 's,o',
+        'order-refund': 's,o',
         'order-statuses': 's,a,o',
         pages: 's,a,o,m',
         permissions: 's',
@@ -68,6 +69,6 @@ export default {
         store: 's,a,o',
         textures: 's,a,o,m',
         users: 's,a,o',
-        'user-delete': 's,o'
+        'user-delete': 's,o',
     }
 }

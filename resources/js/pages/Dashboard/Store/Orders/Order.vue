@@ -8,7 +8,19 @@
                         <slide-y-down-transition v-show="controlSaveVisibilities && $v.$anyDirty && !$v.$invalid">
                             <control-button title="Сохранить" @click="onUpdate" />
                         </slide-y-down-transition>
-                        <control-button title="Удалить" @click="onDelete" icon="delete" class="md-danger" />
+                        <router-button-link
+                            v-if="authCheck('order-refund') && refundAvailable"
+                            title="Возместить"
+                            icon="money_off"
+                            color="md-warning"
+                            route="cms.store.orders.order.refund"
+                            :params="{ id }" />
+                        <control-button
+                            v-if="authCheck('order-delete')"
+                            title="Удалить"
+                            @click="onDelete"
+                            icon="delete"
+                            class="md-danger" />
                     </div>
                 </md-card-content>
             </md-card>
@@ -146,56 +158,6 @@
                         </md-table>
                     </md-card-content>
                 </md-card>
-                <md-card v-if="order.paid">
-                    <card-icon-header v-if="!refundEnabled" icon="lock" title="Возврат денежных средств" />
-                    <card-icon-header v-else icon="lock_open" title="Возврат денежных средств" color="md-card-header-danger"/>
-                    <md-card-content>
-                        <md-button v-if="!refundEnabled" class="md-success" @click.native="handleRefundEnable">Вернуть средста покупателю</md-button>
-                        <div class="form-group" v-else>
-                            <v-input title="ID"
-                                     icon="qr_code"
-                                     name="paymentId"
-                                     :vField="$v.paymentId"
-                                     :module="storeModule"
-                                     :maxlength="50"
-                                     :value="paymentId"
-                                     :disabled="true" />
-
-                            <v-input title="Сумма"
-                                     icon="payment"
-                                     name="refundAmount"
-                                     :vField="$v.refundAmount"
-                                     :module="storeModule"
-                                     :placeholder="`До ${order.price} ₽`"
-                                     :maxlength="6"
-                                     :rangeMin="1"
-                                     :rangeMax="order.price"
-                                     :vRules="{ required: true, numeric: true, between: true }" />
-
-                            <v-input title="Причина возврата"
-                                     icon="notes"
-                                     name="refundReason"
-                                     :maxlength="255"
-                                     :vField="$v.refundReason"
-                                     :module="storeModule" />
-
-                            <v-input title="ID платежа"
-                                     placeholder="Скопируйте ID платежа"
-                                     icon="qr_code_scanner"
-                                     name="comparedPaymentId"
-                                     sameName="ID"
-                                     :maxlength="50"
-                                     :vField="$v.comparedPaymentId"
-                                     :module="storeModule"
-                                     :vRules="{ sameAs: true }" />
-
-                            <div class="mt-2">
-                                <md-button class="md-info" @click.native="cancelRefund">Отменить</md-button>
-                                <md-button class="md-danger" @click.native="refundOrder" :disabled="$v.$invalid">Выполнить возврат</md-button>
-                            </div>
-                        </div>
-                    </md-card-content>
-                </md-card>
             </div>
         </div>
     </div>
@@ -203,14 +165,12 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import { numeric, sameAs, requiredIf, between } from 'vuelidate/lib/validators'
 import { getFormatPrice, getArticle, getCurrentStatus } from "@/helpers";
 
 import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
 import ProductCard from "@/components/Cards/ProductCard";
-import FieldWrap from "@/custom_components/Form/FieldWrap";
 
-import { pageTitle } from '@/mixins/base';
+import { pageTitle, authCheck } from '@/mixins/base';
 import { updateMethod, deleteMethod } from '@/mixins/crudMethods';
 import swal from "sweetalert2";
 
@@ -218,10 +178,9 @@ export default {
     name: 'Order',
     components: {
         ProductCard,
-        ThumbTableCell,
-        FieldWrap
+        ThumbTableCell
     },
-    mixins: [pageTitle, updateMethod, deleteMethod],
+    mixins: [pageTitle, authCheck, updateMethod, deleteMethod],
     props: {
         id: {
             type: [ String, Number ],
@@ -232,38 +191,11 @@ export default {
         redirectRoute: { name: 'cms.store.orders' },
         responseData: false,
         storeModule: 'orders',
-        controlSaveVisibilities: false,
-        refundEnabled: false
+        controlSaveVisibilities: false
     }),
-    validations() {
-        return {
-            paymentId: {
-                touch: false
-            },
-            refundAmount: {
-                required: requiredIf(function () {
-                    return this.refundEnabled
-                }),
-                between: between(1, this.order.price),
-                numeric,
-                touch: false
-            },
-            refundReason: {
-                touch: false
-            },
-            comparedPaymentId: {
-                sameAs: sameAs('paymentId'),
-                touch: false
-            }
-        }
-    },
     computed: {
         ...mapState('orders', {
-            order: state => state.item,
-            paymentId: state => state.item.payment_id,
-            comparedPaymentId: state => state.fields.comparedPaymentId,
-            refundAmount: state => state.fields.refundAmount,
-            refundReason: state => state.fields.refundReason
+            order: state => state.item
         }),
         restStatuses () {
             return this.$store.getters['orderStatuses/getRestItems'](this.currentStatus.order);
@@ -309,6 +241,14 @@ export default {
                     { title: 'Email', content: user.email}
                 ]
                 : null;
+        },
+        refundAvailable () {
+            return this.order.paid && (this.availableRefundAmount > 0)
+        },
+        availableRefundAmount () {
+            const amount = this.order.price - Number(this.order.refund_amount);
+
+            return amount > 0 ? amount : 0;
         }
     },
     created() {
@@ -317,26 +257,16 @@ export default {
             this.getItemAction(this.id)
         ])
             .then(() => {
-                this.setPageTitle(this.title);
+                this.setPageTitle(`Заказ № ${this.order.number}`);
                 this.responseData = true;
             })
             .catch(() => this.$router.push(this.redirectRoute));
-    },
-    beforeDestroy () {
-        this.setOrderFieldsAction({
-            comparedPaymentId: null,
-            refundAmount: 0,
-            refundReason: '',
-        })
     },
     methods: {
         ...mapActions({
             getStatusesAction: 'orderStatuses/getItems',
             getItemAction: 'orders/getItem',
-            changeStatusAction: 'orders/changeStatus',
-            refundAction: 'orders/refund',
-            setOrderFieldAction: 'orders/setItemField',
-            setOrderFieldsAction: 'orders/setItemFields'
+            changeStatusAction: 'orders/changeStatus'
         }),
         onUpdate() {
             return this.update({
@@ -406,39 +336,6 @@ export default {
         },
         getArticle (imageId) {
             return getArticle(imageId);
-        },
-        handleRefundEnable () {
-            this.setOrderFieldsAction({
-                comparedPaymentId: '',
-                refundAmount: '',
-                refundReason: '',
-            });
-            this.refundEnabled = true;
-        },
-        refundOrder () {
-            const data = {
-                payment_id: this.comparedPaymentId,
-                refund_amount: this.refundAmount,
-                refund_reason: this.refundReason
-            };
-            return this.confirm('Возврат средств невозможно отменить!')
-                .then(response => {
-                    if (response.value) {
-                        return this.refundAction({ id: this.id, data })
-                            .then(() => {
-                                return swal.fire({
-                                    title: `Заказ № ${this.order.number} возмещен!`,
-                                    text: `Cумма возмещения - ${this.refundAmount} ₽`,
-                                    timer: 5000,
-                                    icon: 'success',
-                                    showConfirmButton: false
-                                })
-                            });
-                    }
-                });
-        },
-        cancelRefund () {
-            this.refundEnabled = false;
         }
     }
 }

@@ -3,7 +3,7 @@ import { axiosAction } from "../../mixins/actions";
 const state = {
     item: {},
     fields: {
-        comparedPaymentId: null,
+        comparedPaymentId: '',
         refundAmount: 0,
         refundReason: ''
     }
