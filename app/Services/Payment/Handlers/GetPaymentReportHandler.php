@@ -37,7 +37,7 @@ class GetPaymentReportHandler
             ]]);
         }
 
-        if (!empty($paymentInfo['metadata']['order_number'])) {
+        if (!empty($paymentInfo['metadata']) && !empty($paymentInfo['metadata']['order_number'])) {
             $additionReport = Arr::collapse([[
                 'order_number' => $paymentInfo['metadata']['order_number'],
             ], $additionReport]);

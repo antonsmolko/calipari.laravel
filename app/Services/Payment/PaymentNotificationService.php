@@ -4,10 +4,10 @@
 namespace App\Services\Payment;
 
 
-use App\Models\Order;
 use App\Notifications\PaymentNotification;
 use App\Notifications\PaymentUnknownStatus;
 use App\Services\Order\ClientOrderService;
+use App\Services\Order\Repositories\CmsOrderRepository;
 use App\Services\Payment\Handlers\GetPaymentReportHandler;
 use Illuminate\Support\Facades\Notification;
 
@@ -15,19 +15,23 @@ class PaymentNotificationService
 {
     private GetPaymentReportHandler $getPaymentReportHandler;
     private ClientOrderService $clientOrderService;
+    private CmsOrderRepository $cmsOrderRepository;
 
     /**
      * PaymentNotificationService constructor.
      * @param GetPaymentReportHandler $getPaymentReportHandler
      * @param ClientOrderService $clientOrderService
+     * @param CmsOrderRepository $cmsOrderRepository
      */
     public function __construct(
         GetPaymentReportHandler $getPaymentReportHandler,
-        ClientOrderService $clientOrderService
+        ClientOrderService $clientOrderService,
+        CmsOrderRepository $cmsOrderRepository
     )
     {
         $this->getPaymentReportHandler = $getPaymentReportHandler;
         $this->clientOrderService = $clientOrderService;
+        $this->cmsOrderRepository = $cmsOrderRepository;
     }
 
     /**
@@ -54,8 +58,14 @@ class PaymentNotificationService
                 break;
 
             case 'refund.succeeded':
-//                $title = 'Заказ № ' . $paymentInfo['order_number'] . ' возмещен!';
-                $notify = new PaymentUnknownStatus($paymentRequest);
+                $order = $this->cmsOrderRepository->getItemByPaymentId($paymentInfo['id']);
+                $titlePrefix = $order->price - $order->refund_amount > 0
+                    ? ' частично возмещен!'
+                    : ' возмещен!';
+
+                $title = 'Заказ № ' . $order->number . $titlePrefix;
+
+                $notify = new PaymentNotification($paymentReport, $title);
                 break;
 
             default:

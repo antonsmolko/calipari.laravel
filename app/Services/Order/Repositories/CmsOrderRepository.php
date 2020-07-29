@@ -96,4 +96,13 @@ class CmsOrderRepository extends CmsBaseResourceRepository
 
         return $order;
     }
+
+    /**
+     * @param string $paymentId
+     * @return mixed
+     */
+    public function getItemByPaymentId(string $paymentId)
+    {
+        return $this->model::where('payment_id', $paymentId)->firstOrFail();
+    }
 }

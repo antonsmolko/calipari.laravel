@@ -13,7 +13,6 @@ use App\Services\Cart\ClientCartService;
 use App\Services\Order\Handlers\CreatePaymentHandler;
 use App\Services\Order\Handlers\StoreHandler;
 use App\Services\Order\Repositories\ClientOrderRepository;
-use App\Services\Order\Resources\ClientOrder as ClientOrderResource;
 use App\Services\OrderStatus\Repositories\OrderStatusRepository;
 use App\Services\Payment\PaymentService;
 use Illuminate\Contracts\Encryption\DecryptException;
