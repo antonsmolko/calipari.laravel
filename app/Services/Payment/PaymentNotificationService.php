@@ -42,7 +42,7 @@ class PaymentNotificationService
 
         switch ($event) {
             case 'payment.succeeded':
-                $this->clientOrderService->makePaid($orderId, $paymentInfo['object']['id']);
+                $this->clientOrderService->makePaid($orderId, $paymentInfo['id']);
 
                 $title = 'Заказ № ' . $paymentInfo['order_number'] . ' оплачен!';
                 $notify = new PaymentNotification($paymentReport, $title);
