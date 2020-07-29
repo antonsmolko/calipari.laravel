@@ -48,12 +48,12 @@ class PaymentNotificationService
                 $orderId = $paymentInfo['metadata']['order_id'];
                 $this->clientOrderService->makePaid($orderId, $paymentInfo['id']);
 
-                $title = 'Заказ № ' . $paymentInfo['order_number'] . ' оплачен!';
+                $title = 'Заказ № ' . $paymentInfo['metadata']['order_number'] . ' оплачен!';
                 $notify = new PaymentNotification($paymentReport, $title);
                 break;
 
             case 'payment.canceled':
-                $title = 'Оплата заказа № ' . $paymentInfo['order_number'] . ' отменена!';
+                $title = 'Оплата заказа № ' . $paymentInfo['metadata']['order_number'] . ' отменена!';
                 $notify = new PaymentNotification($paymentReport, $title, 'x');
                 break;
 
