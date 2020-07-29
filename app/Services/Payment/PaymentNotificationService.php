@@ -58,7 +58,7 @@ class PaymentNotificationService
                 break;
 
             case 'refund.succeeded':
-                $order = $this->cmsOrderRepository->getItemByPaymentId($paymentInfo['id']);
+                $order = $this->cmsOrderRepository->getItemByPaymentId($paymentInfo['payment_id']);
                 $titlePrefix = $order->price - $order->refund_amount > 0
                     ? ' частично возмещен!'
                     : ' возмещен!';
