@@ -97,7 +97,7 @@ class PaymentService
      * @throws \YandexCheckout\Common\Exceptions\TooManyRequestsException
      * @throws \YandexCheckout\Common\Exceptions\UnauthorizedException
      */
-    public function refund(string $paymentId, int $amount, string $description = '')
+    public function refund(string $paymentId, int $amount, string $description)
     {
         return $this->client->createRefund(
             array(

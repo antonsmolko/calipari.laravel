@@ -211,7 +211,7 @@ class CmsOrderService extends CmsBaseResourceService
 
         $status = $this->orderStatusRepository->getItemByAlias(Order::REFUNDED_STATUS);
         $this->repository->update($order, [
-            'refund_amount' => $refundData['refund_amount'],
+            'refund_amount' => $order->refund_amount + $refundData['refund_amount'],
             'refund_reason' => $refundData['refund_reason']
         ]);
 

@@ -146,7 +146,7 @@ export default {
         this.setOrderFieldsAction({
             comparedPaymentId: '',
             refundAmount: this.availableRefundAmount,
-            refundReason: '',
+            refundReason: this.order.refund_reason,
         });
     },
     beforeDestroy () {
