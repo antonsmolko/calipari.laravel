@@ -22,6 +22,7 @@ class CmsOrderFromList extends JsonResource
             'delivery' => json_decode($this->delivery, true)['title'],
             'price' => $this->price,
             'refund_amount' => $this->refund_amount,
+            'refund_reason' => $this->refund_reason,
             'paid' => $this->paid,
             'statuses' => $this->statuses,
             'date' => $this->created_at->format('d.m.Y - H:i:s')

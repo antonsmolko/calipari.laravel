@@ -44,6 +44,7 @@
                         <v-input title="Причина возврата"
                                  icon="notes"
                                  name="refundReason"
+                                 :value="refundReason"
                                  :maxlength="255"
                                  :vField="$v.refundReason"
                                  :module="storeModule" />
