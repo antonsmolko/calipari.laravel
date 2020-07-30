@@ -459,8 +459,13 @@ Route::prefix('cms')
                 ->middleware('role:super_admin|owner')
                 ->where('id', '[0-9]+');
             Route::post('current', 'Cms\Order\OrderController@getCurrentItems');
-            Route::post('completed', 'Cms\Order\OrderController@getCompletedItems');
-            Route::post('canceled', 'Cms\Order\OrderController@getCanceledItems');
+            Route::post('{status}', 'Cms\Order\OrderController@getItemsByStatus')
+                ->where('status', '^('
+                    . \App\Models\Order::COMPLETED_STATUS . '|'
+                    . \App\Models\Order::CANCELED_STATUS . '|'
+                    . \App\Models\Order::REFUNDED_STATUS . '|)$');
+//            Route::post('canceled', 'Cms\Order\OrderController@getCanceledItems');
+//            Route::post('refunded', 'Cms\Order\OrderController@getRefundedItems');
             Route::delete('{id}', 'Cms\Order\OrderController@destroy')
                 ->middleware('role:super_admin|owner');
         });

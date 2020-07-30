@@ -20,7 +20,9 @@ class CmsOrderFromList extends JsonResource
             'number' => $this->number,
             'email' => $this->user ? $this->user->email : null,
             'delivery' => json_decode($this->delivery, true)['title'],
-            'price' => number_format($this->price, 0, '.', ' ') . ' ₽',
+            'price' => $this->price,
+            'refund_amount' => $this->refund_amount,
+            'paid' => $this->paid,
             'statuses' => $this->statuses,
             'date' => $this->created_at->format('d.m.Y - H:i:s')
         ];

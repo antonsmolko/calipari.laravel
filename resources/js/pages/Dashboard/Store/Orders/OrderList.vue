@@ -8,7 +8,7 @@
             </md-card>
 
             <tabs
-                :tab-name="['Текущие заказы', 'Выполненные заказы', 'Отмененные заказы']"
+                :tab-name="['Текущие', 'Выполненные', 'Отмененные', 'Возмещенные']"
                 :activeTab="activeTab"
                 color-button="success">
                 <template slot="tab-pane-1">
@@ -38,7 +38,7 @@
                             </md-table-cell>
 
                             <md-table-cell md-label="Цена">
-                                <span class="md-subheading">{{ item.price }}</span>
+                                <span class="md-subheading">{{ $helpers.getFormatPrice(item.price) }}</span>
                             </md-table-cell>
 
                             <md-table-cell md-label="Доставка">
@@ -63,10 +63,17 @@
                             <md-table-cell md-label="Действия">
                                 <div class="table-actions" v-if="item">
 
+                                    <router-button-link v-if="authCheck('order-refund') && refundAvailability(item)"
+                                                        title="Возместить"
+                                                        icon="money_off"
+                                                        color="md-warning"
+                                                        route="cms.store.orders.order.refund"
+                                                        :params="{ id: item.id }" />
+
                                     <router-button-link title="Подробнее"
                                                         icon="visibility"
                                                         color="md-info"
-                                                        :route="`cms.store.orders.order`"
+                                                        route="cms.store.orders.order"
                                                         :params="{ id: item.id }" />
 
                                     <control-button title="Удалить"
@@ -107,27 +114,30 @@
                             </md-table-cell>
 
                             <md-table-cell md-label="Цена">
-                                <span class="md-subheading">{{ item.price }}</span>
+                                <span class="md-subheading">{{ $helpers.getFormatPrice(item.price) }}</span>
                             </md-table-cell>
 
                             <md-table-cell md-label="Доставка">
                                 {{ item.delivery }}
                             </md-table-cell>
 
-                            <md-table-cell md-label="Статус">
-                                <span class="md-body-1">{{ getCurrentStatus(item).title }}</span>
-                            </md-table-cell>
-
                             <md-table-cell md-label="Действия">
                                 <div class="table-actions" v-if="item">
+                                    <router-button-link v-if="authCheck('order-refund') && refundAvailability(item)"
+                                                        title="Возместить"
+                                                        icon="money_off"
+                                                        color="md-warning"
+                                                        route="cms.store.orders.order.refund"
+                                                        :params="{ id: item.id }" />
 
                                     <router-button-link title="Подробнее"
                                                         icon="visibility"
                                                         color="md-info"
-                                                        :route="`cms.store.orders.order`"
+                                                        route="cms.store.orders.order"
                                                         :params="{ id: item.id }" />
 
-                                    <control-button title="Удалить"
+                                    <control-button v-if="authCheck('order-delete')"
+                                                    title="Удалить"
                                                     icon="delete"
                                                     color="md-danger"
                                                     @click="onDelete(item)" />
@@ -165,28 +175,84 @@
                                 <span v-else>-</span>
                             </md-table-cell>
 
-                            <md-table-cell md-label="Цена">
-                                <span class="md-subheading">{{ item.price }}</span>
-                            </md-table-cell>
-
-                            <md-table-cell md-label="Доставка">
-                                {{ item.delivery }}
-                            </md-table-cell>
-
-                            <md-table-cell md-label="Статус">
-                                <span class="md-body-1">{{ getCurrentStatus(item).title }}</span>
-                            </md-table-cell>
-
                             <md-table-cell md-label="Действия">
                                 <div class="table-actions" v-if="item">
 
                                     <router-button-link title="Подробнее"
                                                         icon="visibility"
                                                         color="md-info"
-                                                        :route="`cms.store.orders.order`"
+                                                        route="cms.store.orders.order"
                                                         :params="{ id: item.id }" />
 
-                                    <control-button title="Удалить"
+                                    <control-button v-if="authCheck('order-delete')"
+                                                    title="Удалить"
+                                                    icon="delete"
+                                                    color="md-danger"
+                                                    @click="onDelete(item)" />
+                                </div>
+                            </md-table-cell>
+
+                        </template>
+                    </v-extended-table>
+
+                </template>
+                <template slot="tab-pane-4">
+                    <v-extended-table :serverPagination="true"
+                                      :resourceUrl="refundedResourceUrl"
+                                      defaultSortOrder="desc"
+                                      emptyContent="У Вас еще нет возмещенных заказов!"
+                                      :searchFields="[ 'number', 'date' ]" >
+                        <template slot-scope="{ item }">
+
+                            <md-table-cell md-label="#" style="width: 50px">
+                                {{ item.id }}
+                            </md-table-cell>
+
+                            <md-table-cell md-label="Номер" md-sort-by="number">
+                                <span class="md-subheading">{{ item.number }}</span>
+                            </md-table-cell>
+
+                            <md-table-cell md-label="Дата" md-sort-by="date">
+                                {{ item.date }}
+                            </md-table-cell>
+
+                            <md-table-cell md-label="Пользователь">
+                                <span v-if="item.email">
+                                    {{ item.email }}
+                                </span>
+                                <span v-else>-</span>
+                            </md-table-cell>
+
+                            <md-table-cell md-label="Цена">
+                                <span class="md-subheading">{{ $helpers.getFormatPrice(item.price) }}</span>
+                            </md-table-cell>
+
+                            <md-table-cell md-label="Сумма возмещения">
+                                <span class="md-body-1">{{ item.refund_amount }}</span>
+                            </md-table-cell>
+
+                            <md-table-cell md-label="Причина возмещения">
+                                {{ item.refund_reason }}
+                            </md-table-cell>
+
+                            <md-table-cell md-label="Действия">
+                                <div class="table-actions" v-if="item">
+
+                                    <router-button-link v-if="authCheck('order-refund') && refundAvailability(item)"
+                                                        title="Возместить"
+                                                        icon="money_off"
+                                                        color="md-warning"
+                                                        route="cms.store.orders.order.refund"
+                                                        :params="{ id: item.id }" />
+
+                                    <router-button-link title="Подробнее"
+                                                        icon="visibility"
+                                                        color="md-info"
+                                                        route="cms.store.orders.order"
+                                                        :params="{ id: item.id }" />
+
+                                    <control-button v-if="authCheck('order-delete')"
+                                                    title="Удалить"
                                                     icon="delete"
                                                     color="md-danger"
                                                     @click="onDelete(item)" />
@@ -206,7 +272,7 @@
 import { mapActions } from 'vuex'
 
 import { getCurrentStatus } from "@/helpers";
-import { pageTitle } from '@/mixins/base'
+import { pageTitle, authCheck } from '@/mixins/base'
 import { deleteMethod } from '@/mixins/crudMethods'
 import Tabs from '@/custom_components/Tabs.vue'
 import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
@@ -215,7 +281,7 @@ import swal from "sweetalert2";
 
 export default {
     name: 'OrderList',
-    mixins: [ pageTitle, deleteMethod ],
+    mixins: [ pageTitle, deleteMethod, authCheck ],
     components: { Tabs, VExtendedTable, TableActions },
     data() {
         return {
@@ -223,6 +289,7 @@ export default {
             currentResourceUrl: '/store/orders/current',
             completedResourceUrl: '/store/orders/completed',
             canceledResourceUrl: '/store/orders/canceled',
+            refundedResourceUrl: '/store/orders/refunded',
             responseData: false,
             redirectRoute: { name: 'cms.store' },
             storeModule: 'orders'
@@ -295,6 +362,9 @@ export default {
         },
         getCurrentStatus (item) {
             return getCurrentStatus(item.statuses);
+        },
+        refundAvailability (item) {
+            return item.paid && item.price > Number(item.refund_amount);
         }
     }
 }

@@ -3,10 +3,16 @@
         <div class="md-layout-item md-size-100">
             <md-card class="mt-0">
                 <md-card-content class="md-between">
-                    <router-button-link
-                        title="К списку заказов"
-                        :route="redirectRoute.name"
-                        :params="{ id }"/>
+                    <div>
+                        <router-button-link
+                            title="К списку заказов"
+                            route="cms.store.orders" />
+                        <router-button-link
+                            title="В заказ"
+                            icon="visibility"
+                            :route="redirectRoute.name"
+                            :params="{ id }"/>
+                    </div>
                     <div>
                         <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
                             <control-button title="Сделать возврат" @click="refund" />

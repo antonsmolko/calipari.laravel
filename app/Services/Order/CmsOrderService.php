@@ -82,19 +82,20 @@ class CmsOrderService extends CmsBaseResourceService
     }
 
     /**
+     * @param string $status
      * @param array $requestData
-     * @return Resources\CmsOrderFromListCollection
+     * @return array|mixed
      */
-    public function getCompletedItems(array $requestData)
+    public function getItemsByStatus(string $status, array $requestData)
     {
         $key = $this->cacheKeyManager
-            ->getResourceKey(Key::ORDERS_PREFIX, ['cms', 'completed'], $requestData);
+            ->getResourceKey(Key::ORDERS_PREFIX, ['cms', $status], $requestData);
 
         return Cache::tags(Tag::ORDERS_TAG)
             ->remember(
                 $key,
                 TTL::ORDERS_TTL,
-                fn() => $this->repository->getItemsByStatus($requestData, 'completed'));
+                fn() => $this->repository->getItemsByStatus($requestData, $status));
     }
 
     /**
@@ -104,13 +105,29 @@ class CmsOrderService extends CmsBaseResourceService
     public function getCanceledItems(array $requestData)
     {
         $key = $this->cacheKeyManager
-            ->getResourceKey(Key::ORDERS_PREFIX, ['cms', 'canceled'], $requestData);
+            ->getResourceKey(Key::ORDERS_PREFIX, ['cms', Order::CANCELED_STATUS], $requestData);
 
         return Cache::tags(Tag::ORDERS_TAG)
             ->remember(
                 $key,
                 TTL::ORDERS_TTL,
-                fn() => $this->repository->getItemsByStatus($requestData, 'canceled'));
+                fn() => $this->repository->getItemsByStatus($requestData, Order::CANCELED_STATUS));
+    }
+
+    /**
+     * @param array $requestData
+     * @return Resources\CmsOrderFromListCollection
+     */
+    public function getRefundedItems(array $requestData)
+    {
+        $key = $this->cacheKeyManager
+            ->getResourceKey(Key::ORDERS_PREFIX, ['cms', Order::REFUNDED_STATUS], $requestData);
+
+        return Cache::tags(Tag::ORDERS_TAG)
+            ->remember(
+                $key,
+                TTL::ORDERS_TTL,
+                fn() => $this->repository->getItemsByStatus($requestData, Order::REFUNDED_STATUS));
     }
 
     /**
@@ -209,13 +226,15 @@ class CmsOrderService extends CmsBaseResourceService
             return false;
         }
 
-        $status = $this->orderStatusRepository->getItemByAlias(Order::REFUNDED_STATUS);
-        $this->repository->update($order, [
+        $refundedOrder = $this->repository->update($order, [
             'refund_amount' => $order->refund_amount + $refundData['refund_amount'],
             'refund_reason' => $refundData['refund_reason']
         ]);
 
-        $this->repository->changeStatus($order, $status->id);
+        if ($refundedOrder->price === $refundedOrder->refund_amount) {
+            $status = $this->orderStatusRepository->getItemByAlias(Order::REFUNDED_STATUS);
+            $this->repository->changeStatus($order, $status->id);
+        }
 
         return $this->repository->getItemDetails($order->id);
     }

@@ -10,7 +10,7 @@ class GetMailOrderImageThumbHandler
 {
     private const CANVAS_COLOR = 'F8F8F8';
     private const CANVAS_WITH = 600;
-    private const CANVAS_HEIGHT = 340;
+    private const CANVAS_HEIGHT = 600;
 
     private ImageProcessingBuilder $imageProcessingBuilder;
 

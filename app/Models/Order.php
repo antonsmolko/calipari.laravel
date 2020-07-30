@@ -21,6 +21,7 @@ class Order extends Model
     const DEFAULT_STATUS = 'processing';
     const CANCELED_STATUS = 'canceled';
     const PAID_STATUS = 'paid';
+    const COMPLETED_STATUS = 'completed';
     const REFUNDED_STATUS = 'refunded';
 
     /**

@@ -38,6 +38,7 @@ class CmsOrderRepository extends CmsBaseResourceRepository
             $this->model::whereDoesntHave('statuses', fn ($query) => $query
                 ->where('alias', 'completed')
                 ->orWhere('alias', 'canceled')
+                ->orWhere('alias', 'refunded')
             )
                 ->when(!empty($requestData['query']),
                     fn ($query) => $query->where('number', 'like', $requestData['query'] . '%'))
