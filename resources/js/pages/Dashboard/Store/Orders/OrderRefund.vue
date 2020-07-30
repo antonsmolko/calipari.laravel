@@ -20,14 +20,9 @@
             <md-card>
                 <md-card-content>
                     <div class="form-group">
-                        <v-input title="ID"
-                                 icon="qr_code"
-                                 name="paymentId"
-                                 :vField="$v.paymentId"
-                                 :module="storeModule"
-                                 :maxlength="50"
-                                 :value="paymentId"
-                                 :disabled="true" />
+                        <h4 class="card-title">ID</h4>
+                        <md-icon>qr_code</md-icon>
+                        <span class="md-caption md-body-1 payment-id">{{ order.payment_id }}</span>
 
                         <v-input title="Сумма"
                                  icon="payment"
@@ -66,7 +61,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import { numeric, sameAs, requiredIf, between } from 'vuelidate/lib/validators'
+import { numeric, sameAs, required, between } from 'vuelidate/lib/validators'
 
 import { pageTitle } from '@/mixins/base';
 import swal from "sweetalert2";
@@ -88,13 +83,8 @@ export default {
     },
     validations() {
         return {
-            paymentId: {
-                touch: false
-            },
             refundAmount: {
-                required: requiredIf(function () {
-                    return this.refundEnabled
-                }),
+                required,
                 between: between(1, this.availableRefundAmount),
                 numeric,
                 touch: false
@@ -145,8 +135,8 @@ export default {
 
         this.setOrderFieldsAction({
             comparedPaymentId: '',
-            refundAmount: this.availableRefundAmount,
-            refundReason: this.order.refund_reason,
+            refundAmount: 0,
+            refundReason: this.order.refund_reason || '',
         });
     },
     beforeDestroy () {
@@ -206,3 +196,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.payment-id {
+    padding-left: 9px;
+}
+</style>

@@ -17,7 +17,7 @@ const mutations = {
         state.fields[field] = value;
     },
     SET_ITEM_FIELDS(state, payload) {
-        for (const [field, value] of Object.keys(payload)) {
+        for (const [field, value] of Object.entries(payload)) {
             if (Object.hasOwnProperty.call(state.fields, field)) {
                 state.fields[field] = value;
             }

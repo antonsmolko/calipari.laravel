@@ -61,7 +61,7 @@ class PaymentNotificationService
                 $order = $this->cmsOrderRepository->getItemByPaymentId($paymentInfo['payment_id']);
                 $titlePrefix = $order->price - $order->refund_amount > 0
                     ? ' частично возмещен!'
-                    : ' возмещен!';
+                    : ' полностью возмещен!';
 
                 $title = 'Заказ № ' . $order->number . $titlePrefix;
 
