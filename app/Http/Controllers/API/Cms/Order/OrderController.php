@@ -49,24 +49,6 @@ class OrderController extends BaseResourceController
         return response()->json($this->service->getItemsByStatus($status, $request->all()));
     }
 
-//    /**
-//     * @param FormRequest $request
-//     * @return JsonResponse
-//     */
-//    public function getCanceledItems(FormRequest $request): JsonResponse
-//    {
-//        return response()->json($this->service->getCanceledItems($request->all()));
-//    }
-//
-//    /**
-//     * @param FormRequest $request
-//     * @return JsonResponse
-//     */
-//    public function getRefundedItems(FormRequest $request): JsonResponse
-//    {
-//        return response()->json($this->service->getCanceledItems($request->all()));
-//    }
-
     /**
      * @param int $id
      * @return JsonResponse

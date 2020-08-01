@@ -14,12 +14,12 @@ class GetPaymentResponseHandler
     {
         switch ($paymentInfo->getStatus()) {
             case 'succeeded':
-//                $paymentMethod = $paymentInfo->getPaymentMethod();
+                $paymentMethod = $paymentInfo->getPaymentMethod();
                 return [
                     'status' => 'success',
                     'message' => $paymentInfo->getDescription() . ' успешно оплачен!',
                     'timeout' => 10000,
-//                    'paymentMethodId' => $paymentMethod->saved ? $paymentMethod->id : null
+                    'payment' => $paymentMethod->saved ? $paymentMethod : null
                 ];
             case 'canceled':
                 $metadata = $paymentInfo->getMetadata();

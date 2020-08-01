@@ -144,7 +144,9 @@ Route::get('settings', 'Client\SettingGroup\SettingGroupController@index');
 /** Orders */
 Route::group(['prefix' => 'orders'], function() {
     Route::post('/', 'Client\Order\OrderController@store');
-    Route::post('pay', 'Client\Order\OrderController@pay');
+    Route::get('/{hash}', 'Client\Order\OrderController@getItemByHashForPayment');
+    Route::get('{number}/pay', 'Client\Order\OrderController@pay');
+    Route::get('{number}/pay-with-id/{id}', 'Client\Order\OrderController@payWithId');
     Route::get('payment-confirmation/{token}', 'Client\Order\OrderController@confirmPaymentCompletion');
 });
 
@@ -464,8 +466,6 @@ Route::prefix('cms')
                     . \App\Models\Order::COMPLETED_STATUS . '|'
                     . \App\Models\Order::CANCELED_STATUS . '|'
                     . \App\Models\Order::REFUNDED_STATUS . '|)$');
-//            Route::post('canceled', 'Cms\Order\OrderController@getCanceledItems');
-//            Route::post('refunded', 'Cms\Order\OrderController@getRefundedItems');
             Route::delete('{id}', 'Cms\Order\OrderController@destroy')
                 ->middleware('role:super_admin|owner');
         });

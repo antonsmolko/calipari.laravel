@@ -6,6 +6,7 @@ use App\Http\Controllers\API\Client\Order\Requests\PayRequest;
 use App\Http\Controllers\API\Client\Order\Requests\StoreRequest;
 use App\Services\Order\ClientOrderService;
 use Illuminate\Http\JsonResponse;
+use Psy\Util\Json;
 
 class OrderController
 {
@@ -30,12 +31,47 @@ class OrderController
     }
 
     /**
-     * @param PayRequest $request
+     * @param string $hash
      * @return JsonResponse
      */
-    public function pay(PayRequest $request): JsonResponse
+    public function getItemByHashForPayment(string $hash): JsonResponse
     {
-        return response()->json($this->service->pay($request->all()));
+        return response()->json($this->service->getItemByHashForPayment($hash));
+    }
+
+    /**
+     * @param string $number
+     * @return JsonResponse
+     * @throws \YandexCheckout\Common\Exceptions\ApiException
+     * @throws \YandexCheckout\Common\Exceptions\BadApiRequestException
+     * @throws \YandexCheckout\Common\Exceptions\ForbiddenException
+     * @throws \YandexCheckout\Common\Exceptions\InternalServerError
+     * @throws \YandexCheckout\Common\Exceptions\NotFoundException
+     * @throws \YandexCheckout\Common\Exceptions\ResponseProcessingException
+     * @throws \YandexCheckout\Common\Exceptions\TooManyRequestsException
+     * @throws \YandexCheckout\Common\Exceptions\UnauthorizedException
+     */
+    public function pay(string $number): JsonResponse
+    {
+        return response()->json($this->service->pay($number));
+    }
+
+    /**
+     * @param string $number
+     * @param string $paymentId
+     * @return JsonResponse
+     * @throws \YandexCheckout\Common\Exceptions\ApiException
+     * @throws \YandexCheckout\Common\Exceptions\BadApiRequestException
+     * @throws \YandexCheckout\Common\Exceptions\ForbiddenException
+     * @throws \YandexCheckout\Common\Exceptions\InternalServerError
+     * @throws \YandexCheckout\Common\Exceptions\NotFoundException
+     * @throws \YandexCheckout\Common\Exceptions\ResponseProcessingException
+     * @throws \YandexCheckout\Common\Exceptions\TooManyRequestsException
+     * @throws \YandexCheckout\Common\Exceptions\UnauthorizedException
+     */
+    public function payWithId(string $number, string $paymentId): JsonResponse
+    {
+        return response()->json($this->service->payWithId($number, $paymentId));
     }
 
     /**
