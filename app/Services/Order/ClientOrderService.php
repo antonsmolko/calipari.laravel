@@ -106,9 +106,9 @@ class ClientOrderService extends ClientBaseResourceService
 
     /**
      * @param string $hash
-     * @return mixed|void
+     * @return array
      */
-    public function getItemByHashForPayment(string $hash)
+    public function getItemByHashForPayment(string $hash): array
     {
         try {
             $number = decrypt($hash);
@@ -117,14 +117,11 @@ class ClientOrderService extends ClientBaseResourceService
         }
 
         $order = $this->repository->getItemForPayment($number);
+        $status = !$order->paid ? 'enabled' : 'paid';
 
-        return !$order->paid
-            ? array(
-                'status' => 'enabled',
+        return array(
+                'status' => $status,
                 'order' => $order
-            )
-            : array(
-                'status' => 'paid'
             );
     }
 
