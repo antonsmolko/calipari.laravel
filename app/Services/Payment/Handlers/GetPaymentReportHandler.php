@@ -21,14 +21,11 @@ class GetPaymentReportHandler
         if ($paymentMethod && $paymentMethod['type'] === 'bank_card') {
             if (!empty($paymentMethod['card'])) {
                 $additionReport = Arr::collapse([$additionReport, [
-                    'card_number' => $this->getFormatCardNumber($paymentMethod),
+                    'card_number' => $this->getFormatCardNumber($paymentMethod['card']),
                     'card_expiry' => $paymentMethod['card']['expiry_month'] . '/' . $paymentMethod['card']['expiry_year'],
                     'card_type' => $paymentMethod['card']['card_type']
                 ]]);
             }
-//            $additionReport = Arr::collapse([$additionReport, [
-//                'saved' => $paymentMethod['saved'] ? 'Да' : 'Нет'
-//            ]]);
         }
 
         if (!empty($paymentInfo['cancellation_details'])) {
@@ -51,13 +48,13 @@ class GetPaymentReportHandler
     }
 
     /**
-     * @param array $paymentMethod
+     * @param array $paymentCard
      * @return string
      */
-    private function getFormatCardNumber(array $paymentMethod): string
+    private function getFormatCardNumber(array $paymentCard): string
     {
         $cardRegExp = '/[0-9*]{4}/';
-        $cardNumber = $paymentMethod['card']['first6'] . '******' . $paymentMethod['card']['last4'];
+        $cardNumber = $paymentCard['first6'] . '******' . $paymentCard['last4'];
 
         return Str::of($cardNumber)->matchAll($cardRegExp)->join(' ');
     }

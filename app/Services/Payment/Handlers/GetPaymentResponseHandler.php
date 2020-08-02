@@ -15,6 +15,7 @@ class GetPaymentResponseHandler
         switch ($paymentInfo->getStatus()) {
             case 'succeeded':
                 $paymentMethod = $paymentInfo->getPaymentMethod();
+
                 return [
                     'status' => 'success',
                     'message' => $paymentInfo->getDescription() . ' успешно оплачен!',

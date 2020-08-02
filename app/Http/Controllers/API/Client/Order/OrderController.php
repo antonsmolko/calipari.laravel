@@ -51,9 +51,9 @@ class OrderController
      * @throws \YandexCheckout\Common\Exceptions\TooManyRequestsException
      * @throws \YandexCheckout\Common\Exceptions\UnauthorizedException
      */
-    public function pay(string $number): JsonResponse
+    public function paymentCreate(string $number): JsonResponse
     {
-        return response()->json($this->service->pay($number));
+        return response()->json($this->service->paymentCreate($number));
     }
 
     /**

@@ -146,6 +146,14 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function cards()
+    {
+        return $this->hasMany('App\Models\Card');
+    }
+
+    /**
      * @return bool
      */
     public function isActive(): bool

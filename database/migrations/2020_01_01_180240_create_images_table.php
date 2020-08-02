@@ -75,6 +75,9 @@ class CreateImagesTable extends Migration
         Schema::table('art_collections', function(Blueprint $table) {
             $table->dropForeign(['image_id']);
         });
+        Schema::table('images', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
         Schema::dropIfExists('images');
     }
 }

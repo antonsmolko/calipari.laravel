@@ -4,6 +4,7 @@
 namespace App\Services\User\Repositories;
 
 
+use App\Models\Card;
 use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\User;
@@ -219,5 +220,18 @@ class ClientUserRepository
         $user->likes()->toggle([$imageId]);
 
         return $user->likes->pluck('id');
+    }
+
+    /**
+     * @param User $user
+     * @param array $cardData
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function addCard(User $user, array $cardData)
+    {
+        return $user->cards()->create([
+            'user_id' => $user->id,
+            'info' => json_encode($cardData, true)
+        ]);
     }
 }

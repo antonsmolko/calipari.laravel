@@ -145,7 +145,7 @@ Route::get('settings', 'Client\SettingGroup\SettingGroupController@index');
 Route::group(['prefix' => 'orders'], function() {
     Route::post('/', 'Client\Order\OrderController@store');
     Route::get('/{hash}', 'Client\Order\OrderController@getItemByHashForPayment');
-    Route::get('{number}/pay', 'Client\Order\OrderController@pay');
+    Route::get('{number}/payment-create', 'Client\Order\OrderController@paymentCreate');
     Route::get('{number}/pay-with-id/{id}', 'Client\Order\OrderController@payWithId');
     Route::get('payment-confirmation/{token}', 'Client\Order\OrderController@confirmPaymentCompletion');
 });
@@ -218,6 +218,10 @@ Route::prefix('profile')
                ->withoutMiddleware('jwt.auth');
            Route::get('/{imageId}/toggle', 'Client\User\UserController@toggleLike')
                ->where('number', '[0-9]+');
+        });
+        Route::group(['prefix' => 'cards'], function() {
+            Route::get('{paymentId}/remove', 'Client\Card\CardController@remove');
+            Route::post('sync', 'Client\Card\CardController@sync');
         });
     });
 

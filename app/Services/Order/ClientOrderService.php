@@ -16,6 +16,7 @@ use App\Services\Order\Repositories\ClientOrderRepository;
 use App\Services\OrderStatus\Repositories\OrderStatusRepository;
 use App\Services\Payment\Handlers\GetPaymentResponseHandler;
 use App\Services\Payment\PaymentService;
+use App\Services\User\ClientUserService;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Notification;
 
@@ -27,11 +28,13 @@ class ClientOrderService extends ClientBaseResourceService
     private PaymentService $paymentService;
     private CreatePaymentHandler $createPaymentHandler;
     private GetPaymentResponseHandler $getPaymentResponseHandler;
+    private ClientUserService $userService;
 
     /**
      * ClientOrderService constructor.
      * @param ClientOrderRepository $repository
      * @param OrderStatusRepository $orderStatusRepository
+     * @param ClientUserService $userService
      * @param CacheKeyManager $cacheKeyManager
      * @param StoreHandler $storeHandler
      * @param ClientCartService $cartService
@@ -42,6 +45,7 @@ class ClientOrderService extends ClientBaseResourceService
     public function __construct(
         ClientOrderRepository $repository,
         OrderStatusRepository $orderStatusRepository,
+        ClientUserService $userService,
         CacheKeyManager $cacheKeyManager,
         StoreHandler $storeHandler,
         ClientCartService $cartService,
@@ -57,6 +61,7 @@ class ClientOrderService extends ClientBaseResourceService
         $this->paymentService = $paymentService;
         $this->createPaymentHandler = $createPaymentHandler;
         $this->getPaymentResponseHandler = $getPaymentResponseHandler;
+        $this->userService = $userService;
     }
 
     /**
@@ -119,10 +124,10 @@ class ClientOrderService extends ClientBaseResourceService
         $order = $this->repository->getItemForPayment($number);
         $status = !$order->paid ? 'enabled' : 'paid';
 
-        return array(
-                'status' => $status,
-                'order' => $order
-            );
+        return [
+            'status' => $status,
+            'order' => $order
+        ];
     }
 
     /**
@@ -137,18 +142,11 @@ class ClientOrderService extends ClientBaseResourceService
      * @throws \YandexCheckout\Common\Exceptions\TooManyRequestsException
      * @throws \YandexCheckout\Common\Exceptions\UnauthorizedException
      */
-    public function pay(string $number): array
+    public function paymentCreate(string $number): array
     {
         $order = $this->repository->getItemForPayment($number);
 
-        return !$order->paid
-            ? $this->createPaymentHandler->handle($order)
-            : array(
-                'status' => 'paid',
-                'payment' => array(
-                    'description' => 'Заказ № ' . $number
-                )
-            );
+        return $this->createPaymentHandler->handle($order);
     }
 
     /**
@@ -186,10 +184,10 @@ class ClientOrderService extends ClientBaseResourceService
 
     /**
      * @param int $id
-     * @param string $paymentId
+     * @param array $paymentInfo
      * @return bool
      */
-    public function makePaid(int $id, string $paymentId): bool
+    public function makePaid(int $id, array $paymentInfo): bool
     {
         $order = $this->repository->getItem($id);
 
@@ -197,9 +195,17 @@ class ClientOrderService extends ClientBaseResourceService
             return false;
         }
 
+        if (!empty($paymentInfo['payment_method']) && $paymentInfo['payment_method']['saved']) {
+            $user = $order->user();
+
+            if ($user) {
+                $this->userService->addCard($user, $paymentInfo['payment_method']);
+            }
+        }
+
         $status = $this->orderStatusRepository->getItemByAlias(Order::PAID_STATUS);
         $this->repository->changeStatus($order, $status->id);
-        $this->repository->update($order, ['payment_id' => $paymentId]);
+        $this->repository->update($order, ['payment_id' => $paymentInfo['id']]);
 
         return true;
     }
