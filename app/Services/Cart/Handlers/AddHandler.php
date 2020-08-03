@@ -27,7 +27,7 @@ class AddHandler
     public function handle(array $item)
     {
         $user = auth()->user();
-        $cartItems = $user->cart ? json_decode($user->cart->items, true) : [];
+        $cartItems = $user->cart ? $user->cart->getItems() : [];
         $items = Arr::collapse([$cartItems, $item]);
 
         return $this->repository->update($user, array_values($items));

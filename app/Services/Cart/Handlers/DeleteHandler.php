@@ -26,11 +26,14 @@ class DeleteHandler
     public function handle(int $id)
     {
         $user = auth()->user();
-        $cartItems = json_decode($user->cart->items, true);
 
-        $items = array_filter($cartItems, function($item) use ($id) {
-           return $item['id'] !== $id;
-        });
+        $items = array_map(function($item) use ($id) {
+            if ($item['id'] === $id) {
+                $item['deleted'] = true;
+            }
+
+            return $item;
+        }, $user->cart->getItems());
 
         return $this->repository->update($user, array_values($items));
     }

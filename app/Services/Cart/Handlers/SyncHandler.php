@@ -30,8 +30,7 @@ class SyncHandler
         $storeData = $items;
 
         if ($user && $user->cart) {
-            $cart = $user->cart;
-            $cartItems = json_decode($cart->items, true);
+            $cartItems = $user->cart->getItems();
             $storeData = collect([...$items, ...$cartItems])
                 ->unique('id')
                 ->toArray();
@@ -40,7 +39,9 @@ class SyncHandler
         $storeData = array_values(
             array_filter($storeData, fn ($item) => Image::where('publish', 1)
                 ->where('id', $item['image_id'])
-                ->exists()));
+                ->exists()
+            )
+        );
 
 
         return $user

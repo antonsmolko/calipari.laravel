@@ -30,7 +30,7 @@ class ClientCartRepository extends ClientBaseResourceRepository
             ['items' => json_encode($items, true)]
         );
 
-        return json_decode($cart->items, true);
+        return $cart->getNotDeletedItems();
     }
 
     /**
@@ -46,10 +46,10 @@ class ClientCartRepository extends ClientBaseResourceRepository
                 $item['qty'] = $qty;
             }
             return $item;
-        }, json_decode($user->cart->items, true));
+        }, $user->cart->getItems());
 
         return $user->cart()->update([
             'items' => json_encode($items, true)
-            ]);
+        ]);
     }
 }

@@ -81,6 +81,6 @@ class ClientCartService
         $user = auth()->user();
         $this->repository->setQty($user, $requestData['id'], $requestData['qty']);
 
-        return json_decode($user->cart->items, true);
+        return $user->cart->getNotDeletedItems();
     }
 }
