@@ -22,7 +22,7 @@ class CardRepository
     }
 
     /**
-     * @param Authenticatable|User $user
+     * @param $user
      * @param array $storeData
      * @return mixed
      */

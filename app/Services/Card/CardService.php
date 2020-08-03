@@ -45,11 +45,11 @@ class CardService
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @param array $paymentMethod
      * @return mixed|null
      */
-    public function store(User $user, array $paymentMethod)
+    public function store($user, array $paymentMethod)
     {
         $savingCard = $this->getSavedCardInfoHandler->handle($paymentMethod);
 
