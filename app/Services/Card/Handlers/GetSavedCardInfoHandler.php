@@ -22,8 +22,8 @@ class GetSavedCardInfoHandler
             'id' => $paymentMethod['id'],
             'issuer_country' => $paymentCard['issuer_country'],
             'last4' => $paymentCard['last4'],
-            'title' => $paymentCard['title'],
-            'type' => $paymentCard['type']
+            'title' => $paymentMethod['title'],
+            'type' => $paymentMethod['type']
         ];
     }
 }
