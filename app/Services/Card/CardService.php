@@ -10,6 +10,7 @@ use App\Services\Card\Handlers\StoreHandler;
 use App\Services\Card\Handlers\SyncHandler;
 use App\Services\Card\Repositories\CardRepository;
 use App\Services\Card\Handlers\GetSavedCardInfoHandler;
+use Illuminate\Support\Facades\Log;
 
 class CardService
 {
@@ -51,6 +52,7 @@ class CardService
      */
     public function store($user, array $paymentMethod)
     {
+        Log::notice(json_encode($paymentMethod, true));
         $savingCard = $this->getSavedCardInfoHandler->handle($paymentMethod);
 
         return $this->storeHandler->handle($user, $savingCard);
