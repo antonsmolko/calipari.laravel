@@ -27,7 +27,9 @@ class StoreHandler
      */
     public function handle($user, array $savingCard)
     {
-        $hasEqual = (bool) $user->cards()
+        $userCards = $user->cards;
+
+        $hasEqual = (bool) $userCards
             ->first(fn ($card) => !count(array_diff_assoc(
                 Arr::except($savingCard, 'id'),
                 Arr::except($card->getInfo(), 'id')
