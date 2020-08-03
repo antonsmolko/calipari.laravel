@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Notifications\ReceivedAnOrder;
 use App\Services\Base\Resource\ClientBaseResourceService;
 use App\Services\Cache\KeyManager as CacheKeyManager;
+use App\Services\Card\CardService;
 use App\Services\Cart\ClientCartService;
 use App\Services\Order\Handlers\CreatePaymentHandler;
 use App\Services\Order\Handlers\StoreHandler;
@@ -29,6 +30,7 @@ class ClientOrderService extends ClientBaseResourceService
     private CreatePaymentHandler $createPaymentHandler;
     private GetPaymentResponseHandler $getPaymentResponseHandler;
     private ClientUserService $userService;
+    private CardService $cardService;
 
     /**
      * ClientOrderService constructor.
@@ -41,6 +43,7 @@ class ClientOrderService extends ClientBaseResourceService
      * @param PaymentService $paymentService
      * @param CreatePaymentHandler $createPaymentHandler
      * @param GetPaymentResponseHandler $getPaymentResponseHandler
+     * @param CardService $cardService
      */
     public function __construct(
         ClientOrderRepository $repository,
@@ -51,7 +54,8 @@ class ClientOrderService extends ClientBaseResourceService
         ClientCartService $cartService,
         PaymentService $paymentService,
         CreatePaymentHandler $createPaymentHandler,
-        GetPaymentResponseHandler $getPaymentResponseHandler
+        GetPaymentResponseHandler $getPaymentResponseHandler,
+        CardService $cardService
     )
     {
         parent::__construct($repository, $cacheKeyManager);
@@ -62,6 +66,7 @@ class ClientOrderService extends ClientBaseResourceService
         $this->createPaymentHandler = $createPaymentHandler;
         $this->getPaymentResponseHandler = $getPaymentResponseHandler;
         $this->userService = $userService;
+        $this->cardService = $cardService;
     }
 
     /**
@@ -199,7 +204,7 @@ class ClientOrderService extends ClientBaseResourceService
             $user = $order->user();
 
             if ($user) {
-                $this->userService->addCard($user, $paymentInfo['payment_method']);
+                $this->cardService->store($user, $paymentInfo['payment_method']);
             }
         }
 

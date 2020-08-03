@@ -5,6 +5,8 @@ namespace App\Services\Card\Repositories;
 
 
 use App\Models\Card;
+use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class CardRepository
 {
@@ -20,6 +22,16 @@ class CardRepository
     }
 
     /**
+     * @param Authenticatable|User $user
+     * @param array $storeData
+     * @return mixed
+     */
+    public function store($user, array $storeData)
+    {
+        return $user->cards()->create($storeData);
+    }
+
+    /**
      * @param int $userId
      * @param string $paymentId
      * @return mixed
@@ -32,10 +44,10 @@ class CardRepository
     }
 
     /**
-     * @param $user
+     * @param Authenticatable $user
      * @return mixed
      */
-    public function getUserWithTrashedItems($user)
+    public function getWithTrashedUserItems(Authenticatable $user)
     {
         return $user->cards()->withTrashed()->get();
     }

@@ -4,22 +4,56 @@
 namespace App\Services\Card;
 
 
+use App\Models\User;
+use App\Services\Card\Handlers\GetInfoCardsHandler;
+use App\Services\Card\Handlers\StoreHandler;
+use App\Services\Card\Handlers\SyncHandler;
 use App\Services\Card\Repositories\CardRepository;
-use Illuminate\Support\Arr;
+use App\Services\Card\Handlers\GetSavedCardInfoHandler;
 
 class CardService
 {
     private CardRepository $repository;
+    private SyncHandler $syncHandler;
+    private StoreHandler $storeHandler;
+    private GetSavedCardInfoHandler $getSavedCardInfoHandler;
+    private GetInfoCardsHandler $getInfoCardsHandler;
     private $authUser;
 
     /**
      * CardService constructor.
      * @param CardRepository $repository
+     * @param SyncHandler $syncHandler
+     * @param GetSavedCardInfoHandler $getSavedCardInfoHandler
+     * @param StoreHandler $storeHandler
+     * @param GetInfoCardsHandler $getInfoCardsHandler
      */
-    public function __construct(CardRepository $repository)
+    public function __construct(
+        CardRepository $repository,
+        SyncHandler $syncHandler,
+        GetSavedCardInfoHandler $getSavedCardInfoHandler,
+        StoreHandler $storeHandler,
+        GetInfoCardsHandler $getInfoCardsHandler
+    )
     {
         $this->repository = $repository;
+        $this->syncHandler = $syncHandler;
+        $this->storeHandler = $storeHandler;
+        $this->getSavedCardInfoHandler = $getSavedCardInfoHandler;
+        $this->getInfoCardsHandler = $getInfoCardsHandler;
         $this->authUser = auth()->user();
+    }
+
+    /**
+     * @param User $user
+     * @param array $paymentMethod
+     * @return mixed|null
+     */
+    public function store(User $user, array $paymentMethod)
+    {
+        $savingCard = $this->getSavedCardInfoHandler->handle($paymentMethod);
+
+        return $this->storeHandler->handle($user, $savingCard);
     }
 
     /**
@@ -36,25 +70,15 @@ class CardService
 
     /**
      * @param array $cards
-     * @return array
+     * @return mixed
      */
     public function sync(array $cards)
     {
         $user = $this->authUser;
-        $userWithTrashedCards = $this->repository->getUserWithTrashedItems($user);
+        $withTrashedUserCards = $this->repository->getWithTrashedUserItems($user);
+        $infoCards = $this->getInfoCardsHandler->handle($withTrashedUserCards);
+        $this->syncHandler->handle($user, $cards, $infoCards);
 
-        return array_map(function ($card) use ($user, $userWithTrashedCards) {
-            $hasCard = (bool) $userWithTrashedCards->first(fn ($trashedCard) => !count(array_diff_assoc(
-               Arr::except($card, 'id'),
-               Arr::except($trashedCard->getInfo(), 'id')
-            )));
-
-            if (!$hasCard) {
-                return $user->cards()->create([
-                    'user_id' => $user->id,
-                    'info' => json_encode($card, true)
-                ]);
-            }
-        }, $cards);
+        return $user->cards->map(fn ($card) => json_decode($card->info, true));
     }
 }

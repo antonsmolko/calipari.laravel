@@ -13,11 +13,9 @@ use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Order\Resources\ClientOrder as OrderResource;
 use App\Services\User\Handlers\CancelOrderHandler;
 use App\Services\User\Handlers\ClientCreateHandler;
-use App\Services\User\Handlers\GetSavedCardInfoHandler;
 use App\Services\User\Handlers\SyncWishlistHandler;
 use App\Services\User\Handlers\UpdateHandler;
 use App\Services\User\Repositories\ClientUserRepository;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 
 class ClientUserService
@@ -30,7 +28,6 @@ class ClientUserService
     private SyncWishlistHandler $syncWishlistHandler;
     private CacheKeyManager $cacheKeyManager;
     private $authUser;
-    private GetSavedCardInfoHandler $getSavedCardInfoHandler;
 
     /**
      * ClientUserService constructor.
@@ -41,7 +38,6 @@ class ClientUserService
      * @param UpdateHandler $updateHandler
      * @param CancelOrderHandler $cancelOrderHandler
      * @param SyncWishlistHandler $syncWishlistHandler
-     * @param GetSavedCardInfoHandler $getSavedCardInfoHandler
      */
     public function __construct(
         ClientUserRepository $repository,
@@ -50,8 +46,7 @@ class ClientUserService
         CacheKeyManager $cacheKeyManager,
         UpdateHandler $updateHandler,
         CancelOrderHandler $cancelOrderHandler,
-        SyncWishlistHandler $syncWishlistHandler,
-        GetSavedCardInfoHandler $getSavedCardInfoHandler
+        SyncWishlistHandler $syncWishlistHandler
     )
     {
         $this->repository = $repository;
@@ -62,7 +57,6 @@ class ClientUserService
         $this->syncWishlistHandler = $syncWishlistHandler;
         $this->cacheKeyManager = $cacheKeyManager;
         $this->authUser = auth()->user();
-        $this->getSavedCardInfoHandler = $getSavedCardInfoHandler;
     }
 
     /**
@@ -219,24 +213,5 @@ class ClientUserService
     public function toggleLike(int $imageId)
     {
         return $this->repository->toggleLike($this->authUser, $imageId);
-    }
-
-    /**
-     * @param User $user
-     * @param array $paymentMethod
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
-    public function addCard(User $user, array $paymentMethod)
-    {
-        $savingCard = $this->getSavedCardInfoHandler->handle($paymentMethod);
-        $hasEqual = (bool) $user->cards()
-            ->first(fn ($card) => !count(array_diff_assoc(
-                Arr::except($savingCard, 'id'),
-                Arr::except($card->getInfo(), 'id')
-            )));
-
-        return !$hasEqual
-            ? $this->repository->addCard($user, $savingCard)
-            : null;
     }
 }

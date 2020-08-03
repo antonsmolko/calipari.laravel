@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Services\User\Handlers;
+namespace App\Services\Card\Handlers;
 
 
 class GetSavedCardInfoHandler
