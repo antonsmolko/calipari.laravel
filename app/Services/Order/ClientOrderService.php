@@ -201,7 +201,7 @@ class ClientOrderService extends ClientBaseResourceService
         }
 
         if (!empty($paymentInfo['payment_method']) && $paymentInfo['payment_method']['saved']) {
-            $user = $order->user();
+            $user = $order->user;
 
             if ($user) {
                 $this->cardService->store($user, $paymentInfo['payment_method']);
