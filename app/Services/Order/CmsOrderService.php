@@ -189,7 +189,7 @@ class CmsOrderService extends CmsBaseResourceService
     {
         $orderData = $this->getMailFormatOrderHandler->handle($order);
 
-        $email = $order->user ? $order->user->email : $order['customer']['email'];
+        $email = $order->user ? $order->user->email : $order->getCustomerField('email');
         $mail = app()->makeWith($mailClass, ['order' => $orderData]);
         Mail::to($email)->queue($mail);
     }

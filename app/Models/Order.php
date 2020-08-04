@@ -68,4 +68,23 @@ class Order extends Model
     {
         return (bool) $this->statuses()->firstWhere('alias', 'paid');
     }
+
+    /**
+     * @param string $field
+     * @return mixed
+     */
+    public function getCustomerField(string $field)
+    {
+        $customer = $this->getCustomer();
+
+        return $customer[$field];
+    }
+
+    /**
+     * @return array
+     */
+    public function getCustomer(): array
+    {
+        return json_decode($this->customer, true);
+    }
 }
