@@ -59,10 +59,10 @@ class UserController extends Controller
     }
 
     /**
-     * @param int $number
+     * @param string $number
      * @return JsonResponse
      */
-    public function getOrder(int $number): JsonResponse
+    public function getOrder(string $number): JsonResponse
     {
         return response()->json($this->service->getOrderResource($number));
     }

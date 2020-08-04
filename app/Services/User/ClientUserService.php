@@ -171,10 +171,10 @@ class ClientUserService
     }
 
     /**
-     * @param int $number
-     * @return mixed
+     * @param string $number
+     * @return array|mixed
      */
-    public function getOrderResource(int $number)
+    public function getOrderResource(string $number)
     {
         $key = $this->cacheKeyManager
             ->getResourceKey(
@@ -189,10 +189,10 @@ class ClientUserService
     }
 
     /**
-     * @param int $number
-     * @return mixed
+     * @param string $number
+     * @return OrderResource
      */
-    public function cancelOrder(int $number)
+    public function cancelOrder(string $number)
     {
         return new OrderResource($this->cancelOrderHandler->handle($number));
     }

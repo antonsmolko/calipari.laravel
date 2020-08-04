@@ -155,10 +155,10 @@ class ClientUserRepository
 
     /**
      * @param $user
-     * @param int $number
-     * @return mixed
+     * @param string $number
+     * @return OrderResource
      */
-    public function getOrderResource($user, int $number)
+    public function getOrderResource($user, string $number)
     {
         return new OrderResource($user->orders()
             ->where('number', $number)
@@ -168,10 +168,10 @@ class ClientUserRepository
 
     /**
      * @param $user
-     * @param int $number
+     * @param string $number
      * @return mixed
      */
-    public function getOrder($user, int $number)
+    public function getOrder($user, string $number)
     {
         return $user->orders()
             ->where('number', $number)
@@ -179,11 +179,11 @@ class ClientUserRepository
     }
 
     /**
-     * @param \Illuminate\Contracts\Auth\Authenticatable|User $user
-     * @param int $number
-     * @return mixed
+     * @param $user
+     * @param string $number
+     * @return OrderResource
      */
-    public function cancelOrder($user, int $number)
+    public function cancelOrder($user, string $number)
     {
         /** @var OrderStatus $canceledStatus */
         $canceledStatus = OrderStatus::where('alias', Order::CANCELED_STATUS)->firstOrFail();

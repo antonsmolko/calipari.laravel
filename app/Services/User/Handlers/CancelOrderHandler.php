@@ -34,10 +34,10 @@ class CancelOrderHandler
     }
 
     /**
-     * @param int $number
+     * @param string $number
      * @return mixed
      */
-    public function handle(int $number)
+    public function handle(string $number)
     {
         $user = auth()->user();
         $order = $this->orderRepository->getUserItemByNumber($user, $number);
