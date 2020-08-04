@@ -42,7 +42,7 @@ class CancelOrderHandler
         $user = auth()->user();
         $order = $this->orderRepository->getUserItemByNumber($user, $number);
 
-        if (!$user->orders->contain($order->id)) {
+        if (!$user->orders->contains($order->id)) {
             abort(403);
         }
 
