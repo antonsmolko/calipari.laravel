@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Auth;
 
+use App\Events\Auth\Registered;
 use App\Http\Controllers\API\Auth\ResponseUserStatus\SocialLoginResponseUserStatusStrategy;
 use App\Http\Controllers\API\Auth\Base\BaseLoginController;
 use App\Http\Controllers\API\Client\User\Requests\SocialRequest;
@@ -43,16 +44,16 @@ class SocialLoginController extends BaseLoginController
     }
 
     /**
-     * @param $service
+     * @param string $service
      * @param SocialRequest $request
      * @return JsonResponse
      */
-    public function registered($service, SocialRequest $request): JsonResponse
+    public function register(string $service, SocialRequest $request): JsonResponse
     {
         /** @var User $user */
         $user = $this->userService->storeWithSocial($request->all(), $service);
-
         $this->authService->createEmailConfirmation($user, $user->email);
+        event(new Registered($user));
 
         return response()->json($this->authService->getMessageByEmailConfirmation($user->email), 200);
     }
@@ -79,7 +80,6 @@ class SocialLoginController extends BaseLoginController
         }
 
         if ($user = $this->userService->getUserByEmail($serviceUser->getEmail())) {
-
             $this->userService->storeUserSocial($user, $serviceUser->getId(), $service);
 
             return $this->getStatusResponse($user);

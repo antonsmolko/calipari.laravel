@@ -35,7 +35,7 @@ Route::group(['prefix' => '/auth', ['middleware' => 'throttle:20,5']], function(
 
     Route::get('/login/{service}', 'Auth\SocialLoginController@redirect');
     Route::get('/login/{service}/callback', 'Auth\SocialLoginController@callback');
-    Route::post('/login/{service}/register', 'Auth\SocialLoginController@registered');
+    Route::post('/login/{service}/register', 'Auth\SocialLoginController@register');
 
 
     /** Send reset password mail */

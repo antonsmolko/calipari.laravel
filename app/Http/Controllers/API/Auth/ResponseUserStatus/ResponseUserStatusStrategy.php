@@ -4,17 +4,20 @@
 namespace App\Http\Controllers\API\Auth\ResponseUserStatus;
 
 
+use App\Events\Auth\Registered;
+use App\Models\User;
+
 trait ResponseUserStatusStrategy
 {
     /**
      * Determines which message to return to the user.
      *
-     * @param $user
+     * @param User $user
      * @param $token
      * @param int $expiresIn
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function getUserStatusResponse($user, $token, int $expiresIn)
+    public function getUserStatusResponse(User $user, $token, int $expiresIn)
     {
         if (!$user->isActive()) {
             return $this->getLockedOut();
@@ -24,6 +27,8 @@ trait ResponseUserStatusStrategy
 
             return $this->getNotConfirmed($user->email);
         }
+
+        event(new Registered($user));
 
         return $this->getAllRights($user->name, $token, $expiresIn);
     }

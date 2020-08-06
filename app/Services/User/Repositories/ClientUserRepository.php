@@ -94,7 +94,7 @@ class ClientUserRepository
             return false;
         }
 
-        return !!$user->update([
+        return (bool) $user->update([
             'email' => $verifiedEmail,
             'confirmed' => 1
         ]);

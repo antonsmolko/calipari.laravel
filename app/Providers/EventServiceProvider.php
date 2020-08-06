@@ -169,6 +169,14 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\Models\Post\PostDeleted::class => [
             \App\Listeners\Cache\Clear\PostCacheClear::class,
         ],
+
+        \App\Events\Auth\Registered::class => [
+            \App\Listeners\Order\SyncWithUser::class,
+        ],
+
+        \App\Events\Auth\ChangeEmail::class => [
+            \App\Listeners\Order\RefreshCustomerEmail::class,
+        ],
     ];
 
     /**

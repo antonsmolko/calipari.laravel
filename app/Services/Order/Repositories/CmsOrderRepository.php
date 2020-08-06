@@ -106,4 +106,15 @@ class CmsOrderRepository extends CmsBaseResourceRepository
     {
         return $this->model::where('payment_id', $paymentId)->firstOrFail();
     }
+
+    /**
+     * @param string $email
+     * @return mixed
+     */
+    public function getWithoutRegistrationItemsByEmail(string $email)
+    {
+        return $this->model::doesntHave('user')
+            ->where('customer->email', $email)
+            ->get();
+    }
 }

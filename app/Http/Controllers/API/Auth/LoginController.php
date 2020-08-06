@@ -55,6 +55,7 @@ class LoginController extends BaseLoginController
                 ->header('Authorization', $token)
             : response()->json([
                 'message' => __('auth.wrong_login_pass'),
-                'status' => 'danger'], 401);
+                'status' => 'danger'
+            ], 401);
     }
 }

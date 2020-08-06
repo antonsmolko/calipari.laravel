@@ -19,6 +19,7 @@ class CheckImagesCount implements ShouldQueue
      * CheckImagesCount constructor.
      * @param CmsCategoryService $categoryService
      * @param CmsColorCollectionService $colorCollectionService
+     * @param CmsArtCollectionService $artCollectionService
      */
     public function __construct(
         CmsCategoryService $categoryService,

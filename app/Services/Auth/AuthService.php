@@ -4,6 +4,8 @@
 namespace App\Services\Auth;
 
 
+use App\Events\Auth\ChangeEmail;
+use App\Events\Auth\Registered;
 use App\Models\User;
 use App\Services\Base\Auth\BaseAuthService;
 use App\Services\User\Resources\UserClient as UserResource;
@@ -12,28 +14,21 @@ use Illuminate\Http\Request;
 
 class AuthService extends BaseAuthService
 {
+    /**
+     * @param Request $request
+     * @return array|void
+     */
     public function me(Request $request)
     {
         $user = $request->user();
 
         if ($user && $user->isActive() && $user->isConfirmed()) {
-//            return new UserResource(auth()->user());
             return [
                 'status' => 'success',
                 'data' => new UserResource(auth()->user())
             ];
         }
-//        $this->logout();
     }
-//    /**
-//     * @return UserResource
-//     */
-//    public function me()
-//    {
-//        return $this->guard()->user()
-//            ? new UserResource($this->guard()->user())
-//            : null;
-//    }
 
     public function logout()
     {
@@ -41,11 +36,17 @@ class AuthService extends BaseAuthService
     }
 
     /**
-     * @return JsonResponse
+     * @return \Exception|JsonResponse
      */
-    public function refresh(): JsonResponse
+    public function refresh()
     {
-        return $this->respondWithRefreshToken(auth()->refresh(true, true));
+        try {
+            $token = auth()->refresh(true, true);
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return $this->respondWithRefreshToken($token);
     }
 
     /**
@@ -62,9 +63,12 @@ class AuthService extends BaseAuthService
                 . '?message=' . __('auth.invalid_token')
                 . '&status=danger');
 
-        $message = $this->repository->emailConfirm($user)
-            ? __('auth.email_verified')
-            : __('auth.email_already_verified');
+        if ($this->repository->emailConfirm($user)) {
+            $message = __('auth.email_verified');
+            event(new ChangeEmail($user));
+        } else {
+            $message = __('auth.email_already_verified');
+        }
 
         return redirect(env('CLIENT_BASE_URL')
             . '/login'
@@ -105,12 +109,14 @@ class AuthService extends BaseAuthService
     }
 
     /**
-     * @param $user
+     * @param User $user
      * @param string $token
      * @return array
      */
-    public function respondWithToken($user, string $token): array
+    public function respondWithToken(User $user, string $token): array
     {
+        event(new Registered($user));
+
         return [
             'message' => __('auth.welcome_message', ['name' => $user->name]),
             'status' => 'success',
@@ -126,16 +132,8 @@ class AuthService extends BaseAuthService
      */
     public function respondWithRefreshToken(string $token): JsonResponse
     {
-//        return [
-//            'message' => 'Токен обновлен!',
-//            'status' => 'success',
-//            'access_token' => $token,
-//            'token_type' => 'bearer',
-//            'expires_in' => $this->expiresIn
-//        ];
         return response()
             ->json([
-                'message' => 'Токен обновлен!',
                 'status' => 'success',
                 'access_token' => $token,
                 'token_type' => 'bearer',
@@ -143,14 +141,4 @@ class AuthService extends BaseAuthService
             ], 200)
             ->header('Authorization', $token);
     }
-
-//    /**
-//     * Get the guard to be used during authentication.
-//     *
-//     * @return \Illuminate\Contracts\Auth\Guard
-//     */
-//    public function guard()
-//    {
-//        return Auth::guard();
-//    }
 }

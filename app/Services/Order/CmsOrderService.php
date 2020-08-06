@@ -6,6 +6,7 @@ namespace App\Services\Order;
 
 use App\Events\Models\Order\OrderUpdated;
 use App\Models\Order;
+use App\Models\User;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\Cache\Key;
@@ -237,5 +238,32 @@ class CmsOrderService extends CmsBaseResourceService
         }
 
         return $this->repository->getItemDetails($order->id);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function syncWithoutRegistrationItemsWithUser(User $user)
+    {
+        $orders = $this->repository->getWithoutRegistrationItemsByEmail($user->email);
+        $orders->each(function($order) use ($user) {
+            $order->user()->associate($user);
+            $order->save();
+        });
+    }
+
+    /**
+     * @param User $user
+     */
+    public function refreshCustomerEmail(User $user)
+    {
+        $orders = $user->orders;
+        $orders->each(function ($order) use ($user) {
+            $customer = $order->getCustomer();
+            $customer['email'] = $user->email;
+            $order->update([
+                'customer' => json_encode($customer, true)
+            ]);
+        });
     }
 }

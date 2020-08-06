@@ -38,15 +38,14 @@ class AuthController extends BaseAuthController
      */
     public function emailConfirm(string $token)
     {
-        return $this->authService->emailConfirm( $token);
+        return $this->authService->emailConfirm($token);
     }
 
     /**
-     * @return JsonResponse
+     * @return \Exception|JsonResponse
      */
-    public function refresh(): JsonResponse
+    public function refresh()
     {
-//        return response()->json($this->authService->refresh());
         return $this->authService->refresh();
     }
 }
