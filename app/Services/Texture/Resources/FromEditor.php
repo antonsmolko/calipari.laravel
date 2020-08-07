@@ -22,6 +22,7 @@ class FromEditor extends JsonResource
             'background_path' => $this->background_path,
             'price' => $this->price,
             'width' => $this->width,
+            'seamless' => $this->seamless,
             'description' => $this->description
         ];
     }

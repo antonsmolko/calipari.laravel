@@ -23,6 +23,7 @@ class CmsFromEdit extends JsonResource
             'order' => $this->order,
             'sample_path' => $this->sample_path,
             'background_path' => $this->background_path,
+            'seamless' => $this->seamless,
             'publish' => $this->publish,
             'description' => $this->description
         ];
