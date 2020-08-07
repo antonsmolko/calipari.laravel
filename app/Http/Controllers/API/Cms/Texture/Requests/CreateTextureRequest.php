@@ -26,11 +26,12 @@ class CreateTextureRequest extends FormRequest
         return [
             'name' => 'bail|required|unique:textures,name|min:' . config('validation.name.min') . '|max:' . config('validation.name.max'),
             'price' => 'bail|required|integer',
-            'width' => 'bail|required|integer',
+            'seamless' => 'bail|nullable|integer',
+            'width' => 'bail|required_without:seamless|integer|nullable',
             'sample' => 'bail|required|file|image|mimes:jpeg,png|min:' . config('validation.upload.min_size.min') . '|max:' . config('validation.upload.max_size'),
             'order' => 'bail|integer|required',
             'background' => 'bail|required|file|image|mimes:jpeg,png|min:' . config('validation.upload.min_size.min') . '|max:' . config('validation.upload.max_size'),
-            'description' => 'max:' . config('validation.text.max'),
+            'description' => 'required|string|max:' . config('validation.text.max'),
         ];
     }
 }

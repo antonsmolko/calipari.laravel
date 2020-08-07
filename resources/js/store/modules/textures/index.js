@@ -11,6 +11,7 @@ const state = {
         sample: '',
         background_path: '',
         background: '',
+        seamless: '',
         publish: '',
         description: '',
         order: ''
@@ -37,6 +38,9 @@ const mutations = {
     },
     TOGGLE_PUBLISH_FIELD (state) {
         state.fields.publish = +!state.fields.publish;
+    },
+    TOGGLE_SEAMLESS_FIELD (state) {
+        state.fields.seamless = +!state.fields.seamless;
     },
     CLEAR_ITEM_FIELDS (state) {
         for(const field of Object.keys(state.fields)) {
@@ -111,6 +115,9 @@ const actions = {
     },
     togglePublishField ({ commit }) {
         commit('TOGGLE_PUBLISH_FIELD');
+    },
+    toggleSeamlessField ({ commit }) {
+        commit('TOGGLE_SEAMLESS_FIELD');
     },
     clearItemFields ({ commit }) {
         commit('CLEAR_ITEM_FIELDS');

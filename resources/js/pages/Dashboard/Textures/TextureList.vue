@@ -95,10 +95,7 @@ export default {
     computed: {
         ...mapState('textures', {
             items: state => state.items
-        }),
-        baseSamplePath () {
-            return `${this.$config.BASE_IMAGE_URL}/crop/500/300`
-        }
+        })
     },
     methods: {
         ...mapActions('textures', {
@@ -112,7 +109,7 @@ export default {
         onDelete(item) {
             return this.delete({
                 payload: item.id,
-                title: item.title,
+                title: item.name,
                 alertText: `фактура «${item.name}»`,
                 storeModule: this.storeModule,
                 successText: 'Фактура удалена!'

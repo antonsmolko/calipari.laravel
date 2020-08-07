@@ -117,6 +117,14 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Clear\FilterCacheClear::class,
         ],
 
+        \App\Events\Models\Texture\TextureSaved::class => [
+            \App\Listeners\Cache\Clear\TextureCacheClear::class
+        ],
+
+        \App\Events\Models\Texture\TextureDeleted::class => [
+            \App\Listeners\Cache\Clear\TextureCacheClear::class
+        ],
+
         \App\Events\Models\Delivery\DeliverySaved::class => [
             \App\Listeners\Cache\Clear\DeliveryCacheClear::class,
         ],

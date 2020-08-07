@@ -37,7 +37,7 @@
                     </tr>
                     <tr>
                         <td colspan="5" style="border: 1px solid #B3B3B3; padding: 1px">
-                            <img style="width: 311px" src="{{ $details->image_url }}" alt="">
+                            <img style="width: 320px" src="{{ $details->image_url }}" alt="">
                         </td>
                     </tr>
                     <tr>

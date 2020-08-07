@@ -36,12 +36,19 @@
                                          :vRules="{ required: true, numeric: true }" />
                             </div>
                             <div class="md-layout-item">
+                                <v-switch :value="seamless"
+                                          title="Безшовная"
+                                          name="seamless"
+                                          :module="storeModule" />
+                            </div>
+                            <div class="md-layout-item">
                                 <v-input title="Ширина"
                                          icon="straighten"
                                          name="width"
                                          :maxlength="8"
                                          :module="storeModule"
                                          :vField="$v.width"
+                                         :disabled="Boolean(seamless)"
                                          :vRules="{ required: true, numeric: true }" />
                             </div>
                             <div class="md-layout-item">
@@ -73,6 +80,7 @@
                         </div>
                         <div class="mt-5">
                             <text-editor :value="description"
+                                         :vField="$v.description"
                                          :module="storeModule" />
                         </div>
                         <div class="mt-5">
@@ -89,7 +97,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 
-import { required, numeric, minLength } from 'vuelidate/lib/validators'
+import { required, requiredIf, numeric, minLength } from 'vuelidate/lib/validators'
 
 import { pageTitle } from '@/mixins/base'
 import { changePublish } from '@/mixins/changingFields'
@@ -127,7 +135,9 @@ export default {
             touch: false
         },
         width: {
-            required,
+            required: requiredIf(function () {
+                return !this.seamless
+            }),
             numeric,
             touch: false
         },
@@ -141,8 +151,13 @@ export default {
         },
         order: {
             numeric,
+            required,
             touch: false
         },
+        description: {
+            required,
+            touch: false
+        }
     },
     computed: {
         ...mapState('textures', {
@@ -151,6 +166,7 @@ export default {
             width: state => state.fields.width,
             sample: state => state.fields.sample,
             background: state => state.fields.background,
+            seamless: state => state.fields.seamless,
             publish: state => state.fields.publish,
             description: state => state.fields.description,
             order: state => state.fields.order
@@ -173,9 +189,10 @@ export default {
                 sendData: {
                     name: this.name,
                     price: this.price,
-                    width: this.width,
+                    width: this.seamless ? 0 : this.width,
                     sample: this.sample,
                     background: this.background,
+                    seamless: Number(this.seamless),
                     description: this.description,
                     publish: Number(this.publish),
                     order: Number(this.order)
