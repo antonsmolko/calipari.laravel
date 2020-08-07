@@ -177,6 +177,11 @@ class Image extends Model
         return str_pad($this->id, config('settings.image_article_length'), "0", STR_PAD_LEFT);
     }
 
+    public function getArticle()
+    {
+        return str_pad($this->id, config('settings.image_article_length'), "0", STR_PAD_LEFT);
+    }
+
     public function scopeWhereCategory($query, int $id)
     {
         return $query

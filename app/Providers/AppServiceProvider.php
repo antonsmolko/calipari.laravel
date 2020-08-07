@@ -13,9 +13,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if ($this->app->isLocal()) {
+//        if ($this->app->isLocal()) {
             //
-        }
+//        }
 
         // Предотвращение ошибки SQL 1071 Specified key was too long, возникающей при миграции строки с индексом
         // Schema::defaultStringLength(191);

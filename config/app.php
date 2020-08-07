@@ -167,7 +167,7 @@ return [
          */
         Intervention\Image\ImageServiceProvider::class,
         \SocialiteProviders\Manager\ServiceProvider::class,
-        \CdekSDK\LaravelCdekServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -230,6 +230,7 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'Gravatar' => Creativeorange\Gravatar\Facades\Gravatar::class,
         'Date' => Jenssegers\Date\Date::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

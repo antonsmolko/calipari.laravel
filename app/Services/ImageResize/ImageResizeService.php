@@ -7,6 +7,8 @@ use App\Services\ImageResize\Handlers\GetFileEntriesHandler;
 use App\Services\ImageResize\Handlers\GetOrderImageHandler;
 use App\Services\ImageResize\Handlers\GetMailOrderImageThumbHandler;
 use App\Services\ImageResize\Handlers\GetOrderImageThumbHandler;
+use App\Services\ImageResize\Handlers\GetPDFLabelOrderImageHandler;
+use App\Services\ImageResize\Handlers\GetPDFLayoutOrderImageHandler;
 use App\Services\ImageResize\Repositories\ImageResizeRepository;
 
 class ImageResizeService
@@ -17,7 +19,8 @@ class ImageResizeService
     private GetOrderImageHandler $getOrderImageHandler;
     private GetMailOrderImageThumbHandler $getMailOrderImageThumbHandler;
     private GetOrderImageThumbHandler $getOrderImageThumbHandler;
-
+    private GetPDFLabelOrderImageHandler $getPDFLabelOrderImageHandler;
+    private GetPDFLayoutOrderImageHandler $getPDFLayoutOrderImageHandler;
 
     /**
      * ImageResizeService constructor.
@@ -27,6 +30,8 @@ class ImageResizeService
      * @param GetOrderImageHandler $getOrderImageHandler
      * @param GetMailOrderImageThumbHandler $getMailOrderImageThumbHandler
      * @param GetOrderImageThumbHandler $getOrderImageThumbHandler
+     * @param GetPDFLabelOrderImageHandler $getPDFLabelOrderImageHandler
+     * @param GetPDFLayoutOrderImageHandler $getPDFLayoutOrderImageHandler
      */
     public function __construct(
         ImageResizeRepository $repository,
@@ -34,7 +39,9 @@ class ImageResizeService
         CreateResponseHandler $createResponseHandler,
         GetOrderImageHandler $getOrderImageHandler,
         GetMailOrderImageThumbHandler $getMailOrderImageThumbHandler,
-        GetOrderImageThumbHandler $getOrderImageThumbHandler
+        GetOrderImageThumbHandler $getOrderImageThumbHandler,
+        GetPDFLabelOrderImageHandler $getPDFLabelOrderImageHandler,
+        GetPDFLayoutOrderImageHandler $getPDFLayoutOrderImageHandler
     )
     {
         $this->repository = $repository;
@@ -43,6 +50,8 @@ class ImageResizeService
         $this->getOrderImageHandler = $getOrderImageHandler;
         $this->getMailOrderImageThumbHandler = $getMailOrderImageThumbHandler;
         $this->getOrderImageThumbHandler = $getOrderImageThumbHandler;
+        $this->getPDFLabelOrderImageHandler = $getPDFLabelOrderImageHandler;
+        $this->getPDFLayoutOrderImageHandler = $getPDFLayoutOrderImageHandler;
     }
 
     /**
@@ -129,6 +138,64 @@ class ImageResizeService
             ->handle($file, $width, $height, $x, $y, $flipH, $flipV, $colorize);
 
         return $this->createResponseHandler->handle($img, $ext);
+    }
+
+    /**
+     * @param string $path
+     * @param string $width
+     * @param string $height
+     * @param string $x
+     * @param string $y
+     * @param string $flipH
+     * @param string $flipV
+     * @param string $colorize
+     * @return mixed
+     */
+    public function getPDFLabelOrderImage(
+        string $path,
+        string $width,
+        string $height,
+        string $x,
+        string $y,
+        string $flipH,
+        string $flipV,
+        string $colorize
+    )
+    {
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+
+        return $this->getPDFLabelOrderImageHandler
+            ->handle($file, $width, $height, $x, $y, $flipH, $flipV, $colorize)
+            ->response($ext, 100);
+    }
+
+    /**
+     * @param string $path
+     * @param string $width
+     * @param string $height
+     * @param string $x
+     * @param string $y
+     * @param string $flipH
+     * @param string $flipV
+     * @param string $colorize
+     * @return mixed
+     */
+    public function getPDFLayoutOrderImage(
+        string $path,
+        string $width,
+        string $height,
+        string $x,
+        string $y,
+        string $flipH,
+        string $flipV,
+        string $colorize
+    )
+    {
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+
+        return $this->getPDFLayoutOrderImageHandler
+            ->handle($file, $width, $height, $x, $y, $flipH, $flipV, $colorize)
+            ->response($ext, 100);
     }
 
     /**

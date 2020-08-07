@@ -47,6 +47,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapWebRoutes();
 
         $this->mapImageRoutes();
+
+        $this->mapPDFRoutes();
     }
 
     /**
@@ -91,5 +93,20 @@ class RouteServiceProvider extends ServiceProvider
             ->middleware('api')
             ->namespace('App\Http\Controllers\ImageResize')
             ->group(base_path('routes/image.php'));
+    }
+
+    /**
+     * Define the "api" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapPDFRoutes()
+    {
+        Route::prefix('pdf')
+            ->middleware('web')
+            ->namespace('App\Http\Controllers\PDF')
+            ->group(base_path('routes/pdf.php'));
     }
 }

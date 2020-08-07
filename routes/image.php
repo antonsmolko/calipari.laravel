@@ -56,6 +56,32 @@ Route::get(config('settings.mail_order_item_thumb_url') .
         'path' => '[\w\.]+'
     ]);
 
+Route::get(config('settings.pdf_label_order_item_image_url') .
+    '/{width}/{height}/{x}/{y}/{flipH}/{flipV}/{colorize}/{path}',
+    'ImageResizeController@getPDFLabelOrderImage')
+    ->where([
+        'width' => '\d+',
+        'height' => '\d+',
+        'x' => '\d+',
+        'y' => '\d+',
+        'flipH' => '[0,1]',
+        'flipV' => '[0,1]',
+        'path' => '[\w\.]+'
+    ]);
+
+Route::get(config('settings.pdf_layout_order_item_image_url') .
+    '/{width}/{height}/{x}/{y}/{flipH}/{flipV}/{colorize}/{path}',
+    'ImageResizeController@getPDFLayoutOrderImage')
+    ->where([
+        'width' => '\d+',
+        'height' => '\d+',
+        'x' => '\d+',
+        'y' => '\d+',
+        'flipH' => '[0,1]',
+        'flipV' => '[0,1]',
+        'path' => '[\w\.]+'
+    ]);
+
 Route::get('fit/{width}/{height}/{path}','ImageResizeController@fit')
     ->where([
         'width' => '\d+',

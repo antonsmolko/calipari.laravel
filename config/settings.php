@@ -12,6 +12,8 @@ return [
     'order_item_full_url' => '/order-full',
     'mail_order_item_thumb_url' => '/mail-thumb',
     'order_item_thumb_url' => '/thumb',
+    'pdf_label_order_item_image_url' => '/pdf-label-order-item',
+    'pdf_layout_order_item_image_url' => '/pdf-layout-order-item',
     'slack' => [
         'emoji' => [
             'order' => [

@@ -104,6 +104,54 @@ class ImageResizeController extends Controller
      * @param string $path
      * @return mixed
      */
+    public function getPDFLabelOrderImage(
+        string $width,
+        string $height,
+        string $x,
+        string $y,
+        string $flipH,
+        string $flipV,
+        string $colorize,
+        string $path)
+    {
+        return $this->service->getPDFLabelOrderImage($path, $width, $height, $x, $y, $flipH, $flipV, $colorize);
+    }
+
+    /**
+     * @param string $width
+     * @param string $height
+     * @param string $x
+     * @param string $y
+     * @param string $flipH
+     * @param string $flipV
+     * @param string $colorize
+     * @param string $path
+     * @return mixed
+     */
+    public function getPDFLayoutOrderImage(
+        string $width,
+        string $height,
+        string $x,
+        string $y,
+        string $flipH,
+        string $flipV,
+        string $colorize,
+        string $path)
+    {
+        return $this->service->getPDFLayoutOrderImage($path, $width, $height, $x, $y, $flipH, $flipV, $colorize);
+    }
+
+    /**
+     * @param string $width
+     * @param string $height
+     * @param string $x
+     * @param string $y
+     * @param string $flipH
+     * @param string $flipV
+     * @param string $colorize
+     * @param string $path
+     * @return mixed
+     */
     public function getOrderImageThumb(
         string $width,
         string $height,

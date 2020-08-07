@@ -231,7 +231,7 @@ if (! function_exists('getOrderItemPath')) {
      */
     function getOrderItemPath($item)
     {
-        $filter = json_decode($item->filter, true);
+        $filter = $item->getFilter();
         $w = $item->width_px;
         $h = $item->height_px;
         $x = $item->x;

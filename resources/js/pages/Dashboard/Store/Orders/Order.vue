@@ -26,44 +26,7 @@
             </md-card>
         </div>
         <div class="md-layout-item md-xsmall-size-100 md-medium-size-50 md-large-size-33 md-xlarge-size-25">
-            <div class="tm-order-item mb-5" v-for="item in order.items" :key="item.id">
-                <product-card headerAnimation="false">
-                    <img class="img" slot="imageHeader" :src="item.thumb" />
-                    <h4 slot="title" class="title">
-                        <span class="card-title">Артикул:</span>
-                        <span class="md-title"><small>{{ item.article }}</small></span>
-                    </h4>
-                    <div slot="description" class="card-description">
-                        <div class="md-order-item__details-item">
-                            <span class="card-title">Ширина:</span>
-                            <span class="md-body-2">{{ item.width }} см</span>
-                        </div>
-                        <div class="md-order-item__details-item">
-                            <span class="card-title">Высота:</span>
-                            <span class="md-body-2">{{ item.height }} см</span>
-                        </div>
-                        <div class="md-order-item__details-item">
-                            <span class="card-title">Фактура:</span>
-                            <span class="md-body-2">{{ item.texture }}</span>
-                        </div>
-                        <div class="md-order-item__details-item">
-                            <span class="card-title">Эффекты:</span>
-                            <span class="md-body-2">{{ item.filter }}</span>
-                        </div>
-                        <div class="md-order-item__details-item">
-                            <span class="card-title">Количество:</span>
-                            <span class="md-body-2">{{ item.qty }}</span>
-                        </div>
-                    </div>
-                    <template slot="footer">
-                        <div class="tm-order-item__footer-content">
-                            <div class="price">
-                                <h3>{{ getFormatPrice(item.price) }}</h3>
-                            </div>
-                        </div>
-                    </template>
-                </product-card>
-            </div>
+            <order-item v-for="item in order.items" :key="item.id" :item="item" />
         </div>
         <div class="md-layout-item md-xsmall-size-100 md-medium-size-50 md-large-size-66 md-xlarge-size-75">
             <md-card>
@@ -164,9 +127,7 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import { getFormatPrice, getArticle, getCurrentStatus } from "@/helpers";
-
-import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
-import ProductCard from "@/components/Cards/ProductCard";
+import OrderItem from "@/custom_components/Orders/OrderItem";
 
 import { pageTitle, authCheck } from '@/mixins/base';
 import { updateMethod, deleteMethod } from '@/mixins/crudMethods';
@@ -175,8 +136,7 @@ import swal from "sweetalert2";
 export default {
     name: 'Order',
     components: {
-        ProductCard,
-        ThumbTableCell
+        OrderItem
     },
     mixins: [pageTitle, authCheck, updateMethod, deleteMethod],
     props: {

@@ -36,4 +36,12 @@ class OrderItem extends Model
     {
         return $this->belongsTo('App\Models\Texture');
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFilter()
+    {
+        return json_decode($this->filter, true);
+    }
 }
