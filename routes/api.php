@@ -234,13 +234,16 @@ Route::prefix('cms')
     ->middleware('role:super_admin|admin|content_manager|owner')
     ->group(function() {
 
-
     /** Images */
 
     Route::post('images/paginate', 'Cms\Image\ImageController@getItems')
         ->name('images.list');
     Route::post('images/trashed/paginate', 'Cms\Image\ImageController@getTrashedItems')
         ->name('images.trashed.list');
+
+    Route::post('images/find-duplicates', 'Cms\Image\ImageController@findDuplicates')
+        ->name('images.find-duplicates');
+
     Route::get('images/{id}/force-delete', 'Cms\Image\ImageController@forceDelete')
         ->where('id', '[0-9]+')
         ->name('images.force.delete')

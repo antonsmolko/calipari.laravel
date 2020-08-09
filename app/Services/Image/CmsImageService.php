@@ -11,6 +11,7 @@ use App\Services\Cache\Tag;
 use App\Services\Cache\TTL;
 use App\Services\ColorCollection\Repositories\CmsColorCollectionRepository;
 use App\Services\Image\Handlers\DeleteImageHandler;
+use App\Services\Image\Handlers\FindDuplicatesHandler;
 use App\Services\Image\Handlers\GetSyncDataHandler;
 use App\Services\Image\Handlers\SyncUpdateWithColorCollectionHandler;
 use App\Services\Image\Handlers\UpdateHandler;
@@ -31,6 +32,7 @@ class CmsImageService extends CmsBaseResourceService
     private GetSyncDataHandler $getSyncDataHandler;
     private UpdateHandler $updateHandler;
     private SyncUpdateWithColorCollectionHandler $syncUpdateWithColorCollectionHandler;
+    private FindDuplicatesHandler $findDuplicatesHandler;
 
     /**
      * CmsImageService constructor.
@@ -44,6 +46,7 @@ class CmsImageService extends CmsBaseResourceService
      * @param UpdateHandler $updateHandler
      * @param SyncUpdateWithColorCollectionHandler $syncUpdateWithColorCollectionHandler
      * @param CacheKeyManager $cacheKeyManager
+     * @param FindDuplicatesHandler $findDuplicatesHandler
      */
     public function __construct(
         CmsImageRepository $repository,
@@ -55,7 +58,8 @@ class CmsImageService extends CmsBaseResourceService
         GetSyncDataHandler $getSyncDataHandler,
         UpdateHandler $updateHandler,
         SyncUpdateWithColorCollectionHandler $syncUpdateWithColorCollectionHandler,
-        CacheKeyManager $cacheKeyManager
+        CacheKeyManager $cacheKeyManager,
+        FindDuplicatesHandler $findDuplicatesHandler
     )
     {
         parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
@@ -66,6 +70,7 @@ class CmsImageService extends CmsBaseResourceService
         $this->getSyncDataHandler = $getSyncDataHandler;
         $this->updateHandler = $updateHandler;
         $this->syncUpdateWithColorCollectionHandler = $syncUpdateWithColorCollectionHandler;
+        $this->findDuplicatesHandler = $findDuplicatesHandler;
         $this->cacheTag = Tag::IMAGES_TAG;
     }
 
@@ -201,5 +206,10 @@ class CmsImageService extends CmsBaseResourceService
         $item = $this->repository->getItem($id);
 
         return $this->repository->dissociateOwner($item);
+    }
+
+    public function findDuplicates(array $requestData)
+    {
+        return $this->findDuplicatesHandler->handle($requestData);
     }
 }

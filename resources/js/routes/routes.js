@@ -23,6 +23,11 @@ const ImageTrashedList = resolve => {
         resolve(require('@/pages/Dashboard/Images/ImageTrashedList.vue'))
     })
 };
+const FindDuplicates = resolve => {
+    require.ensure(['@/pages/Dashboard/Images/FindDuplicates.vue'], () => {
+        resolve(require('@/pages/Dashboard/Images/FindDuplicates.vue'))
+    })
+};
 
 /** Category pages */
 const CatalogPanel = resolve => {
@@ -436,6 +441,13 @@ const cmsImagePages = [
         path: 'images/trashed',
         name: 'cms.images.trashed',
         component: ImageTrashedList,
+        meta: getPathMeta('images')
+    },
+    {
+        path: ':category_type/:id/find-duplicates',
+        name: 'cms.images.find-duplicates',
+        component: FindDuplicates,
+        props: true,
         meta: getPathMeta('images')
     },
     {

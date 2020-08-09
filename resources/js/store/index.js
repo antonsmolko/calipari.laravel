@@ -76,7 +76,7 @@ const mutations = {
         state.searchQuery = payload.trim();
     },
     SET_LOADING(state, payload) {
-        state.loading = !!payload;
+        state.loading = Boolean(payload);
     },
     CHANGE_PUBLISH(state, payload) {
         state.searchedData.forEach(item => {

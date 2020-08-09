@@ -5,23 +5,31 @@
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
                         <router-button-link v-if="category_type === 'images'"
-                            route="cms.dashboard" />
+                                            route="cms.dashboard"/>
                         <router-button-link v-else
-                            route="cms.catalog.categories.list"
-                            :params="{ category_type }" />
+                                            route="cms.catalog.categories.list"
+                                            :params="{ category_type }"/>
                         <div>
+                            <router-button-link icon="content_copy"
+                                                color="md-info"
+                                                title="Поиск дубликатов"
+                                                route="cms.images.find-duplicates"
+                                                :params="{
+                                                    id: category_type === 'images' ? 0 : id,
+                                                    category_type
+                                                }"/>
                             <router-button-link v-if="category_type === 'images'"
                                                 icon="delete"
                                                 color="md-info"
                                                 title="Удаленные изображения"
-                                                route="cms.images.trashed" />
+                                                route="cms.images.trashed"/>
                             <router-button-link v-if="category_type !== 'images'"
-                                icon="add"
-                                color="md-success"
-                                title="Добавить изображения"
-                                route="cms.catalog.categories.images.excluded"
-                                :params="{ id }" />
-                            <upload-button @change="fileInputChange" />
+                                                icon="add"
+                                                color="md-success"
+                                                title="Добавить изображения"
+                                                route="cms.catalog.categories.images.excluded"
+                                                :params="{ id }"/>
+                            <upload-button @change="fileInputChange"/>
                         </div>
                     </md-card-content>
                 </md-card>
@@ -35,10 +43,10 @@
                         v-if="fileProgress"
                         class="md-info"
                         md-mode="indeterminate"
-                        :md-value="fileProgress" />
+                        :md-value="fileProgress"/>
                 </div>
                 <md-card>
-                    <card-icon-header title="Каталог изображений" icon="image" />
+                    <card-icon-header title="Каталог изображений" icon="image"/>
                     <md-card-content>
                         <image-list-table :resourceUrl="resourceUrl"
                                           @publish="togglePublish">
@@ -62,105 +70,106 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
-    import { pageTitle } from '@/mixins/base'
-    import { deleteMethod, uploadMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base'
+import { deleteMethod, uploadMethod } from '@/mixins/crudMethods'
 
-    import ImageListTable from "@/custom_components/Tables/ImageListTable";
-    import ImageTableActions from "@/custom_components/Tables/ImageTableActions";
+import ImageListTable from "@/custom_components/Tables/ImageListTable";
+import ImageTableActions from "@/custom_components/Tables/ImageTableActions";
 
-    export default {
-        name: 'ImageList',
-        mixins: [
-            pageTitle,
-            deleteMethod,
-            uploadMethod
-        ],
-        components: {
-            ImageListTable,
-            ImageTableActions
+export default {
+    name: 'ImageList',
+    mixins: [
+        pageTitle,
+        deleteMethod,
+        uploadMethod
+    ],
+    components: {
+        ImageListTable,
+        ImageTableActions
+    },
+    props: {
+        category_type: {
+            type: String,
+            default: 'images'
         },
-        props: {
-            category_type: {
-                type: String,
-                default: 'images'
-            },
-            id: {
-                type: [ Number, String ],
-                default: null
-            }
-        },
-        data: () => ({
-            storeModule: 'images'
+        id: {
+            type: [Number, String],
+            default: null
+        }
+    },
+    data: () => ({
+        storeModule: 'images'
+    }),
+    computed: {
+        ...mapState({
+            category: state => state.categories.item,
+            fileProgress: state => state.images.fileProgress
         }),
-        computed: {
-            ...mapState({
-                category: state => state.categories.item,
-                fileProgress: state => state.images.fileProgress
-            }),
-            resourceUrl () {
-                return this.isCategoryPage ? `/catalog/categories/${this.id}/images` : '/images/paginate'
-            },
-            isCategoryPage() {
-                return this.category_type !== 'images';
+        resourceUrl() {
+            return this.isCategoryPage ? `/catalog/categories/${this.id}/images` : '/images/paginate'
+        },
+        isCategoryPage() {
+            return this.category_type !== 'images';
+        }
+    },
+    created() {
+        this.init(this.category_type);
+    },
+    beforeDestroy() {
+
+    },
+    methods: {
+        ...mapActions({
+            getCategoryAction: 'categories/getItem',
+            togglePublishAction: 'table/togglePublish',
+            removeImageAction: 'categories/removeImage'
+        }),
+        async init(categoryType) {
+            if (categoryType !== 'images') {
+                await this.getCategoryAction(this.id)
             }
-        },
-        created () {
-            this.init(this.category_type);
-        },
-        beforeDestroy () {
+            const pageTitle = categoryType === 'images'
+                ? 'Изображения'
+                : `Изображения категории «${this.category.title}»`;
+            await this.setPageTitle(pageTitle);
 
         },
-        methods: {
-            ...mapActions({
-                getCategoryAction: 'categories/getItem',
-                togglePublishAction: 'table/togglePublish',
-                removeImageAction: 'categories/removeImage'
-            }),
-            async init (categoryType) {
-                if (categoryType !== 'images') {
-                    await this.getCategoryAction(this.id)
-                }
-                const pageTitle = categoryType === 'images'
-                    ? 'Изображения'
-                    : `Изображения категории «${this.category.title}»`;
-                await this.setPageTitle(pageTitle);
-
-            },
-            fileInputChange (event) {
-                this.upload({
-                    uploadFiles: event.target.files,
-                    type: this.category_type,
-                    id: this.id
-                });
-            },
-            onRemove (id) {
-                this.removeImageAction({ categoryId: this.id, imageId: id });
-            },
-            onDelete (item) {
-                this.delete({
-                    payload: item.id,
-                    title: item.id,
-                    alertText: `изображение «${item.id}»`,
-                    successText: 'Изображение удалено!',
-                    storeModule: this.storeModule,
-                    tableMode: 'table'
-                })
-            },
-            togglePublish (id) {
-                this.togglePublishAction(`/images/${id}/publish`);
-            }
+        fileInputChange(event) {
+            this.upload({
+                uploadFiles: event.target.files,
+                type: this.category_type,
+                id: this.id
+            });
+        },
+        onRemove(id) {
+            this.removeImageAction({categoryId: this.id, imageId: id});
+        },
+        onDelete(item) {
+            this.delete({
+                payload: item.id,
+                title: item.id,
+                alertText: `изображение «${item.id}»`,
+                successText: 'Изображение удалено!',
+                storeModule: this.storeModule,
+                tableMode: 'table'
+            })
+        },
+        togglePublish(id) {
+            this.togglePublishAction(`/images/${id}/publish`);
         }
     }
+}
 </script>
 
 <style lang="scss" scoped>
-    .md-between {
-        display: flex;
-        justify-content: space-between;
-    }
-    .md-progress-bar__container {
-        height: 4px;
-    }
+.md-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.md-progress-bar__container {
+    height: 4px;
+}
 </style>

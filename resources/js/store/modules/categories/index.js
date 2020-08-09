@@ -114,7 +114,7 @@ const actions = {
             thenContent: response => dispatch('table/updateItemsPost', null, { root: true })
         })
     },
-    uploadImages ({ commit, dispatch }, { files, id }) {
+    uploadImages ({ commit, dispatch, rootState }, { files, id }) {
         const data = new FormData();
         for(let file of files) {
             data.append('images[]', file);
@@ -135,7 +135,9 @@ const actions = {
             thenContent: (response) => {
                 commit('images/CHANGE_FILE_PROGRESS', 0, { root: true });
                 commit('table/SET_PAGINATION_FIELD', { field: 'current_page', value: 1 }, { root: true });
-                dispatch('table/getItemsPost', null, { root: true });
+                if (rootState.table.resourceUrl) {
+                    dispatch('table/getItemsPost', null, { root: true });
+                }
             }
         })
     },

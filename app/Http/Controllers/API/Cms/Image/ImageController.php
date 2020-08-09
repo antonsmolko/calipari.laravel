@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Cms\Image;
 
 use App\Http\Controllers\API\Cms\Base\BaseResourceController;
+use App\Http\Controllers\API\Cms\Image\Requests\DuplicateRequest;
 use App\Http\Controllers\API\Cms\Image\Requests\UpdateRequest;
 use App\Http\Requests\FormRequest;
 use App\Services\Image\CmsImageService;
@@ -95,5 +96,14 @@ class ImageController extends BaseResourceController
     public function dissociateOwner(int $id)
     {
         return $this->service->dissociateOwner($id);
+    }
+
+    /**
+     * @param DuplicateRequest $request
+     * @return JsonResponse
+     */
+    public function findDuplicates(DuplicateRequest $request): JsonResponse
+    {
+        return response()->json($this->service->findDuplicates($request->all()));
     }
 }

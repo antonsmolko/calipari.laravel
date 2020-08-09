@@ -65,7 +65,7 @@
                                 <v-image name="image"
                                          :vField="$v.image"
                                          :imgDefault="item.path"
-                                         :module="storeModule" />
+                                         :module="storeModule"/>
                             </div>
                             <div class="md-layout-item md-size-50 md-medium-size-100">
                                 <v-input title="Максимальная ширина печати"
@@ -76,7 +76,7 @@
                                          :vField="$v.maxPrintWidth"
                                          :differ="true"
                                          :module="storeModule"
-                                         :vRules="{ numeric: true }" />
+                                         :vRules="{ numeric: true }"/>
 
                                 <v-input title="Описание"
                                          icon="description"
@@ -85,7 +85,7 @@
                                          :maxlength="250"
                                          :vField="$v.description"
                                          :differ="true"
-                                         :module="storeModule" />
+                                         :module="storeModule"/>
 
                                 <v-switch :vField="$v.publish"
                                           :disabled="isColorCollectionMainImage"
@@ -123,14 +123,15 @@
                     </md-card-header>
                     <md-card-content>
 
-                        <v-select v-if="!item.color_collection && topicList.length" title="Темы" placeholder="Выберите темы"
+                        <v-select v-if="!item.color_collection && topicList.length" title="Темы"
+                                  placeholder="Выберите темы"
                                   :multiple="true"
                                   name="topics"
                                   :vField="$v.topics"
                                   :differ="true"
                                   :value="topics"
                                   :options="topicList"
-                                  :module="storeModule" />
+                                  :module="storeModule"/>
 
                         <v-select v-if="colorList.length" title="Цвета" placeholder="Выберите цвета"
                                   :multiple="true"
@@ -139,27 +140,30 @@
                                   :differ="true"
                                   :value="colors"
                                   :options="colorList"
-                                  :module="storeModule" />
+                                  :module="storeModule"/>
 
-                        <v-select v-if="!item.color_collection && interiorList.length" title="Интерьеры" placeholder="Выберите интерьеры"
+                        <v-select v-if="!item.color_collection && interiorList.length" title="Интерьеры"
+                                  placeholder="Выберите интерьеры"
                                   :multiple="true"
                                   name="interiors"
                                   :vField="$v.interiors"
                                   :differ="true"
                                   :value="interiors"
                                   :options="interiorList"
-                                  :module="storeModule" />
+                                  :module="storeModule"/>
 
-                        <v-select v-if="!item.color_collection && tagList.length" title="Теги" placeholder="Выберите теги"
+                        <v-select v-if="!item.color_collection && tagList.length" title="Теги"
+                                  placeholder="Выберите теги"
                                   :multiple="true"
                                   name="tags"
                                   :vField="$v.tags"
                                   :differ="true"
                                   :value="tags"
                                   :options="tagList"
-                                  :module="storeModule" />
+                                  :module="storeModule"/>
 
-                        <v-select v-if="!item.color_collection && ownerList.length" title="Владельцы" placeholder="Выберите владельца"
+                        <v-select v-if="!item.color_collection && ownerList.length" title="Владельцы"
+                                  placeholder="Выберите владельца"
                                   name="owner_id"
                                   :vField="$v.owner"
                                   :differ="true"
@@ -167,7 +171,7 @@
                                   :options="ownerList"
                                   defaultValue=""
                                   defaultTitle="Свое"
-                                  :module="storeModule" />
+                                  :module="storeModule"/>
 
                     </md-card-content>
                 </md-card>
@@ -177,185 +181,188 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
-    import { pageTitle } from '@/mixins/base'
-    import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base'
+import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
 
-    import VSelect from "@/custom_components/VForm/VSelect"
-    import { numeric } from "vuelidate/lib/validators"
+import VSelect from "@/custom_components/VForm/VSelect"
+import { numeric } from "vuelidate/lib/validators"
 
-    export default {
-        name: 'ImageEdit',
-        components: { VSelect },
-        mixins: [
-            pageTitle,
-            updateMethod,
-            deleteMethod
-        ],
-        props: {
-            id: {
-                type: [ Number, String ],
-                required: true
-            },
-            result: []
+export default {
+    name: 'ImageEdit',
+    components: { VSelect },
+    mixins: [
+        pageTitle,
+        updateMethod,
+        deleteMethod
+    ],
+    props: {
+        id: {
+            type: [Number, String],
+            required: true
         },
-        data() {
-            return {
-                storeModule: 'images',
-                responseData: false,
-                controlSaveVisibilities: false,
-                redirectRoute: { name: 'cms.images' }
-            }
-        },
-        validations: {
-            image: {
-                touch: false
-            },
-            publish: {
-                touch: false
-            },
-            topics: {
-                touch: false
-            },
-            colors: {
-                touch: false
-            },
-            interiors: {
-                touch: false
-            },
-            tags: {
-                touch: false
-            },
-            owner: {
-                touch: false
-            },
-            maxPrintWidth: {
-                numeric,
-                touch: false
-            },
-            description: {
-                touch: false
-            }
-        },
-        computed: {
-            ...mapState({
-                item: state => state.images.item,
-                image: state => state.images.fields.image,
-                publish: state => state.images.fields.publish,
-                topics: state => state.images.fields.topics,
-                colors: state => state.images.fields.colors,
-                interiors: state => state.images.fields.interiors,
-                owner: state => state.images.fields.owner_id,
-                tags: state => state.images.fields.tags,
-                maxPrintWidth: state => state.images.fields.max_print_width,
-                description: state => state.images.fields.description,
-                ownerList: state => state.subCategories.itemsByType.owners
-            }),
-            topicList () {
-                return this.$store.getters['categories/getItemsByType']('topics');
-            },
-            colorList () {
-                return this.$store.getters['categories/getItemsByType']('colors');
-            },
-            interiorList () {
-                return this.$store.getters['categories/getItemsByType']('interiors');
-            },
-            tagList () {
-                return this.$store.getters['categories/getItemsByType']('tags');
-            },
-            isColorCollectionMainImage () {
-                return this.item.color_collection && this.item.id === this.item.color_collection.main_image_id;
-            }
-        },
-        async created() {
-            await this.clearFieldsAction();
-            await Promise.all([
-                this.getItemAction(this.id),
-                this.getCategoriesAction(),
-                this.getSubcategoriesAction('owners')
-            ])
-                .then(() => {
-                    this.setPageTitle(`Изображение «${this.item.article}»`);
-                    this.responseData = true;
-                })
-                .then(() => {
-                    this.$v.$reset();
-                    this.controlSaveVisibilities = true;
-                })
-                .catch(() => {
-                    window.history.length > 1
-                        ? this.$router.go(-1)
-                        : this.$router.push(this.redirectRoute)
-                });
-        },
-        methods: {
-            ...mapActions({
-                getItemAction: 'images/getItem',
-                clearFieldsAction: 'images/clearFields',
-                getCategoriesAction: 'categories/getItems',
-                getSubcategoriesAction: 'subCategories/getItemsWithType',
-                setTableRouteDetectorFieldAction: 'table/setRouteDetectorField'
-            }),
-            onUpdate () {
-                return this.update({
-                    sendData: {
-                        formData: {
-                            image: this.image,
-                            publish: +this.publish,
-                            topics: this.topics,
-                            colors: this.colors,
-                            interiors: this.interiors,
-                            owner_id: this.owner,
-                            max_print_width: this.maxPrintWidth,
-                            tags: this.tags,
-                            description: this.description
-                        },
-                        id: this.id
-                    },
-                    title: this.item.article,
-                    successText: 'Изображение обновлено!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                });
-            },
-            onDelete () {
-                return this.delete({
-                    payload: this.id,
-                    title: this.item.article,
-                    alertText: `изображение «${this.item.article}»`,
-                    successText: 'Изображение удалено!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                })
-            },
-            goBack () {
-                window.history.length > 1 ? this.$router.go(-1) : this.$router.push(this.redirectRoute)
-            }
-        },
-        beforeRouteEnter(to, from, next) {
-            next(vm => vm.setTableRouteDetectorFieldAction({ field: 'to', value: from.name }));
-        },
-        beforeRouteLeave(to, from, next) {
-            this.setTableRouteDetectorFieldAction({ field: 'from', value: from.name });
-            next();
+        result: []
+    },
+    data() {
+        return {
+            storeModule: 'images',
+            responseData: false,
+            controlSaveVisibilities: false,
+            redirectRoute: {name: 'cms.images'}
         }
+    },
+    validations: {
+        image: {
+            touch: false
+        },
+        publish: {
+            touch: false
+        },
+        topics: {
+            touch: false
+        },
+        colors: {
+            touch: false
+        },
+        interiors: {
+            touch: false
+        },
+        tags: {
+            touch: false
+        },
+        owner: {
+            touch: false
+        },
+        maxPrintWidth: {
+            numeric,
+            touch: false
+        },
+        description: {
+            touch: false
+        }
+    },
+    computed: {
+        ...mapState({
+            item: state => state.images.item,
+            image: state => state.images.fields.image,
+            publish: state => state.images.fields.publish,
+            topics: state => state.images.fields.topics,
+            colors: state => state.images.fields.colors,
+            interiors: state => state.images.fields.interiors,
+            owner: state => state.images.fields.owner_id,
+            tags: state => state.images.fields.tags,
+            maxPrintWidth: state => state.images.fields.max_print_width,
+            description: state => state.images.fields.description,
+            ownerList: state => state.subCategories.itemsByType.owners
+        }),
+        topicList() {
+            return this.$store.getters['categories/getItemsByType']('topics');
+        },
+        colorList() {
+            return this.$store.getters['categories/getItemsByType']('colors');
+        },
+        interiorList() {
+            return this.$store.getters['categories/getItemsByType']('interiors');
+        },
+        tagList() {
+            return this.$store.getters['categories/getItemsByType']('tags');
+        },
+        isColorCollectionMainImage() {
+            return this.item.color_collection && this.item.id === this.item.color_collection.main_image_id;
+        }
+    },
+    async created() {
+        await this.clearFieldsAction();
+        await Promise.all([
+            this.getItemAction(this.id),
+            this.getCategoriesAction(),
+            this.getSubcategoriesAction('owners')
+        ])
+            .then(() => {
+                this.setPageTitle(`Изображение «${this.item.article}»`);
+                this.responseData = true;
+            })
+            .then(() => {
+                this.$v.$reset();
+                this.controlSaveVisibilities = true;
+            })
+            .catch(() => {
+                window.history.length > 1
+                    ? this.$router.go(-1)
+                    : this.$router.push(this.redirectRoute)
+            });
+    },
+    methods: {
+        ...mapActions({
+            getItemAction: 'images/getItem',
+            clearFieldsAction: 'images/clearFields',
+            getCategoriesAction: 'categories/getItems',
+            getSubcategoriesAction: 'subCategories/getItemsWithType',
+            setTableRouteDetectorFieldAction: 'table/setRouteDetectorField'
+        }),
+        onUpdate() {
+            return this.update({
+                sendData: {
+                    formData: {
+                        image: this.image,
+                        publish: +this.publish,
+                        topics: this.topics,
+                        colors: this.colors,
+                        interiors: this.interiors,
+                        owner_id: this.owner,
+                        max_print_width: this.maxPrintWidth,
+                        tags: this.tags,
+                        description: this.description
+                    },
+                    id: this.id
+                },
+                title: this.item.article,
+                successText: 'Изображение обновлено!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            });
+        },
+        onDelete() {
+            return this.delete({
+                payload: this.id,
+                title: this.item.article,
+                alertText: `изображение «${this.item.article}»`,
+                successText: 'Изображение удалено!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            })
+        },
+        goBack() {
+            window.history.length > 1 ? this.$router.go(-1) : this.$router.push(this.redirectRoute)
+        }
+    },
+    beforeRouteEnter(to, from, next) {
+        next(vm => vm.setTableRouteDetectorFieldAction({field: 'to', value: from.name}));
+    },
+    beforeRouteLeave(to, from, next) {
+        this.setTableRouteDetectorFieldAction({field: 'from', value: from.name});
+        next();
     }
+}
 </script>
 
 <style lang="scss" scoped>
-    .info-item {
-        display: flex;
-        align-items: center;
-        &:not(:last-child) {
-            margin-bottom: 10px;
-        }
-        .card-title {
-            width: 150px;
-            margin: 0;
-        }
-        .info-value {
-            margin: 0;
-        }
+.info-item {
+    display: flex;
+    align-items: center;
+
+    &:not(:last-child) {
+        margin-bottom: 10px;
     }
+
+    .card-title {
+        width: 150px;
+        margin: 0;
+    }
+
+    .info-value {
+        margin: 0;
+    }
+}
 </style>

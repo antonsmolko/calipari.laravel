@@ -10,11 +10,14 @@ const state = {
         tags: [],
         owner_id: '',
         max_print_width: '',
-        description: ''
+        description: '',
+        difference: 50
     },
     item: {},
     items: [],
     fileProgress: 0,
+    duplicates: [],
+    checkedForDuplicate: false
 };
 
 const mutations = {
@@ -135,8 +138,38 @@ const actions = {
             thenContent: response => dispatch('table/updateItemsPost', null, {root: true})
         });
     },
+    findDuplicates ({ state, commit }, { category_type, id = null }) {
+        commit('SET_LOADING', true, { root: true });
+
+        const data = new FormData();
+        data.append('image', state.fields.image);
+        data.append('difference', state.fields.difference ?? 50);
+        if (category_type !== 'images') {
+            data.append('category_id', id)
+        }
+
+        return axiosAction('post', commit, {
+            url: '/images/find-duplicates',
+            data,
+            options: {
+                onUploadProgress: (imageUpload) => {
+                    commit('CHANGE_FILE_PROGRESS', Math.round( ( imageUpload.loaded / imageUpload.total) * 100 ))
+                }
+            },
+            thenContent: (response) => {
+                commit('CHANGE_FILE_PROGRESS', 0);
+                const value = response.data;
+                commit('SET_FIELD', { field: 'duplicates', value })
+                commit('SET_FIELD', { field: 'checkedForDuplicate', value: true })
+                commit('SET_LOADING', false, { root: true });
+            }
+        })
+    },
     setItemField ({ commit }, payload) {
         commit('SET_ITEM_FIELD', payload);
+    },
+    setField ({ commit }, payload) {
+        commit('SET_FIELD', payload);
     },
     togglePublishField ({ commit }) {
         commit('TOGGLE_PUBLISH_FIELD');

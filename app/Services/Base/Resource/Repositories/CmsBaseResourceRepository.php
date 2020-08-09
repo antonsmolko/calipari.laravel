@@ -3,7 +3,6 @@
 namespace App\Services\Base\Resource\Repositories;
 
 
-use App\Models\Image;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -23,6 +22,19 @@ abstract class CmsBaseResourceRepository
     public function index()
     {
         return $this->model::orderBy('id')->get();
+    }
+
+    /**
+     * @param int|null $category_id
+     * @return mixed
+     */
+    public function getWithTrashedItemsFromDuplicates(int $category_id = null)
+    {
+        return $this->model::select(['id', 'path', 'deleted_at'])
+            ->when($category_id, fn ($query) => $query
+                ->whereHas('categories', fn ($query) => $query
+                    ->where('id', $category_id)))
+            ->withTrashed()->get();
     }
 
     /**
