@@ -151,8 +151,7 @@ export default {
         this.responseData = true;
     },
     beforeDestroy() {
-        this.setImagesFieldAction({field: 'duplicates', value: []})
-        this.setImagesItemFieldAction({field: 'difference', value: 50})
+        this.clearFieldsAction()
     },
     methods: {
         ...mapActions({
@@ -160,7 +159,8 @@ export default {
             setImagesFieldAction: 'images/setField',
             setImagesItemFieldAction: 'images/setItemField',
             uploadImageAction: 'images/store',
-            uploadImageToCategoryAction: 'categories/uploadImages'
+            uploadImageToCategoryAction: 'categories/uploadImages',
+            clearFieldsAction: 'images/clearFields'
         }),
         findDuplicates () {
             this.setImagesFieldAction({field: 'duplicates', value: []})

@@ -34,6 +34,9 @@ const mutations = {
         for (const field of Object.keys(state.fields)) {
             state.fields[field] = state.fields[field] instanceof Array ? [] : '';
         }
+        state.fields.difference = 50;
+        state.duplicates = [];
+        state.checkedForDuplicate = false;
         state.item = {};
     },
     DELETE_ITEM (state, id) {
