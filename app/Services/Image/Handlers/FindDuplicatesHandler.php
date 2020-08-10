@@ -5,8 +5,6 @@ namespace App\Services\Image\Handlers;
 
 
 use App\Services\Image\Repositories\CmsImageRepository;
-use App\Services\Image\Resources\FromDuplicatesCms as FromDuplicatesResource;
-use Imagick;
 
 class FindDuplicatesHandler
 {
@@ -36,15 +34,15 @@ class FindDuplicatesHandler
 
         set_time_limit(900);
 
-        $uploadImage = new Imagick($image->getPathname());
+        $uploadImage = new \Imagick($image->getPathname());
         $items = $this->repository->getWithTrashedItemsFromDuplicates($category_id);
 
         $duplicates = $items
             ->filter(function($item) use ($uploadImage, $difference) {
                 $baseDir = getBaseImagePath($item->path);
                 $imageUrl = public_path('storage/uploads/images/') . $baseDir . '/' . $item->path;
-                $image = new Imagick($imageUrl);
-                $res = $uploadImage->compareImages($image, Imagick::METRIC_MEANSQUAREERROR);
+                $image = new \Imagick($imageUrl);
+                $res = $uploadImage->compareImages($image, \Imagick::METRIC_MEANSQUAREERROR);
 
                 return round($res[1] * 1000) < $difference;
             })
