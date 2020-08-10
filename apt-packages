@@ -14,4 +14,4 @@ s3cmd
 libmagickwand-dev
 imagemagick
 php-dev
-imagick
+php-imagick

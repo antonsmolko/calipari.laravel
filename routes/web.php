@@ -11,9 +11,9 @@
 |
 */
 
-//Route::get('/', function () {
-//    return view('pages.index');
-//})->name('home');
+Route::get('/', function () {
+    return phpinfo();
+})->name('home');
 
 //Route::get('/logme', function () {
 //    Log::critical('Critical message in Slack!');
