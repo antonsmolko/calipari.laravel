@@ -208,6 +208,11 @@ class CmsImageService extends CmsBaseResourceService
         return $this->repository->dissociateOwner($item);
     }
 
+    /**
+     * @param array $requestData
+     * @return array
+     * @throws \ImagickException
+     */
     public function findDuplicates(array $requestData)
     {
         return $this->findDuplicatesHandler->handle($requestData);

@@ -17,7 +17,7 @@ const state = {
     items: [],
     fileProgress: 0,
     duplicates: [],
-    checkedForDuplicate: false
+    duplicateFindStatus: null
 };
 
 const mutations = {
@@ -36,7 +36,7 @@ const mutations = {
         }
         state.fields.difference = 50;
         state.duplicates = [];
-        state.checkedForDuplicate = false;
+        state.duplicateFindStatus = null;
         state.item = {};
     },
     DELETE_ITEM (state, id) {
@@ -142,7 +142,7 @@ const actions = {
         });
     },
     findDuplicates ({ state, commit }, { category_type, id = null }) {
-        commit('SET_LOADING', true, { root: true });
+        commit('SET_FIELD', { field: 'duplicateFindStatus', value: 'progress' });
 
         const data = new FormData();
         data.append('image', state.fields.image);
@@ -154,17 +154,9 @@ const actions = {
         return axiosAction('post', commit, {
             url: '/images/find-duplicates',
             data,
-            options: {
-                onUploadProgress: (imageUpload) => {
-                    commit('CHANGE_FILE_PROGRESS', Math.round( ( imageUpload.loaded / imageUpload.total) * 100 ))
-                }
-            },
             thenContent: (response) => {
-                commit('CHANGE_FILE_PROGRESS', 0);
-                const value = response.data;
-                commit('SET_FIELD', { field: 'duplicates', value })
-                commit('SET_FIELD', { field: 'checkedForDuplicate', value: true })
-                commit('SET_LOADING', false, { root: true });
+                commit('SET_FIELD', { field: 'duplicates', value: response.data })
+                commit('SET_FIELD', { field: 'duplicateFindStatus', value: 'end' });
             }
         })
     },

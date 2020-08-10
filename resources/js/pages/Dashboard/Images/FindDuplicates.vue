@@ -13,12 +13,10 @@
                             route="cms.catalog.categories.images"
                             :params="{ category_type, id }"/>
                         <div>
-                            <slide-y-down-transition v-show="checkedForDuplicate">
-                                <control-button icon="get_app" title="Загрузить" @click="uploadImage"/>
-                            </slide-y-down-transition>
                             <slide-y-down-transition v-show="!$v.$invalid">
                                 <control-button icon="image_search" title="Искать" @click="findDuplicates"/>
                             </slide-y-down-transition>
+                            <control-button icon="get_app" title="Загрузить" @click="uploadImage"/>
                         </div>
                     </md-card-content>
                 </md-card>
@@ -29,7 +27,7 @@
             <div class="md-layout-item md-size-100">
                 <div class="md-layout-item md-progress-bar__container">
                     <md-progress-bar
-                        v-if="fileProgress && checkedForDuplicate"
+                        v-if="fileProgress"
                         class="md-info"
                         md-mode="indeterminate"
                         :md-value="fileProgress"/>
@@ -79,15 +77,15 @@
                                 </div>
                             </div>
                         </template>
-                        <template v-else-if="!loading && checkedForDuplicate">
+                        <template v-else-if="duplicateFindStatus === 'end' && !duplicates.length">
                             <div class="alert alert-info mt-2">
                                 <h3>Дубликатов не найдено! Можете загрузить изображение.</h3>
                             </div>
                         </template>
-                        <template v-else-if="loading">
+                        <template v-else-if="duplicateFindStatus === 'progress'">
                             <div class="mt-3 mb-3">
                                 <div class="progress-bar__container">
-                                    <md-progress-bar v-show="loading" md-mode="indeterminate"></md-progress-bar>
+                                    <md-progress-bar md-mode="indeterminate"></md-progress-bar>
                                 </div>
                             </div>
                         </template>
@@ -142,7 +140,7 @@ export default {
             duplicates: state => state.images.duplicates,
             difference: state => state.images.fields.difference,
             loading: state => state.loading,
-            checkedForDuplicate: state => state.images.checkedForDuplicate,
+            duplicateFindStatus: state => state.images.duplicateFindStatus,
             fileProgress: state => state.images.fileProgress
         })
     },
