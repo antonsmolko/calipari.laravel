@@ -11,7 +11,3 @@ php7.4-cli
 php7.4-json
 php7.4-zip
 s3cmd
-libmagickwand-dev
-imagemagick
-php-dev
-php-imagick
