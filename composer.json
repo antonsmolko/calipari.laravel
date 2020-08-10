@@ -12,7 +12,6 @@
         "ext-gd": "*",
         "ext-json": "*",
         "ext-memcached": "*",
-        "ext-imagick": "*",
         "algolia/algoliasearch-client-php": "^2.2",
         "barryvdh/laravel-dompdf": "^0.8.6",
         "creativeorange/gravatar": "~1.0",
