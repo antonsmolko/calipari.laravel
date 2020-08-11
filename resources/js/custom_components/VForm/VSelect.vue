@@ -63,6 +63,10 @@
                 type: String,
                 default: null
             },
+            action: {
+                type: String,
+                default: 'setItemField'
+            },
             differ: {
                 type: Boolean,
                 default: false
@@ -83,11 +87,11 @@
                 if (this.vField)
                     this.touched(this.vField, value);
 
-                this.$store.dispatch(`${this.storeModule}setItemField`, { field: this.name, value });
+                this.$store.dispatch(`${this.storeModule}${this.action}`, { field: this.name, value });
             },
             isDiffer(a, b) {
                 return this.multiple
-                    ? !!a.filter(i => !b.includes(i)).concat(b.filter(i => !a.includes(i))).length
+                    ? Boolean(a.filter(i => !b.includes(i)).concat(b.filter(i => !a.includes(i))).length)
                     : a != b;
             },
             touchedDifferent(v, value) {

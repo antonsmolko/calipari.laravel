@@ -25,15 +25,6 @@ const mutations = {
             state.fields[field] = '';
         }
     },
-    // SET_ITEM_FIELDS (state, id) {
-    //     for(let item of state.items) {
-    //         if(item.id === +id) {
-    //             for(const field of Object.keys(state.fields)) {
-    //                 state.fields[field] = item[field] === null ? '' : item[field];
-    //             }
-    //         }
-    //     }
-    // },
     SET_ITEM_FIELDS (state, payload) {
         for(let field of Object.keys(state.fields)) {
             state.fields[field] = payload[field] === null ? '' : payload[field];

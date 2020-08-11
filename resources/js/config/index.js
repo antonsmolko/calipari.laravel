@@ -18,6 +18,7 @@ export default {
     awsBucket,
 
     ALIAS_REGEXP: /^([a-z0-9]+[-]?)+[a-z0-9]$/,
+    SNAKE_CASE_REGEXP: /^([a-z0-9]+[_]?)+[a-z0-9]$/,
 
     pagesIds: {
         home: 1,
@@ -67,6 +68,7 @@ export default {
         settings: 's,a,o,m',
         'settings/administration': 's,a',
         store: 's,a,o',
+        'store-settings': 's,a,o',
         textures: 's,a,o,m',
         users: 's,a,o',
         'user-delete': 's,o',

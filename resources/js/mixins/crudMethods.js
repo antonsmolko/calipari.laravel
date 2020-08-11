@@ -2,10 +2,10 @@ import swal from 'sweetalert2'
 
 export const createMethod = {
     methods: {
-        create({ sendData, title, successText, redirectRoute, storeModule = null }) {
+        create({ sendData, title, successText, redirectRoute, storeModule = null, action = 'store' }) {
             const module = storeModule ? `${storeModule}/` : '';
 
-            return this.$store.dispatch(`${module}store`, sendData)
+            return this.$store.dispatch(`${module}${action}`, sendData)
                 .then(() => {
                     // this.$router.push(redirectRoute);
                     window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);

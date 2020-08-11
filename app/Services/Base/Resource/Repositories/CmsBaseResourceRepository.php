@@ -25,19 +25,6 @@ abstract class CmsBaseResourceRepository
     }
 
     /**
-     * @param int|null $category_id
-     * @return mixed
-     */
-    public function getWithTrashedItemsFromDuplicates(int $category_id = null)
-    {
-        return $this->model::select(['id', 'path', 'deleted_at'])
-            ->when($category_id, fn ($query) => $query
-                ->whereHas('categories', fn ($query) => $query
-                    ->where('id', $category_id)))
-            ->withTrashed()->get();
-    }
-
-    /**
      * @param int $id
      * @return mixed
      */

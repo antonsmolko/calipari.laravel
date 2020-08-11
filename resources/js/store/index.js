@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import images from './modules/images';
+import { getHash } from '@/helpers';
 
 import artCollections from './modules/art-collections';
 import categories from './modules/categories';
@@ -31,16 +32,17 @@ import errors from '@/lib/Errors';
 const state = {
     pageTitle: '',
     serverErrors: [],
+    notifications: [],
     searchedData: [],
     searchQuery: '',
     loading: false
 };
 
 const mutations = {
-    SET_PAGE_TITLE(state, payload) {
+    SET_PAGE_TITLE (state, payload) {
         state.pageTitle = payload;
     },
-    UPDATE_ERRORS(state, payload) {
+    UPDATE_ERRORS (state, payload) {
         state.serverErrors = [];
         const error = payload;
         switch (error.status) {
@@ -63,28 +65,39 @@ const mutations = {
                 state.serverErrors.push(errors.ERROR_DEFAULT);
         }
     },
-    CLEAR_ERRORS(state) {
+    CLEAR_ERRORS (state) {
         state.serverErrors = [];
     },
-    SET_SEARCHED_DATA(state, payload) {
+    SET_SEARCHED_DATA (state, payload) {
         state.searchedData = payload;
     },
-    DELETE_SEARCHED_DATA_ITEM(state, payload) {
+    DELETE_SEARCHED_DATA_ITEM (state, payload) {
         state.searchedData = state.searchedData.filter(item => item.id !== +payload);
     },
-    SET_SEARCH_QUERY(state, payload) {
+    SET_SEARCH_QUERY (state, payload) {
         state.searchQuery = payload.trim();
     },
-    SET_LOADING(state, payload) {
+    SET_LOADING (state, payload) {
         state.loading = Boolean(payload);
     },
-    CHANGE_PUBLISH(state, payload) {
+    CHANGE_PUBLISH (state, payload) {
         state.searchedData.forEach(item => {
             if(item.id === payload.id) {
                 return item.publish = payload.publish;
             }
         });
     },
+    ADD_NOTIFICATION (state, { message, status, timeout = null }) {
+        state.notifications.push({
+            id: getHash(),
+            message,
+            status,
+            timeout
+        })
+    },
+    DELETE_NOTIFICATION (state, id) {
+        state.notifications = state.notifications.filter(notification => notification.id !== id)
+    }
 };
 
 const actions = {
@@ -99,6 +112,12 @@ const actions = {
     },
     setLoading(context, payload) {
         context.commit('SET_LOADING', payload);
+    },
+    addNotification ({ commit }, payload) {
+        commit('ADD_NOTIFICATION', payload)
+    },
+    deleteNotification ({ commit }, payload) {
+        commit('DELETE_NOTIFICATION', payload)
     }
 };
 

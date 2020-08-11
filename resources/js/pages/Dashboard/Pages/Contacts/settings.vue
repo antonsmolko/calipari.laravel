@@ -70,6 +70,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import SettingInput from '@/custom_components/Settings/SettingInput';
+
 export default {
     name: "Settings",
     components: {

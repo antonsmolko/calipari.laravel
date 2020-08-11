@@ -155,6 +155,11 @@ return [
             'alias' => 'cdek',
             'description' => 'Группа настроек содержащих настройки транспортной компании CDEK'
         ],
+        [
+            'title' => 'Дополнительные сборы к заказу',
+            'alias' => 'order-added-costs',
+            'description' => 'Группа настроек, содержащая дополнительные пункты оплаты для персонального заказа'
+        ],
     ],
     'settings' => [
         [
@@ -296,6 +301,20 @@ return [
             'type' => 'text',
             'group_id' => 5
         ],
+        [
+            'display_name' => 'Обработка изображения',
+            'key_name' => 'image_processing',
+            'value'=> '1500',
+            'type' => 'text',
+            'group_id' => 6
+        ],
+        [
+            'display_name' => 'Поиск изображения',
+            'key_name' => 'image_search',
+            'value'=> '500',
+            'type' => 'text',
+            'group_id' => 6
+        ]
     ],
     'owners' => [
         [

@@ -35,6 +35,15 @@ class ImageController extends BaseResourceController
     }
 
     /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getItem(int $id): JsonResponse
+    {
+        return response()->json($this->service->getItem($id));
+    }
+
+    /**
      * @param FormRequest $request
      * @return JsonResponse
      */

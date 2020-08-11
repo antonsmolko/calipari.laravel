@@ -20,7 +20,7 @@
                                                 }"/>
                             <router-button-link v-if="category_type === 'images'"
                                                 icon="delete"
-                                                color="md-info"
+                                                color="md-default"
                                                 title="Удаленные изображения"
                                                 route="cms.images.trashed"/>
                             <router-button-link v-if="category_type !== 'images'"

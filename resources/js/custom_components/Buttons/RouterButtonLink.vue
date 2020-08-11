@@ -2,7 +2,7 @@
     <router-link :to="params ? { name: route, params } : { name: route }">
         <md-button :class="`${color} md-just-icon`">
             <md-icon>{{ icon }}</md-icon>
-            <md-tooltip md-direction="right">{{ title }}</md-tooltip>
+            <md-tooltip :md-direction="direction">{{ title }}</md-tooltip>
         </md-button>
     </router-link>
 </template>
@@ -30,6 +30,10 @@
             title: {
                 type: String,
                 default: 'Назад'
+            },
+            direction: {
+                type: String,
+                default: 'right'
             }
         }
     }

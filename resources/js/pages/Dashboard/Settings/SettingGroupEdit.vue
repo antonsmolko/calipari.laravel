@@ -7,8 +7,7 @@
                         <router-button-link
                             title="В администрирование"
                             :route="redirectRoute.name"
-                            :params="redirectRoute.params"
-                        />
+                            :params="redirectRoute.params" />
                         <div>
                             <slide-y-down-transition v-show="controlSaveVisibilities && $v.$anyDirty && !$v.$invalid">
                                 <control-button title="Сохранить" @click="onUpdate" />
@@ -30,6 +29,7 @@
                                  name="title"
                                  :value="title"
                                  :vField="$v.title"
+                                 :maxlength="50"
                                  :differ="true"
                                  :module="storeModule"
                                  :vRules="{ required: true, unique: true, minLength: true }" />
@@ -92,7 +92,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty || !this.isUniqueTitleEdit
+                    return (value.trim() === '') && !this.$v.title.$dirty || this.isUniqueTitleEdit
                 },
             },
             alias: {
@@ -100,7 +100,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.alias.$dirty) || !this.isUniqueAliasEdit
+                    return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAliasEdit
                 },
                 testAlias (value) {
                     return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
@@ -117,10 +117,10 @@
                 description: state => state.fields.description
             }),
             isUniqueTitleEdit() {
-                return !!this.$store.getters['settingGroups/isUniqueTitleEdit'](this.title, this.id);
+                return this.$store.getters['settingGroups/isUniqueTitleEdit'](this.title, this.id);
             },
             isUniqueAliasEdit () {
-                return !!this.$store.getters['settingGroups/isUniqueAliasEdit'](this.alias, this.id);
+                return this.$store.getters['settingGroups/isUniqueAliasEdit'](this.alias, this.id);
             }
         },
         created() {

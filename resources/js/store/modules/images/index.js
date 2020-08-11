@@ -160,6 +160,12 @@ const actions = {
             }
         })
     },
+    getItemForPersonalOrder ({ commit }, id) {
+        return axiosAction('get', commit, {
+            url: `/images/${id}/personal-order`,
+            thenContent: response => commit('SET_FIELD', { field: 'item', value: response.data })
+        });
+    },
     setItemField ({ commit }, payload) {
         commit('SET_ITEM_FIELD', payload);
     },

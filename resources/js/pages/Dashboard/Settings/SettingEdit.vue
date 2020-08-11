@@ -99,7 +99,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.displayName.$dirty || !this.isUniqueDisplayNameEdit
+                    return (value.trim() === '') && !this.$v.displayName.$dirty || this.isUniqueDisplayNameEdit
                 }
             },
             keyName: {
@@ -107,10 +107,10 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return (value.trim() === '') && !this.$v.keyName.$dirty || !this.isUniqueKeyNameEdit
+                    return (value.trim() === '') && !this.$v.keyName.$dirty || this.isUniqueKeyNameEdit
                 },
                 testKey (value) {
-                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
+                    return value.trim() === '' || (this.$config.SNAKE_CASE_REGEXP).test(value);
                 }
             },
             group: {
@@ -126,10 +126,10 @@
                 settingGroups: state => state.settingGroups.items
             }),
             isUniqueKeyNameEdit() {
-                return !!this.$store.getters['settings/isUniqueKeyNameEdit'](this.keyName, this.id);
+                return this.$store.getters['settings/isUniqueKeyNameEdit'](this.keyName, this.id);
             },
             isUniqueDisplayNameEdit() {
-                return !!this.$store.getters['settings/isUniqueDisplayNameEdit'](this.displayName, this.id);
+                return this.$store.getters['settings/isUniqueDisplayNameEdit'](this.displayName, this.id);
             }
         },
         methods: {

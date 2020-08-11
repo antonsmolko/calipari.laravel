@@ -3,14 +3,13 @@
 
 namespace App\Services\User\Repositories;
 
+
 use App\Models\User;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
 use App\Services\User\Resources\UserCollection;
 use App\Services\User\Resources\UserEdit as UserEditResource;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
-
 
 class CmsUserRepository extends CmsBaseResourceRepository
 {
@@ -22,16 +21,6 @@ class CmsUserRepository extends CmsBaseResourceRepository
     {
         $this->model = $model;
     }
-
-//    /**
-//     * @return Collection
-//     */
-//    public function index(): Collection
-//    {
-//        return $this->model::with('roles')
-//            ->withCount('orders')
-//            ->get();
-//    }
 
     /**
      * @param array $requestData
@@ -55,6 +44,15 @@ class CmsUserRepository extends CmsBaseResourceRepository
     public function getItem(int $id): User
     {
         return $this->model::findOrFail($id);
+    }
+
+    /**
+     * @param string $email
+     * @return mixed
+     */
+    public function getItemByEmail(string $email)
+    {
+        return $this->model::where('email', $email)->first();
     }
 
     /**

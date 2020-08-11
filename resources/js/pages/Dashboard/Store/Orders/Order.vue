@@ -41,7 +41,7 @@
                 </md-card-content>
             </md-card>
             <md-card>
-                <card-icon-header class="mt-3"title="Цена" icon="account_balance_wallet"/>
+                <card-icon-header class="mt-3" title="Цена" icon="account_balance_wallet"/>
                 <md-card-content>
                     <md-table :value="priceTableData" class="tm-order-item__table table-striped table-hover">
                         <md-table-row slot="md-table-row" slot-scope="{ item }">

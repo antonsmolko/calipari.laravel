@@ -5,31 +5,56 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
     computed: {
+        ...mapState([
+            'notifications'
+        ]),
         ...mapGetters([
             'serverErrors'
         ])
     },
     methods: {
-        notifyVue(message) {
-            this.$notify(
-                {
-                    message: message,
-                    icon: 'add_alert',
-                    horizontalAlign: 'center',
-                    verticalAlign: 'top',
-                    type: 'danger',
-                    timeout: 5000
-                }
-            )
+        ...mapActions({
+            deleteNotificationAction: 'deleteNotification'
+        }),
+        errorNotifyVue(message) {
+            this.$notify({
+                message,
+                icon: 'notification_important',
+                horizontalAlign: 'center',
+                verticalAlign: 'top',
+                type: 'danger',
+                timeout: 5000
+            })
+        },
+        notifyVue({ message, icon = 'notification_important', type = 'danger', timeout = 5000 }) {
+            this.$notify({
+                message,
+                icon,
+                horizontalAlign: 'center',
+                verticalAlign: 'top',
+                type,
+                timeout
+            })
         }
     },
     watch: {
-        serverErrors() {
-            this.serverErrors.forEach(message => this.notifyVue(message))
+        serverErrors () {
+            this.serverErrors.forEach(message => this.errorNotifyVue(message))
+        },
+        notifications () {
+            this.notifications.forEach(notification => {
+                this.notifyVue({
+                    message: notification.message,
+                    icon: notification.icon,
+                    type: notification.type,
+                    timeout: notification.timeout
+                });
+                this.deleteNotificationAction(notification.id);
+            });
         }
     }
 }

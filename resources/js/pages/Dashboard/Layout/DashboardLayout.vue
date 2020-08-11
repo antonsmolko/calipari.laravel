@@ -7,9 +7,7 @@
             :active-color="sidebarBackground"
             :background-image="sidebarBackgroundImage"
             :data-background-color="sidebarBackgroundColor">
-            <user-menu
-                :avatar="user.gravatar_medium"
-                :title="user.name"/>
+            <user-menu :avatar="user.gravatar_medium" :title="user.name"/>
             <mobile-menu/>
             <template slot="links">
                 <sidebar-item :link="{name: 'Панель управления', icon: 'dashboard', path: '/cms/dashboard'}"/>
@@ -27,6 +25,7 @@
                     <sidebar-item :link="{name: 'Доставка, оплата', path: '/cms/pages/shipping-payment'}"/>
                 </sidebar-item>
                 <sidebar-item v-if="authCheck('store')" :link="{name: 'Магазин', icon: 'local_mall', path: '/cms/store'}">
+                    <sidebar-item v-if="authCheck('store-settings')" :link="{name: 'Настройки', icon: 'tune', path: '/cms/store/settings'}"/>
                     <sidebar-item v-if="authCheck('deliveries')" :link="{name: 'Доставка', icon: 'local_mall', path: '/cms/store/deliveries'}"/>
                     <sidebar-item
                         v-if="authCheck('order-statuses')"

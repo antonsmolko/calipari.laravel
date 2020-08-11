@@ -236,32 +236,39 @@ Route::prefix('cms')
 
     /** Images */
 
-    Route::post('images/paginate', 'Cms\Image\ImageController@getItems')
-        ->name('images.list');
-    Route::post('images/trashed/paginate', 'Cms\Image\ImageController@getTrashedItems')
-        ->name('images.trashed.list');
+    Route::prefix('images')
+        ->group(function() {
+            Route::post('paginate', 'Cms\Image\ImageController@getItems')
+                ->name('images.list');
+            Route::post('trashed/paginate', 'Cms\Image\ImageController@getTrashedItems')
+                ->name('images.trashed.list');
 
-    Route::post('images/find-duplicates', 'Cms\Image\ImageController@findDuplicates')
-        ->name('images.find-duplicates');
+            Route::post('find-duplicates', 'Cms\Image\ImageController@findDuplicates')
+                ->name('images.find-duplicates');
 
-    Route::get('images/{id}/force-delete', 'Cms\Image\ImageController@forceDelete')
-        ->where('id', '[0-9]+')
-        ->name('images.force.delete')
-        ->middleware('role:super_admin|admin|owner');
-    Route::get('images/{id}/restore', 'Cms\Image\ImageController@restore')
-        ->where('id', '[0-9]+')
-        ->name('images.restore');
-    Route::get('images/{id}/publish', 'Cms\Image\ImageController@publish')
-        ->where('id', '[0-9]+')
-        ->name('images.publish');
-    Route::get('images/{id}/dissociate-owner', 'Cms\Image\ImageController@dissociateOwner')
-        ->where('id', '[0-9]+')
-        ->name('images.dissociate-owner');
-    Route::post('images/{id}', 'Cms\Image\ImageController@update')
-        ->where('id', '[0-9]+')
-        ->name('images.update');
-    Route::apiResource('images', 'Cms\Image\ImageController')
-        ->except(['index', 'create', 'edit', 'update']);
+            Route::get('{id}/force-delete', 'Cms\Image\ImageController@forceDelete')
+                ->where('id', '[0-9]+')
+                ->name('images.force.delete')
+                ->middleware('role:super_admin|admin|owner');
+            Route::get('{id}/restore', 'Cms\Image\ImageController@restore')
+                ->where('id', '[0-9]+')
+                ->name('images.restore');
+            Route::get('{id}/publish', 'Cms\Image\ImageController@publish')
+                ->where('id', '[0-9]+')
+                ->name('images.publish');
+            Route::get('{id}/dissociate-owner', 'Cms\Image\ImageController@dissociateOwner')
+                ->where('id', '[0-9]+')
+                ->name('images.dissociate-owner');
+            Route::get('{id}/personal-order', 'Cms\Image\ImageController@getItem')
+                ->where('id', '[0-9]+')
+                ->name('images.item.personal-order');
+            Route::post('{id}', 'Cms\Image\ImageController@update')
+                ->where('id', '[0-9]+')
+                ->name('images.update');
+
+            Route::apiResource('/', 'Cms\Image\ImageController')
+                ->except(['index', 'create', 'edit', 'update']);
+        });
 
 
     /** Catalog */
@@ -476,6 +483,12 @@ Route::prefix('cms')
             Route::delete('{id}', 'Cms\Order\OrderController@destroy')
                 ->middleware('role:super_admin|owner');
         });
+
+        /** Carts */
+        Route::prefix('carts')
+            ->group(function() {
+                Route::post('/', 'Cms\Cart\CartController@store');
+            });
 
 
         /** Order Statuses */

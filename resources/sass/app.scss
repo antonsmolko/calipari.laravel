@@ -133,6 +133,12 @@
     padding-right: 0 !important;
 }
 
+// Form
+
+.md-field.md-theme-default > .md-icon:after {
+    background-color: transparent !important;
+}
+
 // Form Errors
 
 .md-field {
@@ -223,6 +229,14 @@
     justify-content: center !important;
 }
 
+.md-flex-middle {
+    align-items: center !important;
+}
+
+.md-flex-grow-1 {
+    flex-grow: 1;
+}
+
 .md-block {
     display: block;
 }
@@ -240,6 +254,12 @@
 
 .rotate-180 {
     transform: rotate(180deg);
+}
+
+.icon-rotate-90 {
+    .md-icon.input-icon-left {
+        transform: rotate(90deg);
+    }
 }
 
 // Tables

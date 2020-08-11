@@ -2,6 +2,7 @@ import sortBy from 'lodash/sortBy'
 import last from 'lodash/last'
 import has from 'lodash/has'
 import compact from 'lodash/compact'
+import crc32 from 'crc-32'
 import $config from '@/config'
 
 export const getFormatPrice = price => typeof price === 'number' && price > 0
@@ -96,10 +97,17 @@ export const getS3ImageUrl = ({ name, fit = 'cover', width = null, height = null
     return `${$config.s3ImageEndpoint}/${encodeRequest}`
 }
 
+export const getHash = () => {
+    const date = new Date()
+
+    return Math.abs(crc32.str(`${date.getTime()}|${Math.round(Math.random() * 1000)}`))
+}
+
 export default {
     getFormatPrice,
     getArticle,
     getFormatDate,
     getCurrentStatus,
-    getGates
+    getGates,
+    getHash
 }

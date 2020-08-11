@@ -1,9 +1,13 @@
 <template>
     <div>
-        <h4 class="card-title">{{ title }}</h4>
+        <h4 class="card-title" v-if="!hiddenTitle">{{ title }}</h4>
         <div class="form-group">
-            <md-field :class="[{ 'md-error': vField.$error }, { 'md-valid': !vField.$invalid }]">
-                <md-icon v-if="icon">{{ icon }}</md-icon>
+            <md-field :class="[
+                { 'md-error': vField.$error && !disabled },
+                { 'md-valid': !vField.$invalid && !disabled },
+                { 'md-disabled': disabled }
+                ]">
+                <md-icon v-if="icon" class="input-icon-left">{{ icon }}</md-icon>
                 <label v-if="placeholder">{{ placeholder }}</label>
                 <md-input
                     :type="type"
@@ -114,6 +118,10 @@ export default {
             type: String,
             default: null
         },
+        action: {
+            type: String,
+            default: 'setItemField'
+        },
         differ: {
             type: Boolean,
             default: false
@@ -137,50 +145,53 @@ export default {
         disabled: {
             type: Boolean,
             default: false
+        },
+        hiddenTitle: {
+            type: Boolean,
+            default: false
         }
+
     },
-    data() {
-        return {
-            referenceValue: ''
-        }
-    },
+    data: () => ({
+        referenceValue: ''
+    }),
     computed: {
-        storeModule() {
+        storeModule () {
             return this.module ? `${this.module}/` : '';
         }
     },
-    created() {
+    created () {
         this.referenceValue = this.value;
     },
     methods: {
-        onInput(value) {
+        onInput (value) {
             if (this.vField && this.vDelay) {
                 this.setValidationDelay(this.vField, value);
             } else if (this.vField) {
                 this.touched(this.vField, value);
             }
 
-            this.$store.dispatch(`${this.storeModule}setItemField`, {
+            this.$store.dispatch(`${this.storeModule}${this.action}`, {
                 field: this.name,
                 value: value.trim()
             });
         },
-        setValidationDelay(v, value) {
+        setValidationDelay (v, value) {
             v.$reset();
             if (touchMap.has(v)) {
                 clearTimeout(touchMap.get(v));
             }
             touchMap.set(v, setTimeout(() => this.touched(this.vField, value), 500));
         },
-        touched(v, value) {
+        touched (v, value) {
             this.differ ? this.touchedDifferent(v, value) : v.$touch();
         },
-        touchedDifferent(v, value) {
+        touchedDifferent (v, value) {
             this.isDiffer(value, this.referenceValue)
                 ? v.$touch()
                 : v.$reset()
         },
-        isDiffer(a, b) {
+        isDiffer (a, b) {
             return a != b;
         }
     }

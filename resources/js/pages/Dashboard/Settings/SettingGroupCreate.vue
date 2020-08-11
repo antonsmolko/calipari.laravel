@@ -25,6 +25,7 @@
                         <v-input title="Заголовок"
                                  icon="title"
                                  name="title"
+                                 :maxlength="50"
                                  :vField="$v.title"
                                  :module="storeModule"
                                  :vRules="{ required: true, unique: true, minLength: true }" />
@@ -76,7 +77,7 @@
                 touch: false,
                 minLength: minLength(2),
                 isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.title.$dirty) || !this.isUniqueTitle
+                    return ((value.trim() === '') && !this.$v.title.$dirty) || this.isUniqueTitle
                 },
             },
             alias: {
@@ -87,7 +88,7 @@
                 },
                 minLength: minLength(2),
                 isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.alias.$dirty) || !this.isUniqueAlias
+                    return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAlias
                 },
             },
             description: {
@@ -101,10 +102,10 @@
                 description: state => state.fields.description
             }),
             isUniqueTitle() {
-                return !!this.$store.getters['settingGroups/isUniqueTitle'](this.title);
+                return this.$store.getters['settingGroups/isUniqueTitle'](this.title);
             },
             isUniqueAlias () {
-                return !!this.$store.getters['settingGroups/isUniqueAlias'](this.alias);
+                return this.$store.getters['settingGroups/isUniqueAlias'](this.alias);
             }
         },
         methods: {

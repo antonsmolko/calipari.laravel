@@ -234,6 +234,13 @@ const StorePanel = resolve => {
     })
 };
 
+/** Store Settings */
+const StoreSettings = resolve => {
+    require.ensure(['@/pages/Dashboard/Store/Settings.vue'], () => {
+        resolve(require('@/pages/Dashboard/Store/Settings.vue'))
+    })
+};
+
 /** Deliveries */
 const DeliveryList = resolve => {
     require.ensure(['@/pages/Dashboard/Store/Delivery/DeliveryList.vue'], () => {
@@ -283,6 +290,12 @@ const Order = resolve => {
 const OrderRefund = resolve => {
     require.ensure(['@/pages/Dashboard/Store/Orders/OrderRefund.vue'], () => {
         resolve(require('@/pages/Dashboard/Store/Orders/OrderRefund.vue'))
+    })
+};
+
+const OrderCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Store/Orders/OrderCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Store/Orders/OrderCreate.vue'))
     })
 };
 
@@ -775,6 +788,19 @@ const cmsArtCollectionsPages = {
     ]
 };
 
+const cmsStoreSettingsPage = {
+    path: '/cms/store',
+    component: DashboardLayout,
+    children: [
+        {
+            path: 'settings',
+            name: 'cms.store.settings',
+            component: StoreSettings,
+            meta: getPathMeta('store-settings')
+        }
+    ]
+};
+
 const cmsDeliveriesPages = {
     path: '/cms/store',
     component: DashboardLayout,
@@ -838,6 +864,13 @@ const cmsOrderPages = {
             path: 'orders',
             name: 'cms.store.orders',
             component: OrderList,
+            meta: getPathMeta('orders')
+        },
+        {
+            path: 'orders/create/:imageId',
+            name: 'cms.store.orders.create',
+            component: OrderCreate,
+            props: true,
             meta: getPathMeta('orders')
         },
         {
@@ -996,6 +1029,7 @@ const routes = [
     cmsSubCategoriesPages,
     cmsColorCollectionsPages,
     cmsArtCollectionsPages,
+    cmsStoreSettingsPage,
     cmsDeliveriesPages,
     cmsOrderPages,
     cmsOrderStatusPages,
