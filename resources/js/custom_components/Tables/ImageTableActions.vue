@@ -7,7 +7,7 @@
                         color="md-info"
                         @click="onRemove" />
 
-        <router-button-link title="Создать заказ"
+        <router-button-link title="Сформировать заказ"
                             icon="shopping_cart"
                             color="md-warning"
                             route="cms.store.orders.create"

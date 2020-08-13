@@ -142,6 +142,15 @@ class ImageResizeController extends Controller
     }
 
     /**
+     * @param string $path
+     * @return mixed
+     */
+    public function getPDFProjectImage(string $path)
+    {
+        return $this->service->getPDFProjectImage($path);
+    }
+
+    /**
      * @param string $width
      * @param string $height
      * @param string $x

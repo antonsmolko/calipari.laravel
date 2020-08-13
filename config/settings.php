@@ -8,12 +8,14 @@ return [
         '7' => '### ## ##',
         '6' => '## ## ##'
     ],
+    'order_min_size' => 90,
     'base_image_url' => env('APP_URL') . '/api/image',
     'order_item_full_url' => '/order-full',
     'mail_order_item_thumb_url' => '/mail-thumb',
     'order_item_thumb_url' => '/thumb',
     'pdf_label_order_item_image_url' => '/pdf-label-order-item',
     'pdf_layout_order_item_image_url' => '/pdf-layout-order-item',
+    'pdf_project_image_url' => '/pdf-project',
     'slack' => [
         'emoji' => [
             'order' => [

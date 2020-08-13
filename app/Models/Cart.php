@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 
 class Cart extends Model
 {
@@ -22,18 +20,10 @@ class Cart extends Model
     }
 
     /**
-     * @return array
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function getItems(): array
+    public function items()
     {
-        return json_decode($this->items, true) ?? [];
-    }
-
-    /**
-     * @return array
-     */
-    public function getNotDeletedItems(): array
-    {
-        return array_values(Arr::where($this->getItems(), fn($item, $key) => empty($item['deleted'])));
+        return $this->hasMany('App\Models\CartItem');
     }
 }

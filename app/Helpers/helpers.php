@@ -286,3 +286,16 @@ if (! function_exists('getBaseImagePath')) {
         return substr($name, 0, 1) . '/' . substr($name, 0, 3);
     }
 }
+
+if (! function_exists('getItemPrice')) {
+    /**
+     * @param int $width
+     * @param int $height
+     * @param int $texturePrice
+     * @return int
+     */
+    function getItemPrice(int $width, int $height, int $texturePrice): int
+    {
+        return (int) round($width * $height / 1e6 * $texturePrice, 0) * 100;
+    }
+}

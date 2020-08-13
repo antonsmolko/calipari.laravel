@@ -84,7 +84,7 @@
                 </md-card-content>
             </md-card>
             <md-card>
-                <card-icon-header class="mt-3" title="Дополнительный сбор" icon="attach_money"/>
+                <card-icon-header class="mt-3" title="Дополнительная оплата" icon="attach_money"/>
                 <md-card-content>
                     <div class="order-added-costs-item md-flex md-flex-middle">
                         <md-checkbox v-model="selectedAddedCosts" value="imageProcessing">
@@ -164,6 +164,7 @@ import VSelect from "@/custom_components/VForm/VSelect"
 import { createMethod } from '@/mixins/crudMethods'
 import { required, requiredIf, email, numeric } from "vuelidate/lib/validators"
 import { getHash } from '@/helpers'
+import $config from '@/config'
 
 export default {
     name: "OrderCreate",
@@ -320,7 +321,7 @@ export default {
         },
         getAddedCostsJson () {
             const addedCostsResult = this.selectedAddedCosts.reduce((acc, item) => {
-                acc[item] = this.addedCosts[item];
+                acc[this.$config.addedCosts[item]] = this.addedCosts[item];
 
                 return acc;
             }, {});

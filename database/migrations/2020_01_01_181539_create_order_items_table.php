@@ -27,7 +27,7 @@ class CreateOrderItemsTable extends Migration
             $table->unsignedSmallInteger('qty');
             $table->string('filter_details');
             $table->json('filter');
-            $table->unsignedSmallInteger('price');
+            $table->unsignedInteger('price');
             $table->timestamps();
         });
 

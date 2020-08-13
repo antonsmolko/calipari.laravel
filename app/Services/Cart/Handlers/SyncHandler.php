@@ -4,48 +4,44 @@
 namespace App\Services\Cart\Handlers;
 
 
-use App\Models\Image;
 use App\Services\Cart\Repositories\ClientCartRepository;
+use App\Services\CartItem\Repositories\ClientCartItemRepository;
+use App\Services\CartItem\Resources\FromCartClient as CartItemResource;
 
 class SyncHandler
 {
     private ClientCartRepository $repository;
+    private ClientCartItemRepository $itemRepository;
 
     /**
      * SyncHandler constructor.
      * @param ClientCartRepository $repository
+     * @param ClientCartItemRepository $itemRepository
      */
-    public function __construct(ClientCartRepository $repository)
+    public function __construct(
+        ClientCartRepository $repository,
+        ClientCartItemRepository $itemRepository
+    )
     {
         $this->repository = $repository;
+        $this->itemRepository = $itemRepository;
     }
 
     /**
-     * @param array $items
-     * @return array|mixed
+     * @param array $itemKeys
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function handle(array $items)
+    public function handle(array $itemKeys)
     {
         $user = auth()->user();
-        $storeData = $items;
+        $items = $this->itemRepository->getItemsByKeys($itemKeys);
 
-        if ($user && $user->cart) {
-            $cartItems = $user->cart->getItems();
-            $storeData = collect([...$items, ...$cartItems])
-                ->unique('id')
-                ->toArray();
-        }
+        $cart = $user->cart
+            ? $user->cart
+            : $this->repository->create($user);
 
-        $storeData = array_values(
-            array_filter($storeData, fn ($item) => Image::where('publish', 1)
-                ->where('id', $item['image_id'])
-                ->exists()
-            )
-        );
+        $items->each(fn($item) => $this->itemRepository->associateWithCart($item, $cart));
 
-
-        return $user
-            ? $this->repository->update($user, $storeData)
-            : $storeData;
+        return CartItemResource::collection($cart->items);
     }
 }

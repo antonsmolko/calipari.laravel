@@ -150,7 +150,6 @@ Route::group(['prefix' => 'orders'], function() {
     Route::get('payment-confirmation/{token}', 'Client\Order\OrderController@confirmPaymentCompletion');
 });
 
-
 /** Carts */
 Route::prefix('carts')
     ->group(function() {
@@ -159,12 +158,21 @@ Route::prefix('carts')
         Route::post('sync', 'Client\Cart\CartController@sync');
         Route::post('set-qty', 'Client\Cart\CartController@setQty')
             ->middleware('jwt.auth');
-        Route::delete('{id}', 'Client\Cart\CartController@delete')
-            ->where('id', '[0-9]+')
-            ->middleware('jwt.auth');
+//        Route::delete('{id}', 'Client\Cart\CartController@delete')
+//            ->where('id', '[0-9]+')
+//            ->middleware('jwt.auth');
         Route::post('add', 'Client\Cart\CartController@add')
             ->middleware('jwt.auth');
+        Route::post('with-project', 'Client\Cart\CartController@getItemsWithProject');
     });
+
+/** CartItems */
+Route::prefix('cart-items')
+    ->group(function() {
+        Route::post('sync', 'Client\CartItem\CartItemController@sync');
+    });
+Route::apiResource('cart-items', 'Client\CartItem\CartItemController')
+    ->except(['index', 'create', 'edit']);
 
 
 /** PAGES */

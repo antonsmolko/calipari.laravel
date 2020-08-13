@@ -101,19 +101,6 @@ class ClientOrderService extends ClientBaseResourceService
         return $this->repository->update($order, $updateData);
     }
 
-//    /**
-//     * @param int $id
-//     * @param string $statusAlias
-//     * @return ClientOrderResource
-//     */
-//    public function changeStatus(int $id, string $statusAlias)
-//    {
-//        $order = $this->repository->getItem($id);
-//        $status = $this->orderStatusRepository->getItemByAlias($statusAlias);
-//
-//        return $this->repository->changeStatus($order, $status->id);
-//    }
-
     /**
      * @param string $hash
      * @return array

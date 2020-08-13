@@ -72,5 +72,11 @@ export default {
         textures: 's,a,o,m',
         users: 's,a,o',
         'user-delete': 's,o',
+    },
+
+    addedCosts: {
+        imageProcessing: 'Обработка изображения',
+        imageSearch: 'Поиск изображения',
+        imageCosts: 'Покупка изображения'
     }
 }

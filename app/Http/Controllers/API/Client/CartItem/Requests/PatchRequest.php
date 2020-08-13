@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\API\Client\Cart\Requests;
+namespace App\Http\Controllers\API\Client\CartItem\Requests;
 
 use App\Http\Requests\FormRequest;
+use Illuminate\Validation\Rule;
 
-class AddRequest extends FormRequest
+class PatchRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +25,7 @@ class AddRequest extends FormRequest
     public function rules()
     {
         return [
-            'item' => 'required|array'
+            'qty' => 'bail|required|integer'
         ];
     }
 }

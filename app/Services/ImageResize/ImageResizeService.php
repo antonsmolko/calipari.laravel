@@ -9,6 +9,7 @@ use App\Services\ImageResize\Handlers\GetMailOrderImageThumbHandler;
 use App\Services\ImageResize\Handlers\GetOrderImageThumbHandler;
 use App\Services\ImageResize\Handlers\GetPDFLabelOrderImageHandler;
 use App\Services\ImageResize\Handlers\GetPDFLayoutOrderImageHandler;
+use App\Services\ImageResize\Handlers\GetPDFProjectImageHandler;
 use App\Services\ImageResize\Repositories\ImageResizeRepository;
 
 class ImageResizeService
@@ -21,6 +22,7 @@ class ImageResizeService
     private GetOrderImageThumbHandler $getOrderImageThumbHandler;
     private GetPDFLabelOrderImageHandler $getPDFLabelOrderImageHandler;
     private GetPDFLayoutOrderImageHandler $getPDFLayoutOrderImageHandler;
+    private GetPDFProjectImageHandler $getPDFProjectImageHandler;
 
     /**
      * ImageResizeService constructor.
@@ -32,6 +34,7 @@ class ImageResizeService
      * @param GetOrderImageThumbHandler $getOrderImageThumbHandler
      * @param GetPDFLabelOrderImageHandler $getPDFLabelOrderImageHandler
      * @param GetPDFLayoutOrderImageHandler $getPDFLayoutOrderImageHandler
+     * @param GetPDFProjectImageHandler $getPDFProjectImageHandler
      */
     public function __construct(
         ImageResizeRepository $repository,
@@ -41,7 +44,8 @@ class ImageResizeService
         GetMailOrderImageThumbHandler $getMailOrderImageThumbHandler,
         GetOrderImageThumbHandler $getOrderImageThumbHandler,
         GetPDFLabelOrderImageHandler $getPDFLabelOrderImageHandler,
-        GetPDFLayoutOrderImageHandler $getPDFLayoutOrderImageHandler
+        GetPDFLayoutOrderImageHandler $getPDFLayoutOrderImageHandler,
+        GetPDFProjectImageHandler $getPDFProjectImageHandler
     )
     {
         $this->repository = $repository;
@@ -52,6 +56,7 @@ class ImageResizeService
         $this->getOrderImageThumbHandler = $getOrderImageThumbHandler;
         $this->getPDFLabelOrderImageHandler = $getPDFLabelOrderImageHandler;
         $this->getPDFLayoutOrderImageHandler = $getPDFLayoutOrderImageHandler;
+        $this->getPDFProjectImageHandler = $getPDFProjectImageHandler;
     }
 
     /**
@@ -195,6 +200,19 @@ class ImageResizeService
 
         return $this->getPDFLayoutOrderImageHandler
             ->handle($file, $width, $height, $x, $y, $flipH, $flipV, $colorize)
+            ->response($ext, 100);
+    }
+
+    /**
+     * @param string $path
+     * @return mixed
+     */
+    public function getPDFProjectImage(string $path)
+    {
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+
+        return $this->getPDFProjectImageHandler
+            ->handle($file)
             ->response($ext, 100);
     }
 

@@ -5,6 +5,7 @@ namespace App\Services\Cart\Repositories;
 
 
 use App\Models\Cart;
+use App\Models\CartItem;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
 
 class ClientCartRepository extends ClientBaseResourceRepository
@@ -20,17 +21,34 @@ class ClientCartRepository extends ClientBaseResourceRepository
 
     /**
      * @param $user
-     * @param array $items
-     * @return mixed
+     * @return Cart
      */
-    public function update($user, array $items)
+    public function create($user): Cart
     {
-        $cart = $user->cart()->updateOrCreate(
-            ['user_id' => $user->id],
-            ['items' => json_encode($items, true)]
-        );
+        return $this->model::create([
+            'user_id' => $user->id,
+            'user_email' => $user->email
+        ]);
+    }
 
-        return $cart->getNotDeletedItems();
+    /**
+     * @param Cart $cart
+     * @param array $storeData
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function addItem(Cart $cart, array $storeData)
+    {
+        return $cart->items()->create($storeData);
+    }
+
+    /**
+     * @param Cart $cart
+     * @param array $updateData
+     * @return bool
+     */
+    public function update(Cart $cart, array $updateData): bool
+    {
+        return $cart->update($updateData);
     }
 
     /**

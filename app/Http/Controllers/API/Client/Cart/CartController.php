@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API\Client\Cart;
 
-use App\Http\Controllers\API\Client\Cart\Requests\AddRequest;
+use App\Http\Controllers\API\Client\Cart\Requests\ProjectRequest;
 use App\Http\Controllers\API\Client\Cart\Requests\SetQtyRequest;
 use App\Http\Controllers\API\Client\Cart\Requests\SyncRequest;
-use App\Http\Controllers\API\Client\Cart\Requests\UpdateRequest;
+use App\Http\Controllers\API\Client\CartItem\Requests\StoreRequest;
 use App\Services\Cart\ClientCartService;
 use Illuminate\Http\JsonResponse;
 
@@ -32,22 +32,22 @@ class CartController
     }
 
     /**
-     * @param AddRequest $request
+     * @param StoreRequest $request
      * @return JsonResponse
      */
-    public function add(AddRequest $request): JsonResponse
+    public function add(StoreRequest $request): JsonResponse
     {
-        return response()->json($this->service->add($request->item));
+        return response()->json($this->service->add($request->all()));
     }
 
-    /**
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function delete(int $id): JsonResponse
-    {
-        return response()->json($this->service->delete($id));
-    }
+//    /**
+//     * @param int $id
+//     * @return JsonResponse
+//     */
+//    public function delete(int $id): JsonResponse
+//    {
+//        return response()->json($this->service->delete($id));
+//    }
 
     /**
      * @param SetQtyRequest $request
@@ -56,5 +56,14 @@ class CartController
     public function setQty(SetQtyRequest $request): JsonResponse
     {
         return response()->json($this->service->setQty($request->all()));
+    }
+
+    /**
+     * @param ProjectRequest $request
+     * @return JsonResponse
+     */
+    public function getItemsWithProject(ProjectRequest $request): JsonResponse
+    {
+        return response()->json($this->service->getItemsWithProject($request->key));
     }
 }

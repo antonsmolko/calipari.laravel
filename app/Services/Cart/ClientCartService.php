@@ -4,41 +4,44 @@
 namespace App\Services\Cart;
 
 
-use App\Services\Cart\Handlers\AddHandler;
 use App\Services\Cart\Handlers\DeleteHandler;
 use App\Services\Cart\Handlers\SyncHandler;
 use App\Services\Cart\Repositories\ClientCartRepository;
+use App\Services\CartItem\Handlers\GetStoreDetailsDataHandler;
+use App\Services\CartItem\Resources\FromCartClient as CartItemResource;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Arr;
 
 class ClientCartService
 {
     private ClientCartRepository $repository;
     private SyncHandler $syncHandler;
-    private AddHandler $addHandler;
     private DeleteHandler $deleteHandler;
+    private GetStoreDetailsDataHandler $getStoreDetailsDataHandler;
 
     /**
      * ClientCartService constructor.
      * @param ClientCartRepository $repository
      * @param SyncHandler $syncHandler
-     * @param AddHandler $addHandler
      * @param DeleteHandler $deleteHandler
+     * @param GetStoreDetailsDataHandler $getStoreDetailsDataHandler
      */
     public function __construct(
         ClientCartRepository $repository,
         SyncHandler $syncHandler,
-        AddHandler $addHandler,
-        DeleteHandler $deleteHandler
+        DeleteHandler $deleteHandler,
+        GetStoreDetailsDataHandler $getStoreDetailsDataHandler
     )
     {
         $this->repository = $repository;
         $this->syncHandler = $syncHandler;
-        $this->addHandler = $addHandler;
         $this->deleteHandler = $deleteHandler;
+        $this->getStoreDetailsDataHandler = $getStoreDetailsDataHandler;
     }
 
     /**
      * @param array $items
-     * @return mixed
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function sync(array $items)
     {
@@ -46,30 +49,24 @@ class ClientCartService
     }
 
     /**
-     * @param array $items
+     * @param array $itemData
      * @return mixed
      */
-    public function update(array $items)
+    public function add(array $itemData)
     {
-        return $this->repository->update(auth()->user(), $items);
-    }
+        $user = auth()->user();
 
-    /**
-     * @param array $item
-     * @return mixed
-     */
-    public function add(array $item)
-    {
-        return $this->addHandler->handle($item);
-    }
+        $cart = $user->cart
+            ? $user->cart
+            : $this->repository->create($user);
 
-    /**
-     * @param int $id
-     * @return mixed
-     */
-    public function delete(int $id)
-    {
-        return $this->deleteHandler->handle($id);
+        $details = $this->getStoreDetailsDataHandler->handle($itemData);
+
+        $this->repository->addItem($cart, [
+            'details' => json_encode($details, true)
+        ]);
+
+        return CartItemResource::collection($cart->items);
     }
 
     /**
@@ -82,5 +79,26 @@ class ClientCartService
         $this->repository->setQty($user, $requestData['id'], $requestData['qty']);
 
         return $user->cart->getNotDeletedItems();
+    }
+
+    /**
+     * @param string $key
+     * @return array
+     */
+    public function getItemsWithProject(string $key): array
+    {
+        try {
+            $keyData = decrypt($key, true);
+        } catch (DecryptException $e) {
+            abort(404);
+        }
+
+        $cart = $this->repository->getItem($keyData['cart_id']);
+
+        $cartItems = array_map(fn($item) => $item['id'] === $keyData['project_id']
+            ? Arr::except($item, 'deleted')
+            : $item, $cart->getItems());
+
+        return $this->repository->update($cart, ['items' => json_encode($cartItems, true)]);
     }
 }

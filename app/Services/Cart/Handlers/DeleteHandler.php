@@ -35,6 +35,6 @@ class DeleteHandler
             return $item;
         }, $user->cart->getItems());
 
-        return $this->repository->update($user, array_values($items));
+        return $this->repository->updateByUser($user, array_values($items));
     }
 }

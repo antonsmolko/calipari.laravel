@@ -82,6 +82,11 @@ Route::get(config('settings.pdf_layout_order_item_image_url') .
         'path' => '[\w\.]+'
     ]);
 
+Route::get(
+    config('settings.pdf_project_image_url') . '/{path}',
+    'ImageResizeController@getPDFProjectImage')
+    ->where(['path' => '[\w\.]+']);
+
 Route::get('fit/{width}/{height}/{path}','ImageResizeController@fit')
     ->where([
         'width' => '\d+',

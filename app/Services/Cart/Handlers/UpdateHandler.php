@@ -30,13 +30,12 @@ class UpdateHandler
         $storeData = $items;
 
         if ($user->cart) {
-            $cart = $user->cart;
-            $cartItems = json_decode($cart->items, true);
+            $cartItems = $user->cart->getItems();
             $storeData = array_values(collect([...$items, ...$cartItems])
                 ->unique('id')
                 ->toArray());
         }
 
-        return $this->repository->store($user, $storeData);
+        return $this->repository->update($user, $storeData);
     }
 }

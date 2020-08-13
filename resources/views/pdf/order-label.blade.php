@@ -61,7 +61,7 @@
                     </tr>
                     <tr>
                         <td colspan="3" class="spec-item spec-title">Количество полос:</td>
-                        <td colspan="2" class="spec-item spec-value text-emphasis">{{ $details->stripe_count }}</td>
+                        <td colspan="2" class="spec-item spec-value text-emphasis">{{ $details->stripes_count }}</td>
                     </tr>
                 </table>
             </td>

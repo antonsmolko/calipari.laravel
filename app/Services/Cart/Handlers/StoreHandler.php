@@ -38,17 +38,20 @@ class StoreHandler
     }
 
     /**
-     * @param array $storeItemData
-     * @return mixed
+     * @param array $requestData
+     * @return array
      */
-    public function handle(array $storeItemData)
+    public function handle(array $requestData): array
     {
-        if (!empty($storeItemData['added_costs'])) {
-            $storeItemData['added_costs'] = json_decode($storeItemData['added_costs'], true);
+        $requestEmail = $requestData['email'];
+        $item = Arr::except($requestData, ['email', 'name']);
+
+        if (!empty($requestData['added_costs'])) {
+            $item['added_costs'] = json_decode($item['added_costs'], true);
         }
 
-        $image = $this->imageRepository->getItem($storeItemData['image_id']);
-        $storeItemData = Arr::collapse([$storeItemData, [
+        $image = $this->imageRepository->getItem($item['image_id']);
+        $item = Arr::collapse([$item, [
             'x' => 0,
             'y' => 0,
             'width_px' => $image->width,
@@ -61,14 +64,28 @@ class StoreHandler
             ]
         ]]);
 
-        $user = $this->userRepository->getItemByEmail($storeItemData['email']);
-        if ($user) {
-            $storeData['user_id'] = $user->id;
-            $storeItemData = Arr::except($storeItemData, ['email', 'name']);
+        $itemsData = [$item];
+        $existingCart = $this->repository->getItemByEmail($requestEmail);
+
+        if ($existingCart) {
+            $existingCartItems = $existingCart->getItems();
+            $itemsData = array_values(collect([...$existingCartItems, $item])
+                ->unique('id')
+                ->toArray());
         }
 
-        return $user
-            ? $this->clientRepository->update($user, $storeItemData)
-            : $this->repository->store(['items' => json_encode($storeItemData, true)]);
+        $items = json_encode($itemsData, true);
+        $user = $this->userRepository->getItemByEmail($requestEmail);
+
+        $cart = $user
+            ? $this->repository->updateByUser($user, [
+                'user_id' => $user->id,
+                'email' => $requestEmail,
+                'items' => $items])
+            : $this->repository->updateOrCreate($requestEmail, [
+                'email' => $requestEmail,
+                'items' => $items]);
+
+        return [$cart, $item];
     }
 }
