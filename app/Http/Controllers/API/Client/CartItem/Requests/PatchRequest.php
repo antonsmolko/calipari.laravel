@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API\Client\CartItem\Requests;
 
 use App\Http\Requests\FormRequest;
-use Illuminate\Validation\Rule;
 
 class PatchRequest extends FormRequest
 {

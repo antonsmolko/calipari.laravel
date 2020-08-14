@@ -293,9 +293,9 @@ const OrderRefund = resolve => {
     })
 };
 
-const OrderCreate = resolve => {
-    require.ensure(['@/pages/Dashboard/Store/Orders/OrderCreate.vue'], () => {
-        resolve(require('@/pages/Dashboard/Store/Orders/OrderCreate.vue'))
+const ProjectCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Store/Orders/ProjectCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Store/Orders/ProjectCreate.vue'))
     })
 };
 
@@ -867,13 +867,6 @@ const cmsOrderPages = {
             meta: getPathMeta('orders')
         },
         {
-            path: 'orders/create/:imageId',
-            name: 'cms.store.orders.create',
-            component: OrderCreate,
-            props: true,
-            meta: getPathMeta('orders')
-        },
-        {
             path: 'orders/:id',
             name: 'cms.store.orders.order',
             component: Order,
@@ -889,6 +882,23 @@ const cmsOrderPages = {
         }
     ]
 };
+
+const cmsCartItemsPages = {
+    path: '/cms/store',
+        component: DashboardLayout,
+        meta: {
+        auth: true
+    },
+    children: [
+        {
+            path: 'projects/create/:imageId',
+            name: 'cms.store.projects.create',
+            component: ProjectCreate,
+            props: true,
+            meta: getPathMeta('projects')
+        }
+    ]
+}
 
 const cmsMenuPages = {
     path: '/cms/pages',
@@ -1033,6 +1043,7 @@ const routes = [
     cmsDeliveriesPages,
     cmsOrderPages,
     cmsOrderStatusPages,
+    cmsCartItemsPages,
     cmsMenuPages,
     cmsLockPages,
     {

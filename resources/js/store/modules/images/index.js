@@ -110,7 +110,7 @@ const actions = {
             data
         })
     },
-    togglePublish({ commit }, id) {
+    togglePublish ({ commit }, id) {
         return axiosAction('get', commit, {
             url: `/images/${id}/publish`,
             thenContent: response => commit('CHANGE_PUBLISH', response.data)
@@ -160,9 +160,9 @@ const actions = {
             }
         })
     },
-    getItemForPersonalOrder ({ commit }, id) {
+    getRawItem ({ commit }, id) {
         return axiosAction('get', commit, {
-            url: `/images/${id}/personal-order`,
+            url: `/images/${id}/get-raw`,
             thenContent: response => commit('SET_FIELD', { field: 'item', value: response.data })
         });
     },

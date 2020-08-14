@@ -38,7 +38,7 @@ class SyncHandler
 
         $cart = $user->cart
             ? $user->cart
-            : $this->repository->create($user);
+            : $this->repository->updateOrCreate($user);
 
         $items->each(fn($item) => $this->itemRepository->associateWithCart($item, $cart));
 

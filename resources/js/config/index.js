@@ -64,6 +64,7 @@ export default {
         'order-statuses': 's,a,o',
         pages: 's,a,o,m',
         permissions: 's',
+        projects: 's,a,o',
         roles: 's,a,o',
         settings: 's,a,o,m',
         'settings/administration': 's,a',

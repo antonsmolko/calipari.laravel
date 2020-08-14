@@ -36,7 +36,7 @@
                         :vRules="{ required: true, email: true }"
                         :module="storeModule"
                         :delay="true"
-                        action="setPersonalOrderField"/>
+                        action="setProjectField"/>
 
                     <v-input
                         title="Имя покупателя"
@@ -45,7 +45,7 @@
                         :vField="$v.name"
                         :maxlength="50"
                         :module="storeModule"
-                        action="setPersonalOrderField"/>
+                        action="setProjectField"/>
 
                     <v-input
                         class="icon-rotate-90"
@@ -56,7 +56,7 @@
                         :vRules="{ required: true, numeric: true }"
                         :maxlength="4"
                         :module="storeModule"
-                        action="setPersonalOrderField"/>
+                        action="setProjectField"/>
 
                     <v-input
                         title="Высота полотна, см"
@@ -67,7 +67,7 @@
                         :vRules="{ required: true, numeric: true }"
                         :maxlength="4"
                         :module="storeModule"
-                        action="setPersonalOrderField"/>
+                        action="setProjectField"/>
 
                     <v-select
                         title="Фактуры"
@@ -79,7 +79,7 @@
                         :vRule="{ required: true, numeric: true }"
                         :module="storeModule"
                         nameField="name"
-                        action="setPersonalOrderField"/>
+                        action="setProjectField"/>
 
                 </md-card-content>
             </md-card>
@@ -103,7 +103,7 @@
                                 :vRules="{ numeric: true }"
                                 :maxlength="4"
                                 :module="storeModule"
-                                action="setPersonalOrderAddedCostsField"/>
+                                action="setProjectAddedCostsField"/>
                         </slide-y-down-transition>
                     </div>
 
@@ -124,7 +124,7 @@
                                 :vRules="{ numeric: true }"
                                 :maxlength="4"
                                 :module="storeModule"
-                                action="setPersonalOrderAddedCostsField"/>
+                                action="setProjectAddedCostsField"/>
                         </slide-y-down-transition>
                     </div>
 
@@ -144,7 +144,7 @@
                                 :vRules="{ numeric: true }"
                                 :maxlength="4"
                                 :module="storeModule"
-                                action="setPersonalOrderAddedCostsField"/>
+                                action="setProjectAddedCostsField"/>
                         </slide-y-down-transition>
                     </div>
 
@@ -164,10 +164,9 @@ import VSelect from "@/custom_components/VForm/VSelect"
 import { createMethod } from '@/mixins/crudMethods'
 import { required, requiredIf, email, numeric } from "vuelidate/lib/validators"
 import { getHash } from '@/helpers'
-import $config from '@/config'
 
 export default {
-    name: "OrderCreate",
+    name: "ProjectCreate",
     components: {
         ProductCard,
         ResourceImage,
@@ -237,13 +236,13 @@ export default {
     computed: {
         ...mapState({
             image: state => state.images.item,
-            email: state => state.orders.personalOrder.email,
-            name: state => state.orders.personalOrder.name,
-            width: state => state.orders.personalOrder.width,
-            height: state => state.orders.personalOrder.height,
-            texture: state => state.orders.personalOrder.texture,
+            email: state => state.orders.project.email,
+            name: state => state.orders.project.name,
+            width: state => state.orders.project.width,
+            height: state => state.orders.project.height,
+            texture: state => state.orders.project.texture,
             textures: state => state.textures.items,
-            addedCosts: state => state.orders.personalOrder.addedCosts,
+            addedCosts: state => state.orders.project.addedCosts,
             settings: state => state.settings.entries
         }),
         ...mapGetters('textures', {
@@ -263,24 +262,24 @@ export default {
                     });
                     this.goBack();
                 }
-                this.setPersonalOrderFieldAction({ field: 'texture', value: this.defaultTextureId });
-                this.setPersonalOrderAddedCostsFieldAction({ field: 'imageProcessing', value: this.settings.image_processing });
-                this.setPersonalOrderAddedCostsFieldAction({ field: 'imageSearch', value: this.settings.image_search });
+                this.setProjectFieldAction({ field: 'texture', value: this.defaultTextureId });
+                this.setProjectAddedCostsFieldAction({ field: 'imageProcessing', value: this.settings.image_processing });
+                this.setProjectAddedCostsFieldAction({ field: 'imageSearch', value: this.settings.image_search });
                 this.responseData = true;
             });
     },
     beforeDestroy() {
-        this.clearPersonalOrderFieldsAction();
+        this.clearProjectFieldsAction();
     },
     methods: {
         ...mapActions({
             getTexturesAction: 'textures/getItems',
-            getImageAction: 'images/getItemForPersonalOrder',
-            setPersonalOrderFieldAction: 'orders/setPersonalOrderField',
-            setPersonalOrderAddedCostsFieldAction: 'orders/setPersonalOrderAddedCostsField',
+            getImageAction: 'images/getRawItem',
+            setProjectFieldAction: 'orders/setProjectField',
+            setProjectAddedCostsFieldAction: 'orders/setProjectAddedCostsField',
             addNotificationAction: 'addNotification',
             getSettingsByGroupsAction: 'settings/getItemsByGroups',
-            clearPersonalOrderFieldsAction: 'orders/clearPersonalOrderFields'
+            clearProjectFieldsAction: 'orders/clearProjectFields'
         }),
         goBack () {
             window.history.length > 1 ? this.$router.go(-1) : this.$router.push({ name: 'cms.images' });

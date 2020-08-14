@@ -10,6 +10,8 @@ use App\Services\CartItem\Handlers\GetStoreDetailsDataHandler;
 use App\Services\CartItem\Repositories\ClientCartItemRepository;
 use App\Services\CartItem\Resources\FromCartClient as CartItemResource;
 use App\Services\Image\Repositories\ClientImageRepository;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Arr;
 
 class ClientCartItemService extends ClientBaseResourceService
 {
@@ -79,5 +81,26 @@ class ClientCartItemService extends ClientBaseResourceService
     public function sync(array $itemKeys)
     {
         return CartItemResource::collection($this->repository->getItemsByKeys($itemKeys));
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function getProject(string $key)
+    {
+        try {
+            $keyData = decrypt($key, true);
+        } catch (DecryptException $e) {
+            abort(404);
+        }
+
+        $project =  $this->repository->getWithTrashed($keyData['item_id']);
+
+        if ($project->trashed()) {
+            $project->restore();
+        }
+
+        return new CartItemResource($project);
     }
 }

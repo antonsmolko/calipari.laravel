@@ -7,10 +7,10 @@
                         color="md-info"
                         @click="onRemove" />
 
-        <router-button-link title="Сформировать заказ"
+        <router-button-link title="Сформировать проект"
                             icon="shopping_cart"
                             color="md-warning"
-                            route="cms.store.orders.create"
+                            route="cms.store.projects.create"
                             :params="{ imageId: item.id }"/>
 
         <router-button-link v-if="hasCollection"

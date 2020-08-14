@@ -29,4 +29,15 @@ abstract class ClientBaseResourceRepository
     {
         return $this->model::findOrFail($id);
     }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function getWithTrashed(int $id)
+    {
+        return $this->model::withTrashed()
+            ->where('id', $id)
+            ->firstOrFail();
+    }
 }

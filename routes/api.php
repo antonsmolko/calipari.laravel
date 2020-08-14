@@ -153,26 +153,19 @@ Route::group(['prefix' => 'orders'], function() {
 /** Carts */
 Route::prefix('carts')
     ->group(function() {
-        Route::post('/', 'Client\Cart\CartController@update')
-            ->middleware('jwt.auth');
         Route::post('sync', 'Client\Cart\CartController@sync');
-        Route::post('set-qty', 'Client\Cart\CartController@setQty')
-            ->middleware('jwt.auth');
-//        Route::delete('{id}', 'Client\Cart\CartController@delete')
-//            ->where('id', '[0-9]+')
-//            ->middleware('jwt.auth');
         Route::post('add', 'Client\Cart\CartController@add')
             ->middleware('jwt.auth');
-        Route::post('with-project', 'Client\Cart\CartController@getItemsWithProject');
     });
 
 /** CartItems */
 Route::prefix('cart-items')
     ->group(function() {
         Route::post('sync', 'Client\CartItem\CartItemController@sync');
+        Route::post('get-project', 'Client\CartItem\CartItemController@getProject');
     });
 Route::apiResource('cart-items', 'Client\CartItem\CartItemController')
-    ->except(['index', 'create', 'edit']);
+    ->except(['index', 'create', 'edit', 'show']);
 
 
 /** PAGES */
@@ -267,9 +260,9 @@ Route::prefix('cms')
             Route::get('{id}/dissociate-owner', 'Cms\Image\ImageController@dissociateOwner')
                 ->where('id', '[0-9]+')
                 ->name('images.dissociate-owner');
-            Route::get('{id}/personal-order', 'Cms\Image\ImageController@getItem')
+            Route::get('{id}/get-raw', 'Cms\Image\ImageController@getItem')
                 ->where('id', '[0-9]+')
-                ->name('images.item.personal-order');
+                ->name('images.item.get-raw');
             Route::post('{id}', 'Cms\Image\ImageController@update')
                 ->where('id', '[0-9]+')
                 ->name('images.update');
@@ -493,9 +486,9 @@ Route::prefix('cms')
         });
 
         /** Carts */
-        Route::prefix('carts')
+        Route::prefix('cart-items')
             ->group(function() {
-                Route::post('/', 'Cms\Cart\CartController@store');
+                Route::post('/', 'Cms\CartItem\CartItemController@store');
             });
 
 

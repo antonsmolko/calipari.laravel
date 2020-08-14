@@ -6,6 +6,7 @@ namespace App\Http\Controllers\API\Client\CartItem;
 
 use App\Http\Controllers\API\Client\Base\BaseResourceController;
 use App\Http\Controllers\API\Client\CartItem\Requests\PatchRequest;
+use App\Http\Controllers\API\Client\CartItem\Requests\ProjectRequest;
 use App\Http\Controllers\API\Client\CartItem\Requests\StoreRequest;
 use App\Http\Controllers\API\Client\CartItem\Requests\SyncRequest;
 use App\Services\CartItem\ClientCartItemService;
@@ -57,5 +58,14 @@ class CartItemController extends BaseResourceController
     public function sync(SyncRequest $request): JsonResponse
     {
         return response()->json($this->service->sync($request->items));
+    }
+
+    /**
+     * @param ProjectRequest $request
+     * @return JsonResponse
+     */
+    public function getProject(ProjectRequest $request): JsonResponse
+    {
+        return response()->json($this->service->getProject($request->key));
     }
 }

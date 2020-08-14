@@ -17,7 +17,7 @@
 
 С уважением,<br>
 {{ config('app.name') }}.
-
+@lang('[' . env('CLIENT_DOMAIN') . '](' . env('CLIENT_BASE_URL') . ')')
 
 @slot('subcopy')
 @lang(

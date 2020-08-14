@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\Cms\Cart\Requests;
+namespace App\Http\Controllers\API\Cms\CartItem\Requests;
 
 use App\Http\Requests\FormRequest;
 

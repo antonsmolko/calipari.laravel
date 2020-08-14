@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\API\Client\Cart\Requests;
+namespace App\Http\Controllers\API\Client\CartItem\Requests;
 
 use App\Http\Requests\FormRequest;
 
-class UpdateRequest extends FormRequest
+class ProjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'items' => 'required|array'
+            'key' => 'required|string'
         ];
     }
 }
