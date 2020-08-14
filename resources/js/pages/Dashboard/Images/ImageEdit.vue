@@ -13,6 +13,12 @@
                             <slide-y-down-transition v-show="controlSaveVisibilities && $v.$anyDirty">
                                 <control-button @click="onUpdate"/>
                             </slide-y-down-transition>
+                            <router-button-link
+                                title="Сформировать проект"
+                                icon="shopping_cart"
+                                color="md-warning"
+                                route="cms.store.projects.create"
+                                :params="{ imageId: item.id }"/>
                             <control-button
                                 :disabled="isColorCollectionMainImage"
                                 title="Удалить"
