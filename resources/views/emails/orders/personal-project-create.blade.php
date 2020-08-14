@@ -16,7 +16,7 @@
 Для ознакомления с деталями проекта, Вы можете скачать прикрепленный к письму PDF документ.
 
 С уважением,<br>
-{{ config('app.name') }}.
+{{ config('app.name') }}.<br>
 @lang('[' . env('CLIENT_DOMAIN') . '](' . env('CLIENT_BASE_URL') . ')')
 
 @slot('subcopy')

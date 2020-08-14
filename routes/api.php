@@ -266,10 +266,9 @@ Route::prefix('cms')
             Route::post('{id}', 'Cms\Image\ImageController@update')
                 ->where('id', '[0-9]+')
                 ->name('images.update');
-
-            Route::apiResource('/', 'Cms\Image\ImageController')
-                ->except(['index', 'create', 'edit', 'update']);
         });
+    Route::apiResource('images', 'Cms\Image\ImageController')
+        ->except(['index', 'create', 'edit', 'update']);
 
 
     /** Catalog */

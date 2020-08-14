@@ -15,22 +15,22 @@
 //    return phpinfo();
 //})->name('home');
 
-Route::get('/', function () {
-    $details = [
-        'image_url' => 'https://manager.local.calipari.ru/api/image/pdf-project/86e3b9f461ccf7b247d2985ea22a736eb6ded3cf.jpg',
-        'width_cm' => 378,
-        'height_cm' => 265,
-        'texture_name' => 'Mexico',
-        'stripes_count' => 3,
-        'added_costs' => [
-            'Обработка изображения' => 1500,
-            'Поиск изображения' => 500,
-            'Покупка изображения' => 3000,
-        ],
-        'price' => 15600
-    ];
-    return view('pdf.project-details', ['details' => $details]);
-})->name('home');
+//Route::get('/', function () {
+//    $details = [
+//        'image_url' => 'https://manager.local.calipari.ru/api/image/pdf-project/86e3b9f461ccf7b247d2985ea22a736eb6ded3cf.jpg',
+//        'width_cm' => 378,
+//        'height_cm' => 265,
+//        'texture_name' => 'Mexico',
+//        'stripes_count' => 3,
+//        'added_costs' => [
+//            'Обработка изображения' => 1500,
+//            'Поиск изображения' => 500,
+//            'Покупка изображения' => 3000,
+//        ],
+//        'price' => 15600
+//    ];
+//    return view('pdf.project-details', ['details' => $details]);
+//})->name('home');
 
 //Route::get('/logme', function () {
 //    Log::critical('Critical message in Slack!');

@@ -37,44 +37,48 @@
             <td colspan="4" class="spacer"></td>
         </tr>
         <tr>
-            <td colspan="4" class="title">Спецификации</td>
-        </tr>
-        <tr>
-            <td class="spec-item">Ширина полотна:</td>
-            <td class="spec-item spec-value">{{ $details['width_cm'] }} см</td>
-        </tr>
-        <tr>
-            <td class="spec-item">Высота полотна:</td>
-            <td class="spec-item spec-value">{{ $details['height_cm'] }} см</td>
-        </tr>
-        <tr>
-            <td class="spec-item">Фактура:</td>
-            <td class="spec-item spec-value">{{ $details['texture_name'] }}</td>
-        </tr>
-        <tr>
-            <td class="spec-item">Количество полос:</td>
-            <td class="spec-item spec-value">{{ $details['stripes_count'] }}</td>
-        </tr>
-        <tr>
-            <td colspan="4" class="spacer"></td>
-        </tr>
-        <tr>
-            <td colspan="4" class="title">Цена</td>
-        </tr>
-        @if(!empty($details['added_costs']))
-        @foreach($details['added_costs'] as $title => $value)
-        <tr>
-            <td class="spec-item">{{ $title }}:</td>
-            <td class="spec-item spec-value">{{ number_format($value, 0, '.', ' ') }} ₽</td>
-        </tr>
-        @endforeach
-        @endif
-        <tr>
-            <td colspan="4" class="spacer-small"></td>
-        </tr>
-        <tr>
-            <td class="spec-item">Общая стоимость, 1 шт:</td>
-            <td class="spec-item spec-value">{{ number_format($details['price'], 0, '.', ' ') }} ₽</td>
+            <td colspan="2" valign="top">
+                <table width="80%" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td class="title">Спецификации</td>
+                    </tr>
+                    <tr>
+                        <td class="spec-item">Ширина полотна:</td>
+                        <td class="spec-item spec-value">{{ $details['width_cm'] }} см</td>
+                    </tr>
+                    <tr>
+                        <td class="spec-item">Высота полотна:</td>
+                        <td class="spec-item spec-value">{{ $details['height_cm'] }} см</td>
+                    </tr>
+                    <tr>
+                        <td class="spec-item">Фактура:</td>
+                        <td class="spec-item spec-value">{{ $details['texture_name'] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="spec-item">Количество полос:</td>
+                        <td class="spec-item spec-value">{{ $details['stripes_count'] }}</td>
+                    </tr>
+                </table>
+            </td>
+            <td colspan="2" valign="top">
+                <table width="80%" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td class="title">Цена</td>
+                    </tr>
+                    @if(!empty($details['added_costs']))
+                        @foreach($details['added_costs'] as $title => $value)
+                            <tr>
+                                <td class="spec-item">{{ $title }}:</td>
+                                <td class="spec-item spec-value">{{ number_format($value, 0, '.', ' ') }} ₽</td>
+                            </tr>
+                        @endforeach
+                    @endif
+                    <tr>
+                        <td class="spec-item">Общая стоимость, 1 шт:</td>
+                        <td class="spec-item spec-value">{{ number_format($details['price'], 0, '.', ' ') }} ₽</td>
+                    </tr>
+                </table>
+            </td>
         </tr>
         <tr>
             <td colspan="4" class="spacer"></td>
