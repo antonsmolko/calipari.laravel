@@ -20,7 +20,7 @@ class CmsOrderItem extends JsonResource
             'width' => $this->width_cm,
             'height' => $this->height_cm,
             'texture' => $this->texture->name,
-            'filter' => $this->filter_details,
+            'filter' => getFilterString($this->getFilter()),
             'qty' => $this->qty,
             'price' => $this->price,
             'added_costs' => $this->getAddedCosts(),

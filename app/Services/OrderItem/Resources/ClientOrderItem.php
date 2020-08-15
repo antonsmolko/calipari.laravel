@@ -23,6 +23,7 @@ class ClientOrderItem extends JsonResource
             'filter' => $this->filter_details,
             'qty' => $this->qty,
             'price' => $this->price,
+            'added_costs' => $this->getAddedCosts(),
             'image_path' => config('settings.base_image_url') .
                 config('settings.order_item_full_url') .
                 getOrderItemPath($this),
