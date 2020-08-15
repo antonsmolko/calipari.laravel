@@ -59,7 +59,7 @@ class StoreHandler
         $delivery = $this->getOrderDeliveryHandler->handle(json_decode($requestData['delivery'], true));
         $customer = $this->getOrderCustomerHandler->handle(json_decode($requestData['customer'], true));
         list($items, $itemsDetails) = $this->getOrderItemsHandler->handle($requestData['items']);
-        $price = $this->getOrderPriceHandler->handle($items, $delivery['price']);
+        $price = $this->getOrderPriceHandler->handle($itemsDetails, $delivery['price']);
 
         $orderData = [
             'number' => $number,

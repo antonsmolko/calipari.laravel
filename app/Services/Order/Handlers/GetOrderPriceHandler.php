@@ -16,7 +16,7 @@ class GetOrderPriceHandler
     public function handle(Collection $orderItems, int $deliveryPrice): int
     {
         return $orderItems->reduce(function ($carry, $item) {
-            $carry += $item->price * $item->qty + getAddedCostsAmount(json_decode(json_encode($item), true));
+            $carry += $item['price'] * $item['qty'] + getAddedCostsAmount(json_decode(json_encode($item), true));
 
             return $carry;
         }, $deliveryPrice);
