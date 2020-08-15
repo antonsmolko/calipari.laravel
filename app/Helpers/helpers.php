@@ -299,3 +299,46 @@ if (! function_exists('getItemPrice')) {
         return (int) round($width * $height / 1e6 * $texturePrice, 0) * 100;
     }
 }
+
+if (! function_exists('getFilterString')) {
+    /**
+     * @param array $filter
+     * @return string
+     */
+    function getFilterString(array $filter): string
+    {
+        $activeKeys = array_keys(array_filter($filter, fn ($item) => $item));
+        $filterSet = config('settings.filter_set');
+
+        $filtersMap = array_reduce($activeKeys, function ($carry, $key) use ($filterSet, $filter) {
+            if (!Arr::exists($filterSet, $key)) {
+                return $carry;
+            }
+
+            if (is_array($filterSet[$key])) {
+                if (in_array($filter[$key], $filterSet[$key])) {
+                    $carry[] = $filterSet[$filter[$key]];
+                }
+            } else {
+                $carry[] = $filterSet[$key];
+            }
+
+            return $carry;
+        }, []);
+
+        return implode(', ', $filtersMap);
+    }
+}
+
+if (! function_exists('getAddedCostsAmount')) {
+    /**
+     * @param array $cartItemDetails
+     * @return float|int
+     */
+    function getAddedCostsAmount(array $cartItemDetails)
+    {
+        return !empty($cartItemDetails['added_costs'])
+            ? array_sum($cartItemDetails['added_costs'])
+            : 0;
+    }
+}

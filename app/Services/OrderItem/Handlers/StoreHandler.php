@@ -27,6 +27,9 @@ class StoreHandler
     public function handle(array $storeData): OrderItem
     {
         $storeData['filter'] = json_encode($storeData['filter'], true);
+        if (!empty($storeData['added_costs'])) {
+            $storeData['added_costs'] = json_encode($storeData['added_costs'], true);
+        }
 
         return $this->repository->store($storeData);
     }

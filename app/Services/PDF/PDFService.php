@@ -74,6 +74,7 @@ class PDFService
 
         if (!empty($item['added_costs'])) {
             $details['added_costs'] = $item['added_costs'];
+            $details['price'] += array_sum($details['added_costs']);
         }
 
         /** @var \Barryvdh\DomPDF\PDF $pdf */

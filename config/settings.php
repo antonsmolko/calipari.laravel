@@ -60,4 +60,11 @@ return [
 //        'roles' => 's,o',
 //        'permissions' => 's'
 //    ]
+    'filter_set' => [
+        'flipH' => 'Отразить гор.',
+        'flipV' => 'Отразить верт.',
+        'colorize' => ['grayscale', 'sepia'],
+        'grayscale' => 'ЧБ',
+        'sepia' => 'Сепия'
+    ]
 ];

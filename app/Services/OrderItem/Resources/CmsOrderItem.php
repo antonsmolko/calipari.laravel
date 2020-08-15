@@ -23,6 +23,8 @@ class CmsOrderItem extends JsonResource
             'filter' => $this->filter_details,
             'qty' => $this->qty,
             'price' => $this->price,
+            'added_costs' => $this->getAddedCosts(),
+            'added_costs_amount' => $this->getAddedCostsAmount(),
             'thumb' => config('settings.base_image_url') .
                 config('settings.order_item_thumb_url') .
                 getOrderItemPath($this)

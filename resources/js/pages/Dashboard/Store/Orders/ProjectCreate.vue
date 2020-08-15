@@ -320,7 +320,7 @@ export default {
         },
         getAddedCostsJson () {
             const addedCostsResult = this.selectedAddedCosts.reduce((acc, item) => {
-                acc[this.$config.addedCosts[item]] = this.addedCosts[item];
+                acc[this.$config.addedCosts[item]] = Number(this.addedCosts[item]);
 
                 return acc;
             }, {});

@@ -49,6 +49,15 @@ class ClientCartItemRepository extends ClientBaseResourceRepository
     }
 
     /**
+     * @param CartItem $item
+     * @return bool|null
+     */
+    public function forceDelete(CartItem $item)
+    {
+        return $item->forceDelete();
+    }
+
+    /**
      * @param array $keys
      * @return mixed
      */

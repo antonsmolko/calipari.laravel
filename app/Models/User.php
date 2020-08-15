@@ -64,6 +64,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasOne(UserDetail::class);
     }
 
+
+
     /**
      * @return mixed
      */
@@ -128,6 +130,13 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
      */
     public function cart() {
         return $this->hasOne('App\Models\Cart');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function cartItems() {
+        return $this->hasManyThrough('App\Models\CartItem', 'App\Models\Cart');
     }
 
     /**

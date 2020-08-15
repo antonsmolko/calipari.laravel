@@ -5,6 +5,7 @@ namespace App\Services\Order\Handlers;
 
 
 use App\Models\Order;
+use App\Services\CartItem\Repositories\ClientCartItemRepository;
 use App\Services\Order\Repositories\ClientOrderRepository;
 use App\Services\OrderItem\OrderItemService;
 use Illuminate\Support\Arr;
@@ -17,6 +18,7 @@ class StoreHandler
     private GetOrderCustomerHandler $getOrderCustomerHandler;
     private GetOrderPriceHandler $getOrderPriceHandler;
     private OrderItemService $itemService;
+    private ClientCartItemRepository $cartItemRepository;
 
     /**
      * StoreHandler constructor.
@@ -26,6 +28,7 @@ class StoreHandler
      * @param GetOrderCustomerHandler $getOrderCustomerHandler
      * @param GetOrderPriceHandler $getOrderPriceHandler
      * @param OrderItemService $itemService
+     * @param ClientCartItemRepository $cartItemRepository
      */
     public function __construct(
         ClientOrderRepository $repository,
@@ -33,7 +36,8 @@ class StoreHandler
         GetOrderDeliveryHandler $getOrderDeliveryHandler,
         GetOrderCustomerHandler $getOrderCustomerHandler,
         GetOrderPriceHandler $getOrderPriceHandler,
-        OrderItemService $itemService
+        OrderItemService $itemService,
+        ClientCartItemRepository $cartItemRepository
     )
     {
         $this->repository = $repository;
@@ -42,6 +46,7 @@ class StoreHandler
         $this->getOrderCustomerHandler = $getOrderCustomerHandler;
         $this->getOrderPriceHandler = $getOrderPriceHandler;
         $this->itemService = $itemService;
+        $this->cartItemRepository = $cartItemRepository;
     }
 
     /**
@@ -53,7 +58,7 @@ class StoreHandler
         $number = $this->getOrderNumber();
         $delivery = $this->getOrderDeliveryHandler->handle(json_decode($requestData['delivery'], true));
         $customer = $this->getOrderCustomerHandler->handle(json_decode($requestData['customer'], true));
-        $items = $this->getOrderItemsHandler->handle(json_decode($requestData['items'], true));
+        list($items, $itemsDetails) = $this->getOrderItemsHandler->handle($requestData['items']);
         $price = $this->getOrderPriceHandler->handle($items, $delivery['price']);
 
         $orderData = [
@@ -68,10 +73,12 @@ class StoreHandler
 
         $order = $this->repository->store($orderData);
 
-        array_walk($items, function ($item) use ($order) {
-            $storeData = Arr::collapse([$item, ['order_id' => $order->id]]);
+        $itemsDetails->each(function ($itemDetails) use ($order) {
+            $storeData = Arr::collapse([$itemDetails, ['order_id' => $order->id]]);
             $this->itemService->store($storeData);
         });
+
+        $items->each(fn ($item) => $this->cartItemRepository->forceDelete($item));
 
         return $order;
     }
@@ -83,11 +90,11 @@ class StoreHandler
     {
         $length = (int) config('settings.order_number_length');
         $randLength = (int) ('1e' . $length) - 1;
-        $order = true;
+        $checkExistsNumber = true;
         $number = null;
-        while ($order) {
+        while ($checkExistsNumber) {
             $number = substr(str_pad(sprintf('%u',crc32(microtime())), $length, rand(0, $randLength)), -$length);
-            $order = !!Order::where('number', $number)->first();
+            $checkExistsNumber = Order::where('number', $number)->exists();
         }
 
         return $number;

@@ -10,7 +10,6 @@ use App\Notifications\ReceivedAnOrder;
 use App\Services\Base\Resource\ClientBaseResourceService;
 use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Card\CardService;
-use App\Services\Cart\ClientCartService;
 use App\Services\Order\Handlers\CreatePaymentHandler;
 use App\Services\Order\Handlers\StoreHandler;
 use App\Services\Order\Repositories\ClientOrderRepository;
@@ -24,7 +23,6 @@ use Illuminate\Support\Facades\Notification;
 class ClientOrderService extends ClientBaseResourceService
 {
     private StoreHandler $storeHandler;
-    private ClientCartService $cartService;
     private OrderStatusRepository $orderStatusRepository;
     private PaymentService $paymentService;
     private CreatePaymentHandler $createPaymentHandler;
@@ -39,7 +37,6 @@ class ClientOrderService extends ClientBaseResourceService
      * @param ClientUserService $userService
      * @param CacheKeyManager $cacheKeyManager
      * @param StoreHandler $storeHandler
-     * @param ClientCartService $cartService
      * @param PaymentService $paymentService
      * @param CreatePaymentHandler $createPaymentHandler
      * @param GetPaymentResponseHandler $getPaymentResponseHandler
@@ -51,7 +48,6 @@ class ClientOrderService extends ClientBaseResourceService
         ClientUserService $userService,
         CacheKeyManager $cacheKeyManager,
         StoreHandler $storeHandler,
-        ClientCartService $cartService,
         PaymentService $paymentService,
         CreatePaymentHandler $createPaymentHandler,
         GetPaymentResponseHandler $getPaymentResponseHandler,
@@ -60,7 +56,6 @@ class ClientOrderService extends ClientBaseResourceService
     {
         parent::__construct($repository, $cacheKeyManager);
         $this->storeHandler = $storeHandler;
-        $this->cartService = $cartService;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->paymentService = $paymentService;
         $this->createPaymentHandler = $createPaymentHandler;
@@ -76,10 +71,6 @@ class ClientOrderService extends ClientBaseResourceService
     public function store(array $requestData): int
     {
         $order = $this->storeHandler->handle($requestData);
-
-        if (auth()->user()) {
-            $this->cartService->update([]);
-        }
 
         event(new OrderCreated($order));
 

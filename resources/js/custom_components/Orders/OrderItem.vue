@@ -19,13 +19,27 @@
                     <span class="card-title">Фактура:</span>
                     <span class="md-body-2">{{ item.texture }}</span>
                 </div>
-                <div class="md-order-item__details-item">
+                <div class="md-order-item__details-item" v-if="item.filter">
                     <span class="card-title">Эффекты:</span>
                     <span class="md-body-2">{{ item.filter }}</span>
                 </div>
                 <div class="md-order-item__details-item">
                     <span class="card-title">Количество:</span>
                     <span class="md-body-2">{{ item.qty }}</span>
+                </div>
+                <template v-if="item.added_costs_amount">
+                    <div class="space-10"></div>
+                    <div class="md-order-item__details-item"
+                         v-for="([key, value], index) in addedCostsEntries"
+                         :key="index">
+                        <span class="card-title">{{ key }}:</span>
+                        <span class="md-body-2">{{ getPrice(value) }} </span>
+                    </div>
+                </template>
+
+                <div class="md-order-item__details-item">
+                    <span class="card-title">Цена за ед.:</span>
+                    <span class="md-body-2">{{ getPrice(item.price) }}</span>
                 </div>
             </div>
             <template slot="footer">
@@ -46,6 +60,7 @@
 </template>
 
 <script>
+import toPairs from 'lodash/toPairs';
 import ProductCard from "@/components/Cards/ProductCard";
 import { getFormatPrice } from "@/helpers";
 
@@ -60,7 +75,16 @@ export default {
     },
     computed: {
         formatPrice () {
-            return getFormatPrice(this.item.price)
+            const totalItemPrice = this.item.price * this.item.qty + this.item.added_costs_amount;
+            return getFormatPrice(totalItemPrice);
+        },
+        addedCostsEntries () {
+            return toPairs(this.item.added_costs);
+        }
+    },
+    methods: {
+        getPrice (amount) {
+            return getFormatPrice(amount);
         }
     }
 }

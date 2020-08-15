@@ -44,4 +44,20 @@ class OrderItem extends Model
     {
         return json_decode($this->filter, true);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAddedCosts()
+    {
+        return $this->added_costs ? json_decode($this->added_costs, true) : [];
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getAddedCostsAmount()
+    {
+        return array_sum($this->getAddedCosts());
+    }
 }
