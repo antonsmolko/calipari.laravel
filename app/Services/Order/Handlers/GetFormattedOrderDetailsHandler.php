@@ -5,10 +5,9 @@ namespace App\Services\Order\Handlers;
 
 
 use App\Models\Order;
-use App\Services\OrderItem\Resources\MailOrderItem as MailOrderItemResource;
 use Illuminate\Support\Collection;
 
-class GetMailFormatOrderHandler
+class GetFormattedOrderDetailsHandler
 {
     /**
      * @param Order $order
@@ -61,13 +60,16 @@ class GetMailFormatOrderHandler
     {
         return $items->map(fn ($item) => [
             'article' => getImageArticle($item->image_id),
-            'dimensions' => $item->width_cm . ' см × ' . $item->height_cm . ' см',
+            'dimensions' => 'Ш: ' . $item->width_cm . ' см × В: ' . $item->height_cm . ' см',
             'texture' => $item->texture->name,
             'filter' => $item->filter_details,
             'qty' => $item->qty,
             'price' => $item->price,
-            'thumb_path' => config('settings.base_image_url') .
-                config('settings.mail_order_item_thumb_url') .
+            'stripes_count' => $item->texture->seamless ? 1 : ceil($item->width_cm / $item->texture->width),
+            'added_costs' => $item->getAddedCosts(),
+            'added_costs_amount' => $item->getAddedCostsAmount(),
+            'image_url' => config('settings.base_image_url') .
+                config('settings.pdf_label_order_item_image_url') .
                 getOrderItemPath($item)
         ]);
     }

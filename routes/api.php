@@ -480,16 +480,26 @@ Route::prefix('cms')
                     . \App\Models\Order::COMPLETED_STATUS . '|'
                     . \App\Models\Order::CANCELED_STATUS . '|'
                     . \App\Models\Order::REFUNDED_STATUS . '|)$');
+            Route::get('{id}/pdf-details', 'Cms\Order\OrderController@getPdfItemDetails')
+                ->where('id', '[0-9]+');
             Route::delete('{id}', 'Cms\Order\OrderController@destroy')
                 ->middleware('role:super_admin|owner');
         });
+
+        /** OrderItems */
+        Route::prefix('order-items')
+            ->group(function () {
+                Route::get('{id}/pdf-label', 'Cms\OrderItem\OrderItemController@getPdfLabel')
+                    ->where('id', '[0-9]+');
+                Route::get('{id}/pdf-layout', 'Cms\OrderItem\OrderItemController@getPdfLayout')
+                    ->where('id', '[0-9]+');
+            });
 
         /** Carts */
         Route::prefix('cart-items')
             ->group(function() {
                 Route::post('/', 'Cms\CartItem\CartItemController@store');
             });
-
 
         /** Order Statuses */
 

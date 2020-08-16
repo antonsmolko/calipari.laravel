@@ -99,4 +99,13 @@ class OrderController extends BaseResourceController
     {
         return response()->json($this->service->makeRefund($id, $request->all()));
     }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function getPdfItemDetails(int $id)
+    {
+        return $this->service->getPdfItemDetails($id);
+    }
 }

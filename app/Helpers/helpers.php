@@ -342,3 +342,16 @@ if (! function_exists('getAddedCostsAmount')) {
             : 0;
     }
 }
+
+if (! function_exists('getStripesCount')) {
+    /**
+     * @param int $projectWidth
+     * @param int $textureWidth
+     * @param bool $seamless
+     * @return int
+     */
+    function getStripesCount(int $projectWidth, int $textureWidth, bool $seamless = false): int
+    {
+        return $seamless ? 1 : ceil($projectWidth / $textureWidth);
+    }
+}

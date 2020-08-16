@@ -7,10 +7,13 @@ namespace App\Http\Controllers\API\Cms\CartItem;
 use App\Http\Controllers\API\Cms\Base\BaseResourceController;
 use App\Http\Controllers\API\Cms\CartItem\Requests\CreateRequest;
 use App\Services\CartItem\CmsCartItemService;
-use Illuminate\Http\JsonResponse;
 
 class CartItemController extends BaseResourceController
 {
+    /**
+     * CartItemController constructor.
+     * @param CmsCartItemService $service
+     */
     public function __construct(CmsCartItemService $service)
     {
         parent::__construct($service);
@@ -18,10 +21,10 @@ class CartItemController extends BaseResourceController
 
     /**
      * @param CreateRequest $request
-     * @return JsonResponse
+     * @return mixed
      */
-    public function store(CreateRequest $request): JsonResponse
+    public function store(CreateRequest $request)
     {
-        return response()->json($this->service->store($request->all()));
+        return $this->service->store($request->all());
     }
 }

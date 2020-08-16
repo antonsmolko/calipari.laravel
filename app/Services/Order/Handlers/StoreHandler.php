@@ -78,6 +78,7 @@ class StoreHandler
             $this->itemService->store($storeData);
         });
 
+
         $items->each(fn ($item) => $this->cartItemRepository->forceDelete($item));
 
         return $order;

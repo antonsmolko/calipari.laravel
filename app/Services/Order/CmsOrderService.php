@@ -13,11 +13,12 @@ use App\Services\Cache\Key;
 use App\Services\Cache\Tag;
 use App\Services\Cache\TTL;
 use App\Services\Cache\KeyManager as CacheKeyManager;
-use App\Services\Order\Handlers\GetMailFormatOrderHandler;
+use App\Services\Order\Handlers\GetFormattedOrderDetailsHandler;
 use App\Services\Order\Handlers\RefundHandler;
 use App\Services\Order\Repositories\CmsOrderRepository;
 use App\Services\OrderStatus\Repositories\OrderStatusRepository;
 use App\Services\Payment\PaymentService;
+use App\Services\Pdf\PdfService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use App\Services\Order\Resources\CmsOrder as OrderResource;
@@ -25,36 +26,40 @@ use App\Services\Order\Resources\CmsOrderFromList as OrderFromListResource;
 
 class CmsOrderService extends CmsBaseResourceService
 {
-    private GetMailFormatOrderHandler $getMailFormatOrderHandler;
+    private GetFormattedOrderDetailsHandler $getFormattedOrderDetailsHandler;
     private RefundHandler $refundHandler;
     private PaymentService $paymentService;
     private OrderStatusRepository $orderStatusRepository;
+    private PdfService $pdfService;
 
     /**
      * CmsOrderService constructor.
      * @param CmsOrderRepository $repository
      * @param ClearCacheHandler $clearCacheByTagHandler
-     * @param GetMailFormatOrderHandler $getMailFormatOrderHandler
+     * @param GetFormattedOrderDetailsHandler $getFormattedOrderDetailsHandler
      * @param RefundHandler $refundHandler
      * @param PaymentService $paymentService
      * @param CacheKeyManager $cacheKeyManager
      * @param OrderStatusRepository $orderStatusRepository
+     * @param PdfService $pdfService
      */
     public function __construct(
         CmsOrderRepository $repository,
         ClearCacheHandler $clearCacheByTagHandler,
-        GetMailFormatOrderHandler $getMailFormatOrderHandler,
+        GetFormattedOrderDetailsHandler $getFormattedOrderDetailsHandler,
         RefundHandler $refundHandler,
         PaymentService $paymentService,
         CacheKeyManager $cacheKeyManager,
-        OrderStatusRepository $orderStatusRepository
+        OrderStatusRepository $orderStatusRepository,
+        PdfService $pdfService
     )
     {
         parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
-        $this->getMailFormatOrderHandler = $getMailFormatOrderHandler;
+        $this->getFormattedOrderDetailsHandler = $getFormattedOrderDetailsHandler;
         $this->refundHandler = $refundHandler;
         $this->paymentService = $paymentService;
         $this->orderStatusRepository = $orderStatusRepository;
+        $this->pdfService = $pdfService;
         $this->cacheTag = Tag::ORDERS_TAG;
     }
 
@@ -188,11 +193,16 @@ class CmsOrderService extends CmsBaseResourceService
      */
     public function sendMail($mailClass, Order $order)
     {
-        $orderData = $this->getMailFormatOrderHandler->handle($order);
+        $orderData = $this->getFormattedOrderDetailsHandler->handle($order);
 
         $email = $order->user ? $order->user->email : $order->getCustomerField('email');
-        $mail = app()->makeWith($mailClass, ['order' => $orderData]);
-        Mail::to($email)->queue($mail);
+
+        $mail = app()->makeWith($mailClass, [
+            'order' => $orderData,
+            'pdf' => $this->pdfService->getOrderDetails($orderData)
+        ]);
+
+        Mail::to($email)->send($mail);
     }
 
     /**
@@ -265,5 +275,21 @@ class CmsOrderService extends CmsBaseResourceService
                 'customer' => json_encode($customer, true)
             ]);
         });
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getPdfItemDetails(int $id)
+    {
+        $order = $this->repository->getItem($id);
+        $orderDetails = $this->getFormattedOrderDetailsHandler->handle($order);
+
+        return $this->pdfService->getDownloadResponse(
+            $orderDetails,
+            'order-details',
+            $order->number
+        );
     }
 }

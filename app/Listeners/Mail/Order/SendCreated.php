@@ -28,7 +28,17 @@ class SendCreated implements ShouldQueue
      * @param  OrderCreated $event
      * @return void
      */
-    public function handle(OrderCreated $event)
+//    public function handle(OrderCreated $event)
+//    {
+//        $this->orderSevice->sendMail(\App\Mail\OrderInProcess::class, $event->order);
+//    }
+
+    /**
+     * * Determine whether the listener should be queued.
+     *
+     * @param OrderCreated $event
+     */
+    public function shouldQueue(OrderCreated $event)
     {
         $this->orderSevice->sendMail(\App\Mail\OrderInProcess::class, $event->order);
     }

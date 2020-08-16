@@ -31,6 +31,8 @@ class StoreRequest extends FormRequest
             'filter' => 'bail|required',
             'x' => 'bail|required|integer',
             'y' => 'bail|required|integer',
+            'width_px' => 'bail|required|integer',
+            'height_px' => 'bail|required|integer',
             'texture_id' => 'bail|required|integer|exists:textures,id'
         ];
     }

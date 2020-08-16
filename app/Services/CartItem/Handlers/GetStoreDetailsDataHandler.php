@@ -38,8 +38,8 @@ class GetStoreDetailsDataHandler
             'height_cm' => $projectData['height_cm'],
             'x' => $projectData['x'],
             'y' => $projectData['y'],
-            'width_px' => $image->width,
-            'height_px' => $image->height,
+            'width_px' => $projectData['width_px'],
+            'height_px' => $projectData['height_px'],
             'filter' => $projectData['filter'],
             'texture_id' => $projectData['texture_id'],
             'qty' => 1

@@ -15,6 +15,9 @@
                             color="md-warning"
                             route="cms.store.orders.order.refund"
                             :params="{ id }" />
+                        <md-button class="md-success" @click="downloadDetails">
+                            <md-icon>get_app</md-icon> Детализация
+                        </md-button>
                         <control-button
                             v-if="authCheck('order-delete')"
                             title="Удалить"
@@ -26,7 +29,12 @@
             </md-card>
         </div>
         <div class="md-layout-item md-xsmall-size-100 md-medium-size-50 md-large-size-33 md-xlarge-size-25">
-            <order-item v-for="item in order.items" :key="item.id" :item="item" />
+            <order-item
+                v-for="item in order.items"
+                :key="item.id"
+                :item="item"
+                @downloadLabel="downloadLabel"
+                @downloadLayout="downloadLayout"/>
         </div>
         <div class="md-layout-item md-xsmall-size-100 md-medium-size-50 md-large-size-66 md-xlarge-size-75">
             <md-card>
@@ -224,7 +232,10 @@ export default {
         ...mapActions({
             getStatusesAction: 'orderStatuses/getItems',
             getItemAction: 'orders/getItem',
-            changeStatusAction: 'orders/changeStatus'
+            changeStatusAction: 'orders/changeStatus',
+            downloadPdfLabelAction: 'orders/downloadPdfLabel',
+            downloadPdfLayoutAction: 'orders/downloadPdfLayout',
+            downloadPdfDetailsAction: 'orders/downloadPdfDetails',
         }),
         onUpdate() {
             return this.update({
@@ -294,6 +305,18 @@ export default {
         },
         getArticle (imageId) {
             return getArticle(imageId);
+        },
+        downloadLabel (itemId) {
+            const fileName = `order-label-${this.order.number}-${itemId}.pdf`;
+            this.downloadPdfLabelAction({ itemId, fileName });
+        },
+        downloadLayout (itemId) {
+            const fileName = `order-layout-${this.order.number}-${itemId}.pdf`;
+            this.downloadPdfLayoutAction({ itemId, fileName });
+        },
+        downloadDetails () {
+            const fileName = `order-details-${this.order.number}.pdf`;
+            this.downloadPdfDetailsAction({ id: this.id, fileName });
         }
     }
 }

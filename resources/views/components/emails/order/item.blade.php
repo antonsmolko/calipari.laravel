@@ -12,7 +12,7 @@
                 <table>
                     <tr>
                         <th>
-                            <img class="small-float-center" src="{{ $item['thumb_path'] }}" width="240" alt="">
+                            <img class="small-float-center" src="{{ $item['image_url'] }}" width="240" alt="">
                         </th>
                         <th class="show-for-large" width="12px"></th>
                     </tr>

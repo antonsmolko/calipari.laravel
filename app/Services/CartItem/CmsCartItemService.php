@@ -7,15 +7,17 @@ namespace App\Services\CartItem;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
 use App\Services\Cache\KeyManager as CacheKeyManager;
+use App\Services\CartItem\Handlers\GetPdfDetailsHandler;
 use App\Services\CartItem\Handlers\StoreProjectHandler;
 use App\Services\CartItem\Repositories\CmsCartItemRepository;
-use App\Services\PDF\PDFService;
+use App\Services\Pdf\PdfService;
 use Illuminate\Support\Facades\Mail;
 
 class CmsCartItemService extends CmsBaseResourceService
 {
     private StoreProjectHandler $storeProjectHandler;
-    private PDFService $PDFService;
+    private PdfService $pdfService;
+    private GetPdfDetailsHandler $getPdfDetailsHandler;
 
     /**
      * CmsCartItemService constructor.
@@ -23,36 +25,41 @@ class CmsCartItemService extends CmsBaseResourceService
      * @param ClearCacheHandler $clearCacheHandler
      * @param CacheKeyManager $cacheKeyManager
      * @param StoreProjectHandler $storeProjectHandler
-     * @param PDFService $PDFService
+     * @param PdfService $pdfService
+     * @param GetPdfDetailsHandler $getPdfDetailsHandler
      */
     public function __construct(
         CmsCartItemRepository $repository,
         ClearCacheHandler $clearCacheHandler,
         CacheKeyManager $cacheKeyManager,
         StoreProjectHandler $storeProjectHandler,
-        PDFService $PDFService)
+        PdfService $pdfService,
+        GetPdfDetailsHandler $getPdfDetailsHandler)
     {
         parent::__construct($repository, $clearCacheHandler, $cacheKeyManager);
         $this->storeProjectHandler = $storeProjectHandler;
-        $this->PDFService = $PDFService;
+        $this->pdfService = $pdfService;
+        $this->getPdfDetailsHandler = $getPdfDetailsHandler;
     }
 
     /**
      * @param array $storeData
-     * @return array|mixed
+     * @return \Illuminate\Http\Response|mixed
      */
     public function store(array $storeData)
     {
         $item = $this->storeProjectHandler->handle($storeData);
-        $pdf = $this->PDFService->getPDFProjectDetails($item->getDetails());
+        $details = $this->getPdfDetailsHandler->handle($item->getDetails());
+
+        $pdf = $this->pdfService->getProjectDetails($details);
 
         $key = encrypt(['item_id' => $item->id, 'project_id' => $storeData['id']], true);
-        $data = ['number' => $storeData['id'], 'name' => $storeData['name'], 'key' => $key];
+        $mailContent = ['number' => $storeData['id'], 'name' => $storeData['name'], 'key' => $key];
         $fileName = 'project-details-' . $storeData['id'] . '.pdf';
 
         Mail::to($storeData['email'])
-            ->send(new \App\Mail\PersonalProjectCreate($data, $pdf->output(), $fileName));
+            ->send(new \App\Mail\PersonalProjectCreate($mailContent, $pdf->output(), $fileName));
 
-        return $data;
+        return $this->pdfService->getDownloadResponse($details, 'project', $storeData['id']);
     }
 }

@@ -47,10 +47,10 @@
                     <div class="price">
                         <h3>{{ formatPrice }}</h3>
                     </div>
-                    <md-button class="md-success" :href="`/pdf/label/order-item/${item.id}`">
+                    <md-button class="md-success" @click="downloadLabel">
                         <md-icon>get_app</md-icon> Этикетка
                     </md-button>
-                    <md-button class="md-success" :href="`/pdf/layout/order-item/${item.id}`">
+                    <md-button class="md-success" @click="downloadLayout">
                         <md-icon>get_app</md-icon> Макет
                     </md-button>
                 </div>
@@ -83,6 +83,12 @@ export default {
         }
     },
     methods: {
+        downloadLabel () {
+          this.$emit('downloadLabel', this.item.id)
+        },
+        downloadLayout () {
+            this.$emit('downloadLayout', this.item.id)
+        },
         getPrice (amount) {
             return getFormatPrice(amount);
         }

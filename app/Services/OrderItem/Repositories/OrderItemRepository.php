@@ -27,10 +27,17 @@ class OrderItemRepository extends ClientBaseResourceRepository
         return $this->model::create($storeData);
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     */
     public function getItemFromPDFLabel(int $id)
     {
         return $this->model::where('id', $id)
-            ->with('texture:id,name,width,seamless')
+            ->with([
+                'texture:id,name,width,seamless',
+                'order:id,number'
+            ])
             ->firstOrFail();
     }
 }

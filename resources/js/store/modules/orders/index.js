@@ -1,4 +1,4 @@
-import { axiosAction } from "../../mixins/actions";
+import { axiosAction, axiosDownload } from "../../mixins/actions";
 
 const state = {
     item: {},
@@ -87,6 +87,18 @@ const actions = {
     createCartItem: ({ commit }, data) => axiosAction('post', commit, {
         url: '/store/cart-items',
         data
+    }),
+    downloadPdfLabel: ({ commit }, { itemId, fileName }) => axiosDownload(commit, {
+        url: `/store/order-items/${itemId}/pdf-label`,
+        fileName
+    }),
+    downloadPdfLayout: ({ commit }, { itemId, fileName }) => axiosDownload(commit, {
+        url: `/store/order-items/${itemId}/pdf-layout`,
+        fileName
+    }),
+    downloadPdfDetails: ({ commit }, { id, fileName }) => axiosDownload(commit, {
+        url: `/store/orders/${id}/pdf-details`,
+        fileName
     }),
     setItemField ({ commit }, payload) {
         commit('SET_ITEM_FIELD', payload);
