@@ -23,7 +23,11 @@ class ImageController extends Controller
         $this->service = $service;
     }
 
-    public function getItems(GetRequest $request)
+    /**
+     * @param GetRequest $request
+     * @return JsonResponse
+     */
+    public function getItems(GetRequest $request): JsonResponse
     {
         return response()->json($this->service->getItems($request));
     }

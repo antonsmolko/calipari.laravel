@@ -175,9 +175,6 @@ export default {
 }
 </script>
 <style>
-.md-progress-bar__container {
-    height: 4px;
-}
 .md-duplicate-trash {
     font-size: 16px !important;
     margin: 0;

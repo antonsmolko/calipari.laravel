@@ -60,6 +60,6 @@ class CmsCartItemService extends CmsBaseResourceService
         Mail::to($storeData['email'])
             ->send(new \App\Mail\PersonalProjectCreate($mailContent, $pdf->output(), $fileName));
 
-        return $this->pdfService->getDownloadResponse($details, 'project', $storeData['id']);
+        return $this->pdfService->getDownloadResponse($details, 'project-details', $storeData['id']);
     }
 }

@@ -7,10 +7,11 @@ export const axiosAction = (method, commit, { url, data = null, thenContent = nu
 
     return axios[method](fullUrl, data, options)
         .then((response) => {
+            commit('CLEAR_ERRORS', null, { root: true });
+
             if (thenContent) {
                 return thenContent(response);
             }
-            commit('CLEAR_ERRORS', null, { root: true });
         })
         .catch(error => {
             commit('UPDATE_ERRORS', error.response, { root: true });
@@ -28,10 +29,11 @@ export const axiosPatch = ({ commit, data, url, thenContent, method = 'PATCH' })
         headers: { Authorization: `Bearer ${auth.token()}` }
     })
         .then((response) => {
+            commit('CLEAR_ERRORS', null, { root: true });
+
             if (thenContent) {
                 return thenContent(response);
             }
-            commit('CLEAR_ERRORS', null, { root: true });
         })
         .catch(error => {
             commit('UPDATE_ERRORS', error.response, { root: true });
@@ -39,10 +41,11 @@ export const axiosPatch = ({ commit, data, url, thenContent, method = 'PATCH' })
         });
 }
 
-export const axiosDownload = (commit, { url, fileName }) => {
+export const axiosWithDownload = (method, commit, { url, data = null, fileName, thenContent = null, options = {} }) => {
     const fullUrl = `${config.baseUrl}${url}`;
 
-    return axios.get(fullUrl, {
+    return axios[method](fullUrl, data, {
+        ...options,
         responseType: 'blob', // important
     })
         .then((response) => {
@@ -52,7 +55,12 @@ export const axiosDownload = (commit, { url, fileName }) => {
             link.setAttribute('download', fileName);
             document.body.appendChild(link);
             link.click();
+
             commit('CLEAR_ERRORS', null, { root: true });
+
+            if (thenContent) {
+                return thenContent(response);
+            }
         })
         .catch(error => {
             commit('UPDATE_ERRORS', error.response, { root: true });

@@ -8,7 +8,7 @@
                         @click="onRemove" />
 
         <router-button-link title="Сформировать проект"
-                            icon="shopping_cart"
+                            icon="local_mall"
                             color="md-warning"
                             route="cms.store.projects.create"
                             :params="{ imageId: item.id }"/>

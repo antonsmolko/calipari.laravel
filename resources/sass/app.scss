@@ -75,6 +75,10 @@
     margin: 0 !important;
 }
 
+.mr-1 {
+    margin: .6em !important;
+}
+
 .mr-10 {
     margin-right: .6em;
 }
@@ -239,6 +243,11 @@
 
 .md-block {
     display: block;
+}
+
+// Progress Bar
+.md-progress-bar__container {
+    height: 4px;
 }
 
 // Spinner

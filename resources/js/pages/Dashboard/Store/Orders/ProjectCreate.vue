@@ -1,17 +1,23 @@
 <template>
     <div class="md-layout" v-if="responseData">
         <div class="md-layout-item md-size-100">
-            <md-card class="mt-0">
+            <md-card class="m-0">
                 <md-card-content class="md-between">
                     <control-button icon="arrow_back"
                                     title="Назад"
                                     direction="right"
                                     @click="goBack"/>
                     <slide-y-down-transition v-show="!$v.$invalid">
-                        <control-button title="Создать" @click="onCreate" />
+                        <control-button title="Создать" @click="onCreate" :disabled="loading" />
                     </slide-y-down-transition>
                 </md-card-content>
             </md-card>
+            <div class="md-layout-item md-size-100 mt-1 mb-1 md-progress-bar__container">
+                <md-progress-bar
+                    v-if="loading"
+                    class="md-info"
+                    md-mode="indeterminate"/>
+            </div>
         </div>
         <div class="md-layout-item md-medium-size-100 md-large-size-33 md-xlarge-size-25">
             <product-card headerAnimation="false">
@@ -243,7 +249,8 @@ export default {
             texture: state => state.orders.project.texture,
             textures: state => state.textures.items,
             addedCosts: state => state.orders.project.addedCosts,
-            settings: state => state.settings.entries
+            settings: state => state.settings.entries,
+            loading: state => state.loading
         }),
         ...mapGetters('textures', {
             defaultTextureId: 'defaultItemId'
@@ -290,7 +297,7 @@ export default {
             return Number(width) ? `${Math.round(Number(width) / ratio)}` : '';
         },
         onCreate () {
-            const sendData = {
+            const data = {
                 id: getHash(),
                 email: this.email,
                 name: this.name,
@@ -304,13 +311,15 @@ export default {
             const addedCostsJson = this.getAddedCostsJson()
 
             if (addedCostsJson) {
-                Object.assign(sendData, {
+                Object.assign(data, {
                     added_costs: addedCostsJson
                 })
             }
 
+            const fileName = `project-${data.id}.pdf`;
+
             return this.create({
-                sendData,
+                sendData: { data, fileName },
                 title: `отправлен на ${this.email}`,
                 successText: 'Заказ сформирован!',
                 storeModule: this.storeModule,

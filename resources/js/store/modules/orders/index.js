@@ -1,4 +1,4 @@
-import { axiosAction, axiosDownload } from "../../mixins/actions";
+import { axiosAction, axiosWithDownload } from "../../mixins/actions";
 
 const state = {
     item: {},
@@ -84,22 +84,31 @@ const actions = {
         data,
         thenContent: response => commit('SET_ITEM', response.data)
     }),
-    createCartItem: ({ commit }, data) => axiosAction('post', commit, {
-        url: '/store/cart-items',
-        data
-    }),
-    downloadPdfLabel: ({ commit }, { itemId, fileName }) => axiosDownload(commit, {
-        url: `/store/order-items/${itemId}/pdf-label`,
-        fileName
-    }),
-    downloadPdfLayout: ({ commit }, { itemId, fileName }) => axiosDownload(commit, {
-        url: `/store/order-items/${itemId}/pdf-layout`,
-        fileName
-    }),
-    downloadPdfDetails: ({ commit }, { id, fileName }) => axiosDownload(commit, {
-        url: `/store/orders/${id}/pdf-details`,
-        fileName
-    }),
+    createCartItem ({ commit }, { data, fileName }) {
+        commit('SET_LOADING', true, { root: true });
+
+        return axiosWithDownload('post', commit, {
+            url: '/store/cart-items',
+            data,
+            fileName,
+            thenContent: response => commit('SET_LOADING', false, { root: true })
+        });
+    },
+    downloadPdfLabel: ({ commit }, { itemId, fileName }) => axiosWithDownload(
+        'get',
+        commit,
+        { url: `/store/order-items/${itemId}/pdf-label`, fileName }
+    ),
+    downloadPdfLayout: ({ commit }, { itemId, fileName }) => axiosWithDownload(
+        'get',
+        commit,
+        { url: `/store/order-items/${itemId}/pdf-layout`, fileName }
+    ),
+    downloadPdfDetails: ({ commit }, { id, fileName }) => axiosWithDownload(
+        'get',
+        commit,
+        { url: `/store/orders/${id}/pdf-details`, fileName }
+    ),
     setItemField ({ commit }, payload) {
         commit('SET_ITEM_FIELD', payload);
     },

@@ -18,8 +18,14 @@
                         <td class="header text-emphasis" style="border-right: 1px solid #D3D3D3; padding-right: 3px">
                             ФОТОПАННО
                         </td>
-                        <td class="header">
+                        <td class="header" style="border-right: 1px solid #D3D3D3; padding-right: 3px">
                             ПРОЕКТ
+                        </td>
+                        <td class="header" style="border-right: 1px solid #D3D3D3; padding-right: 3px">
+                            {{ $details['id'] }}
+                        </td>
+                        <td class="header">
+                            {{ date('d.m.Y') }}
                         </td>
                     </tr>
                 </table>
@@ -52,7 +58,7 @@
                     </tr>
                     <tr>
                         <td class="spec-item">Фактура:</td>
-                        <td class="spec-item spec-value">{{ $details['texture_name'] }}</td>
+                        <td class="spec-item spec-value">{{ $details['texture'] }}</td>
                     </tr>
                     <tr>
                         <td class="spec-item">Количество полос:</td>
@@ -74,7 +80,7 @@
                         @endforeach
                     @endif
                     <tr>
-                        <td class="spec-item">Общая стоимость, 1 шт:</td>
+                        <td class="spec-item">Общая стоимость, 1 ед:</td>
                         <td class="spec-item spec-value">{{ number_format($details['price'], 0, '.', ' ') }} ₽</td>
                     </tr>
                 </table>

@@ -54,9 +54,6 @@
             <td class="column" colspan="2" valign="top">
                 <table cellspacing="0" cellpadding="0">
                     <tr>
-                        <td colspan="2" class="title">Спецификации</td>
-                    </tr>
-                    <tr>
                         <td class="spec-item">Артикул изображения:</td>
                         <td class="spec-item spec-value">{{ $item['article'] }}</td>
                     </tr>
@@ -97,10 +94,8 @@
                         <td class="spec-item spec-value">{{ number_format($item['price'], 0, '.', ' ') }} ₽</td>
                     </tr>
                     <tr>
-                        <td colspan="2" class="spacer-small"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" class="total-price">{{ number_format($item['price'] * $item['qty'] + $item['added_costs_amount'], 0, '.', ' ') }} ₽</td>
+                        <td class="spec-item">Итого за позицию:</td>
+                        <td class="spec-value total-price">{{ number_format($item['price'] * $item['qty'] + $item['added_costs_amount'], 0, '.', ' ') }} ₽</td>
                     </tr>
                 </table>
             </td>
@@ -142,7 +137,7 @@
         </tr>
         <tr>
             <td colspan="1" valign="top" class="title">ЦЕНА ЗАКАЗА:</td>
-            <td colspan="3" valign="top" class="spec-item spec-value total-price">{{ number_format($details['price'], 0, '.', ' ') }} ₽</td>
+            <td colspan="3" valign="top" class="spec-value total-price">{{ number_format($details['price'], 0, '.', ' ') }} ₽</td>
         </tr>
         <tr>
             <td colspan="4" class="spacer"></td>
@@ -205,7 +200,7 @@
         border-top: 1px solid #DDDDDD;
     }
     .spacer-small {
-        padding: 5px;
+        padding: 3px;
     }
     .text-emphasis {
         color: #000000;
@@ -223,8 +218,8 @@
     }
     .title {
         font-family: "Oswald";
-        font-size: 16px;
-        line-height: 1;
+        font-size: 18px;
+        line-height: 1 !important;
         text-transform: uppercase;
         letter-spacing: .03em;
         color: #000000;
@@ -232,17 +227,19 @@
     }
     .spec-item {
         vertical-align: top;
+        font-size: 16px;
     }
     .total-price {
         font-family: "Roboto Condensed";
-        font-size: 18px;
+        font-size: 20px;
         color: #000000;
+        line-height: 1.13 !important;
     }
     .spec-value {
         font-family: "Roboto Condensed";
         color: #000000;
         padding-left: 15px;
-        line-height: 1.2
+        line-height: 1.25;
     }
     .copyright {
         font-size: 10px;
