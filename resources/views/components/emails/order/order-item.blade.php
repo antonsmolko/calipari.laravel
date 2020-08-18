@@ -27,6 +27,12 @@
                     <td class="order-item__specs-title"><b>Количество:</b></td>
                     <td>{{ $item['qty'] }}</td>
                 </tr>
+                @if(!empty($item['added_costs_amount']))
+                    <tr class="order-item__specs-item">
+                        <td class="order-item__specs-title"><b>Доп. услуги:</b></td>
+                        <td>{{ number_format($item['added_costs_amount'], 0, '.', ' ') }} ₽</td>
+                    </tr>
+                @endif
                 <tr>
                     <td class="order-item__price">
                         {{ number_format($item['price'] * $item['qty'] + $item['added_costs_amount'], 0, '.', ' ') }} ₽
