@@ -60,7 +60,7 @@ class GetFormattedOrderDetailsHandler
     {
         return $items->map(fn ($item) => [
             'article' => getImageArticle($item->image_id),
-            'dimensions' => 'Ш: ' . $item->width_cm . ' см × В: ' . $item->height_cm . ' см',
+            'dimensions' => $item->width_cm . ' см × ' . $item->height_cm . ' см',
             'texture' => $item->texture->name,
             'filter' => $item->filter_details,
             'qty' => $item->qty,

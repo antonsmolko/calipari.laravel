@@ -1,51 +1,58 @@
-@extends('layouts.emails.default')
+@component('mail::message')
 
-@section('title', 'Заказ # ' . $order['number'])
+@component('mail::order-heading', ['number' => $order['number'], 'data' => $order['date']])
+@endcomponent
 
-@section('content')
-    <x-emails.order.about
-        title="ЗАКАЗ РАЗМЕЩЕН"
-        intro="Здравствуйте! Мы получили Ваш заказ."
-        :number="$order['number']"
-        :date="$order['date']"
-        :status="$order['status']"/>
+@component('components.emails.space')
+@endcomponent
 
-    <table class="callout">
-        <tr>
-            <th class="callout-inner primary">
-                <table class="row">
-                    <tbody>
-                        <tr>
-                            <th class="small-12 large-12 columns first last">
-                                <h2>{{ $order['goodsQty'] }}</h2>
-                            </th>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="spacer">
-                    <tbody>
-                        <tr>
-                            <td height="12px" style="font-size:12px;line-height:12px;">&#xA0;</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="hr">
-                    <tbody>
-                        <th></th>
-                    </tbody>
-                </table>
-                @foreach($order['items'] as $item)
-                    <x-emails.order.item :item="$item"/>
-                @endforeach
-                <x-emails.order.price :totalPrice="$order['price']" :deliveryPrice="$order['delivery']['price']"/>
-            </th>
-            <th class="expander"></th>
-        </tr>
-    </table>
+<h1 class="text-center">{{ $order['goodsQty'] }}</h1>
+@component('components.emails.divider')
+@endcomponent
 
-    <x-emails.order.delivery :delivery="$order['delivery']" :customer="$order['customer']"/>
+@component('components.emails.order.order-items', ['items' => $order['items']])
+@endcomponent
 
-    @if (!empty($order['comment']))
-        <x-emails.order.comment :comment="$order['comment']" />
-    @endif
-@endsection
+@component('mail::order-details-item', ['title' => 'СПОСОБ ДОСТАВКИ'])
+{{ $order['delivery']['title'] }}
+@endcomponent
+
+@component('mail::order-details-item', ['title' => 'АДРЕС ДОСТАВКИ'])
+{{ $order['delivery']['locality'] }},<br>
+{{ $order['delivery']['address'] }}
+@endcomponent
+
+@component('mail::order-details-item', ['title' => 'ПОЛУЧАТЕЛЬ'])
+{{ $order['customer']['name'] }},<br>
+{{ phoneFormat($order['customer']['phone'], config('settings.order_phone_formats')) }}
+@endcomponent
+
+@component('components.emails.divider')
+@endcomponent
+
+@component('mail::order-details-item', ['title' => 'ЦЕНА ДОСТАВКИ'])
+__{{ number_format($order['delivery']['price'], 0, '.', ' ') }} ₽__
+@endcomponent
+
+@component('mail::order-details-item', ['title' => 'ЦЕНА ЗАКАЗА'])
+__{{ number_format($order['price'], 0, '.', ' ') }} ₽__
+@endcomponent
+
+@component('mail::order-total-price', ['price' => $order['price']])
+@endcomponent
+
+@component('components.emails.divider')
+@endcomponent
+
+@component('mail::write-us', [
+'facebookUrl' => 'https://facebook.com',
+'vkUrl' => 'https://vk.com',
+'instagramUrl' => 'https://instagram.com'
+])
+@endcomponent
+
+{{-- Subfooter --}}
+@slot('subfooter')
+После подтверждения заказа мы свяжемся с Вами для уточнения деталей. По любым вопросам Вы можете позвонить по номеру +7 952 967 4204 или ответить на это письмо.
+@endslot
+@endcomponent

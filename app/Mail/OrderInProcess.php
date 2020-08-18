@@ -37,8 +37,8 @@ class OrderInProcess extends Mailable
 
         return $this
             ->from(['address' => env('MAIL_FROM_ADDRESS'), 'name' => env('APP_NAME')])
-            ->subject('Заказ # ' . $this->order['number'])
-            ->view('emails.orders.process')
+            ->subject('Заказ № ' . $this->order['number'])
+            ->markdown('emails.orders.process')
             ->attachData($this->pdf->output(), $fileName)
             ->with($this->order);
     }

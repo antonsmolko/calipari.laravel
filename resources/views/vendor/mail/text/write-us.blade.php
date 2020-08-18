@@ -1,0 +1,1 @@
+{{ $facebookUrl }}{{ $vkUrl }}{{ $instagramUrl }}

@@ -3,7 +3,7 @@
 body,
 body *:not(html):not(style):not(br):not(tr):not(code) {
     box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+    font-family: Roboto, Helvetica, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     position: relative;
 }
@@ -11,12 +11,13 @@ body *:not(html):not(style):not(br):not(tr):not(code) {
 body {
     -webkit-text-size-adjust: none;
     background-color: #29292E;
-    color: #718096;
+    color: #2D2D2D;
     height: 100%;
     line-height: 1.4;
     margin: 0;
     padding: 0;
     width: 100% !important;
+    font-size: 14px;
 }
 
 p,
@@ -36,6 +37,10 @@ a img {
 }
 
 /* Typography */
+h1, h2, h3 {
+    font-family: Helvetica, Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
 
 h1 {
     color: #3d4852;
@@ -60,7 +65,7 @@ h3 {
 }
 
 p {
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.5em;
     margin-top: 0;
     text-align: left;
@@ -99,7 +104,7 @@ img {
 
 .header {
     padding: 15px 32px;
-    /*text-align: center;*/
+    text-align: center;
 }
 
 .header a {
@@ -168,20 +173,37 @@ img {
     -premailer-width: 570px;
     margin: 0 auto;
     padding: 0;
-    /*text-align: center;*/
+    text-align: center;
     width: 570px;
 }
 
 .footer p {
     color: #b0adc5;
     font-size: 12px;
-    /*text-align: center;*/
+    text-align: center;
 }
 
 .footer a {
     color: #b0adc5;
     text-decoration: underline;
 }
+
+.subfooter__cell {
+    border-bottom: 1px solid #666666;
+    padding-top: 24px;
+    padding-bottom: 12px;
+}
+.subfooter p {
+    color: #b0adc5;
+    font-size: 12px;
+    text-align: center;
+}
+
+.subfooter a {
+    color: #b0adc5;
+    text-decoration: underline;
+}
+
 
 /* Tables */
 
@@ -209,7 +231,7 @@ img {
 
 .content-cell {
     max-width: 100vw;
-    padding: 32px;
+    padding: 24px 32px;
 }
 
 /* Buttons */
@@ -234,13 +256,13 @@ img {
 }
 
 .button-blue,
-/*.button-primary {*/
-/*    background-color: #2d3748;*/
-/*    border-bottom: 8px solid #2d3748;*/
-/*    border-left: 18px solid #2d3748;*/
-/*    border-right: 18px solid #2d3748;*/
-/*    border-top: 8px solid #2d3748;*/
-/*}*/
+    /*.button-primary {*/
+    /*    background-color: #2d3748;*/
+    /*    border-bottom: 8px solid #2d3748;*/
+    /*    border-left: 18px solid #2d3748;*/
+    /*    border-right: 18px solid #2d3748;*/
+    /*    border-top: 8px solid #2d3748;*/
+    /*}*/
 .button-primary {
     background-color: #1e87f0;
     border-bottom: 8px solid #1e87f0;
@@ -297,4 +319,112 @@ img {
 
 .break-all {
     word-break: break-all;
+}
+
+/* Custom */
+.order-bag {
+    width: 30px;
+    height: 30px;
+    display: block;
+    margin-bottom: 24px;
+}
+
+.divider {
+    margin: 24px 0;
+}
+.divider td {
+    border-top: 1px solid #D0D0D0;
+}
+
+.order-heading h1, .order-heading p {
+    margin-bottom: 6px !important;
+}
+
+.order-item__image {
+    padding-right: 12px;
+    box-sizing: border-box;
+}
+
+.order-item__image img {
+    width: 240px;
+    height: auto;
+    display: block;
+}
+
+.order-item__specs {
+    padding-left: 12px;
+    box-sizing: border-box;
+}
+
+.order-item__specs-item td {
+    padding-bottom: 6px;
+    vertical-align: top;
+}
+
+.order-item__specs-title {
+    padding-right: 12px;
+    width: 1%;
+    white-space: nowrap;
+}
+
+.order-item__price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #D01345;
+    padding-top: 12px;
+}
+
+.space td {
+    padding: 12px;
+}
+.space-large td {
+    padding: 16px;
+}
+
+.space-small td {
+    padding: 6px;
+}
+
+.space-large td {
+    padding: 16px;
+}
+
+.text-center {
+    text-align: center;
+}
+.text-muted {
+    color: #666666;
+}
+
+.order-details__heading {
+    color: #767676;
+    padding-right: 12px;
+}
+
+.order-details__value {
+    padding-left: 12px;
+}
+
+.order-total-price {
+    margin-top: 12px;
+}
+
+.order-total-price__heading {
+    font-size: 16px;
+    padding-right: 12px;
+}
+.order-total-price__value {
+    color: #D01345;
+    padding-left: 12px;
+}
+a.write-us__social-link {
+    padding: 0 12px;
+    font-size: 12px;
+    text-decoration: none;
+    color: #767676;
+}
+a.write-us__logo img {
+    width: 60px;
+    height: 30px;
+    display: block;
 }

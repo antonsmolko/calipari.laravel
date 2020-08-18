@@ -7,6 +7,7 @@ namespace App\Services\CartItem\Handlers;
 use App\Models\Image;
 use App\Services\Image\Repositories\ClientImageRepository;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Validator;
 
 class GetStoreDetailsDataHandler
 {
@@ -48,26 +49,36 @@ class GetStoreDetailsDataHandler
 
     public function validateProject(Image $image, array $projectData)
     {
-        if ($projectData['width_cm'] > $image->max_print_width) {
-            abort(422, __('project_validation.maximum_allowed_print_width_exceeded'));
-        }
-
         $ratio = $image->width / $image->height;
-        if ($projectData['height_cm'] > $image->max_print_width / $ratio) {
-            abort(422, __('project_validation.maximum_allowed_print_height_exceeded'));
-        }
+        $maxPrintHeight = ceil($image->max_print_width / $ratio);
 
-        if ($projectData['x'] > $image->width || $projectData['x'] < 0) {
-            abort(422, __('project_validation.x-axis_range_limit_exceeded'));
-        }
+        $rules = [
+            'width_cm' => 'required|numeric|max:' . $image->max_print_width,
+            'height_cm' => 'required|numeric|max:' . $maxPrintHeight,
+            'x' => 'required|numeric|min:' . 0 . '|max:' . $image->width,
+            'y' => 'required|numeric|min:' . 0 . '|max:' . $image->height
+        ];
 
-        if ($projectData['y'] > $image->height || $projectData['y'] < 0) {
-            abort(422, __('project_validation.y-axis_range_limit_exceeded'));
-        }
+        $messages = [
+            'width_cm.max' => __('project_validation.maximum_allowed_print_width_exceeded', [
+                'width' => $image->max_print_width
+            ]),
+            'height_cm.max' => __('project_validation.maximum_allowed_print_height_exceeded', [
+                'height' => $maxPrintHeight
+            ]),
+            'x.max' => __('project_validation.x-axis_range_limit_exceeded', ['x' => $image->width]),
+            'y.max' => __('project_validation.y-axis_range_limit_exceeded', ['y' => $image->height]),
+        ];
 
+        $validator = Validator::make($projectData, $rules, $messages);
         $filter = $projectData['filter'];
-        if (!Arr::has($filter, ['flipH', 'flipV', 'colorize']) || count($filter) !== 3) {
-            abort(422, __('project_validation.wrong_filter_format'));
-        }
+
+        $validator->after(function ($validator) use ($filter) {
+            if (!Arr::has($filter, ['flipH', 'flipV', 'colorize']) || count($filter) !== 3) {
+                $validator->errors()->add('filter', __('project_validation.wrong_filter_format'));
+            }
+        });
+
+        $validator->validate();
     }
 }

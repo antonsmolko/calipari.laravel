@@ -29,8 +29,8 @@ class StoreRequest extends FormRequest
             'width_cm' => 'bail|required|integer|min:' . config('settings.order_min_size'),
             'height_cm' => 'bail|required|integer|min:' . config('settings.order_min_size'),
             'filter' => 'bail|required',
-            'x' => 'bail|required|integer',
-            'y' => 'bail|required|integer',
+            'x' => 'bail|required|integer|min:0',
+            'y' => 'bail|required|integer|min:0',
             'width_px' => 'bail|required|integer',
             'height_px' => 'bail|required|integer',
             'texture_id' => 'bail|required|integer|exists:textures,id'
