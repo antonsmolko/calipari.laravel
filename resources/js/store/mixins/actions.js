@@ -15,6 +15,7 @@ export const axiosAction = (method, commit, { url, data = null, thenContent = nu
         })
         .catch(error => {
             commit('UPDATE_ERRORS', error.response, { root: true });
+            commit('CHANGE_FILE_PROGRESS', 0);
             throw error;
         });
 }
