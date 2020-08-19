@@ -11,8 +11,8 @@
         "php": "^7.4",
         "ext-gd": "*",
         "ext-json": "*",
-        "ext-memcached": "*",
         "ext-imagick": "*",
+        "ext-memcached": "*",
         "algolia/algoliasearch-client-php": "^2.2",
         "barryvdh/laravel-dompdf": "^0.8.6",
         "creativeorange/gravatar": "~1.0",
@@ -36,6 +36,7 @@
         "santigarcor/laratrust": "5.2.*",
         "socialiteproviders/vkontakte": "^4.0",
         "socialiteproviders/yandex": "^3.0",
+        "spatie/laravel-image-optimizer": "^1.6",
         "spatie/laravel-query-builder": "^2.8",
         "tymon/jwt-auth": "^1.0",
         "yandex-money/yandex-checkout-sdk-php": "^1.5"

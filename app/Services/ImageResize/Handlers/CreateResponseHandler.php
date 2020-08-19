@@ -30,7 +30,7 @@ class CreateResponseHandler
      * @param string $ext
      * @return mixed
      */
-    public function handle($imgObj, $ext = 'jpg')
+    public function handle(\Intervention\Image\Image $imgObj, $ext = 'jpg')
     {
         return $imgObj
             ->response($ext, $this->quality)

@@ -8,9 +8,9 @@ use App\Services\ImageResize\Builders\ImageProcessingBuilder;
 
 class GetMailOrderImageThumbHandler
 {
-    private const CANVAS_COLOR = 'F8F8F8';
-    private const CANVAS_WITH = 600;
-    private const CANVAS_HEIGHT = 600;
+    private const CANVAS_COLOR = 'EEEEEE';
+    private const CANVAS_WITH = 450;
+    private const CANVAS_HEIGHT = 335;
 
     private ImageProcessingBuilder $imageProcessingBuilder;
 
@@ -43,7 +43,7 @@ class GetMailOrderImageThumbHandler
         string $flipH,
         string $flipV,
         string $colorize
-    )
+    ): \Intervention\Image\Image
     {
         return $this->imageProcessingBuilder
             ->make($file)

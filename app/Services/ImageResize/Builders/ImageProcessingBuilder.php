@@ -105,12 +105,24 @@ class ImageProcessingBuilder
     /**
      * @param int $width
      * @param int $height
-     * @param string $color
-     * @return ImageProcessingBuilder
+     * @param string|null $color
+     * @return $this
      */
-    public function cropCanvas(int $width, int $height, string $color): ImageProcessingBuilder
+    public function cropCanvas(int $width, int $height, string $color = null): ImageProcessingBuilder
     {
         $this->image = $this->repository->cropCanvas($this->image, $width, $height, $color);
+
+        return $this;
+    }
+
+    /**
+     * @param string $format
+     * @param int $quality
+     * @return $this
+     */
+    public function encode(string $format, int $quality = 90): ImageProcessingBuilder
+    {
+        $this->image = $this->repository->encode($this->image, $format, $quality);
 
         return $this;
     }

@@ -265,9 +265,11 @@ Route::prefix('cms')
                 ->name('images.item.get-raw');
             Route::post('{id}', 'Cms\Image\ImageController@update')
                 ->where('id', '[0-9]+')
-                ->name('images.update');
+                ->name('images.update')
+                ->middleware('optimizeImages');
         });
     Route::apiResource('images', 'Cms\Image\ImageController')
+        ->middleware('optimizeImages')
         ->except(['index', 'create', 'edit', 'update']);
 
 
@@ -288,17 +290,20 @@ Route::prefix('cms')
             Route::post('{id}/images/excluded', 'Cms\Category\CategoryController@getExcludedImages')
                 ->where('id', '[0-9]+');
             Route::post('{id}', 'Cms\Category\CategoryController@update')
-                ->where('id', '[0-9]+');
+                ->where('id', '[0-9]+')
+                ->middleware('optimizeImages');
             Route::post('{id}/images/add', 'Cms\Category\CategoryController@addImages')
                 ->where('id', '[0-9]+');
             Route::get('{id}/images/{image_id}/remove', 'Cms\Category\CategoryController@removeImage')
                 ->where('id,image_id', '[0-9]+');
             Route::post('{id}/upload', 'Cms\Category\CategoryController@upload')
-                ->where('id', '[0-9]+');
+                ->where('id', '[0-9]+')
+                ->middleware('optimizeImages');
             Route::get('{id}/publish', 'Cms\Category\CategoryController@publish')
                 ->where('id', '[0-9]+');
         });
         Route::apiResource('categories', 'Cms\Category\CategoryController')
+            ->middleware('optimizeImages')
             ->except(['create', 'edit', 'update']);
 
 
@@ -314,9 +319,11 @@ Route::prefix('cms')
             Route::get('{id}/images/{image_id}/remove', 'Cms\Owner\OwnerController@removeImage')
                 ->where('id,image_id', '[0-9]+');
             Route::post('{id}/upload', 'Cms\Owner\OwnerController@upload')
-                ->where('id', '[0-9]+');
+                ->where('id', '[0-9]+')
+                ->middleware('optimizeImages');
         });
-        Route::apiResource('owners', 'Cms\Owner\OwnerController')->except(['create', 'edit']);
+        Route::apiResource('owners', 'Cms\Owner\OwnerController')
+            ->except(['create', 'edit']);
 
 
         /** Color Collections */
@@ -325,7 +332,8 @@ Route::prefix('cms')
             Route::get('{id}/images', 'Cms\ColorCollection\ColorCollectionController@getImages')
                 ->where('id', '[0-9]+');
             Route::post('{id}/upload', 'Cms\ColorCollection\ColorCollectionController@upload')
-                ->where('id', '[0-9]+');
+                ->where('id', '[0-9]+')
+                ->middleware('optimizeImages');
             Route::post('{id}/set-main-image', 'Cms\ColorCollection\ColorCollectionController@setMainImage')
                 ->where('id', '[0-9]+');
             Route::get('{id}/publish', 'Cms\ColorCollection\ColorCollectionController@publish')
@@ -354,14 +362,16 @@ Route::prefix('cms')
 
     Route::group(['prefix' => 'textures'], function() {
         Route::post('{id}', 'Cms\Texture\TextureController@update')
-            ->where('id', '[0-9]+');
+            ->where('id', '[0-9]+')
+            ->middleware('optimizeImages');
         Route::patch('{id}/patch', 'Cms\Texture\TextureController@patch')
             ->where('id', '[0-9]+');
         Route::get('{id}/publish', 'Cms\Texture\TextureController@publish')
             ->where('id', '[0-9]+');
     });
     Route::apiResource('textures', 'Cms\Texture\TextureController')
-        ->except(['create', 'edit', 'update']);
+        ->except(['create', 'edit', 'update'])
+        ->middleware('optimizeImages');
 
 
     /** Settings */
@@ -369,7 +379,8 @@ Route::prefix('cms')
     Route::group(['prefix' => 'settings'], function() {
         Route::post('set-text', 'Cms\Setting\SettingController@setTextValue');
         Route::get('entries', 'Cms\Setting\SettingController@getEntries');
-        Route::post('set-image', 'Cms\Setting\SettingController@setImageValue');
+        Route::post('set-image', 'Cms\Setting\SettingController@setImageValue')
+            ->middleware('optimizeImages');
         Route::post('{id}', 'Cms\Setting\SettingController@update')
             ->where('id', '[0-9]+')
             ->middleware('role:super_admin|admin');
@@ -512,18 +523,23 @@ Route::prefix('cms')
     /** Pages */
 
     Route::group(['prefix' => 'pages'], function() {
-        Route::post('/{id}', 'Cms\Page\PageController@update');
+        Route::post('/{id}', 'Cms\Page\PageController@update')
+            ->middleware('optimizeImages');
         Route::get('/{id}/delete-image', 'Cms\Page\PageController@deleteImage');
     });
-    Route::apiResource('pages', 'Cms\Page\PageController')->except(['create', 'update', 'edit']);
+    Route::apiResource('pages', 'Cms\Page\PageController')
+        ->except(['create', 'update', 'edit'])
+        ->middleware('optimizeImages');
 
 
     /** Home: Purchase Steps */
 
     Route::post('home-purchase-steps/{id}', 'Cms\PurchaseStep\PurchaseStepController@update')
-        ->where('id', '[0-9]+');
+        ->where('id', '[0-9]+')
+        ->middleware('optimizeImages');
     Route::apiResource('home-purchase-steps', 'Cms\PurchaseStep\PurchaseStepController')
-        ->except(['create', 'update', 'edit']);
+        ->except(['create', 'update', 'edit'])
+        ->middleware('optimizeImages');
 
 
     /** Home: Interiors */
@@ -535,9 +551,11 @@ Route::prefix('cms')
     Route::apiResource('home-interiors', 'Cms\HomeModuleInterior\HomeModuleInteriorController')
         ->except(['create', 'store', 'edit']);
     Route::post('home-interior-slides/{id}', 'Cms\HomeModuleInterior\HomeModuleInteriorSlideController@update')
-        ->where('id', '[0-9]+');
+        ->where('id', '[0-9]+')
+        ->middleware('optimizeImages');
     Route::apiResource('home-interior-slides', 'Cms\HomeModuleInterior\HomeModuleInteriorSlideController')
-        ->except(['create', 'edit']);
+        ->except(['create', 'edit'])
+        ->middleware('optimizeImages');
 
 
     /** WorkExamples */
@@ -545,16 +563,19 @@ Route::prefix('cms')
     Route::group(['prefix' => 'work-examples'], function() {
         Route::post('/list', 'Cms\WorkExample\WorkExampleController@getItems');
         Route::post('/{id}', 'Cms\WorkExample\WorkExampleController@update')
-            ->where('id', '[0-9]+');
+            ->where('id', '[0-9]+')
+            ->middleware('optimizeImages');
         Route::post('/{id}/upload', 'Cms\WorkExample\WorkExampleController@upload')
-            ->where('id', '[0-9]+');
+            ->where('id', '[0-9]+')
+            ->middleware('optimizeImages');
         Route::get('/{id}/publish', 'Cms\WorkExample\WorkExampleController@publish')
             ->where('id', '[0-9]+');
         Route::get('/{id}/delete-image/{index}', 'Cms\WorkExample\WorkExampleController@deleteImage')
             ->where(['id' => '[0-9]+', 'index' => '[0-9]+']);
     });
     Route::apiResource('work-examples', 'Cms\WorkExample\WorkExampleController')
-        ->except(['create', 'update', 'edit']);
+        ->except(['create', 'update', 'edit'])
+        ->middleware('optimizeImages');
 
 
     /** Posts */
@@ -563,16 +584,19 @@ Route::prefix('cms')
         Route::post('/{type}/list', 'Cms\Post\PostController@getItemsByType')
             ->where('type', '[a-z]+');
         Route::post('/{id}', 'Cms\Post\PostController@update')
-            ->where('id', '[0-9]+');
+            ->where('id', '[0-9]+')
+            ->middleware('optimizeImages');
         Route::post('/{id}/upload', 'Cms\Post\PostController@upload')
-            ->where('id', '[0-9]+');
+            ->where('id', '[0-9]+')
+            ->middleware('optimizeImages');
         Route::get('/{id}/publish', 'Cms\Post\PostController@publish')
             ->where('id', '[0-9]+');
         Route::get('/{id}/delete-image/{index}', 'Cms\Post\PostController@deleteImage')
             ->where(['id' => '[0-9]+', 'index' => '[0-9]+']);
     });
     Route::apiResource('posts', 'Cms\Post\PostController')
-        ->except(['create', 'update', 'edit']);
+        ->except(['create', 'update', 'edit'])
+        ->middleware('optimizeImages');
 
 
     /** Dashboard */

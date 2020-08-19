@@ -334,7 +334,7 @@ img {
     min-height: 178px;
     display: block;
     border: 1px solid #D0D0D0;
-    /*padding: 1px;*/
+    padding: 1px;
     box-sizing: border-box;
 }
 

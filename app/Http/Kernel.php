@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'social' => \App\Http\Middleware\SocialMiddleware::class,
         'auth.valid' => \App\Http\Middleware\UserValid::class,
         'lqb.delimiter' => \App\Http\Middleware\ApplySemicolonDelimiter::class,
+        'optimizeImages' => \Spatie\LaravelImageOptimizer\Middlewares\OptimizeImages::class,
     ];
 
     /**

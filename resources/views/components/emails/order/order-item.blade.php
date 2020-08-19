@@ -1,7 +1,7 @@
 <table class="order-items" width="100%" cellpadding="0" cellspacing="0">
     <tr>
         <td width="50%" valign="top" class="order-item__image">
-            <img src="{{ $item['image_url'] }}" alt="{{ $item['article'] }}">
+            <img src="{{ $item['mail_thumb_url'] }}" alt="{{ $item['article'] }}">
         </td>
         <td width="50%" valign="top" class="order-item__specs">
             <table width="100%" cellpadding="0" cellspacing="0">

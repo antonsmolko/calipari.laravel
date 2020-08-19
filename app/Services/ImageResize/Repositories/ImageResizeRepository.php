@@ -7,9 +7,6 @@ use Image;
 
 class ImageResizeRepository
 {
-    /**
-     * Image caching time
-     */
     private int $cacheTime;
 
     /**
@@ -24,7 +21,7 @@ class ImageResizeRepository
      * @param string $file
      * @param string $width
      * @param string $height
-     * @return \Intervention\Image\Image
+     * @return Image
      */
     public function resize(string $file, string $width, string $height)
     {
@@ -39,7 +36,7 @@ class ImageResizeRepository
      * @param string $file
      * @param string $width
      * @param string $height
-     * @return \Intervention\Image\Image
+     * @return Image
      */
     public function crop(string $file, string $width, string $height)
     {
@@ -54,7 +51,7 @@ class ImageResizeRepository
      * @param string $height
      * @param string $x
      * @param string $y
-     * @return \Intervention\Image\Image
+     * @return Image
      */
     public function orderCrop(string $file, string $width, string $height, string $x, string $y)
     {
@@ -67,7 +64,7 @@ class ImageResizeRepository
      * @param string $file
      * @param string $width
      * @param string $height
-     * @return \Intervention\Image\Image
+     * @return Image
      */
     public function fit(string $file, string $width, string $height)
     {
@@ -82,10 +79,10 @@ class ImageResizeRepository
      * @param \Intervention\Image\Image $image
      * @param int $width
      * @param int $height
-     * @param string $color
+     * @param string|null $color
      * @return \Intervention\Image\Image
      */
-    public function cropCanvas(\Intervention\Image\Image $image, int $width, int $height, string $color): \Intervention\Image\Image
+    public function cropCanvas(\Intervention\Image\Image $image, int $width, int $height, string $color = null): \Intervention\Image\Image
     {
         return $image->resizeCanvas($width, $height, 'center', false, $color);
     }
@@ -215,5 +212,16 @@ class ImageResizeRepository
         string $y): \Intervention\Image\Image
     {
         return $image->crop($width, $height, $x, $y);
+    }
+
+    /**
+     * @param \Intervention\Image\Image $image
+     * @param string $format
+     * @param int $quality
+     * @return \Intervention\Image\Image
+     */
+    public function encode(\Intervention\Image\Image $image, string $format, int $quality)
+    {
+        return $image->encode($format, $quality);
     }
 }

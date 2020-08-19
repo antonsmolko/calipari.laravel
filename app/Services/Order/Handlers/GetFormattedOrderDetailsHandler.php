@@ -70,7 +70,10 @@ class GetFormattedOrderDetailsHandler
             'added_costs_amount' => $item->getAddedCostsAmount(),
             'image_url' => config('settings.base_image_url') .
                 config('settings.pdf_label_order_item_image_url') .
-                getOrderItemPath($item)
+                getOrderItemPath($item),
+            'mail_thumb_url' => config('settings.base_image_url') .
+                config('settings.mail_order_item_thumb_url') .
+                getOrderItemPath($item),
         ]);
     }
 }
