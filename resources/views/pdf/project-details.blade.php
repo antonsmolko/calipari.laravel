@@ -12,17 +12,14 @@
             <td colspan="4" valign="top">
                 <table cellspacing="0" cellpadding="0">
                     <tr>
-                        <td style="padding-top: 2px; padding-right: 10px; border-right: 1px solid #D3D3D3">
+                        <td style="padding-top: 4px; padding-right: 10px; border-right: 1px solid #D3D3D3">
                             <img style="width: 60px" src="{{ env('APP_URL') }}/img/svg/calipari.svg" alt="">
                         </td>
                         <td class="header text-emphasis" style="border-right: 1px solid #D3D3D3; padding-right: 3px">
                             ФОТОПАННО
                         </td>
                         <td class="header" style="border-right: 1px solid #D3D3D3; padding-right: 3px">
-                            ПРОЕКТ
-                        </td>
-                        <td class="header" style="border-right: 1px solid #D3D3D3; padding-right: 3px">
-                            {{ $details['id'] }}
+                            ПРОЕКТ № {{ $details['id'] }}
                         </td>
                         <td class="header">
                             {{ date('d.m.Y') }}

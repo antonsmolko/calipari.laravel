@@ -46,7 +46,7 @@ class OrderItemService
      */
     public function getPdfLabel(int $id)
     {
-        $itemDetails = $this->getFormattedItemDetailsHandler->handle($id);
+        $itemDetails = $this->getFormattedItemDetailsHandler->handle($id, 'label');
         $postfix = $itemDetails['order']['number'] . '-' . $id;
 
         return $this->pdfService->getOrderItemLabel($itemDetails, $postfix);
@@ -58,7 +58,7 @@ class OrderItemService
      */
     public function getPdfLayout(int $id)
     {
-        $itemDetails = $this->getFormattedItemDetailsHandler->handle($id);
+        $itemDetails = $this->getFormattedItemDetailsHandler->handle($id, 'layout');
         $postfix = $itemDetails['order']['number'] . '-' . $id;
 
         return $this->pdfService->getOrderItemLayout($itemDetails, $postfix);

@@ -38,6 +38,7 @@ export const axiosPatch = ({ commit, data, url, thenContent, method = 'PATCH' })
         })
         .catch(error => {
             commit('UPDATE_ERRORS', error.response, { root: true });
+            commit('SET_LOADING', false, { root: true });
             throw error;
         });
 }
@@ -45,15 +46,18 @@ export const axiosPatch = ({ commit, data, url, thenContent, method = 'PATCH' })
 export const axiosWithDownload = (method, commit, { url, data = null, fileName, thenContent = null, options = {} }) => {
     const fullUrl = `${config.baseUrl}${url}`;
 
-    return axios[method](fullUrl, data, {
-        ...options,
+    return axios({
+        url: fullUrl, //your url
+        method,
+        data,
         responseType: 'blob', // important
+        ...options
     })
         .then((response) => {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', fileName);
+            link.setAttribute('download', fileName); //or any other extension
             document.body.appendChild(link);
             link.click();
 

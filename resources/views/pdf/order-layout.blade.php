@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<div style="width: 100%; padding: 15px 20px 0 20px; box-sizing: content-box">
+<div style="width: 100%; padding: 15px 25px 0 25px; box-sizing: content-box">
     <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
             <td valign="top">
                 <table cellspacing="0" cellpadding="0">
                     <tr>
-                        <td style="padding-top: 2px; padding-right: 10px; border-right: 1px solid #D3D3D3">
+                        <td style="padding-top: 4px; padding-right: 10px; border-right: 1px solid #D3D3D3">
                             <img style="width: 60px" src="{{ env('APP_URL') }}/img/svg/calipari.svg" alt="">
                         </td>
                         <td class="header text-emphasis" style="border-right: 1px solid #D3D3D3; padding-right: 3px">
@@ -30,7 +30,7 @@
         </tr>
         <tr>
             <td colspan="5" style="border: 1px solid #D3D3D3; padding: 1px">
-                <img style="width: 751px; height: 490px" src="{{ $details->image_url }}" alt="">
+                <img style="width: 741px; height: auto" src="{{ $details->image_url }}" alt="">
             </td>
         </tr>
     </table>
@@ -58,7 +58,7 @@
     }
     .header {
         font-family: "Oswald";
-        font-size: 14px;
+        font-size: 16px;
         line-height: 0.9;
         text-transform: uppercase;
         letter-spacing: .03em;

@@ -97,8 +97,7 @@ const actions = {
     downloadPdfLabel: ({ commit }, { itemId, fileName }) => axiosWithDownload(
         'get',
         commit,
-        { url: `/store/order-items/${itemId}/pdf-label`, fileName }
-    ),
+        { url: `/store/order-items/${itemId}/pdf-label`, fileName }),
     downloadPdfLayout: ({ commit }, { itemId, fileName }) => axiosWithDownload(
         'get',
         commit,

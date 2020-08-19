@@ -5,24 +5,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body style="padding: 30px 4%;">
+<body style="padding: 40px;">
 <div style="margin: 0 auto; width: 100%; box-sizing: border-box">
     <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
             <td colspan="4" valign="top">
                 <table cellspacing="0" cellpadding="0">
                     <tr>
-                        <td style="padding-top: 2px; padding-right: 10px; border-right: 1px solid #D3D3D3">
+                        <td style="padding-top: 4px; padding-right: 10px; border-right: 1px solid #D3D3D3">
                             <img style="width: 60px" src="{{ env('APP_URL') }}/img/svg/calipari.svg" alt="">
                         </td>
                         <td class="header text-emphasis" style="border-right: 1px solid #D3D3D3; padding-right: 3px">
                             ФОТОПАННО
                         </td>
                         <td class="header" style="border-right: 1px solid #D3D3D3; padding-right: 3px">
-                            ЗАКАЗ
-                        </td>
-                        <td class="header" style="border-right: 1px solid #D3D3D3; padding-right: 3px">
-                            № {{ $details['number'] }}
+                            ЗАКАЗ № {{ $details['number'] }}
                         </td>
                         <td class="header">
                             {{ $details['date'] }}
@@ -32,7 +29,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="4" class="spacer-small"></td>
+            <td colspan="4" class="spacer"></td>
         </tr>
         <tr>
             <td class="title">{{ $details['goodsQty'] }}</td>
@@ -46,7 +43,7 @@
                 <table width="100%" cellspacing="0" cellpadding="0">
                     <tr>
                         <td style="border: 1px solid #B3B3B3; padding: 1px">
-                            <img style="display: block; width: 350px" src="{{ $item['image_url'] }}" alt="">
+                            <img style="display: block; width: 324px" src="{{ $item['image_url'] }}" alt="">
                         </td>
                     </tr>
                 </table>
@@ -75,12 +72,6 @@
                         <td class="spec-item">Количество:</td>
                         <td class="spec-item spec-value">{{ $item['qty'] }}</td>
                     </tr>
-                    <tr>
-                        <td colspan="2" class="spacer"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="title">Цена</td>
-                    </tr>
                     @if(!empty($item['added_costs']) && is_array($item['added_costs']))
                         @foreach($item['added_costs'] as $title => $value)
                             <tr>
@@ -90,12 +81,14 @@
                         @endforeach
                     @endif
                     <tr>
-                        <td class="spec-item">За единицу товара:</td>
+                        <td class="spec-item">Цена за ед. товара:</td>
                         <td class="spec-item spec-value">{{ number_format($item['price'], 0, '.', ' ') }} ₽</td>
                     </tr>
                     <tr>
-                        <td class="spec-item">Итого за позицию:</td>
-                        <td class="spec-value total-price">{{ number_format($item['price'] * $item['qty'] + $item['added_costs_amount'], 0, '.', ' ') }} ₽</td>
+                        <td colspan="2" class="spacer"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="total-price">{{ number_format($item['price'] * $item['qty'] + $item['added_costs_amount'], 0, '.', ' ') }} ₽</td>
                     </tr>
                 </table>
             </td>
@@ -191,7 +184,7 @@
         border-collapse: collapse;
     }
     .column {
-        width: 46%;
+        width: 50%;
     }
     .spacer {
         padding: 10px;
@@ -231,9 +224,9 @@
     }
     .total-price {
         font-family: "Roboto Condensed";
-        font-size: 20px;
+        font-size: 22px;
         color: #000000;
-        line-height: 1.13 !important;
+        line-height: 1.05 !important;
     }
     .spec-value {
         font-family: "Roboto Condensed";

@@ -16,7 +16,7 @@
 //})->name('home');
 
 Route::get('/', function () {
-    $order = [
+    $details = [
         'number' => 5932354,
         'date' => '17.08.2020',
         'status' => 'В обработке',
@@ -68,7 +68,7 @@ Route::get('/', function () {
         'price' => 43532,
         'comment' => 'Спецсимволы чувствительны к регистру, поэтому их необходимо прописывать точно так, как указано в таблице. Спецсимволы, не имеющие мнемоники, могут не отображаться вовсе или же некорректно отображаться в тех или иных браузерах.'
     ];
-    return view('pdf.order-details', ['order' => $order]);
+    return view('pdf.order-details', ['details' => $details]);
 })->name('home');
 
 //Route::get('/logme', function () {

@@ -15,17 +15,22 @@
                         <td colspan="5">
                             <table cellspacing="0" cellpadding="0">
                                 <tr>
-                                    <td style="padding-top: 3px; padding-right: 15px; border-right: 1px solid #B3B3B3">
-                                        <img style="width: 75px" src="{{ env('APP_URL') }}/img/svg/calipari.svg" alt="">
+                                    <td style="padding-top: 4px; padding-right: 10px; border-right: 1px solid #D3D3D3">
+                                        <img style="width: 60px" src="{{ env('APP_URL') }}/img/svg/calipari.svg" alt="">
                                     </td>
-                                    <td class="header" style="font-size: 18px; padding-left: 15px; padding-right: 5px; border-right: 1px solid #B3B3B3; line-height: 0.9">
+                                    <td class="header text-emphasis" style="border-right: 1px solid #D3D3D3; padding-right: 3px">
                                         ФОТОПАННО
                                     </td>
-                                    <td style="text-align: right; padding-left: 18px">
+{{--                                    @if($details->texture->seamless)--}}
+{{--                                        <td class="header" style="padding-right: 3px">--}}
+{{--                                            БЕСШОВНОЕ--}}
+{{--                                        </td>--}}
+{{--                                    @endif--}}
+                                    <td style="text-align: right; padding-left: 13px">
                                         @if($details->texture->seamless)
-                                            <img style="width: 36px; height: auto" src="{{ env('APP_URL') }}/img/svg/pdf/label/landscape.svg" alt="">
+                                            <img style="width: 30px; height: auto" src="{{ env('APP_URL') }}/img/svg/pdf/label/landscape.svg" alt="">
                                         @else
-                                            <img style="width: 36px; height: auto" src="{{ env('APP_URL') }}/img/svg/pdf/label/stripes.svg" alt="">
+                                            <img style="width: 30px; height: auto" src="{{ env('APP_URL') }}/img/svg/pdf/label/stripes.svg" alt="">
                                         @endif
                                     </td>
                                 </tr>
@@ -93,14 +98,14 @@
                             <table width="100%">
                                 <tr>
                                     <td valign="top">
-                                        <img style="width: 30px; height: 20px; padding-top: 5px" src="{{ env('APP_URL') }}/img/svg/pdf/label/stripes.svg" alt="">
+                                        <img style="width: 24px; height: 16px; padding-top: 5px" src="{{ env('APP_URL') }}/img/svg/pdf/label/stripes.svg" alt="">
                                     </td>
                                     <td valign="top">—</td>
                                     <td valign="top" class="text-small">фотопанно шовное, состоит из нескольких полос (количество полос указано в спецификации заказа)</td>
                                 </tr>
                                 <tr>
                                     <td valign="top">
-                                        <img style="width: 30px; height: 20px; padding-top: 5px" src="{{ env('APP_URL') }}/img/svg/pdf/label/seamless.svg" alt="">
+                                        <img style="width: 24px; height: 16px; padding-top: 5px" src="{{ env('APP_URL') }}/img/svg/pdf/label/seamless.svg" alt="">
                                     </td>
                                     <td valign="top">—</td>
                                     <td valign="top" class="text-small">фотопанно бесшовное, выполнено одним полотном</td>
@@ -118,10 +123,12 @@
                         <td class="spacer"></td>
                     </tr>
                     <tr>
-                        <td>Сделано в России.</td>
+                        <td>
+                            <span class="text-bolder">Calipari</span>. Студия печати и дизайна. Россия.
+                        </td>
                     </tr>
                     <tr>
-                        <td class="text-emphasis">calipari.ru</td>
+                        <td class="text-emphasis">www.calipari.ru</td>
                     </tr>
                     <tr>
                         <td class="spacer"></td>
@@ -136,14 +143,20 @@
 </div>
 <style>
     @font-face {
-        font-family: "Roboto Condensed";
+        font-family: "Oswald";
+        src: url({{ env('APP_URL') }}/fonts/Oswald-ExtraLight.ttf) format("truetype");
+        font-weight: normal;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: "Roboto Condensed Light";
         src: url({{ env('APP_URL') }}/fonts/RobotoCondensed-Light.ttf) format("truetype");
         font-weight: normal;
         font-style: normal;
     }
     @font-face {
-        font-family: "Oswald";
-        src: url({{ env('APP_URL') }}/fonts/Oswald-ExtraLight.ttf) format("truetype");
+        font-family: "Roboto Condensed";
+        src: url({{ env('APP_URL') }}/fonts/RobotoCondensed-Regular.ttf) format("truetype");
         font-weight: normal;
         font-style: normal;
     }
@@ -152,7 +165,7 @@
         margin: 0
     }
     body {
-        font-family: "Roboto Condensed";
+        font-family: "Roboto Condensed Light";
         font-size: 14px;
         color: #666666;
         padding: 0;
@@ -172,6 +185,9 @@
     }
     .text-emphasis {
         color: #000000;
+    }
+    .text-bolder {
+        font-family: "Roboto Condensed";
     }
     .spec-item {
         font-family: "Oswald";
@@ -196,9 +212,11 @@
     }
     .header {
         font-family: "Oswald";
-        color: #000000;
+        font-size: 16px;
+        line-height: 0.9;
         text-transform: uppercase;
         letter-spacing: .03em;
+        padding-left: 10px;
     }
     .text-small {
         font-size: 12px;
