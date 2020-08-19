@@ -11,7 +11,7 @@
             @endcomponent
             <span class="text-center">С уважением,</span>
             <a class="write-us__logo" href="{{ env('CLIENT_BASE_URL') }}" target=_blank>
-                <img src="{{ env('APP_URL') }}/img/email/calipari-gray.jpg" alt="">
+                <img src="{{ env('APP_URL') }}/img/email/calipari-gray.png" alt="">
             </a>
         </td>
     </tr>

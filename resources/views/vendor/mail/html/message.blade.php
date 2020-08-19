@@ -2,7 +2,7 @@
 {{-- Header --}}
 @slot('header')
 @component('mail::header', ['url' => env('CLIENT_BASE_URL')])
-<img src="{{ env('APP_URL') }}/img/email/calipari-primary.jpg" class="logo" alt="Calipari">
+<img src="{{ env('APP_URL') }}/img/email/calipari-primary.png" class="logo" alt="Calipari">
 @endcomponent
 @endslot
 
