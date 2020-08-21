@@ -87,4 +87,22 @@ class Order extends Model
     {
         return json_decode($this->customer, true);
     }
+
+    /**
+     * @return array
+     */
+    public function getDelivery(): array
+    {
+        return json_decode($this->delivery, true);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentStatusAlias()
+    {
+        $currentStatus = $this->statuses->last();
+
+        return $currentStatus->alias;
+    }
 }

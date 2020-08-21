@@ -1,4 +1,4 @@
-@component('mail::message')
+@component('mail::auth-layout')
 @component('mail::top', ['icon' => 'user'])
 # ПОДТВЕРЖДЕНИЕ EMAIL
 

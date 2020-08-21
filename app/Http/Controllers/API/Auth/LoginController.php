@@ -36,14 +36,14 @@ class LoginController extends BaseLoginController
      */
     public function login(LoginRequest $request)
     {
-//        if ($this->hasTooManyLoginAttempts($request)) {
-//            $this->fireLockoutEvent($request);
-//
-//            return response()->json([
-//                'message' => trans('auth.locked_out'),
-//                'status' => 'danger'
-//            ], 403);
-//        }
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+
+            return response()->json([
+                'message' => trans('auth.locked_out'),
+                'status' => 'danger'
+            ], 403);
+        }
 
         $this->incrementLoginAttempts($request);
 

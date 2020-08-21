@@ -1,0 +1,1 @@
+По любым вопросам связанным с работой интернет-магазина [{{ env('CLIENT_DOMAIN') }}]({{ env('CLIENT_BASE_URL') }}) Вы можете позвонить по номеру [{{ $companyPhone }}](tel:{{ phoneFormat($companyPhone) }}), написать на адрес электронной почты [{{ $companyEmail }}](mailto:{{  $companyEmail }}) или ответить на это письмо.

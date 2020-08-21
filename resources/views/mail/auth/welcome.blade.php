@@ -24,4 +24,8 @@
 
 <x-mail.write-us />
 
+{{-- Subfooter --}}
+@slot('subfooter')
+<x-mail.for-any-questions />
+@endslot
 @endcomponent

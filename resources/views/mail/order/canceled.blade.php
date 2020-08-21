@@ -1,4 +1,4 @@
-@component('mail::order-layout', ['config' => $config])
+@component('mail::order-layout')
 
 @component('mail::top', ['icon' => 'bag'])
 # ЗАКАЗ ОТМЕНЕН

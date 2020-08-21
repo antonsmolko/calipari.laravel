@@ -7,30 +7,30 @@
             <table width="100%" cellpadding="0" cellspacing="0">
                 <tr class="order-item__specs-item">
                     <td class="order-item__specs-title"><b>Артикул:</b></td>
-                    <td>{{ $item['article'] }}</td>
+                    <td class="order-item__specs-value">{{ $item['article'] }}</td>
                 </tr>
                 <tr class="order-item__specs-item">
                     <td class="order-item__specs-title"><b>Размеры:</b></td>
-                    <td>{{ $item['dimensions'] }}</td>
+                    <td class="order-item__specs-value">{{ $item['dimensions'] }}</td>
                 </tr>
                 <tr class="order-item__specs-item">
                     <td class="order-item__specs-title"><b>Материал:</b></td>
-                    <td>{{ $item['texture'] }} / {{ $item['stripes_count'] }} пол.</td>
+                    <td class="order-item__specs-value">{{ $item['texture'] }} / {{ $item['stripes_count'] }} пол.</td>
                 </tr>
                 @if(!empty($item['filter']))
                     <tr class="order-item__specs-item">
                         <td class="order-item__specs-title"><b>Эффекты:</b></td>
-                        <td>{{ $item['filter'] }}</td>
+                        <td class="order-item__specs-value">{{ $item['filter'] }}</td>
                     </tr>
                 @endif
                 <tr class="order-item__specs-item">
                     <td class="order-item__specs-title"><b>Количество:</b></td>
-                    <td>{{ $item['qty'] }}</td>
+                    <td class="order-item__specs-value">{{ $item['qty'] }}</td>
                 </tr>
                 @if(!empty($item['added_costs_amount']))
                     <tr class="order-item__specs-item">
                         <td class="order-item__specs-title"><b>Доп. услуги:</b></td>
-                        <td>{{ number_format($item['added_costs_amount'], 0, '.', ' ') }} ₽</td>
+                        <td class="order-item__specs-value">{{ number_format($item['added_costs_amount'], 0, '.', ' ') }} ₽</td>
                     </tr>
                 @endif
                 <tr>

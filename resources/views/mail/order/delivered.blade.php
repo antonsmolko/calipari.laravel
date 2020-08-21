@@ -1,11 +1,11 @@
 @component('mail::order-layout')
 
 @component('mail::top', ['icon' => 'bag'])
-# ЗАКАЗ ОТПРАВЛЕН
+# ЗАКАЗ ДОСТАВЛЕН
 
 Здравствуйте, {{ $order['customer']['name'] }}!
 
-Ваш заказ № __{{ $order['number'] }}__ от {{ $order['date'] }} отправлен.
+Ваш заказ № __{{ $order['number'] }}__ от {{ $order['date'] }} доставлен.
 @endcomponent
 
 @component('components.mail.space')

@@ -1,1 +1,1 @@
-{{ $slot }}{{ $style }}
+{{ $slot }}

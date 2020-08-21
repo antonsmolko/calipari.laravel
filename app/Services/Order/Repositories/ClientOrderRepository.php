@@ -4,6 +4,7 @@
 namespace App\Services\Order\Repositories;
 
 
+use App\Events\Models\Order\OrderSetStatus;
 use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\User;
@@ -63,6 +64,7 @@ class ClientOrderRepository extends ClientBaseResourceRepository
     public function changeStatus(Order $order, int $status): ClientOrderResource
     {
         $order->statuses()->syncWithoutDetaching([$status]);
+        event(new OrderSetStatus($order));
 
         return new ClientOrderResource($order);
     }

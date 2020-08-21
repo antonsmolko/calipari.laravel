@@ -15,20 +15,19 @@ class GetFormattedOrderDetailsHandler
      */
     public function handle(Order $order): array
     {
-        $delivery = json_decode($order->delivery, true);
-        $customer = json_decode($order->customer, true);
-        $goodQty = $this->getGoodsQtyString($order->items);
-
         return [
             'number' => $order->number,
+            'hash_number' => $order->hash_number,
             'date' => $order->created_at->format('d.m.Y'),
             'status' => $order->statuses->last()->title,
             'items' => $this->getFormattedItems($order->items),
-            'delivery' => $delivery,
-            'customer' => $customer,
-            'goodsQty' => $goodQty,
+            'delivery' => $order->getDelivery(),
+            'customer' => $order->getCustomer(),
+            'goodsQty' => $this->getGoodsQtyString($order->items),
             'price' => $order->price,
-            'comment' => $order->comment
+            'comment' => $order->comment,
+            'refund_amount' => $order->refund_amount,
+            'refund_reason' => $order->refund_reason
         ];
     }
 

@@ -2,12 +2,13 @@
 
 namespace App\Listeners\Mail\Order;
 
-use App\Events\Models\Order\OrderCreated;
+
+use App\Events\Models\Order\OrderSetStatus;
 use App\Services\Order\CmsOrderService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class SendCreated implements ShouldQueue
+class SendByStatus implements ShouldQueue
 {
     use InteractsWithQueue;
 
@@ -22,12 +23,12 @@ class SendCreated implements ShouldQueue
         $this->orderSevice = $orderSevice;
     }
 
-    /**
-     * Handle the event.
-     *
-     * @param  OrderCreated $event
-     * @return void
-     */
+//    /**
+//     * Handle the event.
+//     *
+//     * @param  OrderSetStatus $event
+//     * @return void
+//     */
 //    public function handle(OrderCreated $event)
 //    {
 //        $this->orderSevice->sendMail(\App\Mail\OrderInProcess::class, $event->order);
@@ -36,10 +37,10 @@ class SendCreated implements ShouldQueue
     /**
      * * Determine whether the listener should be queued.
      *
-     * @param OrderCreated $event
+     * @param OrderSetStatus $event
      */
-    public function shouldQueue(OrderCreated $event)
+    public function shouldQueue(OrderSetStatus $event)
     {
-        $this->orderSevice->sendMail(\App\Mail\OrderInProcess::class, $event->order);
+        $this->orderSevice->sendByStatusMail($event->order);
     }
 }

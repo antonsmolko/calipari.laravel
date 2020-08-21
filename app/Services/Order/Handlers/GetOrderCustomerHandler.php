@@ -15,7 +15,7 @@ class GetOrderCustomerHandler
         return [
             'name' => $this->getFullName($requestCustomer),
             'email' => $requestCustomer['email'],
-            'phone' => $this->getPhoneFormat($requestCustomer['phone'])
+            'phone' => $requestCustomer['phone']
         ];
     }
 
@@ -26,16 +26,5 @@ class GetOrderCustomerHandler
     private function getFullName(array $customer): string
     {
         return $customer['last_name'] . ' ' . $customer['first_name'] . ' ' . $customer['middle_name'];
-    }
-
-    /**
-     * @param string $phone
-     * @return string
-     */
-    private function getPhoneFormat(string $phone): string
-    {
-        $phoneClean = preg_replace('/[^0-9]/', '', $phone);
-
-        return preg_replace('/^[7]/', '8', $phoneClean);
     }
 }

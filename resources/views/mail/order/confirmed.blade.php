@@ -1,4 +1,4 @@
-@component('mail::order-layout', ['config' => $config])
+@component('mail::order-layout')
 
 @component('mail::top', ['icon' => 'bag'])
 # ЗАКАЗ ПОДТВЕРЖДЕН
@@ -49,13 +49,11 @@ __{{ number_format($order['price'], 0, '.', ' ') }} ₽__
 @component('components.mail.divider')
 @endcomponent
 
-@component('mail::button', ['url' => env('CLIENT_BASE_URL') . $payUrl, 'color' => 'red'])
+@component('mail::button', ['url' => env('CLIENT_BASE_URL') . $link, 'color' => 'red'])
 Перейти к оплате
 @endcomponent
 
-@if(!empty($config['company_email']))
 @component('mail::subcopy')
-Если Вы не оформляли заказ на сайте [{{ env('CLIENT_DOMAIN') }}]({{ env('CLIENT_BASE_URL') }}) просим уведомить нас по адресу электронной почты [{{ $config['company_email'] }}]({{ $config['company_email'] }}).
+Если Вы не оформляли заказ на сайте [{{ env('CLIENT_DOMAIN') }}]({{ env('CLIENT_BASE_URL') }}), ни каких дейтсвий не требуется. Просим уведомить нас об этом по адресу электронной почты [{{ $companyEmail }}](mailto:{{ $companyEmail }}).
 @endcomponent
-@endif
 @endcomponent

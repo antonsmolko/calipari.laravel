@@ -1,4 +1,4 @@
-@component('mail::order-layout', ['config' => $config])
+@component('mail::order-layout')
 
 @component('mail::top', ['icon' => 'bag'])
 # ЗАКАЗ ОПЛАЧЕН
@@ -12,7 +12,7 @@
 @endcomponent
 
 @component('mail::block-centered')
-# СУММА ОПЛАТЫ <span class="text-red">{{ number_format($order['amount'], 0, '.', ' ') }} ₽</span>
+# СУММА ОПЛАТЫ <span class="text-red">{{ number_format($order['price'], 0, '.', ' ') }} ₽</span>
 В ближайшее время Ваш заказ поступит в производство.
 @endcomponent
 @endcomponent

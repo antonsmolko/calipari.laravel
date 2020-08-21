@@ -439,10 +439,14 @@ img {
     padding-top: 24px;
 }
 a.write-us__social-link {
-    padding: 0 12px;
+    margin: 0 24px;
     font-size: 12px;
     text-decoration: none;
     color: #767676;
+}
+a.write-us__social-link:last-of-type,
+a.write-us__social-link:first-of-type {
+    margin: 0;
 }
 a.write-us__logo img {
     width: 60px;

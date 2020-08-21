@@ -139,7 +139,7 @@ class EventServiceProvider extends ServiceProvider
 
         \App\Events\Models\Order\OrderCreated::class => [
             \App\Listeners\Cache\Clear\OrderCacheClear::class,
-            \App\Listeners\Mail\Order\SendCreated::class,
+            \App\Listeners\Mail\Order\SendByStatus::class,
         ],
 
         \App\Events\Models\Order\OrderUpdated::class => [
@@ -148,11 +148,15 @@ class EventServiceProvider extends ServiceProvider
 
         \App\Events\Models\Order\OrderCanceled::class => [
             \App\Listeners\Cache\Clear\OrderCacheClear::class,
-            \App\Listeners\Mail\Order\SendCanceled::class,
+            \App\Listeners\Mail\Order\SendByStatus::class,
         ],
 
         \App\Events\Models\Order\OrderDeleted::class => [
             \App\Listeners\Cache\Clear\OrderCacheClear::class,
+        ],
+        \App\Events\Models\Order\OrderSetStatus::class => [
+            \App\Listeners\Cache\Clear\OrderCacheClear::class,
+            \App\Listeners\Mail\Order\SendByStatus::class,
         ],
 
         \App\Events\Models\User\UserSaved::class => [

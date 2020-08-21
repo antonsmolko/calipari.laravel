@@ -14,6 +14,7 @@ use App\Services\Cache\Tag;
 use App\Services\Cache\TTL;
 use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Order\Handlers\GetFormattedOrderDetailsHandler;
+use App\Services\Order\Handlers\GetMailClassByOrderStatusHandler;
 use App\Services\Order\Handlers\RefundHandler;
 use App\Services\Order\Repositories\CmsOrderRepository;
 use App\Services\OrderStatus\Repositories\OrderStatusRepository;
@@ -31,6 +32,7 @@ class CmsOrderService extends CmsBaseResourceService
     private PaymentService $paymentService;
     private OrderStatusRepository $orderStatusRepository;
     private PdfService $pdfService;
+    private GetMailClassByOrderStatusHandler $getMailClassByOrderStatusHandler;
 
     /**
      * CmsOrderService constructor.
@@ -42,6 +44,7 @@ class CmsOrderService extends CmsBaseResourceService
      * @param CacheKeyManager $cacheKeyManager
      * @param OrderStatusRepository $orderStatusRepository
      * @param PdfService $pdfService
+     * @param GetMailClassByOrderStatusHandler $getMailClassByOrderStatusHandler
      */
     public function __construct(
         CmsOrderRepository $repository,
@@ -51,7 +54,8 @@ class CmsOrderService extends CmsBaseResourceService
         PaymentService $paymentService,
         CacheKeyManager $cacheKeyManager,
         OrderStatusRepository $orderStatusRepository,
-        PdfService $pdfService
+        PdfService $pdfService,
+        GetMailClassByOrderStatusHandler $getMailClassByOrderStatusHandler
     )
     {
         parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
@@ -60,6 +64,7 @@ class CmsOrderService extends CmsBaseResourceService
         $this->paymentService = $paymentService;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->pdfService = $pdfService;
+        $this->getMailClassByOrderStatusHandler = $getMailClassByOrderStatusHandler;
         $this->cacheTag = Tag::ORDERS_TAG;
     }
 
@@ -178,13 +183,19 @@ class CmsOrderService extends CmsBaseResourceService
         $order = $this->repository->getItem($id);
         $changeStatusOrder = $this->repository->changeStatus($order, $requestData['status']);
 
-        $this->sendMail(\App\Mail\ChangeOrderStatus::class, $changeStatusOrder);
-
-        event(new OrderUpdated());
-
         return !empty($requestData['list'])
             ? new OrderFromListResource($changeStatusOrder)
             : new OrderResource($changeStatusOrder);
+    }
+
+    public function sendByStatusMail(Order $order)
+    {
+        $mailClass = $this->getMailClassByOrderStatusHandler
+            ->handle($order->getCurrentStatusAlias());
+
+        if ($mailClass) {
+            $this->sendMail($mailClass, $order);
+        }
     }
 
     /**

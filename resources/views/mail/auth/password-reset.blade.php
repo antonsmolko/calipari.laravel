@@ -1,4 +1,4 @@
-@component('mail::message')
+@component('mail::auth-layout')
 @component('mail::top', ['icon' => 'user'])
 # СБРОС ПАРОЛЯ
 
@@ -13,7 +13,7 @@
 @component('mail::block-centered')
 Срок действия ссылки для сброса пароля истекает через 60 минут.
 
-После нажатия на кнопку «Сбросить пароль» Вы будете переправлены на сайт [{{ env('CLIENT_DOMAIN') }}]({{ env('CLIENT_DOMAIN') }}) для ввода нового пароля.
+После нажатия на кнопку «Сбросить пароль» Вы будете переправлены на сайт [{{ env('CLIENT_DOMAIN') }}]({{ env('CLIENT_BASE_URL') }}) для ввода нового пароля.
 @endcomponent
 
 @component('mail::button', ['url' => $link])
