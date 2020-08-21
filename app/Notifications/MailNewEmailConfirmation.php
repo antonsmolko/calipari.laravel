@@ -44,12 +44,11 @@ class MailNewEmailConfirmation extends Notification
     {
         $link = url('api/auth/user/confirm/' . $notifiable->emailConfirmation->token);
         return ( new MailMessage )
-            ->subject( 'Подтверждение нового адреса электронной почты - ' . $notifiable->emailConfirmation->email )
-            ->greeting('Добро пожаловать, ' . $notifiable->name . '!')
-            ->line( 'Пожалуйста, нажмите на ссылку ниже, чтобы подтвердить свой новый адрес электронной почты.' )
-            ->line( 'Если вы не регистрировались на нашем сайте или не делали запрос на смену адреса электронной почты никаких дальнейших действий не требуется.' )
-            ->action( 'Подтвердить новый Email - ' . $notifiable->emailConfirmation->email, $link )
-            ->markdown('mail.auth.email-verification');
+            ->subject( 'Подтверждение смены адреса электронной почты')
+            ->markdown('mail.auth.email-change-confirmation', [
+                'link' => $link,
+                'name' => $notifiable->name
+            ]);
     }
 
     /**

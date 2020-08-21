@@ -44,12 +44,12 @@ class MailEmailConfirmation extends Notification
     {
         $link = url('api/auth/user/confirm/' . $notifiable->emailConfirmation->token);
         return ( new MailMessage )
+            ->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
             ->subject( 'Подтверждение адреса электронной почты' )
-            ->greeting('Добро пожаловать, ' . $notifiable->name . '!')
-            ->line( 'Пожалуйста, нажмите на ссылку ниже, чтобы подтвердить свой адрес электронной почты.' )
-            ->line( 'Если вы не регистрировались на нашем сайте, никаких дальнейших действий не требуется.' )
-            ->action( 'Подтвердить Email', $link )
-            ->markdown('mail.auth.email-verification');
+            ->markdown('mail.auth.email-confirmation', [
+                'link' => $link,
+                'name' => $notifiable->name
+            ]);
     }
 
     /**

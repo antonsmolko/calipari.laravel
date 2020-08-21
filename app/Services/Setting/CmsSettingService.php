@@ -150,4 +150,13 @@ class CmsSettingService extends CmsBaseResourceService
 
         return $items->all();
     }
+
+    /**
+     * @param array $keys
+     * @return mixed
+     */
+    public function getEntriesWhereKeyIn(array $keys)
+    {
+        return $this->repository->getEntriesWereKeyIn($keys);
+    }
 }

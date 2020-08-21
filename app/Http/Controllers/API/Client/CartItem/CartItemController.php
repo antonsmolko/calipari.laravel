@@ -57,6 +57,7 @@ class CartItemController extends BaseResourceController
      */
     public function sync(SyncRequest $request): JsonResponse
     {
+        dump($request->all());
         return response()->json($this->service->sync($request->items));
     }
 

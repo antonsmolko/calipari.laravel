@@ -90,6 +90,16 @@ class AuthService extends BaseAuthService
      * @param \Illuminate\Contracts\Auth\Authenticatable|User $user
      * @param string $email
      */
+    public function createWelcomeEmailConfirmation($user, string $email)
+    {
+        $this->repository->setConfirmToken($user, $email);
+        $user->sendWelcomeNotification();
+    }
+
+    /**
+     * @param \Illuminate\Contracts\Auth\Authenticatable|User $user
+     * @param string $email
+     */
     public function createNewEmailConfirmation($user, string $email)
     {
         $this->repository->setConfirmToken($user, $email);

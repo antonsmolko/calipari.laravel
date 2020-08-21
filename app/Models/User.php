@@ -8,6 +8,7 @@ use App\Events\Models\User\UserUpdated;
 use App\Notifications\MailEmailConfirmation;
 use App\Notifications\MailNewEmailConfirmation;
 use App\Notifications\MailResetPassword;
+use App\Notifications\MailWelcome;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -110,6 +111,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function sendEmailConfirmationNotification()
     {
         $this->notify(new MailEmailConfirmation());
+    }
+
+    public function sendWelcomeNotification()
+    {
+        $this->notify(new MailWelcome());
     }
 
     public function sendNewEmailConfirmationNotification()

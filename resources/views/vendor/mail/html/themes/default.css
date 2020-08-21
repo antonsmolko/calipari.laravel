@@ -29,7 +29,8 @@ blockquote {
 }
 
 a {
-    color: #3869d4;
+    color: #2d2d2d;
+    /*color: #3869d4;*/
 }
 
 a img {
@@ -117,8 +118,8 @@ img {
 /* Logo */
 
 .logo {
-    height: 30px;
-    width: 90px;
+    width: 120px;
+    height: 40px;
 }
 
 /* Body */
@@ -133,6 +134,7 @@ img {
     margin: 0;
     padding: 0;
     width: 100%;
+    color: #666666;
 }
 
 .inner-body {
@@ -140,9 +142,9 @@ img {
     -premailer-cellspacing: 0;
     -premailer-width: 570px;
     background-color: #ffffff;
-    border-color: #e8e5ef;
+    /*border-color: #e8e5ef;*/
     border-radius: 2px;
-    border-width: 1px;
+    /*border-width: 1px;*/
     box-shadow: 0 2px 0 rgba(0, 0, 150, 0.025), 2px 4px 0 rgba(0, 0, 150, 0.015);
     margin: 0 auto;
     padding: 0;
@@ -152,13 +154,23 @@ img {
 /* Subcopy */
 
 .subcopy {
-    border-top: 1px solid #e8e5ef;
-    margin-top: 25px;
-    padding-top: 25px;
+    border-top: 1px solid #eaeaea;
+    margin-top: 24px;
+    padding-top: 24px;
+}
+
+.subcopy-content {
+    background-color: #f3f3f3;
+    padding: 12px;
 }
 
 .subcopy p {
-    font-size: 14px;
+    font-size: 12px;
+}
+
+.subcopy p:last-of-type {
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 .subcopy a {
@@ -225,8 +237,7 @@ img {
     -premailer-width: 100px;
     margin: 30px auto 30px 0;
     padding: 0;
-    text-align: left;
-    width: auto;
+    text-align: center;
 }
 
 .button {
@@ -236,6 +247,7 @@ img {
     display: inline-block;
     overflow: hidden;
     text-decoration: none;
+    text-align: center;
 }
 
 .button-blue,
@@ -265,11 +277,12 @@ img {
 
 .button-red,
 .button-error {
-    background-color: #e53e3e;
-    border-bottom: 8px solid #e53e3e;
-    border-left: 18px solid #e53e3e;
-    border-right: 18px solid #e53e3e;
-    border-top: 8px solid #e53e3e;
+    /*background-color: #e53e3e;*/
+    background-color: #D01345;
+    border-bottom: 8px solid #D01345;
+    border-left: 18px solid #D01345;
+    border-right: 18px solid #D01345;
+    border-top: 8px solid #D01345;
 }
 
 /* Panels */
@@ -305,22 +318,27 @@ img {
 }
 
 /* Custom */
-.order-bag {
-    width: 30px;
-    height: 30px;
-    display: block;
-    margin-bottom: 24px;
-}
-
 .divider {
     margin: 24px 0;
 }
 .divider td {
-    border-top: 1px solid #D0D0D0;
+    border-top: 1px solid #eaeaea;
 }
 
-.order-heading h1, .order-heading p {
+.top h1, .top p {
+    text-align: center;
     margin-bottom: 6px !important;
+}
+
+.top b, .top strong {
+    color: #2d2d2d;
+}
+
+.top-icon {
+    width: 30px;
+    height: 30px;
+    display: block;
+    margin-bottom: 12px;
 }
 
 .order-item__image {
@@ -353,6 +371,9 @@ img {
     width: 1%;
     white-space: nowrap;
 }
+.order-item__specs-value {
+    color: #2d2d2d;
+}
 
 .order-item__price {
     font-size: 18px;
@@ -381,12 +402,23 @@ img {
 .text-muted {
     color: #666666;
 }
+.text-red {
+    color: #D01345;
+}
+.order-details__item:not(:last-child) {
+    margin-bottom: 12px;
+}
+
 .order-details__heading {
     color: #767676;
     padding-right: 12px;
 }
 .order-details__value {
     padding-left: 12px;
+    color: #2d2d2d;
+}
+.order-details__value p {
+    margin: 0;
 }
 .order-total-price {
     margin-top: 12px;
@@ -394,11 +426,17 @@ img {
 .order-total-price__heading {
     font-size: 18px;
     padding-right: 12px;
+    color: #2d2d2d;
 }
 .order-total-price__value {
     color: #D01345;
     padding-left: 12px;
     font-size: 18px;
+}
+.write-us, .block-centered {
+    border-top: 1px solid #eaeaea;
+    margin-top: 24px;
+    padding-top: 24px;
 }
 a.write-us__social-link {
     padding: 0 12px;
@@ -413,7 +451,7 @@ a.write-us__logo img {
     margin-top: 5px;
 }
 .subfooter__cell {
-    border-bottom: 1px solid #66666E;
+    border-bottom: 1px solid #44444E;
     padding-top: 24px;
     padding-bottom: 12px;
 }
@@ -425,4 +463,36 @@ a.write-us__logo img {
 .subfooter a {
     color: #99999E;
     text-decoration: underline;
+}
+
+/* Blocks */
+
+.block-centered.mt-0 {
+    margin-top: 0 !important;
+}
+
+.block-centered-item h1,
+.block-centered-item h2,
+.block-centered-item h3,
+.block-centered p {
+    text-align: center;
+}
+
+.block-centered-item h1:last-child,
+.block-centered-item h2:last-child,
+.block-centered-item h3:last-child,
+.block-centered-item p:last-of-type,
+.block-centered-item a:last-of-type {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.regards {
+    margin-top: 32px;
+}
+
+.banner {
+    overflow: hidden;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
 }

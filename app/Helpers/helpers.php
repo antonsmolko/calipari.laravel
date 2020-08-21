@@ -179,29 +179,39 @@ if (! function_exists('wordsDeclension')) {
 }
 
 if (! function_exists('phoneFormat')) {
-    function phoneFormat($phone, $format, $mask = '#')
+//    function phoneFormat($phone, $format, $mask = '#')
+    function phoneFormat($input)
     {
-        $phone = preg_replace('/[^0-9]/', '', $phone);
+//        $phone = preg_replace('/[^0-9]/', '', $phone);
+//
+//        if (is_array($format)) {
+//            if (array_key_exists(strlen($phone), $format)) {
+//                $format = $format[strlen($phone)];
+//            } else {
+//                return false;
+//            }
+//        }
+//
+//        $pattern = '/' . str_repeat('([0-9])?', substr_count($format, $mask)) . '(.*)/';
+//
+//        $format = preg_replace_callback(
+//            str_replace('#', $mask, '/([#])/'),
+//            function () use (&$counter) {
+//                return '${' . (++$counter) . '}';
+//            },
+//            $format
+//        );
+//
+//        return ($phone) ? trim(preg_replace($pattern, $format, $phone, 1)) : false;
+        $trimInput = trim($input); // обрезаем пробелы
+        $patterns = [];
+        $patterns[0] = '/^\+7/'; // заменяем +7 на 8
+        $patterns[1] = '/[^\d]/'; // удаляем все символы кроме цифр - '(', ')', '-', ' '
+        $replacements = [];
+        $replacements[0] = '8';
+        $replacements[1] = '';
 
-        if (is_array($format)) {
-            if (array_key_exists(strlen($phone), $format)) {
-                $format = $format[strlen($phone)];
-            } else {
-                return false;
-            }
-        }
-
-        $pattern = '/' . str_repeat('([0-9])?', substr_count($format, $mask)) . '(.*)/';
-
-        $format = preg_replace_callback(
-            str_replace('#', $mask, '/([#])/'),
-            function () use (&$counter) {
-                return '${' . (++$counter) . '}';
-            },
-            $format
-        );
-
-        return ($phone) ? trim(preg_replace($pattern, $format, $phone, 1)) : false;
+        return preg_replace($patterns, $replacements, $trimInput);
     }
 }
 

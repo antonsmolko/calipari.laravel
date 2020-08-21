@@ -1,4 +1,4 @@
-<table class="space" width="100%" cellpadding="0" cellspacing="0">
+<table class="space" width="100%" cellpadding="0" cellspacing="0" role="presentation">
     <tr>
         <td></td>
     </tr>

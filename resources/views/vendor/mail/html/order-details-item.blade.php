@@ -1,4 +1,4 @@
-<table class="order-details__item" width="100%" cellpadding="0" cellspacing="0">
+<table class="order-details__item" width="100%" cellpadding="0" cellspacing="0" role="presentation">
 <tr>
 <td width="50%" valign="top" class="order-details__heading">
 <b>{{ $title }}</b>

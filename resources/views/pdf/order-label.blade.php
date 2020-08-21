@@ -21,11 +21,6 @@
                                     <td class="header text-emphasis" style="border-right: 1px solid #D3D3D3; padding-right: 3px">
                                         ФОТОПАННО
                                     </td>
-{{--                                    @if($details->texture->seamless)--}}
-{{--                                        <td class="header" style="padding-right: 3px">--}}
-{{--                                            БЕСШОВНОЕ--}}
-{{--                                        </td>--}}
-{{--                                    @endif--}}
                                     <td style="text-align: right; padding-left: 13px">
                                         @if($details->texture->seamless)
                                             <img style="width: 30px; height: auto" src="{{ env('APP_URL') }}/img/svg/pdf/label/landscape.svg" alt="">

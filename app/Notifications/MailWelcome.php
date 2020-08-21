@@ -7,20 +7,20 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-use Illuminate\Auth\Notifications\ResetPassword;
-
-class MailResetPasswordNotification extends ResetPassword
+class MailWelcome extends Notification
 {
     use Queueable;
+
+//    public $user;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($token)
+    public function __construct()
     {
-        parent::__construct($token);
+//        $this->user = $user;
     }
 
     /**
@@ -42,15 +42,14 @@ class MailResetPasswordNotification extends ResetPassword
      */
     public function toMail($notifiable)
     {
-        //        $link = url( "/reset-password/".$this->token );
-        $link = env('CLIENT_BASE_URL' ) . '/reset-password/'.$this->token;
+        $link = url('api/auth/user/confirm/' . $notifiable->emailConfirmation->token);
         return ( new MailMessage )
-            ->subject( 'Подтверждение адреса электронной почты' )
-            ->greeting('Добро пожаловать, Антон!')
-//            ->greeting('Добро пожаловать, ' . $notifiable->name . '!')
-            ->line( 'Пожалуйста, нажмите на ссылку ниже, чтобы подтвердить свой адрес электронной почты.' )
-            ->line( 'Если вы не регистрировались на нашем сайте, никаких дальнейших действий не требуется.' )
-            ->action( 'Подтвердить Email', $link );
+            ->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
+            ->subject( 'Добро пожаловать, ' . $notifiable->name . '!')
+            ->markdown('mail.auth.welcome', [
+                'link' => $link,
+                'name' => $notifiable->name
+            ]);
     }
 
     /**

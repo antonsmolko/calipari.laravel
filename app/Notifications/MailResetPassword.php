@@ -41,16 +41,14 @@ class MailResetPassword extends ResetPassword
      */
     public function toMail($notifiable)
     {
-//        $link = url( '/reset-password/' . $this->token );
         $link = env('CLIENT_BASE_URL' ) . '/reset-password/' . $this->token;
         return ( new MailMessage )
+            ->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
             ->subject( 'Сброс пароля' )
-            ->greeting('Здравствуйте, ' . $notifiable->name . '!')
-            ->line( 'Здравствуйте! Вы получили это письмо, потому что мы получили запрос на сброс пароля для вашей учетной записи.' )
-            ->line( 'Срок действия ссылки для сброса пароля истекает через 60 минут.' )
-            ->line( 'Если вы не запрашивали сброс пароля, никаких дальнейших действий не требуется.' )
-            ->action( 'Сбросить пароль', $link )
-            ->markdown('mail.auth.reset-password');
+            ->markdown('mail.auth.password-reset', [
+                'link' => $link,
+                'name' => $notifiable->name
+            ]);
     }
 
     /**

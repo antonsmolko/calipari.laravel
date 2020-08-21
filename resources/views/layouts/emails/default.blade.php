@@ -1445,7 +1445,7 @@
                     <tbody>
                     <tr>
                         <th>
-                            @include('components.emails.blocks.header')
+                            @include('components.mail.blocks.header')
                             <table align="center" class="container body-border float-center">
                                 <tbody>
                                 <tr>

@@ -62,6 +62,17 @@ class CmsSettingRepository extends CmsBaseResourceRepository
     }
 
     /**
+     * @param array $keys
+     * @return mixed
+     */
+    public function getEntriesWereKeyIn(array $keys)
+    {
+        return $this->model::whereIn('key_name', $keys)
+            ->pluck('value', 'key_name')
+            ->all();
+    }
+
+    /**
      * @param Setting $item
      * @param string|null $value
      */

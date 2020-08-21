@@ -43,7 +43,7 @@
     </tr>
     <tr>
         <td colspan="2">
-            @component('components.emails.divider')
+            @component('components.mail.divider')
             @endcomponent
         </td>
     </tr>

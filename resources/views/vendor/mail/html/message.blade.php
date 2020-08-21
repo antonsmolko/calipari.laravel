@@ -2,9 +2,18 @@
 {{-- Header --}}
 @slot('header')
 @component('mail::header', ['url' => env('CLIENT_BASE_URL')])
-<img src="{{ env('APP_URL') }}/img/email/calipari-primary.png" class="logo" alt="Calipari">
+<img src="{{ env('APP_URL') }}/img/mail/calipari-primary.png" class="logo" alt="Calipari">
 @endcomponent
 @endslot
+
+{{-- Banner --}}
+@isset($banner)
+@slot('banner')
+@component('mail::banner')
+{{ $banner }}
+@endcomponent
+@endslot
+@endisset
 
 {{-- Body --}}
 {{ $slot }}
@@ -20,11 +29,11 @@
 
 {{-- Subfooter --}}
 @isset($subfooter)
-    @slot('subfooter')
-        @component('mail::subfooter')
-            {{ $subfooter }}
-        @endcomponent
-    @endslot
+@slot('subfooter')
+@component('mail::subfooter')
+{{ $subfooter }}
+@endcomponent
+@endslot
 @endisset
 
 {{-- Footer --}}

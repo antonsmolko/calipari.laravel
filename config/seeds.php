@@ -812,14 +812,19 @@ return [
             'order' => 5
         ],
         [
+            'title' => 'Доставлен',
+            'alias' => 'delivered',
+            'order' => 6
+        ],
+        [
             'title' => 'Выполнен',
             'alias' => 'completed',
-            'order' => 6
+            'order' => 7
         ],
         [
             'title' => 'Возмещен',
             'alias' => 'refunded',
-            'order' => 7
+            'order' => 8
         ]
     ]
 ];

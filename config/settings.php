@@ -66,5 +66,12 @@ return [
         'colorize' => ['grayscale', 'sepia'],
         'grayscale' => 'ЧБ',
         'sepia' => 'Сепия'
+    ],
+    'mail_config_keys' => [
+        'company_phone',
+        'company_email',
+        'vk_account',
+        'facebook_account',
+        'instagram_account'
     ]
 ];
