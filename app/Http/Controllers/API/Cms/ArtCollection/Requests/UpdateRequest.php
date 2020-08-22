@@ -35,7 +35,7 @@ class UpdateRequest extends FormRequest
                 'required',
                 'max:' . config('validation.images.max_id_number'),
                 Rule::exists('images', 'id')
-                    ->where('art_collection_id', null),
+                    ->whereIn('art_collection_id', [$id, null]),
             ],
             'publish' => 'bail|required|integer',
             'meta_title' => 'bail|max:' . config('validation.meta_title.max'),

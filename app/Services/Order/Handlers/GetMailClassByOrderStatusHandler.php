@@ -13,6 +13,8 @@ class GetMailClassByOrderStatusHandler
     public function handle(string $status)
     {
         switch ($status) {
+            case 'processing':
+                return \App\Mail\Order\Processing::class;
             case 'confirmed':
                 return \App\Mail\Order\Confirmed::class;
             case 'canceled':
