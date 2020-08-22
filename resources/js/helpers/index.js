@@ -1,3 +1,5 @@
+import sortBy from 'lodash/sortBy'
+import last from 'lodash/last'
 import has from 'lodash/has'
 import compact from 'lodash/compact'
 import crc32 from 'crc-32'
@@ -25,6 +27,10 @@ export const getFormatDate = (milliseconds, delimiter = '.') => {
     ];
 
     return formatDate.join(delimiter);
+}
+
+export const getCurrentStatus = (statuses) => {
+    return last(sortBy(statuses, 'order'));
 }
 
 export const getPathMeta = (path) => ({
@@ -101,6 +107,7 @@ export default {
     getFormatPrice,
     getArticle,
     getFormatDate,
+    getCurrentStatus,
     getGates,
     getHash
 }

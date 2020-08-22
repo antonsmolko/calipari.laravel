@@ -307,24 +307,20 @@ export default {
             getStatusesAction: 'orderStatuses/getPublishedItems',
             changeStatusAction: 'orders/changeStatus'
         }),
-        onStatusChange (value, item) {
+        async onStatusChange (value, item) {
             const status = this.getStatusById(value);
 
-            return this.changeStatusConfirm()
-                .then(response => {
-                    if (response.value) {
-                        return this.changeStatusAction({ id: item.id, status: value })
-                            .then(() => {
-                                return swal.fire({
-                                    title: `Заказ № ${item.number} обновлен!`,
-                                    text: `Установлен статус «${status.title}»`,
-                                    timer: 3000,
-                                    icon: 'success',
-                                    showConfirmButton: false
-                                })
-                            });
-                    }
-                })
+            const response = await this.changeStatusConfirm()
+            if (response.value) {
+                await this.changeStatusAction({ id: item.id, status: value })
+                await swal.fire({
+                    title: `Заказ № ${item.number} обновлен!`,
+                    text: `Установлен статус «${status.title}»`,
+                    timer: 3000,
+                    icon: 'success',
+                    showConfirmButton: false
+                });
+            }
         },
         changeStatusConfirm () {
             return swal.fire({

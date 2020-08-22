@@ -12,8 +12,7 @@ class PartiallyRefunded extends Mailable
     use Queueable, SerializesModels;
 
     public array $order;
-    public string $title;
-    public string $subTitlePostfix;
+    public string $titlePostfix;
 
     /**
      * Processing constructor.
@@ -22,6 +21,7 @@ class PartiallyRefunded extends Mailable
     public function __construct(array $order)
     {
         $this->order = $order;
+        $this->titlePostfix = 'частично возмещен';
     }
 
     /**
@@ -33,10 +33,9 @@ class PartiallyRefunded extends Mailable
     {
         return $this
             ->from(['address' => env('MAIL_FROM_ADDRESS'), 'name' => env('APP_NAME')])
-            ->subject('Заказ № ' . $this->order['number'] . ' частично возмещен')
+            ->subject('Заказ № ' . $this->order['number'] . ' ' . $this->titlePostfix)
             ->markdown('mail.order.refunded')
-            ->with($this->title, 'ЗАКАЗ ЧАСТИЧНО ВОЗМЕЩЕН')
-            ->with($this->subTitlePostfix, 'частично возмещен.')
+            ->with($this->titlePostfix)
             ->with($this->order);
     }
 }

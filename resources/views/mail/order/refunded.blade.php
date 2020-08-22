@@ -1,11 +1,11 @@
 @component('mail::order-layout')
 
 @component('mail::top', ['icon' => 'bag'])
-# {{ $title }}
+# ЗАКАЗ {{ Str::upper($titlePostfix) }}
 
 Здравствуйте, {{ $order['customer']['name'] }}!
 
-Ваш заказ № __{{ $order['number'] }}__ от {{ $order['date'] }} {{ $subTitlePostfix }}.
+Ваш заказ № __{{ $order['number'] }}__ от {{ $order['date'] }} {{ $titlePostfix }}.
 @endcomponent
 
 @component('components.mail.space')

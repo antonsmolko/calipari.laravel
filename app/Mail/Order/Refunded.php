@@ -13,7 +13,7 @@ class Refunded extends Mailable
 
     public array $order;
     public string $title;
-    public string $subTitlePostfix;
+    public string $titlePostfix;
 
     /**
      * Processing constructor.
@@ -22,6 +22,7 @@ class Refunded extends Mailable
     public function __construct(array $order)
     {
         $this->order = $order;
+        $this->titlePostfix = 'возмещен';
     }
 
     /**
@@ -33,10 +34,9 @@ class Refunded extends Mailable
     {
         return $this
             ->from(['address' => env('MAIL_FROM_ADDRESS'), 'name' => env('APP_NAME')])
-            ->subject('Заказ № ' . $this->order['number'] . ' возмещен')
+            ->subject('Заказ № ' . $this->order['number'] . ' ' . $this->titlePostfix)
             ->markdown('mail.order.refunded')
-            ->with($this->title, 'ЗАКАЗ ВОЗМЕЩЕН')
-            ->with($this->subTitlePostfix, 'возмещен.')
+            ->with($this->titlePostfix)
             ->with($this->order);
     }
 }
