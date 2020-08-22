@@ -22,6 +22,7 @@ class Order extends Model
     const CANCELED_STATUS = 'canceled';
     const PAID_STATUS = 'paid';
     const COMPLETED_STATUS = 'completed';
+    const PARTIALLY_REFUNDED_STATUS = 'partially_refunded';
     const REFUNDED_STATUS = 'refunded';
 
     /**
@@ -104,5 +105,13 @@ class Order extends Model
         $currentStatus = $this->statuses->last();
 
         return $currentStatus->alias;
+    }
+
+    /**
+     * @return bool
+     */
+    public function fullyRefunded(): bool
+    {
+        return $this->price === $this->refund_amount;
     }
 }

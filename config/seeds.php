@@ -822,9 +822,14 @@ return [
             'order' => 7
         ],
         [
+            'title' => 'Частично возмещен',
+            'alias' => 'partially_refunded',
+            'order' => 8
+        ],
+        [
             'title' => 'Возмещен',
             'alias' => 'refunded',
-            'order' => 8
+            'order' => 9
         ]
     ]
 ];

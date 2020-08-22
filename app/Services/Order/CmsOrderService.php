@@ -4,8 +4,6 @@
 namespace App\Services\Order;
 
 
-use App\Events\Models\Order\OrderSetStatus;
-use App\Events\Models\Order\OrderUpdated;
 use App\Models\Order;
 use App\Models\User;
 use App\Services\Base\Resource\CmsBaseResourceService;
@@ -233,15 +231,14 @@ class CmsOrderService extends CmsBaseResourceService
     public function makeRefund(int $id, array $refundData)
     {
         $order = $this->repository->getItem($id);
-
         $refundedOrder = $this->refundHandler->handle($order, $refundData);
 
-//        if ($refundedOrder->price === $refundedOrder->refund_amount) {
-        $status = $this->orderStatusRepository->getItemByAlias(Order::REFUNDED_STATUS);
+        $statusAlias = $refundedOrder->fullyRefunded()
+            ? Order::REFUNDED_STATUS
+            : Order::PARTIALLY_REFUNDED_STATUS;
+
+        $status = $this->orderStatusRepository->getItemByAlias($statusAlias);
         $this->repository->changeStatus($refundedOrder, $status->id);
-//        } else {
-//            event(new OrderSetStatus($refundedOrder));
-//        }
 
         return $this->repository->getItemDetails($order->id);
     }

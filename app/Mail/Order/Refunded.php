@@ -7,11 +7,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class Refund extends Mailable
+class Refunded extends Mailable
 {
     use Queueable, SerializesModels;
 
     public array $order;
+    public string $title;
+    public string $subTitlePostfix;
 
     /**
      * Processing constructor.
@@ -32,7 +34,9 @@ class Refund extends Mailable
         return $this
             ->from(['address' => env('MAIL_FROM_ADDRESS'), 'name' => env('APP_NAME')])
             ->subject('Заказ № ' . $this->order['number'] . ' возмещен')
-            ->markdown('mail.order.refund')
+            ->markdown('mail.order.refunded')
+            ->with($this->title, 'ЗАКАЗ ВОЗМЕЩЕН')
+            ->with($this->subTitlePostfix, 'возмещен.')
             ->with($this->order);
     }
 }

@@ -25,8 +25,10 @@ class GetMailClassByOrderStatusHandler
                 return \App\Mail\Order\Delivered::class;
             case 'completed':
                 return \App\Mail\Order\Completed::class;
-            case 'refund':
-                return \App\Mail\Order\Refund::class;
+            case 'partially_refunded':
+                return \App\Mail\Order\PartiallyRefunded::class;
+            case 'refunded':
+                return \App\Mail\Order\Refunded::class;
             default:
                 return null;
         }

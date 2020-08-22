@@ -6,7 +6,7 @@
                     <div>
                         <router-button-link
                             title="К списку заказов"
-                            route="cms.store.orders" />
+                            route="cms.store.orders"/>
                         <router-button-link
                             title="В заказ"
                             icon="visibility"
@@ -15,7 +15,7 @@
                     </div>
                     <div>
                         <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
-                            <control-button title="Сделать возврат" @click="refund" />
+                            <control-button title="Сделать возврат" @click="refund"/>
                         </slide-y-down-transition>
                     </div>
                 </md-card-content>
@@ -39,7 +39,7 @@
                                  :maxlength="6"
                                  :rangeMin="1"
                                  :rangeMax="availableRefundAmount"
-                                 :vRules="{ required: true, numeric: true, between: true }" />
+                                 :vRules="{ required: true, numeric: true, between: true }"/>
 
                         <v-input title="Причина возврата"
                                  icon="notes"
@@ -47,7 +47,7 @@
                                  :value="refundReason"
                                  :maxlength="255"
                                  :vField="$v.refundReason"
-                                 :module="storeModule" />
+                                 :module="storeModule"/>
 
                         <v-input title="ID платежа"
                                  placeholder="Скопируйте ID платежа"
@@ -57,7 +57,7 @@
                                  :maxlength="50"
                                  :vField="$v.comparedPaymentId"
                                  :module="storeModule"
-                                 :vRules="{ sameAs: true }" />
+                                 :vRules="{ sameAs: true }"/>
                     </div>
                     <div class="space-30"></div>
                 </md-card-content>
@@ -67,10 +67,10 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
-import { numeric, sameAs, required, between } from 'vuelidate/lib/validators'
+import {mapActions, mapState} from 'vuex';
+import {numeric, sameAs, required, between} from 'vuelidate/lib/validators'
 
-import { pageTitle } from '@/mixins/base';
+import {pageTitle} from '@/mixins/base';
 import swal from "sweetalert2";
 
 export default {
@@ -78,13 +78,13 @@ export default {
     mixins: [pageTitle],
     props: {
         id: {
-            type: [ String, Number ],
+            type: [String, Number],
             required: true
         }
     },
-    data () {
+    data() {
         return {
-            redirectRoute: { name: 'cms.store.orders.order', params: { id: this.id } },
+            redirectRoute: {name: 'cms.store.orders.order', params: {id: this.id}},
             storeModule: 'orders'
         }
     },
@@ -113,30 +113,32 @@ export default {
             refundAmount: state => state.fields.refundAmount,
             refundReason: state => state.fields.refundReason
         }),
-        refundAvailable () {
+        refundAvailable() {
             return this.order.paid && (this.availableRefundAmount > 0)
         },
-        availableRefundAmount () {
+        availableRefundAmount() {
             const amount = this.order.price - Number(this.order.refund_amount);
 
             return amount > 0 ? amount : 0;
         }
     },
     async created() {
+        const orderNumber = this.order.number;
+
         await this.getItemAction(this.id)
             .then(() => {
                 if (!this.refundAvailable) {
                     this.$router.push(this.redirectRoute)
 
                     return swal.fire({
-                        title: `Заказ № ${this.order.number} не может быть возмещен!`,
+                        title: `Заказ № ${orderNumber} не может быть возмещен!`,
                         text: 'Еще не оплачен или уже полностью возмещен',
-                        timer: 5000,
                         icon: 'danger',
+                        timer: 5000,
                         showConfirmButton: false
                     })
                 }
-                this.setPageTitle(`Возмещение заказа № ${this.order.number}`);
+                this.setPageTitle(`Возмещение заказа № ${orderNumber}`);
             })
             .catch(() => this.$router.push(this.redirectRoute));
 
@@ -146,7 +148,7 @@ export default {
             refundReason: this.order.refund_reason || '',
         });
     },
-    beforeDestroy () {
+    beforeDestroy() {
         this.setOrderFieldsAction({
             comparedPaymentId: '',
             refundAmount: 0,
@@ -161,7 +163,7 @@ export default {
             setOrderFieldAction: 'orders/setItemField',
             setOrderFieldsAction: 'orders/setItemFields'
         }),
-        refund () {
+        refund() {
             const data = {
                 payment_id: this.comparedPaymentId,
                 refund_amount: this.refundAmount,
@@ -170,13 +172,13 @@ export default {
             return this.confirm('Возврат средств невозможно отменить!')
                 .then(response => {
                     if (response.value) {
-                        return this.refundAction({ id: this.id, data })
+                        return this.refundAction({id: this.id, data})
                             .then(() => {
                                 this.$router.push(this.redirectRoute)
 
                                 return swal.fire({
                                     title: `Заказ № ${this.order.number} возмещен!`,
-                                    text: `Cумма возмещения - ${this.refundAmount} ₽`,
+                                    text: `Сумма возмещения - ${this.refundAmount} ₽`,
                                     timer: 5000,
                                     icon: 'success',
                                     showConfirmButton: false
@@ -185,7 +187,7 @@ export default {
                     }
                 });
         },
-        confirm (text) {
+        confirm(text) {
             return swal.fire({
                 title: 'Внимание?',
                 text,

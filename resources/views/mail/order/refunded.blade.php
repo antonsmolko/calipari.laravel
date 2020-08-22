@@ -1,11 +1,11 @@
 @component('mail::order-layout')
 
 @component('mail::top', ['icon' => 'bag'])
-# ЗАКАЗ ВОЗМЕЩЕН
+# {{ $title }}
 
 Здравствуйте, {{ $order['customer']['name'] }}!
 
-Ваш заказ № __{{ $order['number'] }}__ от {{ $order['date'] }} возмещен.
+Ваш заказ № __{{ $order['number'] }}__ от {{ $order['date'] }} {{ $subTitlePostfix }}.
 @endcomponent
 
 @component('components.mail.space')
@@ -23,7 +23,7 @@
 @endcomponent
 
 @component('mail::subcopy')
-Возврат будет произведен в течении восьми рабочих дней (зависит от банка платежного средства) на тоже платежное средство, по которому производилась оплата.
+Возврат будет произведен в течении восьми рабочих дней (зависит от банка платежного средства) на тоже платежное средство, с помощью которого производилась оплата.
 @endcomponent
 
 @endcomponent
