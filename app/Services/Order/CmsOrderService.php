@@ -4,6 +4,7 @@
 namespace App\Services\Order;
 
 
+use App\Events\Models\Order\OrderSetStatus;
 use App\Events\Models\Order\OrderUpdated;
 use App\Models\Order;
 use App\Models\User;
@@ -233,30 +234,14 @@ class CmsOrderService extends CmsBaseResourceService
     {
         $order = $this->repository->getItem($id);
 
-        if ($refundData['payment_id'] !== $order->payment_id) {
-            abort(422, __('order.wrong_payment_id'));
-        }
+        $refundedOrder = $this->refundHandler->handle($order, $refundData);
 
-        if ((int) $refundData['refund_amount'] > $order->price) {
-            abort(422, __('order.refund_cannot_be_more_than_payment'));
-        }
-
-        $refundResponse = $this->paymentService
-            ->refund($order->payment_id, $refundData['refund_amount'], $refundData['refund_reason']);
-
-        if ($refundResponse->getStatus() !== 'succeeded' || $refundResponse->paymentId !== $order->payment_id) {
-            return false;
-        }
-
-        $refundedOrder = $this->repository->update($order, [
-            'refund_amount' => $order->refund_amount + $refundData['refund_amount'],
-            'refund_reason' => $refundData['refund_reason']
-        ]);
-
-        if ($refundedOrder->price === $refundedOrder->refund_amount) {
-            $status = $this->orderStatusRepository->getItemByAlias(Order::REFUNDED_STATUS);
-            $this->repository->changeStatus($order, $status->id);
-        }
+//        if ($refundedOrder->price === $refundedOrder->refund_amount) {
+        $status = $this->orderStatusRepository->getItemByAlias(Order::REFUNDED_STATUS);
+        $this->repository->changeStatus($refundedOrder, $status->id);
+//        } else {
+//            event(new OrderSetStatus($refundedOrder));
+//        }
 
         return $this->repository->getItemDetails($order->id);
     }
