@@ -81,8 +81,7 @@ const actions = {
     }),
     refund: ({ commit }, { id, data }) => axiosAction('post', commit, {
         url: `/store/orders/${id}/refund`,
-        data,
-        thenContent: response => commit('SET_ITEM', response.data)
+        data
     }),
     createCartItem ({ commit }, { data, fileName }) {
         commit('SET_LOADING', true, { root: true });

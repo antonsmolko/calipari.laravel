@@ -123,22 +123,20 @@ export default {
         }
     },
     async created() {
-        const orderNumber = this.order.number;
-
         await this.getItemAction(this.id)
             .then(() => {
                 if (!this.refundAvailable) {
                     this.$router.push(this.redirectRoute)
 
                     return swal.fire({
-                        title: `Заказ № ${orderNumber} не может быть возмещен!`,
+                        title: `Заказ № ${this.order.number} не может быть возмещен!`,
                         text: 'Еще не оплачен или уже полностью возмещен',
                         icon: 'danger',
                         timer: 5000,
                         showConfirmButton: false
                     })
                 }
-                this.setPageTitle(`Возмещение заказа № ${orderNumber}`);
+                this.setPageTitle(`Возмещение заказа № ${this.order.number}`);
             })
             .catch(() => this.$router.push(this.redirectRoute));
 
@@ -163,29 +161,25 @@ export default {
             setOrderFieldAction: 'orders/setItemField',
             setOrderFieldsAction: 'orders/setItemFields'
         }),
-        refund() {
+        async refund() {
             const data = {
                 payment_id: this.comparedPaymentId,
                 refund_amount: this.refundAmount,
                 refund_reason: this.refundReason
             };
-            return this.confirm('Возврат средств невозможно отменить!')
-                .then(response => {
-                    if (response.value) {
-                        return this.refundAction({id: this.id, data})
-                            .then(() => {
-                                this.$router.push(this.redirectRoute)
-
-                                return swal.fire({
-                                    title: `Заказ № ${this.order.number} возмещен!`,
-                                    text: `Сумма возмещения - ${this.refundAmount} ₽`,
-                                    timer: 5000,
-                                    icon: 'success',
-                                    showConfirmButton: false
-                                })
-                            });
-                    }
+            const response = await this.confirm('Возврат средств невозможно отменить!')
+            if (response.value) {
+                await this.refundAction({ id: this.id, data })
+                await swal.fire({
+                    title: `Заказ № ${this.order.number} возмещен!`,
+                    text: `Сумма возмещения - ${this.refundAmount} ₽`,
+                    timer: 5000,
+                    icon: 'success',
+                    showConfirmButton: false
                 });
+                await this.$router.push(this.redirectRoute)
+
+            }
         },
         confirm(text) {
             return swal.fire({
