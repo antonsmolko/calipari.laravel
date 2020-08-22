@@ -24,7 +24,19 @@ class OrderStatusRepository extends CmsBaseResourceRepository
      */
     public function index()
     {
-        return $this->model::orderBy('id')->get();
+        return $this->model::orderBy('id')
+            ->orderBy('order')
+            ->get();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPublishedItems()
+    {
+        return $this->model::published()
+            ->orderBy('order')
+            ->get();
     }
 
     /**

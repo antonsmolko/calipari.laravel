@@ -97,19 +97,19 @@
                 <card-icon-header title="Статусы" icon="update"/>
                 <md-card-content v-if="restStatuses.length">
                     <h4 class="card-title mb-0">Текущий статус</h4>
-                    <md-field v-if="restStatuses.length && currentStatus.alias !== 'canceled'">
+                    <md-field v-if="restStatuses.length && order.status.alias !== 'canceled'">
                         <md-select
                             @md-selected="onStatusChange"
-                            :value="currentStatus.id">
-                            <md-option :value="currentStatus.id" :key="currentStatus.id">
-                                {{ currentStatus.title }}
+                            :value="order.status.id">
+                            <md-option :value="order.status.id" :key="order.status.id">
+                                {{ order.status.title }}
                             </md-option>
                             <md-option v-for="status in restStatuses" :value="status.id" :key="status.id">
                                 {{ status.title }}
                             </md-option>
                         </md-select>
                     </md-field>
-                    <span v-else class="md-title">{{ currentStatus.title }}</span>
+                    <span v-else class="md-title">{{ order.status.title }}</span>
                 </md-card-content>
                 <md-card-content>
                     <md-table
@@ -134,7 +134,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import { getFormatPrice, getArticle, getCurrentStatus } from "@/helpers";
+import { getFormatPrice, getArticle } from "@/helpers";
 import OrderItem from "@/custom_components/Orders/OrderItem";
 
 import { pageTitle, authCheck } from '@/mixins/base';
@@ -164,16 +164,13 @@ export default {
             order: state => state.item
         }),
         restStatuses () {
-            return this.$store.getters['orderStatuses/getRestItems'](this.currentStatus.order);
-        },
-        currentStatus () {
-            return getCurrentStatus(this.order.statuses);
+            return this.$store.getters['orderStatuses/getRestItems'](this.order.status);
         },
         baseTableData () {
             return [
                 { title: 'Номер', content: this.order.number },
                 { title: 'Дата', content: this.order.date },
-                { title: 'Статус', content: this.currentStatus.title }
+                { title: 'Статус', content: this.order.status.title }
             ];
         },
         priceTableData () {
@@ -240,7 +237,7 @@ export default {
         onUpdate() {
             return this.update({
                 sendData: {
-                    status: this.currentStatus.id,
+                    status: this.order.status.id,
                     id: this.id
                 },
                 title: this.order.number,

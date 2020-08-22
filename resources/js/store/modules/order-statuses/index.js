@@ -53,6 +53,12 @@ const actions = {
             thenContent: response => commit('SET_ITEMS', response.data)
         })
     },
+    getPublishedItems({ commit }) {
+        return axiosAction('get', commit, {
+            url: '/store/order-statuses/published',
+            thenContent: response => commit('SET_ITEMS', response.data)
+        })
+    },
     getItem({ commit }, id) {
         return axiosAction('get', commit, {
             url: `/store/order-statuses/${id}`,

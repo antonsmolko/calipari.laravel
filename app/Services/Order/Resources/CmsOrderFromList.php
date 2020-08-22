@@ -24,7 +24,7 @@ class CmsOrderFromList extends JsonResource
             'refund_amount' => $this->refund_amount,
             'refund_reason' => $this->refund_reason,
             'paid' => $this->paid,
-            'statuses' => $this->statuses,
+            'status' => $this->getCurrentStatus(),
             'date' => $this->created_at->format('d.m.Y - H:i:s')
         ];
     }

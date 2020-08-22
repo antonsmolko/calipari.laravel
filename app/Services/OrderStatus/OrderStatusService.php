@@ -27,6 +27,14 @@ class OrderStatusService extends CmsBaseResourceService
     }
 
     /**
+     * @return mixed
+     */
+    public function getPublishedItems()
+    {
+        return $this->repository->getPublishedItems();
+    }
+
+    /**
      * @param string $alias
      * @return mixed
      */

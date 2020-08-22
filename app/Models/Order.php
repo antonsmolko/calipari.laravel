@@ -100,9 +100,17 @@ class Order extends Model
     /**
      * @return mixed
      */
+    public function getCurrentStatus()
+    {
+        return $this->statuses->last();
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCurrentStatusAlias()
     {
-        $currentStatus = $this->statuses->last();
+        $currentStatus = $this->getCurrentStatus();
 
         return $currentStatus->alias;
     }

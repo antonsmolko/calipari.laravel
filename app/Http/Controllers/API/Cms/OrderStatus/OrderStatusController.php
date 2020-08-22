@@ -23,6 +23,14 @@ class OrderStatusController extends BaseResourceController
     }
 
     /**
+     * @return mixed
+     */
+    public function getPublishedItems()
+    {
+        return $this->service->getPublishedItems();
+    }
+
+    /**
      * @param StoreRequest $request
      * @return JsonResponse
      */

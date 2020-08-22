@@ -516,6 +516,7 @@ Route::prefix('cms')
 
         Route::get('order-statuses/{id}/publish', 'Cms\OrderStatus\OrderStatusController@publish')
             ->where('id', '[0-9]+');
+            Route::get('order-statuses/published', 'Cms\OrderStatus\OrderStatusController@getPublishedItems');
         Route::apiResource('order-statuses', 'Cms\OrderStatus\OrderStatusController');
     });
 

@@ -48,16 +48,16 @@
                                 <md-field v-if="getRestItems(item).length">
                                     <md-select
                                         @md-selected="onStatusChange($event, item)"
-                                        :value="getCurrentStatus(item).id">
-                                        <md-option :value="getCurrentStatus(item).id" :key="getCurrentStatus(item).id">
-                                            {{ getCurrentStatus(item).title }}
+                                        :value="item.status.id">
+                                        <md-option :value="item.status.id" :key="item.status.id">
+                                            {{ item.status.title }}
                                         </md-option>
                                         <md-option v-for="status in getRestItems(item)" :value="status.id" :key="status.id">
                                             {{ status.title }}
                                         </md-option>
                                     </md-select>
                                 </md-field>
-                                <span v-else class="md-body-1">{{ getCurrentStatus(item).title }}</span>
+                                <span v-else class="md-body-1">{{ item.status.title }}</span>
                             </md-table-cell>
 
                             <md-table-cell md-label="Действия">
@@ -271,7 +271,6 @@
 <script>
 import { mapActions } from 'vuex'
 
-import { getCurrentStatus } from "@/helpers";
 import { pageTitle, authCheck } from '@/mixins/base'
 import { deleteMethod } from '@/mixins/crudMethods'
 import Tabs from '@/custom_components/Tabs.vue'
@@ -305,7 +304,7 @@ export default {
     },
     methods: {
         ...mapActions({
-            getStatusesAction: 'orderStatuses/getItems',
+            getStatusesAction: 'orderStatuses/getPublishedItems',
             changeStatusAction: 'orders/changeStatus'
         }),
         onStatusChange (value, item) {
@@ -356,12 +355,7 @@ export default {
             return this.$store.getters['orderStatuses/getItemById'](id);
         },
         getRestItems (item) {
-            const currentStatus = this.getCurrentStatus(item)
-
-            return this.$store.getters['orderStatuses/getRestItems'](currentStatus.order);
-        },
-        getCurrentStatus (item) {
-            return getCurrentStatus(item.statuses);
+            return this.$store.getters['orderStatuses/getRestItems'](item.status.order);
         },
         refundAvailability (item) {
             return item.paid && item.price > Number(item.refund_amount);
