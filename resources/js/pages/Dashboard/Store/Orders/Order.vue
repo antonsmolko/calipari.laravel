@@ -115,7 +115,7 @@
                     <md-table
                         md-sort="date"
                         md-sort-order="desc"
-                        :value="order.statuses"
+                        :value="sortedStatuses"
                         class="tm-order-item__table table-striped table-hover">
                         <md-table-row slot="md-table-row" slot-scope="{ item }">
                             <md-table-cell class="tm-width-1-2">
@@ -163,6 +163,9 @@ export default {
         ...mapState('orders', {
             order: state => state.item
         }),
+        sortedStatuses () {
+            return this.$store.getters['orders/getSortedItemStatuses'];
+        },
         restStatuses () {
             return this.$store.getters['orderStatuses/getRestItems'](this.currentStatus.order);
         },

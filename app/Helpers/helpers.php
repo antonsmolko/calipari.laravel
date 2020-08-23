@@ -249,7 +249,7 @@ if (! function_exists('getOrderItemPath')) {
         $flipH = (int) $filter['flipH'];
         $flipV = (int) $filter['flipV'];
         $colorize = (bool) $filter['colorize'] ? $filter['colorize'] : 0;
-        $imagePath = $item->image->path;
+        $imagePath = $item->image ? $item->image->path : 'placeholder.jpg';
 
         return  '/' . $w .
                 '/' . $h .

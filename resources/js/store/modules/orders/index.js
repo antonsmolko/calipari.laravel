@@ -1,3 +1,4 @@
+import orderBy from 'lodash/orderBy'
 import { axiosAction, axiosWithDownload } from "../../mixins/actions";
 
 const state = {
@@ -62,7 +63,10 @@ const mutations = {
 const actions = {
     getItem: ({ commit }, id) => axiosAction('get', commit, {
         url: `/store/orders/${id}/details`,
-        thenContent: response => commit('SET_ITEM', response.data)
+        thenContent: response => {
+            console.log(response.data.statuses)
+            commit('SET_ITEM', response.data)
+        }
     }),
     delete: ({ commit, dispatch }, { payload, tableMode = false }) => axiosAction('delete', commit, {
         url: `/store/orders/${payload}`,
@@ -125,6 +129,7 @@ const actions = {
 };
 
 const getters = {
+    getSortedItemStatuses: state => state.item ? orderBy(state.item.statuses, 'date') : []
 };
 
 export default {

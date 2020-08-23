@@ -29,7 +29,7 @@ class CmsOrder extends JsonResource
             'refund_reason' => $this->refund_reason,
             'refund_amount' => $this->refund_amount,
             'statuses' => OrderStatusWithPivotDate::collection($this->statuses),
-            'date' => $this->created_at->format('d.m.Y - H:i:s')
+            'date' => $this->created_at->format('d.m.Y - H:i:s'),
         ];
     }
 }

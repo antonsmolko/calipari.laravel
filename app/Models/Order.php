@@ -36,16 +36,28 @@ class Order extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function images() {
+    public function images()
+    {
         return $this->hasManyThrough('App\Models\Image', 'App\Models\OrderItem');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function statuses() {
+    public function statuses()
+    {
         return $this->belongsToMany('App\Models\OrderStatus', 'order_order_status', 'order_id', 'status_id')
             ->withTimestamps();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function sortedStatuses()
+    {
+        return $this->statuses
+            ->sortBy('pivot.created_at')
+            ->all();
     }
 
     /**
@@ -102,7 +114,9 @@ class Order extends Model
      */
     public function getCurrentStatus()
     {
-        return $this->statuses->last();
+        return $this->statuses
+            ->sortBy('pivot.created_at')
+            ->last();
     }
 
     /**

@@ -15,7 +15,7 @@ class ClientOrderItem extends JsonResource
     public function toArray($request)
     {
         return [
-            'image_id' => $this->image->id,
+            'image_id' => $this->image_id,
             'article' => getImageArticle($this->image_id),
             'width' => $this->width_cm,
             'height' => $this->height_cm,
