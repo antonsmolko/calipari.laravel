@@ -2,11 +2,10 @@
     <md-card
         class="md-card-tabs"
         :class="[
-      { 'flex-column': flexColumn },
-      { 'nav-pills-icons': navPillsIcons },
-      { 'md-card-plain': plain }
-    ]"
-    >
+          { 'flex-column': flexColumn },
+          { 'nav-pills-icons': navPillsIcons },
+          { 'md-card-plain': plain }
+        ]">
         <md-card-header>
             <slot name="header-title"></slot>
         </md-card-header>
@@ -17,10 +16,9 @@
                     @click="switchPanel(tabName[index])"
                     :key="item"
                     :class="[
-            { active: isActivePanel(tabName[index]) },
-            { [getColorButton(colorButton)]: isActivePanel(tabName[index]) }
-          ]"
-                >
+                        { active: isActivePanel(tabName[index]) },
+                        { [getColorButton(colorButton)]: isActivePanel(tabName[index]) }
+                      ]">
                     {{ tabName[index] }}
                     <md-icon v-if="navPillsIcons">{{ tabIcon[index] }}</md-icon>
                 </md-list-item>
@@ -44,43 +42,42 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            flexColumn: Boolean,
-            navPillsIcons: Boolean,
-            plain: Boolean,
-            tabName: Array,
-            tabIcon: Array,
-            colorButton: {
-                type: String,
-                default: ""
-            },
-            activeTab: {
-                type: String,
-                default: ''
-            }
+export default {
+    props: {
+        flexColumn: Boolean,
+        navPillsIcons: Boolean,
+        plain: Boolean,
+        tabName: Array,
+        tabIcon: Array,
+        colorButton: {
+            type: String,
+            default: ""
         },
-        data() {
-            return {
-                activePanel: ''
-            };
-        },
-        methods: {
-            switchPanel(panel) {
-                this.activePanel = panel;
-            },
-            isActivePanel(panel) {
-                return this.activePanel === panel;
-            },
-            getColorButton: function (colorButton) {
-                return "md-" + colorButton + "";
-            },
-            getTabContent: function (index) {
-                return "tab-pane-" + index + "";
-            }
-        },
-        created() {
-            this.activePanel = this.activeTab ? this.activeTab : this.tabName[0];
+        activeTab: {
+            type: String,
+            default: ''
         }
-    };
+    },
+    data: () => ({
+        activePanel: ''
+    }),
+    methods: {
+        switchPanel (panel) {
+            this.activePanel = panel;
+            this.$emit('tab', panel);
+        },
+        isActivePanel (panel) {
+            return this.activePanel === panel;
+        },
+        getColorButton: function (colorButton) {
+            return "md-" + colorButton + "";
+        },
+        getTabContent: function (index) {
+            return "tab-pane-" + index + "";
+        }
+    },
+    created () {
+        this.activePanel = this.activeTab ? this.activeTab : this.tabName[0];
+    }
+};
 </script>

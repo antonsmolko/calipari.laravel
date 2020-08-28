@@ -5,17 +5,17 @@
 </template>
 
 <script>
-    export default {
-        name: "InputNotificationMinString",
-        props: {
-            name: {
-                type: String,
-                default: 'Поле'
-            },
-            min: {
-                type: Number,
-                default: 2
-            }
+export default {
+    name: "InputNotificationMinString",
+    props: {
+        name: {
+            type: String,
+            default: 'Поле'
+        },
+        min: {
+            type: Number,
+            default: 2
         }
     }
+}
 </script>

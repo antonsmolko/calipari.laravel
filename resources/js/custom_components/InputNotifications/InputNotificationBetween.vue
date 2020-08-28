@@ -5,21 +5,21 @@
 </template>
 
 <script>
-    export default {
-        name: "InputNotificationBetween",
-        props: {
-            name: {
-                type: String,
-                default: 'Поле'
-            },
-            min: {
-                type: Number,
-                default: 0
-            },
-            max: {
-                type: Number,
-                required: true
-            }
+export default {
+    name: "InputNotificationBetween",
+    props: {
+        name: {
+            type: String,
+            default: 'Поле'
+        },
+        min: {
+            type: Number,
+            default: 0
+        },
+        max: {
+            type: Number,
+            required: true
         }
     }
+}
 </script>

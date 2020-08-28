@@ -4,9 +4,7 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link :route="redirectRoute.name"
-                                            :params="redirectRoute.params"
-                                            title="Назад" />
+                        <router-button-link :to="redirectRoute" title="Назад" />
                         <div>
                             <slide-y-down-transition v-show="controlSaveVisibilities && $v.$anyDirty && !$v.$invalid">
                                 <control-button @click="onUpdate" />
@@ -231,7 +229,7 @@ export default {
             return this.$store.getters['posts/isUniqueAliasEdit'](this.alias, this.id);
         }
     },
-    created() {
+    created () {
         const tab = this.$route.params.activePostTab;
         if (tab) {
             this.$set(this.redirectRoute.params, 'activePostTab', this.getTabTitle(tab))
@@ -300,7 +298,7 @@ export default {
 </script>
 
 <style lang="scss">
-    .text-editor .ck.ck-editor__main>.ck-editor__editable {
-        height: 700px !important;
-    }
+.text-editor .ck.ck-editor__main>.ck-editor__editable {
+    height: 700px !important;
+}
 </style>

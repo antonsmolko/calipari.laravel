@@ -4,9 +4,7 @@
             <div class="md-layout-item">
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
-                        <router-button-link
-                            :route="redirectRoute.name"
-                            :params="redirectRoute.params" />
+                        <router-button-link :to="redirectRoute" />
                         <div>
                             <upload-button @change="fileInputChange" />
                         </div>
@@ -63,86 +61,84 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
-    import { pageTitle } from '@/mixins/base'
-    import { deleteImageByIndexMethod, uploadMethod } from '@/mixins/crudMethods'
-    import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
+import { pageTitle } from '@/mixins/base'
+import { deleteImageByIndexMethod, uploadMethod } from '@/mixins/crudMethods'
+import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
 
-    export default {
-        name: 'ImageList',
-        mixins: [
-            pageTitle,
-            deleteImageByIndexMethod,
-            uploadMethod
-        ],
-        components: {
-            ThumbTableCell
-        },
-        props: {
-            id: {
-                type: [ Number, String ],
-                required: true
-            }
-        },
-        data () {
-            return {
-                mainImage: null,
-                responseData: false,
-                storeModule: 'workExamples',
-                redirectRoute: {
-                    name: 'cms.pages.portfolio',
-                    params: { activeTab: 'Модули' }
-                }
-            }
-        },
-        computed: {
-            ...mapState({
-                title: state => state.workExamples.fields.title,
-                images: state => state.workExamples.fields.images,
-                fileProgress: state => state.images.fileProgress
+export default {
+    name: 'ImageList',
+    mixins: [
+        pageTitle,
+        deleteImageByIndexMethod,
+        uploadMethod
+    ],
+    components: {
+        ThumbTableCell
+    },
+    props: {
+        id: {
+            type: [ Number, String ],
+            required: true
+        }
+    },
+    data: () => ({
+        mainImage: null,
+        responseData: false,
+        storeModule: 'workExamples',
+        redirectRoute: {
+            name: 'cms.pages.portfolio',
+            params: { activeTab: 'Модули' }
+        }
+    }),
+    computed: {
+        ...mapState({
+            title: state => state.workExamples.fields.title,
+            images: state => state.workExamples.fields.images,
+            fileProgress: state => state.images.fileProgress
+        })
+    },
+    created () {
+        Promise.all([
+            this.getItemAction(this.id),
+        ])
+            .then(() => {
+                this.setPageTitle(`Изображения работы «${this.title}»`);
+                this.responseData = true;
             })
+            .catch(() => this.$router.push(this.redirectRoute));
+    },
+    methods: {
+        ...mapActions({
+            getItemAction: 'workExamples/getItem'
+        }),
+        fileInputChange (event) {
+            this.upload({
+                uploadFiles: event.target.files,
+                id: this.id,
+                storeModule: this.storeModule
+            });
         },
-        created () {
-            Promise.all([
-                this.getItemAction(this.id),
-            ])
-                .then(() => {
-                    this.setPageTitle(`Изображения работы «${this.title}»`);
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push({ name: this.redirectRoute }));
-        },
-        methods: {
-            ...mapActions({
-                getItemAction: 'workExamples/getItem'
-            }),
-            fileInputChange (event) {
-                this.upload({
-                    uploadFiles: event.target.files,
-                    id: this.id,
-                    storeModule: this.storeModule
-                });
-            },
-            onDelete (item) {
-                this.deleteImageByIndex({
-                    id: this.id,
-                    index: item.index,
-                    alertText: `изображение «${item.index}»`,
-                    successText: 'Изображение удалено!',
-                    storeModule: this.storeModule
-                });
-            }
+        onDelete (item) {
+            this.deleteImageByIndex({
+                id: this.id,
+                index: item.index,
+                alertText: `изображение «${item.index}»`,
+                successText: 'Изображение удалено!',
+                storeModule: this.storeModule
+            });
         }
     }
+}
 </script>
 
 <style lang="scss" scoped>
-    .md-between {
-        display: flex;
-        justify-content: space-between;
-    }
-    .md-progress-bar__container {
-        height: 4px;
-    }
+.md-between {
+    display: flex;
+    justify-content: space-between;
+}
+.md-progress-bar__container {
+    height: 4px;
+}
 </style>

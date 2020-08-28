@@ -4,7 +4,7 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link route="cms.textures" title="К списку фактур" />
+                        <router-button-link :to="{ name: 'cms.textures' }" title="К списку фактур" />
                         <slide-y-down-transition v-show="!$v.$invalid">
                             <control-button @click="onCreate" />
                         </slide-y-down-transition>
@@ -113,13 +113,11 @@ export default {
         createMethod
     ],
     components: { 'text-editor': TextEditor },
-    data() {
-        return {
-            storeModule: 'textures',
-            responseData: false,
-            redirectRoute: { name: 'cms.textures' }
-        }
-    },
+    data: () => ({
+        storeModule: 'textures',
+        responseData: false,
+        redirectRoute: { name: 'cms.textures' }
+    }),
     validations: {
         name: {
             required,
@@ -174,7 +172,7 @@ export default {
         ...mapGetters('textures', [
            'nextOrderNumber'
         ]),
-        isUniqueName() {
+        isUniqueName () {
             return this.$store.getters['textures/isUniqueName'](this.name);
         },
     },
@@ -184,7 +182,7 @@ export default {
             clearFieldsAction: 'clearItemFields',
             setItemFieldAction: 'setItemField'
         }),
-        onCreate() {
+        onCreate () {
             return this.create({
                 sendData: {
                     name: this.name,
@@ -204,7 +202,7 @@ export default {
             })
         }
     },
-    created() {
+    created () {
         this.clearFieldsAction();
         this.setItemFieldAction({ field: 'order', value: this.nextOrderNumber });
         this.getItemsAction()

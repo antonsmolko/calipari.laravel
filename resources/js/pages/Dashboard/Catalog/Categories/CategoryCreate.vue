@@ -6,8 +6,10 @@
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
                         <router-button-link
-                            route="cms.catalog.categories.list"
-                            :params="{ category_type }"/>
+                            :to="{
+                                name: 'cms.catalog.categories.list',
+                                params: { category_type }
+                            }"/>
                         <slide-y-down-transition v-show="!$v.$invalid">
                             <control-button @click="onCreate"/>
                         </slide-y-down-transition>
@@ -99,11 +101,9 @@ export default {
         categoryPage,
         createMethod
     ],
-    data() {
-        return {
-            responseData: false
-        }
-    },
+    data: () => ({
+        responseData: false
+    }),
     validations: {
         title: {
             required,
@@ -148,14 +148,14 @@ export default {
             description: state => state.fields.description,
             keywords: state => state.fields.keywords
         }),
-        isUniqueTitle() {
+        isUniqueTitle () {
             return this.$store.getters['categories/isUniqueTitle'](this.title);
         },
-        isUniqueAlias() {
+        isUniqueAlias () {
             return this.$store.getters['categories/isUniqueAlias'](this.alias);
         }
     },
-    created() {
+    created () {
         this.getItemsAction()
             .then(() => {
                 this.setPageTitle(this.pageProps[this.category_type].CREATE_PAGE_TITLE);
@@ -164,7 +164,7 @@ export default {
             })
             .catch(() => this.$router.push(this.redirectRoute));
     },
-    beforeDestroy() {
+    beforeDestroy () {
         this.clearFieldsAction();
     },
     methods: {
@@ -172,7 +172,7 @@ export default {
             getItemsAction: 'getItems',
             clearFieldsAction: 'clearFields'
         }),
-        onCreate() {
+        onCreate () {
             return this.create({
                 sendData: {
                     type: this.category_type,

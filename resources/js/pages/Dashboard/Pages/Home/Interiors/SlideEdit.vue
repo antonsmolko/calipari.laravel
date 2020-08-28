@@ -4,10 +4,7 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link
-                            :route="redirectRoute.name"
-                            :params="redirectRoute.params"
-                            title="Назад" />
+                        <router-button-link :to="redirectRoute" title="Назад" />
                         <div>
                             <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
                                 <control-button @click="onUpdate" />
@@ -64,99 +61,97 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
-    import { required, numeric } from 'vuelidate/lib/validators'
+import { mapState, mapActions } from 'vuex'
+import { required, numeric } from 'vuelidate/lib/validators'
 
-    import { pageTitle } from '@/mixins/base'
-    import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base'
+import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'InteriorSlideEdit',
-        mixins: [
-            pageTitle,
-            updateMethod,
-            deleteMethod
-        ],
-        props: {
-            id: {
-                type: [ Number, String ],
-                required: true
-            }
+export default {
+    name: 'InteriorSlideEdit',
+    mixins: [
+        pageTitle,
+        updateMethod,
+        deleteMethod
+    ],
+    props: {
+        id: {
+            type: [ Number, String ],
+            required: true
+        }
+    },
+    data: () => ({
+        storeModule: 'homeInteriors',
+        responseData: false,
+        redirectRoute: {
+            name: 'cms.pages.home',
+            params: { activeTab: 'Модули' }
+        }
+    }),
+    validations: {
+        imageId: {
+            required,
+            touch: false
         },
-        data () {
-            return {
-                storeModule: 'homeInteriors',
-                responseData: false,
-                redirectRoute: {
-                    name: 'cms.pages.home',
-                    params: { activeTab: 'Модули' }
-                }
-            }
+        image: {
+            touch: false
         },
-        validations: {
-            imageId: {
-                required,
-                touch: false
-            },
-            image: {
-                touch: false
-            },
-            order: {
-                required,
-                numeric,
-                touch: false
-            }
-        },
-        computed: {
-            ...mapState('homeInteriors', {
-                imageId: state => state.fields.image_id,
-                imagePath: state => state.fields.image_path,
-                image: state => state.fields.image,
-                order: state => state.fields.order
+        order: {
+            required,
+            numeric,
+            touch: false
+        }
+    },
+    computed: {
+        ...mapState('homeInteriors', {
+            imageId: state => state.fields.image_id,
+            imagePath: state => state.fields.image_path,
+            image: state => state.fields.image,
+            order: state => state.fields.order
+        })
+    },
+    created () {
+        this.getItemAction(this.id)
+            .then(() => {
+                this.setPageTitle(`Слайд интерьера к изображению «${this.image_id}»`);
+                this.responseData = true;
             })
-        },
-        created () {
-            this.getItemAction(this.id)
-                .then(() => {
-                    this.setPageTitle(`Слайд интерьера к изображению «${this.image_id}»`);
-                    this.responseData = true;
-                })
-                .then(() => this.$v.$reset())
-                .catch(() => this.$router.push(this.redirectRoute));
-        },
-        methods: {
-            ...mapActions('homeInteriors', {
-                getItemAction: 'getItem',
-                clearFieldsAction: 'clearItemFields'
-            }),
-            onUpdate () {
-                return this.update({
-                    sendData: {
-                        formData: {
-                            image_id : this.imageId,
-                            image : this.image,
-                            order: this.order
-                        },
-                        id: this.id
+            .then(() => this.$v.$reset())
+            .catch(() => this.$router.push(this.redirectRoute));
+    },
+    methods: {
+        ...mapActions('homeInteriors', {
+            getItemAction: 'getItem',
+            clearFieldsAction: 'clearItemFields'
+        }),
+        onUpdate () {
+            return this.update({
+                sendData: {
+                    formData: {
+                        image_id : this.imageId,
+                        image : this.image,
+                        order: this.order
                     },
-                    title: `К изображению «${this.imageId}»`,
-                    successText: 'Слайд обновлен!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                });
-            },
-            onDelete () {
-                this.delete({
-                    payload: {
-                        slideId: this.id
-                    },
-                    title: `К изображению «${this.imageId}»`,
-                    alertText: `слайд к изображению «${this.imageId}»`,
-                    successText: 'Слайд удален!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                })
-            }
+                    id: this.id
+                },
+                title: `К изображению «${this.imageId}»`,
+                successText: 'Слайд обновлен!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            });
+        },
+        onDelete () {
+            this.delete({
+                payload: {
+                    slideId: this.id
+                },
+                title: `К изображению «${this.imageId}»`,
+                alertText: `слайд к изображению «${this.imageId}»`,
+                successText: 'Слайд удален!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            })
         }
     }
+}
 </script>

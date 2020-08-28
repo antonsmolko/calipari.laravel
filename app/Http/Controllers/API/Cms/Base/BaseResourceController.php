@@ -43,7 +43,8 @@ class BaseResourceController
      * @return int
      * @throws \Exception
      */
-    public function destroy(int $id): int {
+    public function destroy(int $id): int
+    {
         return $this->service->destroy($id);
     }
 
@@ -51,7 +52,8 @@ class BaseResourceController
      * @param int $id
      * @return JsonResponse
      */
-    public function publish(int $id): JsonResponse {
+    public function publish(int $id): JsonResponse
+    {
         return response()->json($this->service->publish($id));
     }
 }

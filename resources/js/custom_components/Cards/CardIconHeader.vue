@@ -8,21 +8,21 @@
 </template>
 
 <script>
-    export default {
-        name: "CardIconHeader",
-        props: {
-            icon: {
-                type: String,
-                default: 'settings'
-            },
-            title: {
-                type: String,
-                default: 'Установки'
-            },
-            color: {
-                type: String,
-                default: 'md-card-header-green'
-            }
+export default {
+    name: "CardIconHeader",
+    props: {
+        icon: {
+            type: String,
+            default: 'settings'
+        },
+        title: {
+            type: String,
+            default: 'Установки'
+        },
+        color: {
+            type: String,
+            default: 'md-card-header-green'
         }
     }
+}
 </script>

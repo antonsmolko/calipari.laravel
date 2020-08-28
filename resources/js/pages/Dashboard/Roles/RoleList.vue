@@ -5,7 +5,7 @@
                 <md-card-content class="md-between">
                     <router-button-link title="В панель управления" />
                     <router-button-link title="Создать роль" icon="add" color="md-success"
-                                        route="cms.roles.create" />
+                                        :to="{ name: 'cms.roles.create' }" />
                 </md-card-content>
             </md-card>
 
@@ -58,50 +58,48 @@
 </template>
 
 <script>
-    import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-    import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
-    import TableActions from "@/custom_components/Tables/TableActions";
+import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
+import TableActions from "@/custom_components/Tables/TableActions";
 
-    import { pageTitle } from '@/mixins/base'
-    import { deleteMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base'
+import { deleteMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'RoleList',
-        components: { VExtendedTable, TableActions },
-        mixins: [ pageTitle, deleteMethod ],
-        data() {
-            return {
-                responseData: false,
-                storeModule: 'roles'
-            }
-        },
-        computed: {
-            ...mapState('roles', [
-                'items'
-            ]),
-        },
-        methods: {
-            ...mapActions('roles', {
-                getItemsAction: 'getItems'
-            }),
-            onDelete(item) {
-                return this.delete({
-                    payload: item.id,
-                    title: item.display_name,
-                    alertText: `роль «${item.display_name}»`,
-                    storeModule: this.storeModule,
-                    successText: 'Роль удалена!'
-                })
-            }
-        },
-        created() {
-            this.getItemsAction()
-                .then(() => {
-                    this.setPageTitle('Роли');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push({name: 'cms.dashboard'}));
-        },
+export default {
+    name: 'RoleList',
+    components: { VExtendedTable, TableActions },
+    mixins: [ pageTitle, deleteMethod ],
+    data: () => ({
+        responseData: false,
+        storeModule: 'roles'
+    }),
+    computed: {
+        ...mapState('roles', [
+            'items'
+        ]),
+    },
+    methods: {
+        ...mapActions('roles', {
+            getItemsAction: 'getItems'
+        }),
+        onDelete (item) {
+            return this.delete({
+                payload: item.id,
+                title: item.display_name,
+                alertText: `роль «${item.display_name}»`,
+                storeModule: this.storeModule,
+                successText: 'Роль удалена!'
+            })
+        }
+    },
+    created () {
+        this.getItemsAction()
+            .then(() => {
+                this.setPageTitle('Роли');
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push({name: 'cms.dashboard'}));
     }
+}
 </script>

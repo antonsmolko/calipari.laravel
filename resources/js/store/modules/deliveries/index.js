@@ -7,6 +7,8 @@ const state = {
         alias: '',
         price: '',
         order: '',
+        pickup: '',
+        pickups_required: '',
         publish: '',
         description: ''
     },
@@ -21,7 +23,10 @@ const mutations = {
         state.fields[field] = value;
     },
     TOGGLE_PUBLISH_FIELD (state) {
-        state.fields.publish = +!state.fields.publish;
+        state.fields.publish = Number(!state.fields.publish);
+    },
+    TOGGLE_PICKUP_FIELD (state) {
+        state.fields.pickup = Number(!state.fields.pickup);
     },
     DELETE_ITEM (state, payload) {
         state.items = state.items.filter(item => item.id !== payload);
@@ -32,11 +37,11 @@ const mutations = {
         }
     },
     SET_ITEM_FIELDS (state, payload) {
-        for(const field of Object.keys(state.fields)) {
+        for (const field of Object.keys(state.fields)) {
             state.fields[field] = payload[field] === null ? '' : payload[field];
         }
     },
-    CHANGE_PUBLISH(state, payload) {
+    CHANGE_PUBLISH (state, payload) {
         state.items.forEach(item => {
             if(item.id === payload.id) {
                 item.publish = payload.publish;
@@ -46,53 +51,39 @@ const mutations = {
 };
 
 const actions = {
-    getItems ({ commit }) {
-        return axiosAction('get', commit, {
-            url: '/store/deliveries',
-            thenContent: response => commit('SET_ITEMS', response.data)
-        })
-    },
-    getItem ({ commit }, id) {
-        return axiosAction('get', commit, {
-            url: `/store/deliveries/${id}`,
-            thenContent: response => commit('SET_ITEM_FIELDS', response.data)
-        })
-    },
-    store ({ commit }, formData) {
-        const data = new FormData();
-        for(const [key, value] of Object.entries(formData)) {
-            data.append(key, value);
-        }
-        return axiosAction('post', commit, {
-            url: '/store/deliveries',
-            data
-        })
-    },
-    update ({ commit }, { id, formData }) {
-        const data = new FormData();
-        for(const [key, value] of Object.entries(formData)) {
-            data.append(key, value);
-        }
-        return axiosAction('post', commit, {
-            url: `/store/deliveries/${id}`,
-            data
-        })
-    },
-    delete ({ commit }, { payload }) {
-        return axiosAction('delete', commit, {
-            url: `/store/deliveries/${payload}`,
-            thenContent: response => commit('DELETE_ITEM', payload)
-        })
-    },
-    publish ({ commit }, id) {
-        return axiosAction('get', commit, {
-            url: `/store/deliveries/${id}/publish`,
-            thenContent: response => commit('CHANGE_PUBLISH', response.data)
-
-        })
-    },
+    getItems: ({ commit }) => axiosAction('get', commit, {
+        url: '/store/deliveries',
+        thenContent: response => commit('SET_ITEMS', response.data)
+    }),
+    getPickupItems: ({ commit }) => axiosAction('get', commit, {
+        url: '/store/deliveries/pickup',
+        thenContent: response => commit('SET_ITEMS', response.data)
+    }),
+    getItem: ({ commit }, id) => axiosAction('get', commit, {
+        url: `/store/deliveries/${id}`,
+        thenContent: response => commit('SET_ITEM_FIELDS', response.data)
+    }),
+    store: ({ commit }, data) => axiosAction('post', commit, {
+        url: '/store/deliveries',
+        data
+    }),
+    update: ({ commit }, { id, formData }) => axiosAction('post', commit, {
+        url: `/store/deliveries/${id}`,
+        data: formData
+    }),
+    delete: ({ commit }, { payload }) => axiosAction('delete', commit, {
+        url: `/store/deliveries/${payload}`,
+        thenContent: response => commit('DELETE_ITEM', payload)
+    }),
+    publish: ({ commit }, id) => axiosAction('get', commit, {
+        url: `/store/deliveries/${id}/publish`,
+        thenContent: response => commit('CHANGE_PUBLISH', response.data)
+    }),
     setItemField ({ commit }, payload) {
         commit('SET_ITEM_FIELD', payload);
+    },
+    togglePickupField ({ commit }) {
+        commit('TOGGLE_PICKUP_FIELD');
     },
     togglePublishField ({ commit }) {
         commit('TOGGLE_PUBLISH_FIELD');

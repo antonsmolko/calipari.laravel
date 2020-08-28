@@ -6,10 +6,8 @@ namespace App\Http\Controllers\API\Cms\OrderStatus;
 use App\Http\Controllers\API\Cms\Base\BaseResourceController;
 use App\Http\Controllers\API\Cms\OrderStatus\Requests\StoreRequest;
 use App\Http\Controllers\API\Cms\OrderStatus\Requests\UpdateRequest;
-use App\Http\Requests\FormRequest;
 use App\Services\OrderStatus\OrderStatusService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class OrderStatusController extends BaseResourceController
 {

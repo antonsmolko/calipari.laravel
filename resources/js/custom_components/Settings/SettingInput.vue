@@ -20,6 +20,7 @@
 import { mapActions } from 'vuex'
 import debounce from 'lodash/debounce'
 const _debounce = debounce(fn => fn(), 500)
+
 export default {
     name: 'setting-input',
     props: {
@@ -40,29 +41,27 @@ export default {
             default: null
         }
     },
-    data () {
-        return {
-            inputValue: '',
-            onEdit: false,
-            updateTimeout: null
-        }
-    },
+    data: () => ({
+        inputValue: '',
+        onEdit: false,
+        updateTimeout: null
+    }),
     methods: {
         ...mapActions({
             updateAction: 'settings/setTextValue',
         }),
-        onInputChange(value) {
+        onInputChange (value) {
             this.inputValue = value.trim();
             _debounce(this.onUpdate);
         },
-        onUpdate() {
+        onUpdate () {
             this.updateAction({
                 key_name: this.name,
                 value: this.inputValue
             })
         }
     },
-    created() {
+    created () {
         this.inputValue = this.value;
     }
 }

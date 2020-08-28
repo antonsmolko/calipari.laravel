@@ -3,9 +3,9 @@
         <div class="md-layout-item">
             <md-card class="mt-0">
                 <md-card-content class="md-between">
-                    <router-button-link title="В каталог" :route="redirectRoute.name"/>
+                    <router-button-link title="В каталог" :to="redirectRoute"/>
                     <router-button-link title="Создать коллекцию" icon="add" color="md-success"
-                                        route="cms.catalog.color-collections.create" />
+                                        :to="{ name: 'cms.catalog.color-collections.create' }" />
                 </md-card-content>
             </md-card>
 
@@ -68,10 +68,13 @@
                             </md-table-cell>
 
                             <md-table-cell md-label="Действия">
-                                <router-button-link title="Изображения"
-                                                    icon="perm_media"
-                                                    route="cms.catalog.color-collections.images"
-                                                    :params="{ id: item.id }" />
+                                <router-button-link
+                                    title="Изображения"
+                                    icon="perm_media"
+                                    :to="{
+                                        name: 'cms.catalog.color-collections.images',
+                                        params: { id: item.id }
+                                    }" />
 
                                 <table-actions :item="item"
                                                subPath="catalog.color-collections"
@@ -88,51 +91,49 @@
 </template>
 
 <script>
-    import { mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
-    import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
-    import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
-    import TagsTableCell from "@/custom_components/Tables/TagsTableCell";
-    import TableActions from "@/custom_components/Tables/TableActions";
-    import { pageTitle } from '@/mixins/base'
-    import { deleteMethod } from '@/mixins/crudMethods'
+import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
+import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
+import TagsTableCell from "@/custom_components/Tables/TagsTableCell";
+import TableActions from "@/custom_components/Tables/TableActions";
+import { pageTitle } from '@/mixins/base'
+import { deleteMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'ColorCollectionList',
-        mixins: [ pageTitle, deleteMethod ],
-        components: {
-            VExtendedTable,
-            ThumbTableCell,
-            TagsTableCell,
-            TableActions
+export default {
+    name: 'ColorCollectionList',
+    mixins: [ pageTitle, deleteMethod ],
+    components: {
+        VExtendedTable,
+        ThumbTableCell,
+        TagsTableCell,
+        TableActions
+    },
+    data: () => ({
+        resourceUrl: '/catalog/color-collections',
+        redirectRoute: { name: 'cms.catalog' },
+        storeModule: 'colorCollections'
+    }),
+    created () {
+        this.setPageTitle('Цветовые коллекции');
+    },
+    methods: {
+        ...mapActions({
+            togglePublishAction: 'table/togglePublish'
+        }),
+        onDelete (item) {
+            return this.delete({
+                payload: item.id,
+                title: item.title,
+                alertText: `коллекцию «${item.title}»`,
+                storeModule: this.storeModule,
+                successText: 'Коллекция удалена!',
+                tableMode: 'table'
+            })
         },
-        data() {
-            return {
-                resourceUrl: '/catalog/color-collections',
-                redirectRoute: { name: 'cms.catalog' },
-                storeModule: 'colorCollections'
-            }
-        },
-        created() {
-            this.setPageTitle('Цветовые коллекции');
-        },
-        methods: {
-            ...mapActions({
-                togglePublishAction: 'table/togglePublish'
-            }),
-            onDelete(item) {
-                return this.delete({
-                    payload: item.id,
-                    title: item.title,
-                    alertText: `коллекцию «${item.title}»`,
-                    storeModule: this.storeModule,
-                    successText: 'Коллекция удалена!',
-                    tableMode: 'table'
-                })
-            },
-            togglePublish (item) {
-                this.togglePublishAction(`/catalog/color-collections/${item.id}/publish`);
-            }
+        togglePublish (item) {
+            this.togglePublishAction(`/catalog/color-collections/${item.id}/publish`);
         }
     }
+}
 </script>

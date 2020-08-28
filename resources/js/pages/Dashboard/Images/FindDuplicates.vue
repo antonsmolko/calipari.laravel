@@ -7,11 +7,10 @@
                     <md-card-content class="md-between">
                         <router-button-link
                             v-if="category_type === 'images'"
-                            route="cms.images"/>
+                            :to="{ name: 'cms.images' }"/>
                         <router-button-link
                             v-else
-                            route="cms.catalog.categories.images"
-                            :params="{ category_type, id }"/>
+                            :to="{ name: 'cms.catalog.categories.images', params: { category_type, id } }"/>
                         <div>
                             <slide-y-down-transition v-show="!$v.$invalid">
                                 <control-button icon="image_search" title="Искать" @click="findDuplicates"/>
@@ -144,11 +143,11 @@ export default {
             fileProgress: state => state.images.fileProgress
         })
     },
-    mounted() {
+    mounted () {
         this.setPageTitle('Проверка изображения на дубликат');
         this.responseData = true;
     },
-    beforeDestroy() {
+    beforeDestroy () {
         this.clearFieldsAction()
     },
     methods: {

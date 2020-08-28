@@ -8,8 +8,9 @@
         <md-card-content>
             <div class="md-between">
                 <h4>Список работ</h4>
-                <router-button-link title="Создать работу" icon="add" color="md-success"
-                                    :route="`cms.pages.portfolio.${storeModule}.create`" />
+                <router-button-link
+                    title="Создать работу" icon="add" color="md-success"
+                    :to="{ name: `cms.pages.portfolio.${storeModule}.create` }" />
             </div>
             <v-extended-table :serverPagination="true"
                               :resourceUrl="resourceUrl"
@@ -53,10 +54,10 @@
                     </md-table-cell>
 
                     <md-table-cell md-label="Действия">
-                        <router-button-link title="Изображения"
-                                            icon="collections"
-                                            :route="`cms.pages.portfolio.${storeModule}.images`"
-                                            :params="{ id: item.id }" />
+                        <router-button-link
+                            title="Изображения"
+                            icon="collections"
+                            :to="{ name: `cms.pages.portfolio.${storeModule}.images`, params: { id: item.id } }" />
 
                         <table-actions :item="item"
                                        :subPath="`pages.portfolio.${storeModule}`"
@@ -84,17 +85,15 @@ export default {
         TableActions
     },
     mixins: [deleteMethod],
-    data() {
-        return {
-            resourceUrl: '/work-examples/list',
-            storeModule: 'workExamples'
-        }
-    },
+    data: () => ({
+        resourceUrl: '/work-examples/list',
+        storeModule: 'workExamples'
+    }),
     methods: {
         ...mapActions({
             togglePublishAction: 'table/togglePublish'
         }),
-        onDelete(item) {
+        onDelete (item) {
             return this.delete({
                 payload: item.id,
                 title: item.title,
@@ -110,7 +109,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-</style>

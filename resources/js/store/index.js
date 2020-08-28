@@ -18,12 +18,13 @@ import settings from './modules/settings';
 import settingGroups from './modules/setting-groups';
 import orders from './modules/orders';
 import orderStatuses from './modules/order-statuses';
-import table from './modules/table';
 import pages from './modules/pages';
+import pickups from './modules/pickups';
+import posts from './modules/posts';
+import table from './modules/table';
 import homePurchaseSteps from './modules/home/purchase-steps';
 import homeInteriors from './modules/home/interiors';
 import workExamples from './modules/work-examples';
-import posts from './modules/posts';
 
 Vue.use(Vuex);
 
@@ -135,23 +136,24 @@ export default new Vuex.Store({
         artCollections,
         categories,
         colorCollections,
-        images,
         dashboard,
-        subCategories,
-        users,
-        roles,
-        permissions,
-        textures,
-        settings,
-        settingGroups,
         deliveries,
+        homeInteriors,
+        homePurchaseSteps,
+        images,
         orders,
         orderStatuses,
-        table,
         pages,
-        homePurchaseSteps,
-        homeInteriors,
-        workExamples,
-        posts
+        permissions,
+        pickups,
+        posts,
+        roles,
+        settingGroups,
+        settings,
+        subCategories,
+        table,
+        textures,
+        users,
+        workExamples
     }
 });

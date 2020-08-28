@@ -3,9 +3,9 @@
         <div class="md-layout-item">
             <md-card class="mt-0">
                 <md-card-content class="md-between">
-                    <router-button-link title="В панель магазина" :route="redirectRoute.name"/>
+                    <router-button-link title="В панель магазина" :to="redirectRoute"/>
                     <router-button-link title="Создать статус заказа" icon="add" color="md-success"
-                                        route="cms.store.orderStatuses.create" />
+                                        :to="{ name: 'cms.store.orderStatuses.create' }" />
                 </md-card-content>
             </md-card>
 
@@ -60,53 +60,51 @@
 </template>
 
 <script>
-    import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-    import { pageTitle } from '@/mixins/base'
-    import { deleteMethod } from '@/mixins/crudMethods'
-    import TableActions from "@/custom_components/Tables/TableActions";
+import { pageTitle } from '@/mixins/base'
+import { deleteMethod } from '@/mixins/crudMethods'
+import TableActions from "@/custom_components/Tables/TableActions";
 
-    export default {
-        name: 'OrderStatusList',
-        mixins: [ pageTitle, deleteMethod ],
-        components: { TableActions },
-        data() {
-            return {
-                responseData: false,
-                redirectRoute: { name: 'cms.store' },
-                storeModule: 'orderStatuses'
-            }
+export default {
+    name: 'OrderStatusList',
+    mixins: [ pageTitle, deleteMethod ],
+    components: { TableActions },
+    data: () => ({
+        responseData: false,
+        redirectRoute: { name: 'cms.store' },
+        storeModule: 'orderStatuses'
+    }),
+    computed: {
+        ...mapState('orderStatuses', [
+            'items'
+        ]),
+    },
+    methods: {
+        ...mapActions('orderStatuses', {
+            getItemsAction: 'getItems',
+            publishAction: 'publish'
+        }),
+        onDelete (item) {
+            return this.delete({
+                payload: item.id,
+                title: item.title,
+                alertText: `статус заказа «${item.title}»`,
+                storeModule: this.storeModule,
+                successText: 'Статус заказа удален!'
+            })
         },
-        computed: {
-            ...mapState('orderStatuses', [
-                'items'
-            ]),
-        },
-        methods: {
-            ...mapActions('orderStatuses', {
-                getItemsAction: 'getItems',
-                publishAction: 'publish'
-            }),
-            onDelete(item) {
-                return this.delete({
-                    payload: item.id,
-                    title: item.title,
-                    alertText: `статус заказа «${item.title}»`,
-                    storeModule: this.storeModule,
-                    successText: 'Статус заказа удален!'
-                })
-            },
-            onPublishChange (item) {
-                this.publishAction(item.id);
-            }
-        },
-        created() {
-            this.getItemsAction()
-                .then(() => {
-                    this.setPageTitle('Статусы заказа');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
+        onPublishChange (item) {
+            this.publishAction(item.id);
         }
+    },
+    created () {
+        this.getItemsAction()
+            .then(() => {
+                this.setPageTitle('Статусы заказа');
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push(this.redirectRoute));
     }
+}
 </script>

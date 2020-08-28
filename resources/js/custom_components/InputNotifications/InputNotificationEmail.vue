@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    export default {
-        name: "InputNotificationEmail"
-    }
+export default {
+    name: "InputNotificationEmail"
+}
 </script>

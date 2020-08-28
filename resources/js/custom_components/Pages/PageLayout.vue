@@ -4,7 +4,7 @@
             <div class="md-layout-item">
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
-                        <router-button-link route="cms.pages" title="В панель страниц" />
+                        <router-button-link :to="{ name: 'cms.pages' }" title="В панель страниц" />
                         <div>
                             <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
                                 <control-button title="Сохранить" @click="onUpdate" />
@@ -152,13 +152,14 @@ export default {
             fields: state => state.pages.fields,
             item: state => state.pages.item
         }),
-        isUniqueTitle() {
+        isUniqueTitle () {
             return this.$store.getters['pages/isUniqueTitle'](this.fields.title, this.item.id);
         }
     },
-    created() {
-        if (this.$route.params.activeTab)
+    created () {
+        if (this.$route.params.activeTab) {
             this.activeTab = this.$route.params.activeTab;
+        }
 
         Promise.all([
             this.getItemAction(this.pageId),

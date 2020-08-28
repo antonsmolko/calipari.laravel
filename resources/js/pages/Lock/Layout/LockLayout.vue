@@ -26,13 +26,11 @@ export default {
             default: 'black'
         }
     },
-    data() {
-        return {
-            logo: '/img/svg/calipari.svg'
-        }
-    },
+    data: () => ({
+        logo: '/img/svg/calipari.svg'
+    }),
     computed: {
-        setBgImage() {
+        setBgImage () {
             const pageBackgrounds = {
                 login: '/img/bg/bg-login.jpg',
                 404: '/img/bg/bg-notfound.jpg',
@@ -42,7 +40,7 @@ export default {
                 backgroundImage: `url(${pageBackgrounds[this.pageName]})`
             }
         },
-        pageName() {
+        pageName () {
             return last(this.$route.name.split('.'));
         }
     }

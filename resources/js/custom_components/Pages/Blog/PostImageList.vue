@@ -77,26 +77,24 @@ export default {
             default: () => ([])
         }
     },
-    data () {
-        return {
-            storeModule: 'posts'
-        }
-    },
+    data: () => ({
+        storeModule: 'posts'
+    }),
     computed: {
         ...mapState({
             fileProgress: state => state.images.fileProgress,
             settings: state => state.settings.entries
         }),
         baseUrl () {
-            switch (this.$config.IMAGE_PROVIDER) {
+            switch (this.$config.imageProvider) {
                 case 'local':
-                    return this.$config.LOCAL_IMAGE_API_ENDPOINT;
+                    return this.$config.localImageEndpoint;
                 case 's3':
-                    return this.$config.S3_IMAGE_API_ENDPOINT;
+                    return this.$config.s3ImageEndpoint;
             }
         },
         transformationPath () {
-            switch (this.$config.IMAGE_PROVIDER) {
+            switch (this.$config.imageProvider) {
                 case 'local':
                     return '/widen/1000';
                 case 's3':
@@ -104,7 +102,7 @@ export default {
             }
         }
     },
-    created() {
+    created () {
         this.getSettingEntriesAction();
     },
     methods: {
@@ -128,7 +126,7 @@ export default {
             });
         },
         getImagePath (path) {
-            switch (this.$config.IMAGE_PROVIDER) {
+            switch (this.$config.imageProvider) {
                 case 'local':
                     return `/${path}`
                 case 's3':
@@ -140,7 +138,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .md-progress-bar__container {
-        height: 4px;
-    }
+.md-progress-bar__container {
+    height: 4px;
+}
 </style>

@@ -17,8 +17,7 @@
                                 title="Сформировать проект"
                                 icon="shopping_cart"
                                 color="md-warning"
-                                route="cms.store.projects.create"
-                                :params="{ imageId: item.id }"/>
+                                :to="{ name: 'cms.store.projects.create', params: { imageId: item.id } }"/>
                             <control-button
                                 :disabled="isColorCollectionMainImage"
                                 title="Удалить"
@@ -210,14 +209,12 @@ export default {
         },
         result: []
     },
-    data() {
-        return {
-            storeModule: 'images',
-            responseData: false,
-            controlSaveVisibilities: false,
-            redirectRoute: {name: 'cms.images'}
-        }
-    },
+    data: () => ({
+        storeModule: 'images',
+        responseData: false,
+        controlSaveVisibilities: false,
+        redirectRoute: { name: 'cms.images' }
+    }),
     validations: {
         image: {
             touch: false
@@ -262,23 +259,23 @@ export default {
             description: state => state.images.fields.description,
             ownerList: state => state.subCategories.itemsByType.owners
         }),
-        topicList() {
+        topicList () {
             return this.$store.getters['categories/getItemsByType']('topics');
         },
-        colorList() {
+        colorList () {
             return this.$store.getters['categories/getItemsByType']('colors');
         },
-        interiorList() {
+        interiorList () {
             return this.$store.getters['categories/getItemsByType']('interiors');
         },
-        tagList() {
+        tagList () {
             return this.$store.getters['categories/getItemsByType']('tags');
         },
-        isColorCollectionMainImage() {
+        isColorCollectionMainImage () {
             return this.item.color_collection && this.item.id === this.item.color_collection.main_image_id;
         }
     },
-    async created() {
+    async created () {
         await this.clearFieldsAction();
         await Promise.all([
             this.getItemAction(this.id),
@@ -307,7 +304,7 @@ export default {
             getSubcategoriesAction: 'subCategories/getItemsWithType',
             setTableRouteDetectorFieldAction: 'table/setRouteDetectorField'
         }),
-        onUpdate() {
+        onUpdate () {
             return this.update({
                 sendData: {
                     formData: {
@@ -329,7 +326,7 @@ export default {
                 redirectRoute: this.redirectRoute
             });
         },
-        onDelete() {
+        onDelete () {
             return this.delete({
                 payload: this.id,
                 title: this.item.article,
@@ -339,14 +336,14 @@ export default {
                 redirectRoute: this.redirectRoute
             })
         },
-        goBack() {
+        goBack () {
             window.history.length > 1 ? this.$router.go(-1) : this.$router.push(this.redirectRoute)
         }
     },
-    beforeRouteEnter(to, from, next) {
+    beforeRouteEnter (to, from, next) {
         next(vm => vm.setTableRouteDetectorFieldAction({field: 'to', value: from.name}));
     },
-    beforeRouteLeave(to, from, next) {
+    beforeRouteLeave (to, from, next) {
         this.setTableRouteDetectorFieldAction({field: 'from', value: from.name});
         next();
     }

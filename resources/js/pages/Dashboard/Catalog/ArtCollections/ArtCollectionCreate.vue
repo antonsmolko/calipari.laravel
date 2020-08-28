@@ -4,7 +4,7 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link :route="redirectRoute.name" title="К списку коллекций" />
+                        <router-button-link :to="redirectRoute" title="К списку коллекций" />
                         <slide-y-down-transition v-show="!$v.$invalid">
                             <control-button title="Создать коллекцию" @click="onCreate"/>
                         </slide-y-down-transition>
@@ -84,103 +84,101 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
-    import { required, minLength, numeric } from 'vuelidate/lib/validators'
+import { mapState, mapActions } from 'vuex'
+import { required, minLength, numeric } from 'vuelidate/lib/validators'
 
-    import { pageTitle } from '@/mixins/base'
-    import { createMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base'
+import { createMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'ArtCollectionCreate',
-        mixins: [ pageTitle, createMethod ],
-        data() {
-            return {
-                redirectRoute: { name: 'cms.catalog.art-collections' },
-                responseData: false,
-                storeModule: 'artCollections'
+export default {
+    name: 'ArtCollectionCreate',
+    mixins: [ pageTitle, createMethod ],
+    data: () => ({
+        redirectRoute: { name: 'cms.catalog.art-collections' },
+        responseData: false,
+        storeModule: 'artCollections'
+    }),
+    validations: {
+        title: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return (value.trim() === '') && !this.$v.title.$dirty || this.isUniqueTitle
             }
         },
-        validations: {
-            title: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty || this.isUniqueTitle
-                }
+        alias: {
+            required,
+            touch: false,
+            testAlias (value) {
+                return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
             },
-            alias: {
-                required,
-                touch: false,
-                testAlias (value) {
-                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
-                },
-                minLength: minLength(2),
-                isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAlias
-                },
+            minLength: minLength(2),
+            isUnique (value) {
+                return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAlias
             },
-            imageId: {
-                required,
-                numeric,
-                touch: false
-            },
-            metaTitle: {
-                touch: false
-            },
-            description: {
-                touch: false
-            },
-            keywords: {
-                touch: false
-            }
         },
-        computed: {
-            ...mapState('artCollections', {
-                title: state => state.fields.title,
-                alias: state => state.fields.alias,
-                imageId: state => state.fields.image_id,
-                metaTitle: state => state.fields.meta_title,
-                description: state => state.fields.description,
-                keywords: state => state.fields.keywords
-            }),
-            isUniqueTitle() {
-                return this.$store.getters['artCollections/isUniqueTitle'](this.title);
-            },
-            isUniqueAlias () {
-                return this.$store.getters['artCollections/isUniqueAlias'](this.alias);
-            }
+        imageId: {
+            required,
+            numeric,
+            touch: false
         },
-        created() {
-            this.clearFieldsAction();
-            this.getItemsAction()
-                .then(() => {
-                    this.setPageTitle('Новая коллекция');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
+        metaTitle: {
+            touch: false
         },
-        methods: {
-            ...mapActions({
-                getItemsAction: 'artCollections/getItems',
-                clearFieldsAction: 'artCollections/clearItemFields'
-            }),
-            onCreate() {
-                return this.create({
-                    sendData: {
-                        title: this.title,
-                        alias: this.alias,
-                        image_id: this.imageId,
-                        meta_title: this.metaTitle,
-                        description: this.description,
-                        keywords: this.keywords
-                    },
+        description: {
+            touch: false
+        },
+        keywords: {
+            touch: false
+        }
+    },
+    computed: {
+        ...mapState('artCollections', {
+            title: state => state.fields.title,
+            alias: state => state.fields.alias,
+            imageId: state => state.fields.image_id,
+            metaTitle: state => state.fields.meta_title,
+            description: state => state.fields.description,
+            keywords: state => state.fields.keywords
+        }),
+        isUniqueTitle () {
+            return this.$store.getters['artCollections/isUniqueTitle'](this.title);
+        },
+        isUniqueAlias () {
+            return this.$store.getters['artCollections/isUniqueAlias'](this.alias);
+        }
+    },
+    created () {
+        this.clearFieldsAction();
+        this.getItemsAction()
+            .then(() => {
+                this.setPageTitle('Новая коллекция');
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push(this.redirectRoute));
+    },
+    methods: {
+        ...mapActions({
+            getItemsAction: 'artCollections/getItems',
+            clearFieldsAction: 'artCollections/clearItemFields'
+        }),
+        onCreate () {
+            return this.create({
+                sendData: {
                     title: this.title,
-                    successText: 'Коллекция создана!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                })
-            }
+                    alias: this.alias,
+                    image_id: this.imageId,
+                    meta_title: this.metaTitle,
+                    description: this.description,
+                    keywords: this.keywords
+                },
+                title: this.title,
+                successText: 'Коллекция создана!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            })
         }
     }
+}
 </script>

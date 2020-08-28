@@ -4,10 +4,7 @@
             <div class="md-layout-item">
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
-                        <router-button-link
-                            :route="redirectRoute.name"
-                            :params="redirectRoute.params"
-                        />
+                        <router-button-link :to="redirectRoute" />
                         <div>
                             <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
                                 <control-button title="Сохранить" @click="onUpdate" />
@@ -98,152 +95,150 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
-    import { required, minLength } from 'vuelidate/lib/validators'
+import { required, minLength } from 'vuelidate/lib/validators'
 
-    import { categoryPage } from '@/mixins/categories'
-    import { pageTitle } from '@/mixins/base'
-    import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
+import { categoryPage } from '@/mixins/categories'
+import { pageTitle } from '@/mixins/base'
+import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'CategoryEdit',
-        props: {
-            id: {
-                type: [ Number, String ],
-                required: true
+export default {
+    name: 'CategoryEdit',
+    props: {
+        id: {
+            type: [ Number, String ],
+            required: true
+        }
+    },
+    mixins: [
+        categoryPage,
+        pageTitle,
+        updateMethod,
+        deleteMethod
+    ],
+    data: () => ({
+        responseData: false
+    }),
+    validations: {
+        title: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return ((value.trim() === '') && !this.$v.title.$dirty) || this.isUniqueTitleEdit
             }
         },
-        mixins: [
-            categoryPage,
-            pageTitle,
-            updateMethod,
-            deleteMethod
-        ],
-        data () {
-            return {
-                responseData: false
-            }
-        },
-        validations: {
-            title: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.title.$dirty) || this.isUniqueTitleEdit
-                }
+        alias: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAliasEdit
             },
-            alias: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAliasEdit
+            testAlias (value) {
+                return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
+            }
+        },
+        image: {
+            touch: false
+        },
+        publish: {
+            touch: false
+        },
+        metaTitle: {
+            touch: false
+        },
+        description: {
+            touch: false
+        },
+        keywords: {
+            touch: false
+        }
+    },
+    computed: {
+        ...mapState('categories', {
+            title: state => state.fields.title,
+            alias: state => state.fields.alias,
+            image: state => state.fields.image,
+            imagePath: state => state.fields.image_path,
+            publish: state => state.fields.publish,
+            metaTitle: state => state.fields.meta_title,
+            description: state => state.fields.description,
+            keywords: state => state.fields.keywords,
+            hasPublishedImages: state => state.fields.has_published_images
+        }),
+        isUniqueTitleEdit () {
+            return this.$store.getters['categories/isUniqueTitleEdit'](this.title, this.id);
+        },
+        isUniqueAliasEdit () {
+            return this.$store.getters['categories/isUniqueAliasEdit'](this.alias, this.id);
+        }
+    },
+    created () {
+        this.clearFieldsAction();
+        Promise.all([
+            this.getItemsAction(),
+            this.getItemAction(this.id)
+        ])
+            .then(() => {
+                this.setPageTitle(this.title);
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push(this.redirectRoute));
+    },
+    beforeDestroy () {
+        this.clearFieldsAction();
+    },
+    methods: {
+        ...mapActions('categories', {
+            getItemAction: 'getItemFromEdit',
+            getItemsAction: 'getItems',
+            clearFieldsAction: 'clearFields'
+        }),
+        onUpdate () {
+            return this.update({
+                sendData: {
+                    category_id: this.id,
+                    formData: {
+                        type: this.category_type,
+                        title: this.title,
+                        alias: this.alias,
+                        image: this.image,
+                        publish: +this.publish,
+                        meta_title: this.metaTitle,
+                        description: this.description,
+                        keywords: this.keywords
+                    }
                 },
-                testAlias (value) {
-                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
-                }
-            },
-            image: {
-                touch: false
-            },
-            publish: {
-                touch: false
-            },
-            metaTitle: {
-                touch: false
-            },
-            description: {
-                touch: false
-            },
-            keywords: {
-                touch: false
-            }
+                title: this.title,
+                successText: 'Категория обновлена!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            });
         },
-        computed: {
-            ...mapState('categories', {
-                title: state => state.fields.title,
-                alias: state => state.fields.alias,
-                image: state => state.fields.image,
-                imagePath: state => state.fields.image_path,
-                publish: state => state.fields.publish,
-                metaTitle: state => state.fields.meta_title,
-                description: state => state.fields.description,
-                keywords: state => state.fields.keywords,
-                hasPublishedImages: state => state.fields.has_published_images
-            }),
-            isUniqueTitleEdit () {
-                return this.$store.getters['categories/isUniqueTitleEdit'](this.title, this.id);
-            },
-            isUniqueAliasEdit () {
-                return this.$store.getters['categories/isUniqueAliasEdit'](this.alias, this.id);
-            }
-        },
-        created() {
-            this.clearFieldsAction();
-            Promise.all([
-                this.getItemsAction(),
-                this.getItemAction(this.id)
-            ])
-                .then(() => {
-                    this.setPageTitle(this.title);
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
-        },
-        beforeDestroy () {
-            this.clearFieldsAction();
-        },
-        methods: {
-            ...mapActions('categories', {
-                getItemAction: 'getItemFromEdit',
-                getItemsAction: 'getItems',
-                clearFieldsAction: 'clearFields'
-            }),
-            onUpdate () {
-                return this.update({
-                    sendData: {
-                        category_id: this.id,
-                        formData: {
-                            type: this.category_type,
-                            title: this.title,
-                            alias: this.alias,
-                            image: this.image,
-                            publish: +this.publish,
-                            meta_title: this.metaTitle,
-                            description: this.description,
-                            keywords: this.keywords
-                        }
-                    },
-                    title: this.title,
-                    successText: 'Категория обновлена!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                });
-            },
-            onDelete () {
-                return this.delete({
-                    payload: this.id,
-                    title: this.title,
-                    alertText: `категорию «${this.title}»`,
-                    successText: 'Категория удалена!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                })
-            }
+        onDelete () {
+            return this.delete({
+                payload: this.id,
+                title: this.title,
+                alertText: `категорию «${this.title}»`,
+                successText: 'Категория удалена!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            })
         }
     }
+}
 </script>
 
 <style lang="scss">
-    .md-color-sample {
-        flex: none;
-        width: 100%;
-        height: 120px;
-        border-radius: 3px;
-        will-change: background-color;
-        background-color: gray;
-        box-shadow: 0 12px 20px -10px rgba(153, 153, 153, 0.14), 0 4px 20px 0px rgba(153, 153, 153, 0.2), 0 7px 8px -5px rgba(153, 153, 153, 0.12);
-    }
+.md-color-sample {
+    flex: none;
+    width: 100%;
+    height: 120px;
+    border-radius: 3px;
+    will-change: background-color;
+    background-color: gray;
+    box-shadow: 0 12px 20px -10px rgba(153, 153, 153, 0.14), 0 4px 20px 0px rgba(153, 153, 153, 0.2), 0 7px 8px -5px rgba(153, 153, 153, 0.12);
+}
 </style>

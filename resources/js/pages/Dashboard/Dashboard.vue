@@ -2,7 +2,7 @@
     <div class="md-layout" v-if="responseData">
         <panel-card-link
             v-if="authCheck('images')"
-            route="cms.images"
+            :to="{ name: 'cms.images' }"
             icon="image"
             title="Изображения"
             :count="resourcesCount.images"
@@ -10,7 +10,7 @@
 
         <panel-card-link
             v-if="authCheck('catalog')"
-            route="cms.catalog"
+            :to="{ name: 'cms.catalog' }"
             icon="category"
             title="Каталог"
             :count="resourcesCount.categories + resourcesCount.color_collections"
@@ -18,7 +18,7 @@
 
         <panel-card-link
             v-if="authCheck('textures')"
-            route="cms.textures"
+            :to="{ name: 'cms.textures' }"
             icon="style"
             title="Фактуры"
             :count="resourcesCount.textures"
@@ -26,7 +26,7 @@
 
         <panel-card-link
             v-if="authCheck('settings')"
-            route="cms.settings"
+            :to="{ name: 'cms.settings' }"
             icon="settings"
             title="Конфигурация"
             :count="resourcesCount.settings"
@@ -34,7 +34,7 @@
 
         <panel-card-link
             v-if="authCheck('store')"
-            route="cms.store"
+            :to="{ name: 'cms.store' }"
             icon="local_mall"
             title="Магазин"
             :count="resourcesCount.orders"
@@ -42,7 +42,7 @@
 
         <panel-card-link
             v-if="authCheck('users')"
-            route="cms.users"
+            :to="{ name: 'cms.users' }"
             icon="people"
             title="Пользователи"
             :count="resourcesCount.users"
@@ -50,7 +50,7 @@
 
         <panel-card-link
             v-if="authCheck('roles')"
-            route="cms.roles"
+            :to="{ name: 'cms.roles' }"
             icon="business_center"
             title="Роли"
             :count="resourcesCount.roles"
@@ -58,7 +58,7 @@
 
         <panel-card-link
             v-if="authCheck('permissions')"
-            route="cms.permissions"
+            :to="{ name: 'cms.permissions' }"
             icon="vpn_key"
             title="Привилегии"
             :count="resourcesCount.permissions"
@@ -66,7 +66,7 @@
 
         <panel-card-link
             v-if="authCheck('pages')"
-            route="cms.pages"
+            :to="{ name: 'cms.pages' }"
             icon="layers"
             title="Страницы"
             :count="resourcesCount.pages"
@@ -85,17 +85,15 @@ export default {
         PanelCardLink
     },
     mixins: [ pageTitle, authCheck ],
-    data() {
-        return {
-            responseData: false
-        }
-    },
+    data: () => ({
+        responseData: false
+    }),
     computed: {
         ...mapState('dashboard', {
           resourcesCount: state => state.resourcesCount
         })
     },
-    created() {
+    created () {
         this.getResourcesCountAction({
             tables: [
                 'images',

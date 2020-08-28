@@ -9,21 +9,21 @@
 </template>
 
 <script>
-    export default {
-        name: "UploadButton",
-        methods: {
-            onChange (event) {
-                this.$emit('change', event);
-            }
+export default {
+    name: "UploadButton",
+    methods: {
+        onChange (event) {
+            this.$emit('change', event);
         }
     }
+}
 </script>
 
 <style scoped>
-    .upload-button {
-        display: inline-block;
-    }
-    .md-file-input {
-        display: none;
-    }
+.upload-button {
+    display: inline-block;
+}
+.md-file-input {
+    display: none;
+}
 </style>

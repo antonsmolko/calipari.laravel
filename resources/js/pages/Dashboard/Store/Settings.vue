@@ -3,7 +3,7 @@
         <div class="md-layout-item">
             <md-card class="mt-0">
                 <md-card-content>
-                    <router-button-link title="В панель магазина" route="cms.store"/>
+                    <router-button-link title="В панель магазина" :to="{ name: 'cms.store' }"/>
                 </md-card-content>
             </md-card>
 

@@ -5,7 +5,7 @@
                 <md-card-content class="md-between">
                     <router-button-link title="В панель управления" />
                     <router-button-link title="Создать пользователя" icon="add" color="md-success"
-                                        route="cms.users.create" />
+                                        :to="{ name: 'cms.users.create' }" />
                 </md-card-content>
             </md-card>
 
@@ -79,15 +79,13 @@ export default {
     name: 'UsersList',
     components: { VExtendedTable, TableActions },
     mixins: [ pageTitle, deleteMethod, authCheck ],
-    data () {
-        return {
-            resourceUrl: '/users/paginate',
-            propsToSearch: ['name', 'email'],
-            responseData: false,
-            storeModule: 'users'
-        }
-    },
-    created() {
+    data: () => ({
+        resourceUrl: '/users/paginate',
+        propsToSearch: ['name', 'email'],
+        responseData: false,
+        storeModule: 'users'
+    }),
+    created () {
         this.setPageTitle('Пользователи');
     },
     methods: {

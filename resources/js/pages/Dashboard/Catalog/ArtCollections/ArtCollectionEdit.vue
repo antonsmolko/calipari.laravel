@@ -4,7 +4,7 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link :route="redirectRoute.name" title="К списку коллекций" />
+                        <router-button-link :to="redirectRoute" title="К списку коллекций" />
                         <div>
                             <slide-y-down-transition v-show="controlSaveVisibilities && $v.$anyDirty && !$v.$invalid">
                                 <control-button title="Сохранить" @click="onUpdate" />
@@ -108,138 +108,136 @@
 </template>
 
 <script>
-    import { mapActions, mapState } from 'vuex'
-    import { required, minLength, numeric } from 'vuelidate/lib/validators'
+import { mapActions, mapState } from 'vuex'
+import { required, minLength, numeric } from 'vuelidate/lib/validators'
 
-    import VSelect from "@/custom_components/VForm/VSelect";
-    import { pageTitle } from '@/mixins/base'
-    import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
+import VSelect from "@/custom_components/VForm/VSelect";
+import { pageTitle } from '@/mixins/base'
+import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'ArtCollectionEdit',
-        components: { VSelect },
-        mixins: [pageTitle, updateMethod, deleteMethod],
-        props: {
-            id: {
-                type: [ String, Number ],
-                required: true
+export default {
+    name: 'ArtCollectionEdit',
+    components: { VSelect },
+    mixins: [pageTitle, updateMethod, deleteMethod],
+    props: {
+        id: {
+            type: [ String, Number ],
+            required: true
+        }
+    },
+    data: () => ({
+        redirectRoute: { name: 'cms.catalog.art-collections' },
+        responseData: false,
+        storeModule: 'artCollections',
+        controlSaveVisibilities: false
+    }),
+    validations: {
+        title: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return (value.trim() === '') && !this.$v.title.$dirty || this.isUniqueTitleEdit
+            },
+        },
+        alias: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAliasEdit
+            },
+            testAlias (value) {
+                return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
             }
         },
-        data() {
-            return {
-                redirectRoute: { name: 'cms.catalog.art-collections' },
-                responseData: false,
-                storeModule: 'artCollections',
-                controlSaveVisibilities: false
-            }
+        imageId: {
+            numeric,
+            touch: false
         },
-        validations: {
-            title: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty || this.isUniqueTitleEdit
-                },
-            },
-            alias: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAliasEdit
-                },
-                testAlias (value) {
-                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
-                }
-            },
-            imageId: {
-                numeric,
-                touch: false
-            },
-            publish: {
-                touch: false
-            },
-            metaTitle: {
-                touch: false
-            },
-            description: {
-                touch: false
-            },
-            keywords: {
-                touch: false
-            }
+        publish: {
+            touch: false
         },
-        computed: {
-            ...mapState('artCollections', {
-                title: state => state.fields.title,
-                alias: state => state.fields.alias,
-                imageId: state => state.fields.image_id,
-                publish: state => state.fields.publish,
-                hasPublishedImages: state => state.fields.has_published_images,
-                metaTitle: state => state.fields.meta_title,
-                description: state => state.fields.description,
-                keywords: state => state.fields.keywords,
-            }),
-            isUniqueTitleEdit() {
-                return this.$store.getters['artCollections/isUniqueTitleEdit'](this.title, this.id);
-            },
-            isUniqueAliasEdit () {
-                return this.$store.getters['artCollections/isUniqueAliasEdit'](this.alias, this.id);
-            }
+        metaTitle: {
+            touch: false
         },
-        created() {
-            this.clearFieldsAction();
-            Promise.all([
-                this.getItemAction(this.id),
-                this.getItemsAction()
-            ])
-                .then(() => {
-                    this.setPageTitle(this.title);
-                    this.responseData = true;
-                })
-                .then(() => {
-                    this.$v.$reset();
-                    this.controlSaveVisibilities = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
+        description: {
+            touch: false
         },
-        methods: {
-            ...mapActions('artCollections', {
-                clearFieldsAction: 'clearItemFields',
-                getItemsAction: 'getItems',
-                getItemAction: 'getItem'
-            }),
-            onUpdate() {
-                return this.update({
-                    sendData: {
-                        data: {
-                            title: this.title,
-                            alias: this.alias,
-                            image_id: this.imageId,
-                            publish: Number(this.publish),
-                            meta_title: this.metaTitle,
-                            description: this.description,
-                            keywords: this.keywords
-                        },
-                        id: this.id
+        keywords: {
+            touch: false
+        }
+    },
+    computed: {
+        ...mapState('artCollections', {
+            title: state => state.fields.title,
+            alias: state => state.fields.alias,
+            imageId: state => state.fields.image_id,
+            publish: state => state.fields.publish,
+            hasPublishedImages: state => state.fields.has_published_images,
+            metaTitle: state => state.fields.meta_title,
+            description: state => state.fields.description,
+            keywords: state => state.fields.keywords,
+        }),
+        isUniqueTitleEdit () {
+            return this.$store.getters['artCollections/isUniqueTitleEdit'](this.title, this.id);
+        },
+        isUniqueAliasEdit () {
+            return this.$store.getters['artCollections/isUniqueAliasEdit'](this.alias, this.id);
+        }
+    },
+    created () {
+        this.clearFieldsAction();
+        Promise.all([
+            this.getItemAction(this.id),
+            this.getItemsAction()
+        ])
+            .then(() => {
+                this.setPageTitle(this.title);
+                this.responseData = true;
+            })
+            .then(() => {
+                this.$v.$reset();
+                this.controlSaveVisibilities = true;
+            })
+            .catch(() => this.$router.push(this.redirectRoute));
+    },
+    methods: {
+        ...mapActions('artCollections', {
+            clearFieldsAction: 'clearItemFields',
+            getItemsAction: 'getItems',
+            getItemAction: 'getItem'
+        }),
+        onUpdate () {
+            return this.update({
+                sendData: {
+                    data: {
+                        title: this.title,
+                        alias: this.alias,
+                        image_id: this.imageId,
+                        publish: Number(this.publish),
+                        meta_title: this.metaTitle,
+                        description: this.description,
+                        keywords: this.keywords
                     },
-                    title: this.title,
-                    successText: 'Коллекция обновлена!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                });
-            },
-            onDelete() {
-                return this.delete({
-                    payload: this.id,
-                    title: this.title,
-                    alertText: `коллекцию «${this.title}»`,
-                    successText: 'Коллекция удалена!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                })
-            }
+                    id: this.id
+                },
+                title: this.title,
+                successText: 'Коллекция обновлена!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            });
+        },
+        onDelete () {
+            return this.delete({
+                payload: this.id,
+                title: this.title,
+                alertText: `коллекцию «${this.title}»`,
+                successText: 'Коллекция удалена!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            })
         }
     }
+}
 </script>

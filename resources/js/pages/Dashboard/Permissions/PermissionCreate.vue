@@ -4,10 +4,7 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link
-                            title="К списку привилегий"
-                            route="cms.permissions"
-                        />
+                        <router-button-link title="К списку привилегий" :to="{ name: 'cms.permissions' }" />
                         <slide-y-down-transition v-show="!$v.$invalid">
                             <control-button @click="onCreate('auto-close')" />
                         </slide-y-down-transition>
@@ -59,87 +56,85 @@
 </template>
 
 <script>
-    import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-    import { required, minLength } from 'vuelidate/lib/validators'
+import { required, minLength } from 'vuelidate/lib/validators'
 
-    import { pageTitle } from '@/mixins/base'
-    import { createMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base'
+import { createMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'PermissionCreate',
-        mixins: [ pageTitle, createMethod ],
-        data() {
-            return {
-                responseData: false,
-                redirectRoute: { name: 'cms.permissions' },
-                storeModule: 'permissions'
-            }
-        },
-        validations: {
-            name: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return (value.trim() === '') && !this.$v.name.$dirty || !this.isUniqueName
-                },
-                testAlias (value) {
-                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
-                }
+export default {
+    name: 'PermissionCreate',
+    mixins: [ pageTitle, createMethod ],
+    data: () => ({
+        responseData: false,
+        redirectRoute: { name: 'cms.permissions' },
+        storeModule: 'permissions'
+    }),
+    validations: {
+        name: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return (value.trim() === '') && !this.$v.name.$dirty || this.isUniqueName
             },
-            displayName: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return (value.trim() === '') && !this.$v.displayName.$dirty || !this.isUniqueDisplayName
-                }
-            },
-            description: {
-                touch: false
+            testAlias (value) {
+                return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
             }
         },
-        computed: {
-            ...mapState('permissions', {
-                name: state => state.fields.name,
-                displayName: state => state.fields.display_name,
-                description: state => state.fields.description
-            }),
-            isUniqueName() {
-                return !!this.$store.getters['permissions/isUniqueName'](this.name);
-            },
-            isUniqueDisplayName() {
-                return !!this.$store.getters['permissions/isUniqueDisplayName'](this.displayName);
+        displayName: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return (value.trim() === '') && !this.$v.displayName.$dirty || this.isUniqueDisplayName
             }
         },
-        methods: {
-            ...mapActions('permissions', {
-                getItemsAction: 'getItems',
-                clearFieldsAction: 'clearItemFields',
-            }),
-            onCreate() {
-                return this.create({
-                    sendData: {
-                        name: this.name,
-                        display_name: this.displayName,
-                        description: this.description
-                    },
-                    title: this.displayName,
-                    successText: 'Привилегия создана!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                })
-            }
-        },
-        created() {
-            this.clearFieldsAction();
-            this.getItemsAction()
-                .then(() => {
-                    this.setPageTitle('Новая Привилегия');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
+        description: {
+            touch: false
         }
+    },
+    computed: {
+        ...mapState('permissions', {
+            name: state => state.fields.name,
+            displayName: state => state.fields.display_name,
+            description: state => state.fields.description
+        }),
+        isUniqueName () {
+            return this.$store.getters['permissions/isUniqueName'](this.name);
+        },
+        isUniqueDisplayName () {
+            return this.$store.getters['permissions/isUniqueDisplayName'](this.displayName);
+        }
+    },
+    methods: {
+        ...mapActions('permissions', {
+            getItemsAction: 'getItems',
+            clearFieldsAction: 'clearItemFields',
+        }),
+        onCreate () {
+            return this.create({
+                sendData: {
+                    name: this.name,
+                    display_name: this.displayName,
+                    description: this.description
+                },
+                title: this.displayName,
+                successText: 'Привилегия создана!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            })
+        }
+    },
+    created () {
+        this.clearFieldsAction();
+        this.getItemsAction()
+            .then(() => {
+                this.setPageTitle('Новая Привилегия');
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push(this.redirectRoute));
     }
+}
 </script>

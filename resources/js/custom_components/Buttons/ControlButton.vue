@@ -6,30 +6,30 @@
 </template>
 
 <script>
-    export default {
-        name: "ControlButton",
-        props: {
-            title: {
-                type: String,
-                default: 'Создать'
-            },
-            icon: {
-                type: String,
-                default: 'check'
-            },
-            color: {
-                type: String,
-                default: 'md-success'
-            },
-            direction: {
-                type: String,
-                default: 'left'
-            }
+export default {
+    name: "ControlButton",
+    props: {
+        title: {
+            type: String,
+            default: 'Создать'
         },
-        methods: {
-            onClick() {
-                this.$emit('click')
-            }
+        icon: {
+            type: String,
+            default: 'check'
+        },
+        color: {
+            type: String,
+            default: 'md-success'
+        },
+        direction: {
+            type: String,
+            default: 'left'
+        }
+    },
+    methods: {
+        onClick () {
+            this.$emit('click')
         }
     }
+}
 </script>

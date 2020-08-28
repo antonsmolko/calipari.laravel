@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    export default {
-        name: "InputNotificationSameAsPassword",
-    }
+export default {
+    name: "InputNotificationSameAsPassword",
+}
 </script>

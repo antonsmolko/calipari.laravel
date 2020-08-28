@@ -4,7 +4,7 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link :route="redirectRoute.name" title="Назад" />
+                        <router-button-link :to="redirectRoute" title="Назад" />
                         <slide-y-down-transition v-show="!$v.$invalid">
                             <control-button @click="onCreate" />
                         </slide-y-down-transition>
@@ -189,7 +189,7 @@ export default {
             return this.$store.getters['posts/isUniqueAlias'](this.alias);
         }
     },
-    created() {
+    created () {
         this.clearFieldsAction();
         this.getItemsAction()
             .then(() => {
@@ -203,7 +203,7 @@ export default {
             getItemsAction: 'getItems',
             clearFieldsAction: 'clearItemFields'
         }),
-        onCreate() {
+        onCreate () {
             return this.create({
                 sendData: {
                     title: this.title,
@@ -228,7 +228,7 @@ export default {
 </script>
 
 <style lang="scss">
-    .text-editor .ck.ck-editor__main>.ck-editor__editable {
-        height: 700px !important;
-    }
+.text-editor .ck.ck-editor__main>.ck-editor__editable {
+    height: 700px !important;
+}
 </style>

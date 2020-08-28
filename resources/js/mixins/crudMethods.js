@@ -7,8 +7,8 @@ export const createMethod = {
 
             return this.$store.dispatch(`${module}${action}`, sendData)
                 .then(() => {
-                    // this.$router.push(redirectRoute);
-                    window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
+                    this.$router.push(redirectRoute);
+                    // window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
 
                     return swal.fire({
                         title: successText,
@@ -29,8 +29,8 @@ export const updateMethod = {
 
             return this.$store.dispatch(`${module}update`, sendData)
                 .then(() => {
-                    // this.$router.push(redirectRoute);
-                    window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
+                    this.$router.push(redirectRoute);
+                    // window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
 
                     return swal.fire({
                         title: successText,
@@ -55,10 +55,11 @@ export const deleteMethod = {
             storeModule = null,
             redirectRoute = null,
             tableMode = false,
+            action = 'delete',
             force = false
         }) {
             const module = storeModule ? `${storeModule}/` : '';
-            const method = force ? 'forceDelete' : 'delete';
+            const method = force ? 'forceDelete' : action;
 
             return deleteSwalFireConfirm(alertText)
                 .then((result) => {
@@ -66,10 +67,10 @@ export const deleteMethod = {
                         return this.$store.dispatch(`${module}${method}`, { payload, tableMode })
                             .then(() => {
                                 if (redirectRoute) {
-                                    // this.$router.push(redirectRoute);
-                                    window.history.length > 1
-                                        ? this.$router.go(-1)
-                                        : this.$router.push(redirectRoute);
+                                    this.$router.push(redirectRoute);
+                                    // window.history.length > 1
+                                    //     ? this.$router.go(-1)
+                                    //     : this.$router.push(redirectRoute);
                                 }
 
                                 return deleteSwalFireAlert(successText, title);

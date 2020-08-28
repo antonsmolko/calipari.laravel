@@ -4,7 +4,7 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link route="cms.textures" title="К списку материалов"/>
+                        <router-button-link :to="{ name: 'cms.textures' }" title="К списку материалов"/>
                         <div>
                             <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
                                 <control-button @click="onUpdate"/>
@@ -138,13 +138,11 @@ export default {
         },
         result: [],
     },
-    data() {
-        return {
-            storeModule: 'textures',
-            responseData: false,
-            redirectRoute: { name: 'cms.textures' }
-        }
-    },
+    data: () => ({
+        storeModule: 'textures',
+        responseData: false,
+        redirectRoute: { name: 'cms.textures' }
+    }),
     validations: {
         name: {
             required,
@@ -201,11 +199,11 @@ export default {
             publish: state => state.fields.publish,
             order: state => state.fields.order
         }),
-        isUniqueNameEdit() {
+        isUniqueNameEdit () {
             return this.$store.getters['textures/isUniqueNameEdit'](this.name, this.id);
         },
     },
-    created() {
+    created () {
         Promise.all([
             this.getItemsAction(),
             this.getItemAction(this.id)
@@ -223,7 +221,7 @@ export default {
             getItemsAction: 'getItems',
             clearFieldsAction: 'clearItemFields'
         }),
-        onUpdate() {
+        onUpdate () {
             return this.update({
                 sendData: {
                     formData: {
@@ -245,7 +243,7 @@ export default {
                 redirectRoute: this.redirectRoute
             });
         },
-        onDelete() {
+        onDelete () {
             this.delete({
                 payload: this.id,
                 title: this.name,

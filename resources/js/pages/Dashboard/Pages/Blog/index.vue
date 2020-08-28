@@ -1,7 +1,7 @@
 <template>
     <page-layout :pageId="$config.pagesIds.blog">
         <template #modules>
-            <PostTabs />
+            <post-tabs />
         </template>
     </page-layout>
 </template>

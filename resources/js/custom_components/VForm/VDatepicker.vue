@@ -69,7 +69,7 @@ export default {
         referenceValue: null
     }),
     computed: {
-        storeModule() {
+        storeModule () {
             return this.module ? `${this.module}/` : '';
         },
         mdType () {
@@ -97,7 +97,7 @@ export default {
         this.$material.locale.dateFormat = 'dd.MM.yyyy';
     },
     methods: {
-        changeDate() {
+        changeDate () {
             const value = this.selectedDate;
 
             this.$store.dispatch(`${this.storeModule}setItemField`, {
@@ -110,15 +110,15 @@ export default {
                     }
                 });
         },
-        touched(v, value) {
+        touched (v, value) {
             this.differ ? this.touchedDifferent(v, value) : v.$touch();
         },
-        touchedDifferent(v, value) {
+        touchedDifferent (v, value) {
             this.isDiffer(value, this.referenceValue)
                 ? v.$touch()
                 : v.$reset()
         },
-        isDiffer(a, b) {
+        isDiffer (a, b) {
             return a != b;
         }
     }

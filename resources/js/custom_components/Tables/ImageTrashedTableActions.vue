@@ -15,32 +15,32 @@
 </template>
 
 <script>
-    export default {
-        name: "ImageTrashedTableActions",
-        props: {
-            item: {
-                type: Object,
-                default: null
-            },
-            deleteEnabled: {
-                type: Boolean,
-                default: false
-            }
+export default {
+    name: "ImageTrashedTableActions",
+    props: {
+        item: {
+            type: Object,
+            default: null
         },
-        methods: {
-            onDelete () {
-                this.$emit('delete', this.item);
-            },
-            onRestore () {
-                this.$emit('restore', this.item.id);
-            }
+        deleteEnabled: {
+            type: Boolean,
+            default: false
+        }
+    },
+    methods: {
+        onDelete () {
+            this.$emit('delete', this.item);
+        },
+        onRestore () {
+            this.$emit('restore', this.item.id);
         }
     }
+}
 </script>
 
 <style scoped>
-    .table-actions {
-        display: flex;
-        justify-content: flex-end;
-    }
+.table-actions {
+    display: flex;
+    justify-content: flex-end;
+}
 </style>

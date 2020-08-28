@@ -79,7 +79,7 @@ export default {
         ...mapActions({
             togglePublishAction: 'table/togglePublish'
         }),
-        onDelete(item) {
+        onDelete (item) {
             return this.delete({
                 payload: item.id,
                 title: item.title,

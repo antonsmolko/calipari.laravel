@@ -3,10 +3,12 @@
         <div class="md-layout-item">
             <md-card class="mt-0">
                 <md-card-content class="md-between">
-                    <router-button-link route="cms.catalog" title="В каталог" />
+                    <router-button-link :to="{ name: 'cms.catalog' }" title="В каталог" />
                     <router-button-link
-                        route="cms.catalog.categories.create"
-                        :params="{ category_type }"
+                        :to="{
+                            name: 'cms.catalog.categories.create',
+                            params: { category_type }
+                        }"
                         icon="add"
                         color="md-success"
                         title="Создать категорию" />
@@ -71,66 +73,64 @@
     </div>
 </template>
 <script>
-    import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-    import CategoryTableActions from "@/custom_components/Tables/CategoryTableActions";
-    import categoryTableMixin from "@/mixins/categoryTableMixin";
-    import { categoryPage, tableTitle } from '@/mixins/categories'
-    import { pageTitle } from '@/mixins/base'
-    import { deleteMethod } from '@/mixins/crudMethods'
+import CategoryTableActions from "@/custom_components/Tables/CategoryTableActions";
+import categoryTableMixin from "@/mixins/categoryTableMixin";
+import { categoryPage, tableTitle } from '@/mixins/categories'
+import { pageTitle } from '@/mixins/base'
+import { deleteMethod } from '@/mixins/crudMethods'
 
 
-    export default {
-        name: 'CategoryList',
-        mixins: [
-            categoryTableMixin,
-            categoryPage,
-            tableTitle,
-            pageTitle,
-            deleteMethod
-        ],
-        components: {
-            CategoryTableActions
-        },
-        data () {
-            return {
-                resourceUrl: `/catalog/categories/type/${this.category_type}`,
-                responseData: false
-            }
-        },
-        computed: {
-            ...mapState('categories', {
-                items: state => state.items,
+export default {
+    name: 'CategoryList',
+    mixins: [
+        categoryTableMixin,
+        categoryPage,
+        tableTitle,
+        pageTitle,
+        deleteMethod
+    ],
+    components: {
+        CategoryTableActions
+    },
+    data: () => ({
+        resourceUrl: `/catalog/categories/type/${this.category_type}`,
+        responseData: false
+    }),
+    computed: {
+        ...mapState('categories', {
+            items: state => state.items,
+        })
+    },
+    created () {
+        this.setPageTitle(this.pageProps[this.category_type].PAGE_TITLE);
+    },
+    methods: {
+        ...mapActions({
+            togglePublishAction: 'table/togglePublish'
+        }),
+        onDelete (item) {
+            return this.delete({
+                module: 'categories',
+                payload: item.id,
+                title: item.title,
+                alertText: `категорию «${item.title}»`,
+                storeModule: this.storeModule,
+                successText: 'Категория удалена!',
+                tableMode: 'table'
             })
         },
-        created () {
-            this.setPageTitle(this.pageProps[this.category_type].PAGE_TITLE);
-        },
-        methods: {
-            ...mapActions({
-                togglePublishAction: 'table/togglePublish'
-            }),
-            onDelete (item) {
-                return this.delete({
-                    module: 'categories',
-                    payload: item.id,
-                    title: item.title,
-                    alertText: `категорию «${item.title}»`,
-                    storeModule: this.storeModule,
-                    successText: 'Категория удалена!',
-                    tableMode: 'table'
-                })
-            },
-            togglePublish (item) {
-                this.togglePublishAction(`/catalog/categories/${item.id}/publish`);
-            }
+        togglePublish (item) {
+            this.togglePublishAction(`/catalog/categories/${item.id}/publish`);
         }
     }
+}
 </script>
 
 <style lang="scss" scoped>
-    .tm-color {
-        width: 50px;
-        height: 50px;
-    }
+.tm-color {
+    width: 50px;
+    height: 50px;
+}
 </style>

@@ -7,14 +7,14 @@
 </template>
 
 <script>
-    import PageLayout from "@/custom_components/Pages/PageLayout";
-    import WorkExampleList from "@/custom_components/Pages/Portfolio/WorkExampleList";
+import PageLayout from "@/custom_components/Pages/PageLayout";
+import WorkExampleList from "@/custom_components/Pages/Portfolio/WorkExampleList";
 
-    export default {
-        name: "PortfolioPage",
-        components: {
-            PageLayout,
-            WorkExampleList
-        }
+export default {
+    name: "PortfolioPage",
+    components: {
+        PageLayout,
+        WorkExampleList
     }
+}
 </script>

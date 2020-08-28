@@ -23,9 +23,9 @@
                                     @input="handleItemOrderChange(item.id, $event)"/>
                             </md-field>
                         </div>
-                        <router-button-link title="Добавить слайд" icon="add" color="md-success"
-                                            route="cms.pages.home.interiorSlides.create"
-                                            :params="{ interiorId: item.id }"/>
+                        <router-button-link
+                            title="Добавить слайд" icon="add" color="md-success"
+                            :to="{ name: 'cms.pages.home.interiorSlides.create', params: { interiorId: item.id } }" />
                     </div>
                 </div>
                 <md-card v-if="item.slides.length">
@@ -82,6 +82,7 @@ import debounce from 'lodash/debounce'
 import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
 import TableActions from "@/custom_components/Tables/TableActions";
 import { deleteMethod } from '@/mixins/crudMethods'
+
 const _debounce = debounce(value => value(), 1000)
 
 export default {
@@ -91,17 +92,15 @@ export default {
         TableActions
     },
     mixins: [ deleteMethod ],
-    data () {
-        return {
-            storeModule: 'homeInteriors'
-        }
-    },
+    data: () => ({
+        storeModule: 'homeInteriors'
+    }),
     computed: {
         ...mapState('homeInteriors', {
             items: state => state.items
         })
     },
-    created() {
+    created () {
         this.getInteriorsAction();
     },
     methods: {
@@ -123,7 +122,7 @@ export default {
                 data: { order: value }
             }));
         },
-        onDelete(item) {
+        onDelete (item) {
             return this.delete({
                 payload: {
                     interiorId: item.interior_id,
@@ -141,9 +140,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .md-table-thumb {
-        object-fit: cover;
-        width: 200px;
-        height: 100px;
-    }
+.md-table-thumb {
+    object-fit: cover;
+    width: 200px;
+    height: 100px;
+}
 </style>

@@ -3,9 +3,9 @@
         <div class="md-layout-item">
             <md-card class="mt-0">
                 <md-card-content class="md-between">
-                    <router-button-link title="В каталог" :route="redirectRoute.name"/>
+                    <router-button-link title="В каталог" :to="redirectRoute"/>
                     <router-button-link title="Создать коллекцию" icon="add" color="md-success"
-                                        route="cms.catalog.art-collections.create" />
+                                        :to="{ name: 'cms.catalog.art-collections.create' }" />
                 </md-card-content>
             </md-card>
 
@@ -52,10 +52,13 @@
                             </md-table-cell>
 
                             <md-table-cell md-label="Действия">
-                                <router-button-link title="Изображения"
-                                                    icon="perm_media"
-                                                    route="cms.catalog.art-collections.images"
-                                                    :params="{ id: item.id }" />
+                                <router-button-link
+                                    title="Изображения"
+                                    icon="perm_media"
+                                    :to="{
+                                        name: 'cms.catalog.art-collections.images',
+                                        params: { id: item.id }
+                                    }" />
 
                                 <table-actions :item="item"
                                                subPath="catalog.art-collections"
@@ -72,49 +75,47 @@
 </template>
 
 <script>
-    import { mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
-    import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
-    import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
-    import TableActions from "@/custom_components/Tables/TableActions";
-    import { pageTitle } from '@/mixins/base'
-    import { deleteMethod } from '@/mixins/crudMethods'
+import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
+import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
+import TableActions from "@/custom_components/Tables/TableActions";
+import { pageTitle } from '@/mixins/base'
+import { deleteMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'ArtCollectionList',
-        mixins: [ pageTitle, deleteMethod ],
-        components: {
-            VExtendedTable,
-            ThumbTableCell,
-            TableActions
+export default {
+    name: 'ArtCollectionList',
+    mixins: [ pageTitle, deleteMethod ],
+    components: {
+        VExtendedTable,
+        ThumbTableCell,
+        TableActions
+    },
+    data: () => ({
+        resourceUrl: '/catalog/art-collections',
+        redirectRoute: { name: 'cms.catalog' },
+        storeModule: 'artCollections'
+    }),
+    created () {
+        this.setPageTitle('Арт коллекции');
+    },
+    methods: {
+        ...mapActions({
+            togglePublishAction: 'table/togglePublish'
+        }),
+        onDelete (item) {
+            return this.delete({
+                payload: item.id,
+                title: item.title,
+                alertText: `коллекцию «${item.title}»`,
+                storeModule: this.storeModule,
+                successText: 'Коллекция удалена!',
+                tableMode: 'table'
+            })
         },
-        data() {
-            return {
-                resourceUrl: '/catalog/art-collections',
-                redirectRoute: { name: 'cms.catalog' },
-                storeModule: 'artCollections'
-            }
-        },
-        created() {
-            this.setPageTitle('Арт коллекции');
-        },
-        methods: {
-            ...mapActions({
-                togglePublishAction: 'table/togglePublish'
-            }),
-            onDelete(item) {
-                return this.delete({
-                    payload: item.id,
-                    title: item.title,
-                    alertText: `коллекцию «${item.title}»`,
-                    storeModule: this.storeModule,
-                    successText: 'Коллекция удалена!',
-                    tableMode: 'table'
-                })
-            },
-            togglePublish (item) {
-                this.togglePublishAction(`/catalog/art-collections/${item.id}/publish`);
-            }
+        togglePublish (item) {
+            this.togglePublishAction(`/catalog/art-collections/${item.id}/publish`);
         }
     }
+}
 </script>

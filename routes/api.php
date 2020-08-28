@@ -464,6 +464,8 @@ Route::prefix('cms')
         /** Deliveries */
 
         Route::group(['prefix' => 'deliveries'], function() {
+            Route::get('pickup', 'Cms\Delivery\DeliveryController@getPickupItems')
+                ->where('id', '[0-9]+');
             Route::post('{id}', 'Cms\Delivery\DeliveryController@update')
                 ->where('id', '[0-9]+');
             Route::get('{id}/publish', 'Cms\Delivery\DeliveryController@publish')
@@ -471,6 +473,14 @@ Route::prefix('cms')
         });
         Route::apiResource('deliveries', 'Cms\Delivery\DeliveryController')
             ->except(['create', 'edit', 'update']);
+
+        /** Pickups */
+        Route::group(['prefix' => 'pickups'], function() {
+            Route::get('{id}/publish', 'Cms\Pickup\PickupController@publish')
+                ->where('id', '[0-9]+');
+        });
+        Route::apiResource('pickups', 'Cms\Pickup\PickupController')
+            ->except(['create', 'edit']);
 
 
         /** Orders */
@@ -516,7 +526,7 @@ Route::prefix('cms')
 
         Route::get('order-statuses/{id}/publish', 'Cms\OrderStatus\OrderStatusController@publish')
             ->where('id', '[0-9]+');
-            Route::get('order-statuses/published', 'Cms\OrderStatus\OrderStatusController@getPublishedItems');
+        Route::get('order-statuses/published', 'Cms\OrderStatus\OrderStatusController@getPublishedItems');
         Route::apiResource('order-statuses', 'Cms\OrderStatus\OrderStatusController');
     });
 

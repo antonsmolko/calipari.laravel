@@ -16,76 +16,74 @@
 </template>
 
 <script>
-    export default {
-        name: "VTextarea",
-        props: {
-            vField: {
-                type: Object,
-                require: true
-            },
-            title: {
-                type: String,
-                default: 'Описание'
-            },
-            name: {
-                type: String,
-                required: true
-            },
-            value: {
-                type: String,
-                default: ''
-            },
-            maxlength: {
-                type: Number,
-                default: 250
-            },
-            module: {
-                type: String,
-                default: null
-            },
-            differ: {
-                type: Boolean,
-                default: false
-            },
-            icon: {
-                type: String,
-                default: null
-            }
+export default {
+    name: "VTextarea",
+    props: {
+        vField: {
+            type: Object,
+            require: true
         },
-        data() {
-            return {
-                valueReference: ''
-            }
+        title: {
+            type: String,
+            default: 'Описание'
         },
-        computed: {
-            storeModule() {
-                return this.module ? `${this.module}/` : '';
-            }
+        name: {
+            type: String,
+            required: true
         },
-        methods: {
-            onInput(value) {
-                if (this.vField)
-                    this.touched(this.vField, value);
-
-                this.$store.dispatch(`${this.storeModule}setItemField`, {
-                    field: this.name,
-                    value: value.trim()
-                });
-            },
-            touched(v, value) {
-                this.differ ? this.touchedDifferent(v, value) : v.$touch();
-            },
-            touchedDifferent(v, value) {
-                this.isDiffer(value, this.valueReference)
-                    ? v.$touch()
-                    : v.$reset()
-            },
-            isDiffer(a, b) {
-                return a != b;
-            }
+        value: {
+            type: String,
+            default: ''
         },
-        created() {
-            this.valueReference = this.value;
+        maxlength: {
+            type: Number,
+            default: 250
+        },
+        module: {
+            type: String,
+            default: null
+        },
+        differ: {
+            type: Boolean,
+            default: false
+        },
+        icon: {
+            type: String,
+            default: null
         }
+    },
+    data: () => ({
+        valueReference: ''
+    }),
+    computed: {
+        storeModule () {
+            return this.module ? `${this.module}/` : '';
+        }
+    },
+    methods: {
+        onInput (value) {
+            if (this.vField)
+                this.touched(this.vField, value);
+
+            this.$store.dispatch(`${this.storeModule}setItemField`, {
+                field: this.name,
+                value: value.trim()
+            });
+        },
+        touched (v, value) {
+            this.differ ? this.touchedDifferent(v, value) : v.$touch();
+        },
+        touchedDifferent (v, value) {
+            this.isDiffer(value, this.valueReference)
+                ? v.$touch()
+                : v.$reset()
+        },
+        isDiffer (a, b) {
+            return a != b;
+        }
+    },
+    created () {
+        this.valueReference = this.value;
     }
+}
 </script>

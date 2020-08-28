@@ -4,10 +4,7 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link
-                            :route="redirectRoute.name"
-                            :params="redirectRoute.params"
-                            title="Назад" />
+                        <router-button-link :to="redirectRoute" title="Назад" />
                         <div>
                             <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
                                 <control-button @click="onUpdate" />
@@ -68,115 +65,115 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
-    import {required, minLength, numeric} from 'vuelidate/lib/validators'
+import { mapState, mapActions } from 'vuex'
+import { required, minLength, numeric } from 'vuelidate/lib/validators'
 
-    import { pageTitle } from '@/mixins/base'
-    import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base'
+import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
 
-    import VDatepicker from "@/custom_components/VForm/VDatepicker";
+import VDatepicker from "@/custom_components/VForm/VDatepicker";
 
-    export default {
-        name: 'WorkExampleEdit',
-        components: { VDatepicker },
-        mixins: [
-            pageTitle,
-            updateMethod,
-            deleteMethod
-        ],
-        props: {
-            id: {
-                type: [ Number, String ],
-                required: true
-            }
+export default {
+    name: 'WorkExampleEdit',
+    components: { VDatepicker },
+    mixins: [
+        pageTitle,
+        updateMethod,
+        deleteMethod
+    ],
+    props: {
+        id: {
+            type: [ Number, String ],
+            required: true
+        }
+    },
+    data: () => ({
+        storeModule: 'workExamples',
+        responseData: false,
+        redirectRoute: {
+            name: 'cms.pages.portfolio',
+            params: { activeTab: 'Модули' }
+        }
+    }),
+    validations: {
+        title: {
+            required,
+            touch: false,
+            minLength: minLength(2)
         },
-        data: () => ({
-            storeModule: 'workExamples',
-            responseData: false,
-            redirectRoute: {
-                name: 'cms.pages.portfolio',
-                params: { activeTab: 'Модули' }
-            }
+        image: {
+            touch: false
+        },
+        date: {
+            required,
+            numeric,
+            touch: false
+        },
+        image_id: {
+            numeric,
+            isUnique (value) {
+                return value && !this.$v.image_id.$dirty || this.isUniqueImageId
+            },
+            touch: false
+        }
+    },
+    computed: {
+        ...mapState('workExamples', {
+            title: state => state.fields.title,
+            date: state => state.fields.date,
+            image: state => state.fields.image,
+            imagePath: state => state.fields.image_path,
+            image_id: state => state.fields.image_id,
         }),
-        validations: {
-            title: {
-                required,
-                touch: false,
-                minLength: minLength(2)
-            },
-            image: {
-                touch: false
-            },
-            date: {
-                required,
-                numeric,
-                touch: false
-            },
-            image_id: {
-                numeric,
-                isUnique (value) {
-                    return value && !this.$v.image_id.$dirty || this.isUniqueImageId
-                },
-                touch: false
-            }
-        },
-        computed: {
-            ...mapState('workExamples', {
-                title: state => state.fields.title,
-                date: state => state.fields.date,
-                image: state => state.fields.image,
-                imagePath: state => state.fields.image_path,
-                image_id: state => state.fields.image_id,
-            }),
-            isUniqueImageId() {
-                return this.$store.getters['workExamples/isUniqueImageIdEdit'](this.image_id);
-            }
-        },
-        created () {
-            this.clearFieldsAction();
-            Promise.all([
-                this.getItemAction(this.id),
-                this.getItemsAction()
-            ])
-                .then(() => {
-                    this.setPageTitle(`Работа «${this.title}»`);
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
-        },
-        methods: {
-            ...mapActions('workExamples', {
-                getItemAction: 'getItem',
-                getItemsAction: 'getItems',
-                clearFieldsAction: 'clearItemFields'
-            }),
-            onUpdate () {
-                return this.update({
-                    sendData: {
-                        formData: {
-                            title: this.title,
-                            date: this.date,
-                            image_id: this.image_id,
-                            image: this.image
-                        },
-                        id: this.id
+        isUniqueImageId() {
+            return this.$store.getters['workExamples/isUniqueImageIdEdit'](this.image_id);
+        }
+    },
+    created () {
+        this.clearFieldsAction();
+        Promise.all([
+            this.getItemAction(this.id),
+            this.getItemsAction()
+        ])
+            .then(() => {
+                this.setPageTitle(`Работа «${this.title}»`);
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push(this.redirectRoute));
+    },
+    methods: {
+        ...mapActions('workExamples', {
+            getItemAction: 'getItem',
+            getItemsAction: 'getItems',
+            clearFieldsAction: 'clearItemFields'
+        }),
+        onUpdate () {
+            return this.update({
+                sendData: {
+                    formData: {
+                        title: this.title,
+                        date: this.date,
+                        image_id: this.image_id,
+                        image: this.image
                     },
-                    title: this.title,
-                    successText: 'Работа обновлена!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                });
-            },
-            onDelete () {
-                this.delete({
-                    payload: this.id,
-                    title: this.title,
-                    alertText: `работа «${this.title}»`,
-                    successText: 'Работа удалена!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                })
-            }
+                    id: this.id
+                },
+                title: this.title,
+                successText: 'Работа обновлена!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            });
+        },
+        onDelete () {
+            this.delete({
+                payload: this.id,
+                title: this.title,
+                alertText: `работа «${this.title}»`,
+                successText: 'Работа удалена!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            })
         }
     }
+}
 </script>

@@ -9,7 +9,7 @@
             <div class="md-between">
                 <h4>Список шагов покупки</h4>
                 <router-button-link title="Создать шаг покупки" icon="add" color="md-success"
-                                    route="cms.pages.home.purchaseSteps.create" />
+                                    :to="{ name: 'cms.pages.home.purchaseSteps.create' }" />
             </div>
 
             <div>
@@ -51,46 +51,44 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
-    import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
-    import TableActions from "@/custom_components/Tables/TableActions";
-    import { deleteMethod } from '@/mixins/crudMethods'
+import { mapState, mapActions } from 'vuex'
+import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
+import TableActions from "@/custom_components/Tables/TableActions";
+import { deleteMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'PurchaseStepList',
-        components: { ThumbTableCell, TableActions },
-        mixins: [ deleteMethod ],
-        data () {
-            return {
-                storeModule: 'homePurchaseSteps',
-                responseData: false
-            }
+export default {
+    name: 'PurchaseStepList',
+    components: { ThumbTableCell, TableActions },
+    mixins: [ deleteMethod ],
+    data: () => ({
+        storeModule: 'homePurchaseSteps',
+        responseData: false
+    }),
+    computed: {
+        ...mapState('homePurchaseSteps', {
+            items: state => state.items
+        })
+    },
+    methods: {
+        ...mapActions('homePurchaseSteps', {
+            getItemsAction: 'getItems'
+        }),
+        onPublishChange (id) {
+            this.publishAction(id);
         },
-        computed: {
-            ...mapState('homePurchaseSteps', {
-                items: state => state.items
+        onDelete (item) {
+            return this.delete({
+                payload: item.id,
+                title: item.title,
+                alertText: `шаг покупки «${item.title}»`,
+                storeModule: this.storeModule,
+                successText: 'Шаг покупки удален!'
             })
-        },
-        methods: {
-            ...mapActions('homePurchaseSteps', {
-                getItemsAction: 'getItems'
-            }),
-            onPublishChange(id) {
-                this.publishAction(id);
-            },
-            onDelete(item) {
-                return this.delete({
-                    payload: item.id,
-                    title: item.title,
-                    alertText: `шаг покупки «${item.title}»`,
-                    storeModule: this.storeModule,
-                    successText: 'Шаг покупки удален!'
-                })
-            }
-        },
-        created() {
-            this.getItemsAction()
-                .then(() => this.responseData = true);
         }
+    },
+    created () {
+        this.getItemsAction()
+            .then(() => this.responseData = true);
     }
+}
 </script>

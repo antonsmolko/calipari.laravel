@@ -8,8 +8,7 @@
                       :md-sort.sync="currentSort"
                       :md-sort-fn="customSort"
                       class="paginated-table table-striped table-hover"
-                      :class="{ loading }"
-            >
+                      :class="{ loading }" >
                 <md-table-toolbar class="mb-3">
                     <md-field>
                         <label for="pages">На странице</label>
@@ -67,254 +66,252 @@
 </template>
 
 <script>
-    import { mapState, mapGetters, mapActions } from 'vuex'
-    import Fuse from 'fuse.js'
-    import debounce from 'lodash/debounce'
-    import { Pagination } from '@/components'
+import { mapState, mapGetters, mapActions } from 'vuex'
+import Fuse from 'fuse.js'
+import debounce from 'lodash/debounce'
+import { Pagination } from '@/components'
 
-    const _debounce = debounce(f => f(), 300);
+const _debounce = debounce(f => f(), 300);
 
-    export default {
-        name: "VExtendedTable",
-        components: { Pagination },
-        props: {
-            searchFields: {
-                type: Array,
-                default: () => ['id']
-            },
-            perPageOptions: {
-                type: Array,
-                default: () => [ 20, 50, 100, 200 ]
-            },
-            serverPagination: {
-                type: Boolean,
-                default: false
-            },
-            resourceUrl: {
-                type: String,
-                required: true
-            },
-            defaultSortOrder: {
-                type: String,
-                default: 'asc'
-            },
-            emptyContent: {
-                type: String,
-                default: 'Ресурсы отсутствуют!'
-            },
-            editItemPathName: {
-                type: String,
-                default: 'cms.images.edit'
-            }
+export default {
+    name: "VExtendedTable",
+    components: { Pagination },
+    props: {
+        searchFields: {
+            type: Array,
+            default: () => ['id']
         },
-        data () {
-            return {
-                currentSort: 'id',
-                fuseSearch: null
-            }
+        perPageOptions: {
+            type: Array,
+            default: () => [ 20, 50, 100, 200 ]
         },
-        computed: {
-            ...mapState('table', {
-                sortInit: state => state.sortInit,
-                items: state => state.items,
-                searchedItems: state => state.searchedItems,
-                searchQuery: state => state.searchQuery,
-                pagination: state => state.pagination,
-                loading: state => state.loading,
-                routeDetector: state => state.routeDetector
-            }),
-            ...mapGetters('table', [
-                'itemsQty',
-                'searchedQty',
-                'checkReturnToPreviousPage',
-                'checkReturnToSearchedPreviousPage',
-                'isSearchedEmpty',
-                'totalPages'
-            ]),
-            queriedData () {
-                const items = !this.serverPagination && this.searchQuery
-                    ? this.searchedItems
-                    : this.items
+        serverPagination: {
+            type: Boolean,
+            default: false
+        },
+        resourceUrl: {
+            type: String,
+            required: true
+        },
+        defaultSortOrder: {
+            type: String,
+            default: 'asc'
+        },
+        emptyContent: {
+            type: String,
+            default: 'Ресурсы отсутствуют!'
+        },
+        editItemPathName: {
+            type: String,
+            default: 'cms.images.edit'
+        }
+    },
+    data: () => ({
+        currentSort: 'id',
+        fuseSearch: null
+    }),
+    computed: {
+        ...mapState('table', {
+            sortInit: state => state.sortInit,
+            items: state => state.items,
+            searchedItems: state => state.searchedItems,
+            searchQuery: state => state.searchQuery,
+            pagination: state => state.pagination,
+            loading: state => state.loading,
+            routeDetector: state => state.routeDetector
+        }),
+        ...mapGetters('table', [
+            'itemsQty',
+            'searchedQty',
+            'checkReturnToPreviousPage',
+            'checkReturnToSearchedPreviousPage',
+            'isSearchedEmpty',
+            'totalPages'
+        ]),
+        queriedData () {
+            const items = !this.serverPagination && this.searchQuery
+                ? this.searchedItems
+                : this.items
 
-                return items.slice(this.from, this.to)
-            },
-            to () {
-                let highBound = this.from + this.pagination.per_page;
-                if (this.total < highBound) {
-                    highBound = this.total
-                }
+            return items.slice(this.from, this.to)
+        },
+        to () {
+            let highBound = this.from + this.pagination.per_page;
+            if (this.total < highBound) {
+                highBound = this.total
+            }
 
-                return highBound
-            },
-            from () {
-                return this.serverPagination
-                    ? 0
-                    : this.pagination.per_page * (this.pagination.current_page - 1);
-            },
-            total () {
-                return this.pagination.total
-                    ? this.pagination.total
-                    : this.searchedQty ? this.searchedItems.length : this.items.length;
-            },
-            fromEditItemPage () {
-                return this.$route.name === this.routeDetector.to &&
-                    this.editItemPathName === this.routeDetector.from;
-            }
+            return highBound
         },
-        watch: {
-            items () {
-                this.initFuseSearch(this.searchFields)
-            },
-            itemsQty () {
-                this.returnToPreviousPage();
-            },
-            searchedQty () {
-                this.returnToPreviousPage();
-            }
+        from () {
+            return this.serverPagination
+                ? 0
+                : this.pagination.per_page * (this.pagination.current_page - 1);
         },
-        created() {
-            if (!this.fromEditItemPage) {
-                this.resetRouteDetector();
-                this.setState();
-            }
-            this.returnToPreviousPage();
-            this.requestItems()
+        total () {
+            return this.pagination.total
+                ? this.pagination.total
+                : this.searchedQty ? this.searchedItems.length : this.items.length;
         },
-        mounted () {
-            window.scrollTo(0, 0);
+        fromEditItemPage () {
+            return this.$route.name === this.routeDetector.to &&
+                this.editItemPathName === this.routeDetector.from;
+        }
+    },
+    watch: {
+        items () {
             this.initFuseSearch(this.searchFields)
         },
-        methods: {
-            ...mapActions('table', {
-                clearStateAction: 'clearState',
-                getRequestItemsAction: 'getItemsGet',
-                postRequestItemsAction: 'getItemsPost',
-                setFieldAction: 'setField',
-                setFieldsAction: 'setFields',
-                setPaginationFieldAction: 'setPaginationField',
-                resetPaginationAction: 'resetPagination',
-                setRouteDetectorFieldAction: 'setRouteDetectorField'
-            }),
-            async requestItems () {
-                this.serverPagination
-                    ? await this.postRequestItemsAction()
-                    : await this.getRequestItemsAction()
-            },
-            async customSort () {
-                if (this.sortInit && !this.loading && this.items.length && !this.fromEditItemPage) {
-                    const sortOrder = this.pagination.sort_order === 'asc' ? 'desc' : 'asc';
-                    await Promise.all([
-                        this.setPaginationFieldAction({ field: 'sort_order', value: sortOrder }),
-                        this.setPaginationFieldAction({ field: 'sort_by', value: this.currentSort })
-                    ])
-                    return this.serverPagination
-                        ? await this.postRequestItemsAction()
-                        : this.sort(this.items);
-                }
-
-                this.resetRouteDetector();
-                this.setFieldAction({ field: 'sortInit', value: true });
-            },
-            sort (value) {
-                return value.sort((a, b) => {
-                    const sortBy = this.pagination.sort_by;
-
-                    return this.pagination.sort_order === 'asc'
-                        ? this.getSort(a, b, sortBy)
-                        : this.getSort(b, a, sortBy)
-                })
-            },
-            getSort (a, b, sortBy) {
-                const numberSort = typeof a[sortBy] === 'number' && typeof b[sortBy] === 'number';
-                return numberSort
-                    ? a[sortBy] < b[sortBy] ? -1 : 1
-                    : a[sortBy].localeCompare(b[sortBy])
-            },
-
-            async search (query) {
-                const value = query.trim();
+        itemsQty () {
+            this.returnToPreviousPage();
+        },
+        searchedQty () {
+            this.returnToPreviousPage();
+        }
+    },
+    created () {
+        if (!this.fromEditItemPage) {
+            this.resetRouteDetector();
+            this.setState();
+        }
+        this.returnToPreviousPage();
+        this.requestItems()
+    },
+    mounted () {
+        window.scrollTo(0, 0);
+        this.initFuseSearch(this.searchFields)
+    },
+    methods: {
+        ...mapActions('table', {
+            clearStateAction: 'clearState',
+            getRequestItemsAction: 'getItemsGet',
+            postRequestItemsAction: 'getItemsPost',
+            setFieldAction: 'setField',
+            setFieldsAction: 'setFields',
+            setPaginationFieldAction: 'setPaginationField',
+            resetPaginationAction: 'resetPagination',
+            setRouteDetectorFieldAction: 'setRouteDetectorField'
+        }),
+        async requestItems () {
+            this.serverPagination
+                ? await this.postRequestItemsAction()
+                : await this.getRequestItemsAction()
+        },
+        async customSort () {
+            if (this.sortInit && !this.loading && this.items.length && !this.fromEditItemPage) {
+                const sortOrder = this.pagination.sort_order === 'asc' ? 'desc' : 'asc';
                 await Promise.all([
-                    this.setFieldAction({ field: 'searchQuery', value }),
-                    this.setDefaultPage()
+                    this.setPaginationFieldAction({ field: 'sort_order', value: sortOrder }),
+                    this.setPaginationFieldAction({ field: 'sort_by', value: this.currentSort })
                 ])
-
-                if (!value) {
-                    this.clearSearchedItems()
-                }
-
-                this.handleSearch()
-            },
-            handleSearch () {
-                this.serverPagination
-                    ? _debounce(this.postRequestItemsAction)
-                    : this.setSearchedItems();
-            },
-            initFuseSearch (keys) {
-                if (!this.serverPagination) {
-                    this.fuseSearch = new Fuse(this.items.slice(), { keys, threshold: 0.3 });
-                }
-            },
-            async changePage (value) {
-                await this.setPaginationFieldAction({ field: 'current_page', value })
-                if (this.serverPagination) {
-                    await this.postRequestItemsAction()
-                }
-                window.scrollTo(0, 0);
-            },
-            async changePerPage (value) {
-                await this.setPaginationFieldAction({ field: 'per_page', value })
-                await this.setDefaultPage()
-            },
-            setSearchedItems () {
-                const searchResult = this.fuseSearch.search(this.searchQuery).map(fuse => fuse.item);
-                this.setFieldAction({ field: 'searchedItems', value: searchResult });
-            },
-            setDefaultPage () {
-                this.setPaginationFieldAction({ field: 'current_page', value: 1 });
-            },
-            clearSearchedItems () {
-                this.setFieldAction({ field: 'searchedItems', value: [] });
-            },
-            setState () {
-                this.resetPaginationAction();
-                this.clearStateAction()
-                this.setFieldAction({ field: 'resourceUrl', value: this.resourceUrl });
-                this.setPaginationFieldAction({ field: 'sort_order', value: this.defaultSortOrder });
-                this.setPaginationFieldAction({ field: 'per_page', value: this.perPageOptions[0] });
-            },
-            returnToPreviousPage () {
-                this.serverPagination
-                    ? this.checkGoPrevWithServerPagination()
-                    : this.checkGoPrev();
-            },
-            async checkGoPrevWithServerPagination () {
-                if (this.checkReturnToPreviousPage) {
-                    await this.setPaginationFieldAction({
-                        field: 'current_page',
-                        value: this.pagination.current_page - 1
-                    });
-
-                    await this.postRequestItemsAction()
-                }
-            },
-            checkGoPrev () {
-                if (this.pagination.current_page > this.totalPages) {
-                    this.setPaginationFieldAction({ field: 'current_page', value: this.totalPages });
-                }
-            },
-            resetRouteDetector () {
-                this.setRouteDetectorFieldAction({ field: 'from', value: null });
-                this.setRouteDetectorFieldAction({ field: 'to', value: null });
+                return this.serverPagination
+                    ? await this.postRequestItemsAction()
+                    : this.sort(this.items);
             }
+
+            this.resetRouteDetector();
+            this.setFieldAction({ field: 'sortInit', value: true });
+        },
+        sort (value) {
+            return value.sort((a, b) => {
+                const sortBy = this.pagination.sort_by;
+
+                return this.pagination.sort_order === 'asc'
+                    ? this.getSort(a, b, sortBy)
+                    : this.getSort(b, a, sortBy)
+            })
+        },
+        getSort (a, b, sortBy) {
+            const numberSort = typeof a[sortBy] === 'number' && typeof b[sortBy] === 'number';
+            return numberSort
+                ? a[sortBy] < b[sortBy] ? -1 : 1
+                : a[sortBy].localeCompare(b[sortBy])
+        },
+
+        async search (query) {
+            const value = query.trim();
+            await Promise.all([
+                this.setFieldAction({ field: 'searchQuery', value }),
+                this.setDefaultPage()
+            ])
+
+            if (!value) {
+                this.clearSearchedItems()
+            }
+
+            this.handleSearch()
+        },
+        handleSearch () {
+            this.serverPagination
+                ? _debounce(this.postRequestItemsAction)
+                : this.setSearchedItems();
+        },
+        initFuseSearch (keys) {
+            if (!this.serverPagination) {
+                this.fuseSearch = new Fuse(this.items.slice(), { keys, threshold: 0.3 });
+            }
+        },
+        async changePage (value) {
+            await this.setPaginationFieldAction({ field: 'current_page', value })
+            if (this.serverPagination) {
+                await this.postRequestItemsAction()
+            }
+            window.scrollTo(0, 0);
+        },
+        async changePerPage (value) {
+            await this.setPaginationFieldAction({ field: 'per_page', value })
+            await this.setDefaultPage()
+        },
+        setSearchedItems () {
+            const searchResult = this.fuseSearch.search(this.searchQuery).map(fuse => fuse.item);
+            this.setFieldAction({ field: 'searchedItems', value: searchResult });
+        },
+        setDefaultPage () {
+            this.setPaginationFieldAction({ field: 'current_page', value: 1 });
+        },
+        clearSearchedItems () {
+            this.setFieldAction({ field: 'searchedItems', value: [] });
+        },
+        setState () {
+            this.resetPaginationAction();
+            this.clearStateAction()
+            this.setFieldAction({ field: 'resourceUrl', value: this.resourceUrl });
+            this.setPaginationFieldAction({ field: 'sort_order', value: this.defaultSortOrder });
+            this.setPaginationFieldAction({ field: 'per_page', value: this.perPageOptions[0] });
+        },
+        returnToPreviousPage () {
+            this.serverPagination
+                ? this.checkGoPrevWithServerPagination()
+                : this.checkGoPrev();
+        },
+        async checkGoPrevWithServerPagination () {
+            if (this.checkReturnToPreviousPage) {
+                await this.setPaginationFieldAction({
+                    field: 'current_page',
+                    value: this.pagination.current_page - 1
+                });
+
+                await this.postRequestItemsAction()
+            }
+        },
+        checkGoPrev () {
+            if (this.pagination.current_page > this.totalPages) {
+                this.setPaginationFieldAction({ field: 'current_page', value: this.totalPages });
+            }
+        },
+        resetRouteDetector () {
+            this.setRouteDetectorFieldAction({ field: 'from', value: null });
+            this.setRouteDetectorFieldAction({ field: 'to', value: null });
         }
     }
+}
 </script>
 
 <style>
-    .loading td {
-        opacity: 0;
-    }
-    .progress-bar__container {
-        height: 4px;
-    }
+.loading td {
+    opacity: 0;
+}
+.progress-bar__container {
+    height: 4px;
+}
 </style>

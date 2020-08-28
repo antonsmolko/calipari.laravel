@@ -5,30 +5,31 @@
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
                         <router-button-link v-if="category_type === 'images'"
-                                            route="cms.dashboard"/>
-                        <router-button-link v-else
-                                            route="cms.catalog.categories.list"
-                                            :params="{ category_type }"/>
+                                            :to="{ name: 'cms.dashboard' }"/>
+                        <router-button-link
+                            v-else
+                            :to="{ name: 'cms.catalog.categories.list', params: { category_type } }" />
                         <div>
-                            <router-button-link icon="content_copy"
-                                                color="md-info"
-                                                title="Поиск дубликатов"
-                                                route="cms.images.find-duplicates"
-                                                :params="{
-                                                    id: category_type === 'images' ? 0 : id,
-                                                    category_type
-                                                }"/>
-                            <router-button-link v-if="category_type === 'images'"
-                                                icon="delete"
-                                                color="md-default"
-                                                title="Удаленные изображения"
-                                                route="cms.images.trashed"/>
-                            <router-button-link v-if="category_type !== 'images'"
-                                                icon="add"
-                                                color="md-success"
-                                                title="Добавить изображения"
-                                                route="cms.catalog.categories.images.excluded"
-                                                :params="{ id }"/>
+                            <router-button-link
+                                icon="content_copy"
+                                color="md-info"
+                                title="Поиск дубликатов"
+                                :to="{
+                                    name: 'cms.images.find-duplicates',
+                                    params: { id: category_type === 'images' ? 0 : id, category_type }
+                                } "/>
+                            <router-button-link
+                                v-if="category_type === 'images'"
+                                icon="delete"
+                                color="md-default"
+                                title="Удаленные изображения"
+                                :to="{ name: 'cms.images.trashed' }" />
+                            <router-button-link
+                                v-if="category_type !== 'images'"
+                                icon="add"
+                                color="md-success"
+                                title="Добавить изображения"
+                                :to="{ name: 'cms.catalog.categories.images.excluded', params: { id } }" />
                             <upload-button @change="fileInputChange"/>
                         </div>
                     </md-card-content>
@@ -107,18 +108,15 @@ export default {
             category: state => state.categories.item,
             fileProgress: state => state.images.fileProgress
         }),
-        resourceUrl() {
+        resourceUrl () {
             return this.isCategoryPage ? `/catalog/categories/${this.id}/images` : '/images/paginate'
         },
-        isCategoryPage() {
+        isCategoryPage () {
             return this.category_type !== 'images';
         }
     },
-    created() {
+    created () {
         this.init(this.category_type);
-    },
-    beforeDestroy() {
-
     },
     methods: {
         ...mapActions({
@@ -126,7 +124,7 @@ export default {
             togglePublishAction: 'table/togglePublish',
             removeImageAction: 'categories/removeImage'
         }),
-        async init(categoryType) {
+        async init (categoryType) {
             if (categoryType !== 'images') {
                 await this.getCategoryAction(this.id)
             }
@@ -136,17 +134,17 @@ export default {
             await this.setPageTitle(pageTitle);
 
         },
-        fileInputChange(event) {
+        fileInputChange (event) {
             this.upload({
                 uploadFiles: event.target.files,
                 type: this.category_type,
                 id: this.id
             });
         },
-        onRemove(id) {
+        onRemove (id) {
             this.removeImageAction({categoryId: this.id, imageId: id});
         },
-        onDelete(item) {
+        onDelete (item) {
             this.delete({
                 payload: item.id,
                 title: item.id,
@@ -156,7 +154,7 @@ export default {
                 tableMode: 'table'
             })
         },
-        togglePublish(id) {
+        togglePublish (id) {
             this.togglePublishAction(`/images/${id}/publish`);
         }
     }

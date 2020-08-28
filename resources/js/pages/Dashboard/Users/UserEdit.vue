@@ -4,9 +4,7 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link
-                            title="К списку пользователей"
-                            route="cms.users" />
+                        <router-button-link title="К списку пользователей" :to="{ name: 'cms.users' }" />
                         <div>
                             <slide-y-down-transition
                                 v-show="controlSaveVisibilities && $v.$anyDirty && !$v.$invalid">
@@ -145,16 +143,14 @@ export default {
             required: true
         }
     },
-    data () {
-        return {
-            responseData: false,
-            selectedRole: [],
-            changePassword: false,
-            redirectRoute: { name: 'cms.users' },
-            storeModule: 'users',
-            controlSaveVisibilities: false
-        }
-    },
+    data: () => ({
+        responseData: false,
+        selectedRole: [],
+        changePassword: false,
+        redirectRoute: { name: 'cms.users' },
+        storeModule: 'users',
+        controlSaveVisibilities: false
+    }),
     validations: {
         name: {
             required,

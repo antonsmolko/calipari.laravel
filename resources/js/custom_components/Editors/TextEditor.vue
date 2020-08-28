@@ -52,84 +52,82 @@ export default {
             default: false
         }
     },
-    data () {
-        return {
-            editor: ClassicEditor,
-            editorConfig: {
-                plugins: [
-                    Image,
-                    InsertImage,
-                    ImageCaption,
-                    ImageToolbar,
-                    ImageStyle,
-                    ImageResize,
-                    EssentialsPlugin,
-                    BoldPlugin,
-                    ItalicPlugin,
-                    LinkPlugin,
-                    ParagraphPlugin,
-                    List,
-                    Heading,
-                    MediaEmbed
-                ],
-                toolbar: {
-                    items: [
-                        'heading',
-                        '|',
-                        'bold',
-                        'italic',
-                        'bulletedList',
-                        'numberedList',
-                        '|',
-                        'link',
-                        'insertImage',
-                        '|',
-                        'undo',
-                        'redo',
-                        '|',
-                        'mediaEmbed'
-                    ]
-                },
-                image: {
-                    // You need to configure the image toolbar, too, so it uses the new style buttons.
-                    toolbar: [ 'imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight' ],
-
-                    styles: [
-                        // This option is equal to a situation where no style is applied.
-                        'full',
-
-                        // This represents an image aligned to the left.
-                        'alignLeft',
-
-                        // This represents an image aligned to the right.
-                        'alignRight'
-                    ]
-                },
-                heading: {
-                    options: [
-                        { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                        { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-                        { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-                        { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
-                        { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' },
-                        { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
-                        { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
-                    ]
-                },
-                mediaEmbed: {
-                    previewsInData: true
-                }
+    data: () => ({
+        editor: ClassicEditor,
+        editorConfig: {
+            plugins: [
+                Image,
+                InsertImage,
+                ImageCaption,
+                ImageToolbar,
+                ImageStyle,
+                ImageResize,
+                EssentialsPlugin,
+                BoldPlugin,
+                ItalicPlugin,
+                LinkPlugin,
+                ParagraphPlugin,
+                List,
+                Heading,
+                MediaEmbed
+            ],
+            toolbar: {
+                items: [
+                    'heading',
+                    '|',
+                    'bold',
+                    'italic',
+                    'bulletedList',
+                    'numberedList',
+                    '|',
+                    'link',
+                    'insertImage',
+                    '|',
+                    'undo',
+                    'redo',
+                    '|',
+                    'mediaEmbed'
+                ]
             },
-            valueReference: ''
-        }
-    },
+            image: {
+                // You need to configure the image toolbar, too, so it uses the new style buttons.
+                toolbar: [ 'imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight' ],
+
+                styles: [
+                    // This option is equal to a situation where no style is applied.
+                    'full',
+
+                    // This represents an image aligned to the left.
+                    'alignLeft',
+
+                    // This represents an image aligned to the right.
+                    'alignRight'
+                ]
+            },
+            heading: {
+                options: [
+                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                    { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                    { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+                    { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' },
+                    { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
+                    { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
+                ]
+            },
+            mediaEmbed: {
+                previewsInData: true
+            }
+        },
+        valueReference: ''
+    }),
     computed: {
-        storeModule() {
+        storeModule () {
             return this.module ? `${this.module}/` : '';
         }
     },
     methods: {
-        onInput(value) {
+        onInput (value) {
             if (this.vField)
                 this.touched(this.vField, value);
 
@@ -138,36 +136,36 @@ export default {
                 value: value.trim()
             });
         },
-        isDiffer(a, b) {
+        isDiffer (a, b) {
             return a !== b;
         },
-        touchedDifferent(v, value) {
+        touchedDifferent (v, value) {
             this.isDiffer(value, this.valueReference)
                 ? v.$touch()
                 : v.$reset()
         },
-        touched(v, value) {
+        touched (v, value) {
             this.differ ? this.touchedDifferent(v, value) : v.$touch();
         }
     },
-    created() {
+    created () {
         this.valueReference = this.value;
     }
 }
 </script>
 
 <style lang="scss">
-    .ck.ck-editor__main>.ck-editor__editable {
-        height: 300px;
-        &:focus {
-            border: 1px solid var(--ck-color-input-border);
-            box-shadow: var(--ck-inner-shadow),0 0;
-            outline: none;
-        }
+.ck.ck-editor__main>.ck-editor__editable {
+    height: 300px;
+    &:focus {
+        border: 1px solid var(--ck-color-input-border);
+        box-shadow: var(--ck-inner-shadow),0 0;
+        outline: none;
     }
-    .ck input.ck-input.ck-input-text:focus {
-        border: 0;
-        box-shadow: none;
-    }
+}
+.ck input.ck-input.ck-input-text:focus {
+    border: 0;
+    box-shadow: none;
+}
 </style>
 

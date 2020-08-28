@@ -4,10 +4,7 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link
-                            title="К списку привилегий"
-                            route="cms.permissions"
-                        />
+                        <router-button-link title="К списку привилегий" :to="{ name: 'cms.permissions' }" />
                         <div>
                             <slide-y-down-transition v-show="controlSaveVisibilities && $v.$anyDirty && !$v.$invalid">
                                 <control-button title="Сохранить" @click="onUpdate" />
@@ -63,117 +60,115 @@
 </template>
 
 <script>
-    import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-    import { required, minLength } from 'vuelidate/lib/validators'
+import { required, minLength } from 'vuelidate/lib/validators'
 
-    import { pageTitle } from '@/mixins/base'
-    import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base'
+import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'PermissionEdit',
-        mixins: [pageTitle, updateMethod, deleteMethod],
-        props: {
-            id: {
-                type: [ Number, String ],
-                required: true
-            }
-        },
-        data() {
-            return {
-                responseData: false,
-                controlSaveVisibilities: false,
-                redirectRoute: { name: 'cms.permissions' },
-                storeModule: 'permissions'
-            }
-        },
-        validations: {
-            name: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return (value.trim() === '') && !this.$v.name.$dirty || !this.isUniqueNameEdit
-                },
-                testAlias (value) {
-                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
-                }
+export default {
+    name: 'PermissionEdit',
+    mixins: [pageTitle, updateMethod, deleteMethod],
+    props: {
+        id: {
+            type: [ Number, String ],
+            required: true
+        }
+    },
+    data: () => ({
+        responseData: false,
+        controlSaveVisibilities: false,
+        redirectRoute: { name: 'cms.permissions' },
+        storeModule: 'permissions'
+    }),
+    validations: {
+        name: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return (value.trim() === '') && !this.$v.name.$dirty || this.isUniqueNameEdit
             },
-            displayName: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return (value.trim() === '') && !this.$v.displayName.$dirty || !this.isUniqueDisplayNameEdit
-                }
-            },
-            description: {
-                touch: false
+            testAlias (value) {
+                return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
             }
         },
-        computed: {
-            ...mapState('permissions', {
-                name: state => state.fields.name,
-                displayName: state => state.fields.display_name,
-                description: state => state.fields.description
-            }),
-            isUniqueNameEdit() {
-                return !!this.$store.getters['permissions/isUniqueNameEdit'](this.name, this.id);
-            },
-            isUniqueDisplayNameEdit() {
-                return !!this.$store.getters['permissions/isUniqueDisplayNameEdit'](this.displayName, this.id);
+        displayName: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return (value.trim() === '') && !this.$v.displayName.$dirty || this.isUniqueDisplayNameEdit
             }
         },
-        created () {
-            Promise.all([
-                this.getItemsAction(),
-                this.getItemAction(this.id)
-            ])
-                .then(() => {
-                    this.setPageTitle(this.displayName);
-                    this.responseData = true;
-                })
-                .then(() => {
-                    this.$v.$reset();
-                    this.controlSaveVisibilities = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
+        description: {
+            touch: false
+        }
+    },
+    computed: {
+        ...mapState('permissions', {
+            name: state => state.fields.name,
+            displayName: state => state.fields.display_name,
+            description: state => state.fields.description
+        }),
+        isUniqueNameEdit () {
+            return this.$store.getters['permissions/isUniqueNameEdit'](this.name, this.id);
         },
-        beforeDestroy () {
-            this.clearFieldsAction();
-        },
-        methods: {
-            ...mapActions('permissions', {
-                getItemsAction: 'getItems',
-                getItemAction: 'getItem',
-                clearFieldsAction: 'clearItemFields'
-            }),
-            onUpdate () {
-                return this.update({
-                    sendData: {
-                        formData: {
-                            name: this.name,
-                            display_name: this.displayName,
-                            description: this.description
-                        },
-                        id: this.id
+        isUniqueDisplayNameEdit () {
+            return this.$store.getters['permissions/isUniqueDisplayNameEdit'](this.displayName, this.id);
+        }
+    },
+    created () {
+        Promise.all([
+            this.getItemsAction(),
+            this.getItemAction(this.id)
+        ])
+            .then(() => {
+                this.setPageTitle(this.displayName);
+                this.responseData = true;
+            })
+            .then(() => {
+                this.$v.$reset();
+                this.controlSaveVisibilities = true;
+            })
+            .catch(() => this.$router.push(this.redirectRoute));
+    },
+    beforeDestroy () {
+        this.clearFieldsAction();
+    },
+    methods: {
+        ...mapActions('permissions', {
+            getItemsAction: 'getItems',
+            getItemAction: 'getItem',
+            clearFieldsAction: 'clearItemFields'
+        }),
+        onUpdate () {
+            return this.update({
+                sendData: {
+                    formData: {
+                        name: this.name,
+                        display_name: this.displayName,
+                        description: this.description
                     },
-                    title: this.displayName,
-                    successText: 'Привилегия обновлена!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                });
-            },
-            onDelete () {
-                return this.delete({
-                    payload: this.id,
-                    title: this.displayName,
-                    alertText: `привилегию «${this.displayName}»`,
-                    successText: 'Привилегия удалена!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                })
-            }
+                    id: this.id
+                },
+                title: this.displayName,
+                successText: 'Привилегия обновлена!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            });
+        },
+        onDelete () {
+            return this.delete({
+                payload: this.id,
+                title: this.displayName,
+                alertText: `привилегию «${this.displayName}»`,
+                successText: 'Привилегия удалена!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            })
         }
     }
+}
 </script>

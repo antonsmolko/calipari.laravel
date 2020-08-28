@@ -4,11 +4,7 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link
-                            title="В администрирование"
-                            :route="redirectRoute.name"
-                            :params="redirectRoute.params"
-                        />
+                        <router-button-link title="В администрирование" :to="redirectRoute" />
                         <slide-y-down-transition v-show="!$v.$invalid">
                             <control-button @click="onCreate('auto-close')" />
                         </slide-y-down-transition>
@@ -51,90 +47,88 @@
 </template>
 
 <script>
-    import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-    import { required, minLength } from 'vuelidate/lib/validators'
+import { required, minLength } from 'vuelidate/lib/validators'
 
-    import { pageTitle } from '@/mixins/base'
-    import { createMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base'
+import { createMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'SettingGroupCreate',
-        mixins: [ pageTitle, createMethod ],
-        data () {
-            return {
-                responseData: false,
-                storeModule: 'settingGroups',
-                redirectRoute: {
-                    name: 'cms.settings.administration',
-                    params: { activeTab: 'Группы' }
-                }
-            }
-        },
-        validations: {
-            title: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.title.$dirty) || this.isUniqueTitle
-                },
-            },
-            alias: {
-                required,
-                touch: false,
-                testAlias (value) {
-                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
-                },
-                minLength: minLength(2),
-                isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAlias
-                },
-            },
-            description: {
-                touch: false
-            }
-        },
-        computed: {
-            ...mapState('settingGroups', {
-                title: state => state.fields.title,
-                alias: state => state.fields.alias,
-                description: state => state.fields.description
-            }),
-            isUniqueTitle() {
-                return this.$store.getters['settingGroups/isUniqueTitle'](this.title);
-            },
-            isUniqueAlias () {
-                return this.$store.getters['settingGroups/isUniqueAlias'](this.alias);
-            }
-        },
-        methods: {
-            ...mapActions('settingGroups', {
-                getItemsAction: 'getItems',
-                clearFieldsAction: 'clearItemFields',
-            }),
-            onCreate() {
-                return this.create({
-                    sendData: {
-                        title : this.title,
-                        alias: this.alias,
-                        description : this.description
-                    },
-                    title: this.title,
-                    successText: 'Группа создана!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                })
-            }
-        },
-        created() {
-            this.clearFieldsAction();
-            this.getItemsAction()
-                .then(() => {
-                    this.setPageTitle('Новая группа');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
+export default {
+    name: 'SettingGroupCreate',
+    mixins: [ pageTitle, createMethod ],
+    data: () => ({
+        responseData: false,
+        storeModule: 'settingGroups',
+        redirectRoute: {
+            name: 'cms.settings.administration',
+            params: { activeTab: 'Группы' }
         }
+    }),
+    validations: {
+        title: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return ((value.trim() === '') && !this.$v.title.$dirty) || this.isUniqueTitle
+            },
+        },
+        alias: {
+            required,
+            touch: false,
+            testAlias (value) {
+                return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
+            },
+            minLength: minLength(2),
+            isUnique (value) {
+                return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAlias
+            },
+        },
+        description: {
+            touch: false
+        }
+    },
+    computed: {
+        ...mapState('settingGroups', {
+            title: state => state.fields.title,
+            alias: state => state.fields.alias,
+            description: state => state.fields.description
+        }),
+        isUniqueTitle () {
+            return this.$store.getters['settingGroups/isUniqueTitle'](this.title);
+        },
+        isUniqueAlias () {
+            return this.$store.getters['settingGroups/isUniqueAlias'](this.alias);
+        }
+    },
+    methods: {
+        ...mapActions('settingGroups', {
+            getItemsAction: 'getItems',
+            clearFieldsAction: 'clearItemFields',
+        }),
+        onCreate () {
+            return this.create({
+                sendData: {
+                    title : this.title,
+                    alias: this.alias,
+                    description : this.description
+                },
+                title: this.title,
+                successText: 'Группа создана!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            })
+        }
+    },
+    created () {
+        this.clearFieldsAction();
+        this.getItemsAction()
+            .then(() => {
+                this.setPageTitle('Новая группа');
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push(this.redirectRoute));
     }
+}
 </script>

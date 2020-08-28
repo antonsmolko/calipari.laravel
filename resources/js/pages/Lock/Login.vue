@@ -27,12 +27,10 @@ export default {
     components: {
         LockCard
     },
-    data() {
-        return {
-            email: null,
-            password: null,
-        }
-    },
+    data: () => ({
+        email: null,
+        password: null,
+    }),
     methods: {
         async login() {
             let redirect = this.$auth.redirect();
@@ -45,7 +43,6 @@ export default {
                 redirect: {
                     name: redirect ? redirect.from.name : 'cms.dashboard'
                 },
-                // success: () => this.$router.push({name: 'cms.dashboard'}),
                 error: (error) => this.$store.commit('UPDATE_ERRORS', error.response),
                 rememberMe: true,
                 fetchUser: true

@@ -258,6 +258,18 @@ const DeliveryEdit = resolve => {
     })
 };
 
+/** Pickups */
+const PickupCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Store/Delivery/PickupCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Store/Delivery/PickupCreate.vue'))
+    })
+};
+const PickupEdit = resolve => {
+    require.ensure(['@/pages/Dashboard/Store/Delivery/PickupEdit.vue'], () => {
+        resolve(require('@/pages/Dashboard/Store/Delivery/PickupEdit.vue'))
+    })
+};
+
 /** OrderStatuses */
 const OrderStatusList = resolve => {
     require.ensure(['@/pages/Dashboard/Store/OrderStatuses/OrderStatusList.vue'], () => {
@@ -821,6 +833,19 @@ const cmsDeliveriesPages = {
             path: 'deliveries/:id',
             name: 'cms.store.deliveries.edit',
             component: DeliveryEdit,
+            props: true,
+            meta: getPathMeta('deliveries')
+        },
+        {
+            path: 'pickups/create',
+            name: 'cms.store.pickups.create',
+            component: PickupCreate,
+            meta: getPathMeta('deliveries')
+        },
+        {
+            path: 'pickups/:id',
+            name: 'cms.store.pickups.edit',
+            component: PickupEdit,
             props: true,
             meta: getPathMeta('deliveries')
         }

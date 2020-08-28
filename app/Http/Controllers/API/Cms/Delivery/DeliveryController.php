@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\API\Cms\Delivery;
 
 
-use App\Http\Controllers\API\Cms\Delivery\Requests\CreateDeliveryRequest;
-use App\Http\Controllers\API\Cms\Delivery\Requests\UpdateDeliveryRequest;
+use App\Http\Controllers\API\Cms\Delivery\Requests\CreateRequest;
+use App\Http\Controllers\API\Cms\Delivery\Requests\UpdateRequest;
 use App\Http\Controllers\API\Cms\Base\BaseResourceController;
 use App\Models\Delivery;
 use App\Services\Delivery\CmsDeliveryService;
@@ -21,21 +21,26 @@ class DeliveryController extends BaseResourceController
     }
 
     /**
-     * @param CreateDeliveryRequest $request
+     * @param CreateRequest $request
      * @return Delivery
      */
-    public function store(CreateDeliveryRequest $request): Delivery
+    public function store(CreateRequest $request): Delivery
     {
         return $this->service->store($request->all());
     }
 
     /**
-     * @param UpdateDeliveryRequest $request
+     * @param UpdateRequest $request
      * @param int $id
-     * @return Delivery
+     * @return mixed
      */
-    public function update(UpdateDeliveryRequest $request, int $id): Delivery
+    public function update(UpdateRequest $request, int $id)
     {
         return $this->service->update($id, $request->all());
+    }
+
+    public function getPickupItems()
+    {
+        return response()->json($this->service->getPickupItems());
     }
 }

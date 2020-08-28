@@ -5,10 +5,7 @@
             <div class="md-layout-item">
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
-                        <router-button-link
-                            :route="redirectRoute.name"
-                            :params="redirectRoute.params"
-                        />
+                        <router-button-link :to="redirectRoute" />
                         <div v-if="selected.length">
                             <control-button title="Добавить изображения"
                                             icon="add"
@@ -50,85 +47,83 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
-    import { pageTitle } from '@/mixins/base'
-    import { subCategoryImageAddMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base'
+import { subCategoryImageAddMethod } from '@/mixins/crudMethods'
 
-    import ImageListTable from "@/custom_components/Tables/ImageListTable";
-    import ImageTableActions from "@/custom_components/Tables/ImageTableActions";
+import ImageListTable from "@/custom_components/Tables/ImageListTable";
+import ImageTableActions from "@/custom_components/Tables/ImageTableActions";
 
-    export default {
-        name: 'ExcludedImageList',
-        mixins: [
-            pageTitle,
-            subCategoryImageAddMethod
-        ],
-        components: {
-            ImageListTable,
-            ImageTableActions
+export default {
+    name: 'ExcludedImageList',
+    mixins: [
+        pageTitle,
+        subCategoryImageAddMethod
+    ],
+    components: {
+        ImageListTable,
+        ImageTableActions
+    },
+    props: {
+        id: {
+            type: [ Number, String ],
+            required: true
         },
-        props: {
-            id: {
-                type: [ Number, String ],
-                required: true
-            },
-            category_type: {
-                type: String,
-                default: null
-            },
+        category_type: {
+            type: String,
+            default: null
         },
-        data () {
-            return {
-                resourceUrl: `/catalog/${this.category_type}/${this.id}/images/excluded`,
-                storeModule: 'images',
-                redirectRoute: {
-                    name: 'cms.catalog.subcategories.images',
-                    params: { category_type: this.category_type, id: this.id }
-                },
-                responseData: false,
-                selected: []
-            }
+    },
+    data: () => ({
+        resourceUrl: `/catalog/${this.category_type}/${this.id}/images/excluded`,
+        storeModule: 'images',
+        redirectRoute: {
+            name: 'cms.catalog.subcategories.images',
+            params: { category_type: this.category_type, id: this.id }
         },
-        computed: {
-            ...mapState({
-                title: state => state.subCategories.fields.title,
+        responseData: false,
+        selected: []
+    }),
+    computed: {
+        ...mapState({
+            title: state => state.subCategories.fields.title,
+        })
+    },
+    created () {
+        this.getItemAction({ type: this.category_type, id: this.id })
+            .then(() => {
+                this.setPageTitle(`Для категории «${this.title}»`);
+                this.responseData = true;
             })
+            .catch(() => this.$router.push(this.redirectRoute));
+    },
+    methods: {
+        ...mapActions({
+            getItemAction: 'subCategories/getItem',
+            togglePublishAction: 'table/togglePublish',
+        }),
+        togglePublish (id) {
+            this.togglePublishAction(`/images/${id}/publish`);
         },
-        created() {
-            this.getItemAction({ type: this.category_type, id: this.id })
-                .then(() => {
-                    this.setPageTitle(`Для категории «${this.title}»`);
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
-        },
-        methods: {
-            ...mapActions({
-                getItemAction: 'subCategories/getItem',
-                togglePublishAction: 'table/togglePublish',
-            }),
-            togglePublish(id) {
-                this.togglePublishAction(`/images/${id}/publish`);
-            },
-            onImagesAdd() {
-                return this.addImages({
-                    type: this.category_type,
-                    id: this.id,
-                    data: this.selected,
-                    redirectRoute: this.redirectRoute
-                })
-            }
+        onImagesAdd () {
+            return this.addImages({
+                type: this.category_type,
+                id: this.id,
+                data: this.selected,
+                redirectRoute: this.redirectRoute
+            })
         }
     }
+}
 </script>
 
 <style lang="scss" scoped>
-    .md-file-input {
-        display: none;
-    }
-    .md-between {
-        display: flex;
-        justify-content: space-between;
-    }
+.md-file-input {
+    display: none;
+}
+.md-between {
+    display: flex;
+    justify-content: space-between;
+}
 </style>

@@ -24,11 +24,24 @@ class CmsDeliveryService extends CmsBaseResourceService
         CacheKeyManager $cacheKeyManager
     )
     {
-        parent::__construct(
-            $repository,
-            $clearCacheByTagHandler,
-            $cacheKeyManager
-        );
+        parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
         $this->cacheTag = Tag::DELIVERY_TAG;
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function getItem(int $id)
+    {
+        return $this->repository->getDetailsItem($id);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPickupItems()
+    {
+        return $this->repository->getPickupItems();
     }
 }

@@ -3,7 +3,7 @@
         <div class="md-layout-item">
             <md-card class="mt-0">
                 <md-card-content class="md-between">
-                    <router-button-link route="cms.settings" title="В настройки" />
+                    <router-button-link :to="{ name: 'cms.settings' }" title="В настройки" />
                 </md-card-content>
             </md-card>
             <tabs
@@ -68,7 +68,7 @@
                 <template slot="tab-pane-2">
                     <div class="md-justify-end">
                         <router-button-link title="Создать группу" icon="add" color="md-success"
-                                            route="cms.settings.groups.create" />
+                                            :to="{ name: 'cms.settings.groups.create' }" />
                     </div>
                     <md-table v-if="settingGroups.length"
                               :value="settingGroups"
@@ -117,98 +117,96 @@
 </template>
 
 <script>
-    import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-    import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
-    import TableActions from "@/custom_components/Tables/TableActions";
-    import Tabs from '@/custom_components/Tabs.vue'
+import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
+import TableActions from "@/custom_components/Tables/TableActions";
+import Tabs from '@/custom_components/Tabs.vue'
 
-    import { pageTitle } from '@/mixins/base'
-    import { deleteMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base'
+import { deleteMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'SettingAdministrationList',
-        mixins: [ pageTitle, deleteMethod ],
-        components: {
-            VExtendedTable,
-            TableActions,
-            Tabs
+export default {
+    name: 'SettingAdministrationList',
+    mixins: [ pageTitle, deleteMethod ],
+    components: {
+        VExtendedTable,
+        TableActions,
+        Tabs
+    },
+    data: () => ({
+        activeTab: '',
+        responseData: false
+    }),
+    computed: {
+        ...mapState({
+            settings: state => state.settings.items,
+            settingGroups: state => state.settingGroups.items
+        }),
+    },
+    created () {
+        if (this.$route.params.activeTab)
+            this.activeTab = this.$route.params.activeTab;
+        this.getGroupsAction()
+            .then(() => this.getItemsWithGroupAction())
+            .then(() => {
+                this.setPageTitle('Администрирование');
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push({ name: 'cms.settings' }));
+    },
+    methods: {
+        ...mapActions({
+            getItemsWithGroupAction: 'settings/getItemsWithGroup',
+            getGroupsAction: 'settingGroups/getItems',
+        }),
+        onDeleteSetting(item) {
+            return this.delete({
+                payload: item.id,
+                title: item.display_name,
+                alertText: `настройку «${item.display_name}»`,
+                successText: 'Настройка удалена!',
+                storeModule: 'settings'
+            })
         },
-        data () {
-            return {
-                activeTab: '',
-                responseData: false
-            }
+        onDeleteGroup (item) {
+            return this.delete({
+                payload: item.id,
+                title: item.title,
+                alertText: `группу «${item.display_name}»`,
+                successText: 'Группа удалена!',
+                storeModule: 'settingGroups'
+            })
         },
-        computed: {
-            ...mapState({
-                settings: state => state.settings.items,
-                settingGroups: state => state.settingGroups.items
-            }),
-        },
-        created() {
-            if (this.$route.params.activeTab)
-                this.activeTab = this.$route.params.activeTab;
-            this.getGroupsAction()
-                .then(() => this.getItemsWithGroupAction())
-                .then(() => {
-                    this.setPageTitle('Администрирование');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push({ name: 'cms.settings' }));
-        },
-        methods: {
-            ...mapActions({
-                getItemsWithGroupAction: 'settings/getItemsWithGroup',
-                getGroupsAction: 'settingGroups/getItems',
-            }),
-            onDeleteSetting(item) {
-                return this.delete({
-                    payload: item.id,
-                    title: item.display_name,
-                    alertText: `настройку «${item.display_name}»`,
-                    successText: 'Настройка удалена!',
-                    storeModule: 'settings'
-                })
-            },
-            onDeleteGroup (item) {
-                return this.delete({
-                    payload: item.id,
-                    title: item.title,
-                    alertText: `группу «${item.display_name}»`,
-                    successText: 'Группа удалена!',
-                    storeModule: 'settingGroups'
-                })
-            },
-        }
     }
+}
 </script>
 
 <style lang="scss" scoped>
-    .md-card .md-card-actions{
-        border: 0;
-        margin-left: 20px;
-        margin-right: 20px;
-    }
+.md-card .md-card-actions{
+    border: 0;
+    margin-left: 20px;
+    margin-right: 20px;
+}
 
-    .md-table-thumb {
-        object-fit: cover;
-        width: 200px;
-        height: 100px;
-    }
+.md-table-thumb {
+    object-fit: cover;
+    width: 200px;
+    height: 100px;
+}
 
-    .md-table-cell-container {
-        .md-just-icon {
-            margin-left: 5px;
-            margin-right: 5px;
-        }
+.md-table-cell-container {
+    .md-just-icon {
+        margin-left: 5px;
+        margin-right: 5px;
     }
+}
 
-    .md-category-tag {
-        display: inline-block;
-        padding: 3px 5px;
-        background-color: #dddddd;
-        border-radius: 3px;
-        margin: 3px;
-    }
+.md-category-tag {
+    display: inline-block;
+    padding: 3px 5px;
+    background-color: #dddddd;
+    border-radius: 3px;
+    margin: 3px;
+}
 </style>

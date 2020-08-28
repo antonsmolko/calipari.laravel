@@ -20,6 +20,29 @@ export const axiosAction = (method, commit, { url, data = null, thenContent = nu
         });
 }
 
+export const axiosPut = ({ commit, data, url, thenContent, method = 'PUT' }) => {
+    const request = axios.create({
+        method,
+        baseURL: config.baseUrl
+    });
+
+    return request.put(url, data, {
+        headers: { Authorization: `Bearer ${auth.token()}` }
+    })
+        .then((response) => {
+            commit('CLEAR_ERRORS', null, { root: true });
+
+            if (thenContent) {
+                return thenContent(response);
+            }
+        })
+        .catch(error => {
+            commit('UPDATE_ERRORS', error.response, { root: true });
+            commit('SET_LOADING', false, { root: true });
+            throw error;
+        });
+}
+
 export const axiosPatch = ({ commit, data, url, thenContent, method = 'PATCH' }) => {
     const request = axios.create({
         method,

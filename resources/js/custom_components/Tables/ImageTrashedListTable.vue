@@ -72,26 +72,26 @@
 </template>
 
 <script>
-    import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
-    import TagsTableCell from "@/custom_components/Tables/TagsTableCell";
-    import PaletteTableCell from "@/custom_components/Tables/PaletteTableCell";
-    import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
-    import { Badge } from '@/components'
+import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
+import TagsTableCell from "@/custom_components/Tables/TagsTableCell";
+import PaletteTableCell from "@/custom_components/Tables/PaletteTableCell";
+import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
+import { Badge } from '@/components'
 
-    export default {
-        name: "ImageTrashedListTable",
-        components: {
-            VExtendedTable,
-            TagsTableCell,
-            PaletteTableCell,
-            ThumbTableCell,
-            Badge
-        },
-        props: {
-            resourceUrl: {
-                type: String,
-                required: true
-            }
+export default {
+    name: "ImageTrashedListTable",
+    components: {
+        VExtendedTable,
+        TagsTableCell,
+        PaletteTableCell,
+        ThumbTableCell,
+        Badge
+    },
+    props: {
+        resourceUrl: {
+            type: String,
+            required: true
         }
     }
+}
 </script>

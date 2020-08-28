@@ -5,13 +5,13 @@
 </template>
 
 <script>
-    export default {
-        name: "InputNotificationAlias",
-        props: {
-            name: {
-                type: String,
-                default: 'Поле'
-            }
+export default {
+    name: "InputNotificationAlias",
+    props: {
+        name: {
+            type: String,
+            default: 'Поле'
         }
     }
+}
 </script>

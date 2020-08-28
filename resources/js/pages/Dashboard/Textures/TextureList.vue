@@ -5,7 +5,7 @@
                 <md-card-content class="md-between">
                     <router-button-link title="В панель управления" />
                     <router-button-link title="Создать фактуру" icon="add" color="md-success"
-                                        route="cms.textures.create" />
+                                        :to="{ name: 'cms.textures.create' }" />
                 </md-card-content>
             </md-card>
 
@@ -103,10 +103,10 @@ export default {
             publishAction: 'publish',
             setOrderAction: 'setOrder'
         }),
-        onPublishChange(id) {
+        onPublishChange (id) {
             this.publishAction(id);
         },
-        onDelete(item) {
+        onDelete (item) {
             return this.delete({
                 payload: item.id,
                 title: item.name,
@@ -122,7 +122,7 @@ export default {
             }));
         },
     },
-    created() {
+    created () {
         this.getItemsAction()
             .then(() => {
                 this.setPageTitle('Фактуры');
@@ -134,9 +134,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .md-table-thumb {
-        object-fit: cover;
-        width: 200px;
-        height: 100px;
-    }
+.md-table-thumb {
+    object-fit: cover;
+    width: 200px;
+    height: 100px;
+}
 </style>

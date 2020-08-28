@@ -6,11 +6,11 @@
 </template>
 
 <script>
-    import PageLayout from "@/custom_components/Pages/PageLayout";
-    export default {
-        name: "CatalogPage",
-        components: {
-            PageLayout
-        }
+import PageLayout from "@/custom_components/Pages/PageLayout";
+export default {
+    name: "CatalogPage",
+    components: {
+        PageLayout
     }
+}
 </script>

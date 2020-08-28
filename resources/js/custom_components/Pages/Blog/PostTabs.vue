@@ -3,7 +3,14 @@
         :tab-name="['Гид', 'Новости', 'Акции', 'События']"
         :activeTab="activePostTab"
         color-button="success">
-        <template slot="header-title"><h3>Статьи</h3></template>
+        <template slot="header-title">
+            <div class="md-between md-flex-middle mt-1">
+                <h3 class="m-0">Статьи</h3>
+                <router-button-link
+                    title="Создать работу" icon="add" color="md-success"
+                    :to="{ name: 'cms.pages.blog.posts.create' }" />
+            </div>
+        </template>
         <template slot="tab-pane-1">
             <PostList />
         </template>
@@ -29,14 +36,13 @@ export default {
         Tabs,
         PostList
     },
-    data() {
-        return {
-            activePostTab: ''
-        }
-    },
-    created() {
-        if (this.$route.params.activePostTab)
+    data: () => ({
+        activePostTab: ''
+    }),
+    created () {
+        if (this.$route.params.activePostTab) {
             this.activePostTab = this.$route.params.activePostTab;
+        }
     }
 }
 </script>

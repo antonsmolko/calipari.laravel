@@ -4,7 +4,7 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link :route="redirectRoute.name" title="К списку коллекций" />
+                        <router-button-link :to="redirectRoute" title="К списку коллекций" />
                         <div>
                             <slide-y-down-transition v-show="controlSaveVisibilities && $v.$anyDirty && !$v.$invalid">
                                 <control-button title="Сохранить" @click="onUpdate" />
@@ -182,187 +182,185 @@
 </template>
 
 <script>
-    import { mapActions, mapState } from 'vuex'
-    import { required, minLength, numeric } from 'vuelidate/lib/validators'
+import { mapActions, mapState } from 'vuex'
+import { required, minLength, numeric } from 'vuelidate/lib/validators'
 
-    import VSelect from "@/custom_components/VForm/VSelect";
-    import { pageTitle } from '@/mixins/base'
-    import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
+import VSelect from "@/custom_components/VForm/VSelect";
+import { pageTitle } from '@/mixins/base'
+import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'ColorCollectionEdit',
-        components: { VSelect },
-        mixins: [pageTitle, updateMethod, deleteMethod],
-        props: {
-            id: {
-                type: [ String, Number ],
-                required: true
+export default {
+    name: 'ColorCollectionEdit',
+    components: { VSelect },
+    mixins: [pageTitle, updateMethod, deleteMethod],
+    props: {
+        id: {
+            type: [ String, Number ],
+            required: true
+        }
+    },
+    data: () => ({
+        redirectRoute: { name: 'cms.catalog.color-collections' },
+        responseData: false,
+        storeModule: 'colorCollections',
+        controlSaveVisibilities: false
+    }),
+    validations: {
+        title: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return (value.trim() === '') && !this.$v.title.$dirty || this.isUniqueTitleEdit
+            },
+        },
+        alias: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAliasEdit
+            },
+            testAlias (value) {
+                return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
             }
         },
-        data() {
-            return {
-                redirectRoute: { name: 'cms.catalog.color-collections' },
-                responseData: false,
-                storeModule: 'colorCollections',
-                controlSaveVisibilities: false
-            }
+        imageId: {
+            numeric,
+            touch: false
         },
-        validations: {
-            title: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty || this.isUniqueTitleEdit
-                },
-            },
-            alias: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAliasEdit
-                },
-                testAlias (value) {
-                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
-                }
-            },
-            imageId: {
-                numeric,
-                touch: false
-            },
-            maxPrintWidth: {
-                numeric,
-                touch: false
-            },
-            imageDescription: {
-                touch: false
-            },
-            topics: {
-                touch: false
-            },
-            interiors: {
-                touch: false
-            },
-            tags: {
-                touch: false
-            },
-            owner: {
-                touch: false
-            },
-            publish: {
-                touch: false
-            },
-            metaTitle: {
-                touch: false
-            },
-            description: {
-                touch: false
-            },
-            keywords: {
-                touch: false
-            }
+        maxPrintWidth: {
+            numeric,
+            touch: false
         },
-        computed: {
-            ...mapState({
-                title: state => state.colorCollections.fields.title,
-                alias: state => state.colorCollections.fields.alias,
-                imageId: state => state.colorCollections.fields.image_id,
-                imageDescription: state => state.colorCollections.fields.image_description,
-                maxPrintWidth: state => state.colorCollections.fields.max_print_width,
-                topics: state => state.colorCollections.fields.topics,
-                interiors: state => state.colorCollections.fields.interiors,
-                tags: state => state.colorCollections.fields.tags,
-                owner: state => state.colorCollections.fields.owner_id,
-                publish: state => state.colorCollections.fields.publish,
-                hasPublishedImages: state => state.colorCollections.fields.has_published_images,
-                hasImages: state => state.colorCollections.fields.has_images,
-                metaTitle: state => state.colorCollections.fields.meta_title,
-                description: state => state.colorCollections.fields.description,
-                keywords: state => state.colorCollections.fields.keywords,
-                ownerList: state => state.subCategories.itemsByType.owners,
-            }),
-            topicList () {
-                return this.$store.getters['categories/getItemsByType']('topics');
-            },
-            colorList () {
-                return this.$store.getters['categories/getItemsByType']('colors');
-            },
-            interiorList () {
-                return this.$store.getters['categories/getItemsByType']('interiors');
-            },
-            tagList () {
-                return this.$store.getters['categories/getItemsByType']('tags');
-            },
-            isUniqueTitleEdit() {
-                return this.$store.getters['colorCollections/isUniqueTitleEdit'](this.title, this.id);
-            },
-            isUniqueAliasEdit () {
-                return this.$store.getters['colorCollections/isUniqueAliasEdit'](this.alias, this.id);
-            }
+        imageDescription: {
+            touch: false
         },
-        created() {
-            this.clearFieldsAction();
-            Promise.all([
-                this.getItemAction(this.id),
-                this.getItemsAction(),
-                this.getCategoriesAction(),
-                this.getSubcategoriesAction('owners')
-            ])
-                .then(() => {
-                    this.setPageTitle(this.title);
-                    this.responseData = true;
-                })
-                .then(() => {
-                    this.$v.$reset();
-                    this.controlSaveVisibilities = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
+        topics: {
+            touch: false
         },
-        methods: {
-            ...mapActions({
-                clearFieldsAction: 'colorCollections/clearItemFields',
-                getItemsAction: 'colorCollections/getItems',
-                getItemAction: 'colorCollections/getItem',
-                getCategoriesAction: 'categories/getItems',
-                getSubcategoriesAction: 'subCategories/getItemsWithType'
-            }),
-            onUpdate() {
-                return this.update({
-                    sendData: {
-                        data: {
-                            title: this.title,
-                            alias: this.alias,
-                            image_id: this.imageId,
-                            max_print_width: this.maxPrintWidth,
-                            image_description: this.imageDescription,
-                            topics: this.topics,
-                            interiors: this.interiors,
-                            tags: this.tags,
-                            owner_id: this.owner || '',
-                            publish: Number(this.publish),
-                            meta_title: this.metaTitle,
-                            description: this.description,
-                            keywords: this.keywords
-                        },
-                        id: this.id
+        interiors: {
+            touch: false
+        },
+        tags: {
+            touch: false
+        },
+        owner: {
+            touch: false
+        },
+        publish: {
+            touch: false
+        },
+        metaTitle: {
+            touch: false
+        },
+        description: {
+            touch: false
+        },
+        keywords: {
+            touch: false
+        }
+    },
+    computed: {
+        ...mapState({
+            title: state => state.colorCollections.fields.title,
+            alias: state => state.colorCollections.fields.alias,
+            imageId: state => state.colorCollections.fields.image_id,
+            imageDescription: state => state.colorCollections.fields.image_description,
+            maxPrintWidth: state => state.colorCollections.fields.max_print_width,
+            topics: state => state.colorCollections.fields.topics,
+            interiors: state => state.colorCollections.fields.interiors,
+            tags: state => state.colorCollections.fields.tags,
+            owner: state => state.colorCollections.fields.owner_id,
+            publish: state => state.colorCollections.fields.publish,
+            hasPublishedImages: state => state.colorCollections.fields.has_published_images,
+            hasImages: state => state.colorCollections.fields.has_images,
+            metaTitle: state => state.colorCollections.fields.meta_title,
+            description: state => state.colorCollections.fields.description,
+            keywords: state => state.colorCollections.fields.keywords,
+            ownerList: state => state.subCategories.itemsByType.owners,
+        }),
+        topicList () {
+            return this.$store.getters['categories/getItemsByType']('topics');
+        },
+        colorList () {
+            return this.$store.getters['categories/getItemsByType']('colors');
+        },
+        interiorList () {
+            return this.$store.getters['categories/getItemsByType']('interiors');
+        },
+        tagList () {
+            return this.$store.getters['categories/getItemsByType']('tags');
+        },
+        isUniqueTitleEdit() {
+            return this.$store.getters['colorCollections/isUniqueTitleEdit'](this.title, this.id);
+        },
+        isUniqueAliasEdit () {
+            return this.$store.getters['colorCollections/isUniqueAliasEdit'](this.alias, this.id);
+        }
+    },
+    created () {
+        this.clearFieldsAction();
+        Promise.all([
+            this.getItemAction(this.id),
+            this.getItemsAction(),
+            this.getCategoriesAction(),
+            this.getSubcategoriesAction('owners')
+        ])
+            .then(() => {
+                this.setPageTitle(this.title);
+                this.responseData = true;
+            })
+            .then(() => {
+                this.$v.$reset();
+                this.controlSaveVisibilities = true;
+            })
+            .catch(() => this.$router.push(this.redirectRoute));
+    },
+    methods: {
+        ...mapActions({
+            clearFieldsAction: 'colorCollections/clearItemFields',
+            getItemsAction: 'colorCollections/getItems',
+            getItemAction: 'colorCollections/getItem',
+            getCategoriesAction: 'categories/getItems',
+            getSubcategoriesAction: 'subCategories/getItemsWithType'
+        }),
+        onUpdate () {
+            return this.update({
+                sendData: {
+                    data: {
+                        title: this.title,
+                        alias: this.alias,
+                        image_id: this.imageId,
+                        max_print_width: this.maxPrintWidth,
+                        image_description: this.imageDescription,
+                        topics: this.topics,
+                        interiors: this.interiors,
+                        tags: this.tags,
+                        owner_id: this.owner || '',
+                        publish: Number(this.publish),
+                        meta_title: this.metaTitle,
+                        description: this.description,
+                        keywords: this.keywords
                     },
-                    title: this.title,
-                    successText: 'Коллекция обновлена!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                });
-            },
-            onDelete() {
-                return this.delete({
-                    payload: this.id,
-                    title: this.title,
-                    alertText: `коллекцию «${this.title}»`,
-                    successText: 'Коллекция удалена!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                })
-            }
+                    id: this.id
+                },
+                title: this.title,
+                successText: 'Коллекция обновлена!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            });
+        },
+        onDelete () {
+            return this.delete({
+                payload: this.id,
+                title: this.title,
+                alertText: `коллекцию «${this.title}»`,
+                successText: 'Коллекция удалена!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            })
         }
     }
+}
 </script>

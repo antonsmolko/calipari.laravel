@@ -9,7 +9,7 @@
                             v-if="imgDefault"
                             :name="imgDefault"
                             :width="300"/>
-                        <img v-else :src="imagePlaceholder" alt="">
+                        <img v-else :src="$config.imagePlaceholder" alt="">
                     </div>
                 </div>
                 <div v-else class="image-container">
@@ -88,9 +88,6 @@ export default {
     computed: {
         storeModule () {
             return this.module ? `${this.module}/` : '';
-        },
-        imagePlaceholder () {
-            return this.$config.imagePlaceholder;
         }
     },
     methods: {

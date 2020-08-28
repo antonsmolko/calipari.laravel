@@ -4,12 +4,15 @@
             <div class="md-layout-item">
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
-                        <router-button-link :route="redirectRoute"/>
-                        <router-button-link icon="add"
-                                            color="md-success"
-                                            title="Добавить изображения"
-                                            route="cms.catalog.art-collections.images.excluded"
-                                            :params="{ id }" />
+                        <router-button-link :to="redirectRoute"/>
+                        <router-button-link
+                            icon="add"
+                            color="md-success"
+                            title="Добавить изображения"
+                            :to="{
+                                name: 'cms.catalog.art-collections.images.excluded',
+                                params: { id }
+                            }" />
                     </md-card-content>
                 </md-card>
             </div>
@@ -107,91 +110,89 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
-    import { pageTitle } from '@/mixins/base'
-    import { deleteMethod, uploadMethod } from '@/mixins/crudMethods'
-    import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
-    import PaletteTableCell from "@/custom_components/Tables/PaletteTableCell";
-    import TagsTableCell from "@/custom_components/Tables/TagsTableCell";
-    import ImageTableActions from "@/custom_components/Tables/ImageTableActions";
+import { pageTitle } from '@/mixins/base'
+import { deleteMethod, uploadMethod } from '@/mixins/crudMethods'
+import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
+import PaletteTableCell from "@/custom_components/Tables/PaletteTableCell";
+import TagsTableCell from "@/custom_components/Tables/TagsTableCell";
+import ImageTableActions from "@/custom_components/Tables/ImageTableActions";
 
-    export default {
-        name: 'ImageList',
-        mixins: [
-            pageTitle,
-            deleteMethod,
-            uploadMethod
-        ],
-        components: {
-            ThumbTableCell,
-            PaletteTableCell,
-            TagsTableCell,
-            ImageTableActions
-        },
-        props: {
-            id: {
-                type: [ Number, String ],
-                default: null
-            }
-        },
-        data () {
-            return {
-                responseData: false,
-                storeModule: 'images',
-                redirectRoute: 'cms.catalog.art-collections'
-            }
-        },
-        computed: {
-            ...mapState({
-                title: state => state.artCollections.fields.title,
-                images: state => state.images.items
+export default {
+    name: 'ImageList',
+    mixins: [
+        pageTitle,
+        deleteMethod,
+        uploadMethod
+    ],
+    components: {
+        ThumbTableCell,
+        PaletteTableCell,
+        TagsTableCell,
+        ImageTableActions
+    },
+    props: {
+        id: {
+            type: [ Number, String ],
+            default: null
+        }
+    },
+    data: () => ({
+        responseData: false,
+        storeModule: 'images',
+        redirectRoute: { name: 'cms.catalog.art-collections' }
+    }),
+    computed: {
+        ...mapState({
+            title: state => state.artCollections.fields.title,
+            images: state => state.images.items
+        })
+    },
+    created () {
+        Promise.all([
+            this.getItemAction(this.id),
+            this.getImagesAction(this.id)
+        ])
+            .then(() => {
+                this.setPageTitle(`Изображения коллекции «${this.title}»`);
+                this.responseData = true;
             })
+            .catch(() => this.$router.push({ name: this.redirectRoute }));
+    },
+    methods: {
+        ...mapActions({
+            publishAction: 'images/togglePublish',
+            getItemAction: 'artCollections/getItem',
+            getImagesAction: 'artCollections/getImages',
+            removeImageAction: 'artCollections/removeImage'
+        }),
+        onRemove (id) {
+            this.removeImageAction({ collectionId: this.id, imageId: id });
         },
-        created () {
-            Promise.all([
-                this.getItemAction(this.id),
-                this.getImagesAction(this.id)
-            ])
-                .then(() => {
-                    this.setPageTitle(`Изображения коллекции «${this.title}»`);
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push({ name: this.redirectRoute }));
+        onDelete (item) {
+            this.delete({
+                payload: item.id,
+                title: item.id,
+                alertText: `изображение «${item.id}»`,
+                successText: 'Изображение удалено!',
+                storeModule: this.storeModule,
+                tableMode: 'images'
+            });
         },
-        methods: {
-            ...mapActions({
-                publishAction: 'images/togglePublish',
-                getItemAction: 'artCollections/getItem',
-                getImagesAction: 'artCollections/getImages',
-                removeImageAction: 'artCollections/removeImage'
-            }),
-            onRemove (id) {
-                this.removeImageAction({ collectionId: this.id, imageId: id });
-            },
-            onDelete (item) {
-                this.delete({
-                    payload: item.id,
-                    title: item.id,
-                    alertText: `изображение «${item.id}»`,
-                    successText: 'Изображение удалено!',
-                    storeModule: this.storeModule,
-                    tableMode: 'images'
-                });
-            },
-            onPublish (id) {
-                this.publishAction(id);
-            }
+        onPublish (id) {
+            this.publishAction(id);
         }
     }
+}
 </script>
 
 <style lang="scss" scoped>
-    .md-between {
-        display: flex;
-        justify-content: space-between;
-    }
-    .md-progress-bar__container {
-        height: 4px;
-    }
+.md-between {
+    display: flex;
+    justify-content: space-between;
+}
+.md-progress-bar__container {
+    height: 4px;
+}
 </style>

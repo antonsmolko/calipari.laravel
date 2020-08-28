@@ -14,97 +14,95 @@
 </template>
 
 <script>
-    export default {
-        name: "VSelect",
-        props: {
-            title: {
-                type: String
-            },
-            name: {
-                type: String,
-                required: true
-            },
-            vField: {
-                type: Object,
-                default: null
-            },
-            placeholder: {
-                type: String
-            },
-            options: {
-                type: Array,
-                required: true
-            },
-            value: {
-                type: [ Array, Number, String ],
-                default: null
-            },
-            multiple: {
-                type: Boolean,
-                default: false
-            },
-            defaultValue: {
-                type: [ Array, Number, String, Object ],
-                default: null
-            },
-            defaultTitle: {
-                type: String,
-                default: 'Нет'
-            },
-            nameField: {
-                type: String,
-                default: 'title'
-            },
-            indexName: {
-                type: [ String, Number ],
-                default: 'id'
-            },
-            module: {
-                type: String,
-                default: null
-            },
-            action: {
-                type: String,
-                default: 'setItemField'
-            },
-            differ: {
-                type: Boolean,
-                default: false
-            }
+export default {
+    name: "VSelect",
+    props: {
+        title: {
+            type: String
         },
-        data() {
-          return {
-              valueReference: null
-          }
+        name: {
+            type: String,
+            required: true
         },
-        computed: {
-            storeModule() {
-                return this.module ? `${this.module}/` : '';
-            }
+        vField: {
+            type: Object,
+            default: null
         },
-        methods: {
-            onSelect (value) {
-                if (this.vField)
-                    this.touched(this.vField, value);
-
-                this.$store.dispatch(`${this.storeModule}${this.action}`, { field: this.name, value });
-            },
-            isDiffer(a, b) {
-                return this.multiple
-                    ? Boolean(a.filter(i => !b.includes(i)).concat(b.filter(i => !a.includes(i))).length)
-                    : a != b;
-            },
-            touchedDifferent(v, value) {
-                this.isDiffer(value, this.valueReference)
-                    ? v.$touch()
-                    : v.$reset()
-            },
-            touched(v, value) {
-                this.differ ? this.touchedDifferent(v, value) : v.$touch();
-            }
+        placeholder: {
+            type: String
         },
-        created() {
-            this.valueReference = this.value instanceof Array ? this.value.slice(0) : this.value;
+        options: {
+            type: Array,
+            required: true
+        },
+        value: {
+            type: [ Array, Number, String ],
+            default: null
+        },
+        multiple: {
+            type: Boolean,
+            default: false
+        },
+        defaultValue: {
+            type: [ Array, Number, String, Object ],
+            default: null
+        },
+        defaultTitle: {
+            type: String,
+            default: 'Нет'
+        },
+        nameField: {
+            type: String,
+            default: 'title'
+        },
+        indexName: {
+            type: [ String, Number ],
+            default: 'id'
+        },
+        module: {
+            type: String,
+            default: null
+        },
+        action: {
+            type: String,
+            default: 'setItemField'
+        },
+        differ: {
+            type: Boolean,
+            default: false
         }
+    },
+    data: () => ({
+        valueReference: null
+    }),
+    computed: {
+        storeModule () {
+            return this.module ? `${this.module}/` : '';
+        }
+    },
+    methods: {
+        onSelect (value) {
+            if (this.vField)
+                this.touched(this.vField, value);
+
+            this.$store.dispatch(`${this.storeModule}${this.action}`, { field: this.name, value });
+        },
+        isDiffer (a, b) {
+            return this.multiple
+                ? Boolean(a.filter(i => !b.includes(i)).concat(b.filter(i => !a.includes(i))).length)
+                : a != b;
+        },
+        touchedDifferent (v, value) {
+            this.isDiffer(value, this.valueReference)
+                ? v.$touch()
+                : v.$reset()
+        },
+        touched (v, value) {
+            this.differ ? this.touchedDifferent(v, value) : v.$touch();
+        }
+    },
+    created () {
+        this.valueReference = this.value instanceof Array ? this.value.slice(0) : this.value;
     }
+}
 </script>

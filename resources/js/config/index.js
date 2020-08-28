@@ -2,7 +2,7 @@ const isProd = process.env.NODE_ENV === 'production'
 
 const appUrl = isProd ? process.env.MIX_API_URL : 'https://manager.local.calipari.ru/api';
 const baseUrl = isProd ? process.env.MIX_BASE_URL : '/api/cms';
-const imageProvider = isProd ? process.env.MIX_IMAGE_PROVIDER : 's3'; // 'local', 's3'
+    const imageProvider = isProd ? process.env.MIX_IMAGE_PROVIDER : 's3'; // 'local', 's3'
 const localImageEndpoint = isProd ? process.env.MIX_LOCAL_IMAGE_ENDPOINT : '/api/image';
 const s3ImageEndpoint = isProd ? process.env.MIX_S3_ENDPOINT : 'https://d38w12trhxpmo3.cloudfront.net'
 const awsBucket = isProd ? process.env.AWS_BUCKET : 'dev.calipari.frames'

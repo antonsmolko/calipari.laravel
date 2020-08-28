@@ -136,4 +136,12 @@ class Order extends Model
     {
         return $this->price === $this->refund_amount;
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function review()
+    {
+        return $this->belongsTo('App\Models\Review', 'order_id');
+    }
 }

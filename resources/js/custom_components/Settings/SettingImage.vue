@@ -6,8 +6,8 @@
                 <div class="file-input">
                     <div v-if="!imageData">
                         <div class="image-container">
-                            <img v-if="value" :src="`${baseImageUrl}/${value}`" alt="">
-                            <img v-else src="/img/image_placeholder.jpg" alt="">
+                            <resource-image v-if="value" :name="value" :width="400" alt="" />
+                            <img v-else :src="$config.imagePlaceholder" alt="">
                         </div>
                     </div>
                     <div v-else class="image-container">
@@ -30,9 +30,11 @@
 
 <script>
 import { mapActions } from 'vuex'
+import ResourceImage from "@/custom_components/Images/ResourceImage";
 
 export default {
     name: 'setting-image',
+    components: { ResourceImage },
     props: {
         title: String,
         name: String,
@@ -48,14 +50,6 @@ export default {
     data: () => ({
         imageData: ''
     }),
-    computed: {
-        imagePlaceholder () {
-            return this.$config.imagePlaceholder;
-        },
-        baseImageUrl () {
-            return `${this.$config.BASE_IMAGE_URL}/widen/400`;
-        }
-    },
     methods: {
         ...mapActions({
             updateAction: 'settings/setImageValue'
@@ -79,7 +73,7 @@ export default {
                 vm.imageData = e.target.result;
             };
             reader.readAsDataURL(file);
-        },
+        }
     }
 }
 </script>

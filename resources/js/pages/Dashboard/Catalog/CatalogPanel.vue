@@ -8,54 +8,49 @@
             </md-card>
         </div>
         <panel-card-link
-            route="cms.catalog.categories.list"
-            :params="{ category_type: 'topics' }"
+            :to="{ name: 'cms.catalog.categories.list', params: { category_type: 'topics' } }"
             icon="collections_bookmark"
             :count="resourcesCount.topics"
             title="Темы"
             color="blue" />
 
         <panel-card-link
-            route="cms.catalog.categories.list"
-            :params="{ category_type: 'colors' }"
+            :to="{ name: 'cms.catalog.categories.list', params: { category_type: 'colors' } }"
             icon="format_paint"
             :count="resourcesCount.colors"
             title="Цвета"
             color="rose" />
 
         <panel-card-link
-            route="cms.catalog.categories.list"
-            :params="{ category_type: 'interiors' }"
+            :to="{ name: 'cms.catalog.categories.list', params: { category_type: 'interiors' } }"
             icon="meeting_room"
             :count="resourcesCount.interiors"
             title="Интерьеры"
             color="green" />
 
         <panel-card-link
-            route="cms.catalog.categories.list"
-            :params="{ category_type: 'tags' }"
+            :to="{ name: 'cms.catalog.categories.list', params: { category_type: 'tags' } }"
             icon="local_offer"
             :count="resourcesCount.tags"
             title="Теги"
             color="brown" />
 
         <panel-card-link
-            route="cms.catalog.color-collections"
+            :to="{ name: 'cms.catalog.color-collections' }"
             icon="palette"
             :count="resourcesCount.color_collections"
             title="Цветовые коллекции"
             color="cyan" />
 
         <panel-card-link
-            route="cms.catalog.art-collections"
+            :to="{ name: 'cms.catalog.art-collections' }"
             icon="view_quilt"
             :count="resourcesCount.art_collections"
             title="Арт коллекции"
             color="blue-grey" />
 
         <panel-card-link
-            route="cms.catalog.subcategories.list"
-            :params="{ category_type: 'owners' }"
+            :to="{ name: 'cms.catalog.subcategories.list', params: { category_type: 'owners' } }"
             icon="cloud"
             :count="resourcesCount.owners"
             title="Владельцы"
@@ -73,17 +68,15 @@ export default{
         PanelCardLink
     },
     mixins: [ pageTitle ],
-    data() {
-        return {
-            responseData: false
-        }
-    },
+    data: () => ({
+        responseData: false
+    }),
     computed: {
         ...mapState('dashboard', {
             resourcesCount: state => state.resourcesCount
         })
     },
-    created() {
+    created () {
         this.getResourcesCountAction({
             tables: [
                 'color_collections',

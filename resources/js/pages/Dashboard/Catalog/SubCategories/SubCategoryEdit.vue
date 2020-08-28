@@ -4,7 +4,7 @@
             <div class="md-layout-item">
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
-                        <router-button-link :route="redirectRoute.name" />
+                        <router-button-link :to="redirectRoute" />
                         <div>
                             <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
                                 <control-button title="Сохранить" @click="onUpdate" />
@@ -35,13 +35,6 @@
 
                         <div class="space-30"></div>
 
-<!--                        <v-switch :vField="$v.publish"-->
-<!--                                  :disabled="!hasImages"-->
-<!--                                  :value="publish"-->
-<!--                                  :module="storeModule" >-->
-<!--                            <span v-if="!hasImages">Для публикации добавьте изображения</span>-->
-<!--                        </v-switch>-->
-
                     </md-card-content>
                 </md-card>
             </div>
@@ -50,118 +43,112 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
-    import { required, minLength } from 'vuelidate/lib/validators'
+import { required, minLength } from 'vuelidate/lib/validators'
 
-    import { subCategoryPage } from '@/mixins/categories'
-    import { pageTitle } from '@/mixins/base'
-    import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
+import { subCategoryPage } from '@/mixins/categories'
+import { pageTitle } from '@/mixins/base'
+import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'TagEdit',
-        props: {
-            id: {
-                type: [ Number, String ],
-                required: true
+export default {
+    name: 'SubCategoryEdit',
+    props: {
+        id: {
+            type: [ Number, String ],
+            required: true
+        }
+    },
+    mixins: [
+        subCategoryPage,
+        pageTitle,
+        updateMethod,
+        deleteMethod
+    ],
+    data: () => ({
+        imageFile: '',
+        responseData: false,
+        storeModule: 'subCategories',
+        redirectRoute: {
+            name: 'cms.catalog.subcategories.list'
+        }
+    }),
+    validations: {
+        title: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return (value.trim() === '') && !this.$v.title.$dirty || this.isUniqueTitleEdit
             }
         },
-        mixins: [
-            subCategoryPage,
-            pageTitle,
-            updateMethod,
-            deleteMethod
-        ],
-        data () {
-            return {
-                imageFile: '',
-                responseData: false,
-                storeModule: 'subCategories',
-                redirectRoute: {
-                    name: 'cms.catalog.subcategories.list'
-                }
-            }
+        description: {
+            touch: false
+        }
+    },
+    computed: {
+        ...mapState('subCategories', {
+            title: state => state.fields.title,
+            description: state => state.fields.description,
+            hasImages: state => state.fields.hasImages
+        }),
+        isUniqueTitleEdit () {
+            return this.$store.getters['subCategories/isUniqueTitleEdit'](this.title, this.id);
+        }
+    },
+    created () {
+        this.clearFieldsAction()
+        Promise.all([
+            this.getItemsAction(this.category_type),
+            this.getItemAction({
+                type: this.category_type,
+                id: this.id
+            })
+        ])
+            .then(() => {
+                this.setPageTitle(this.title);
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push(this.redirectRoute));
+    },
+    beforeDestroy () {
+        this.clearFieldsAction()
+    },
+    methods: {
+        ...mapActions('subCategories', {
+            getItemAction: 'getItem',
+            getItemsAction: 'getItems',
+            clearFieldsAction: 'clearItemFields'
+        }),
+        onUpdate () {
+            return this.update({
+                sendData: {
+                    id: this.id,
+                    type: this.category_type,
+                    data: {
+                        title: this.title,
+                        description: this.description
+                    }
+                },
+                title: this.title,
+                successText: this.pageProps[this.category_type].UPDATE_SUCCESS_TEXT,
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            });
         },
-        validations: {
-            title: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty || !this.isUniqueTitleEdit
-                }
-            },
-            // publish: {
-            //     touch: false
-            // },
-            description: {
-                touch: false
-            }
-        },
-        computed: {
-            ...mapState('subCategories', {
-                title: state => state.fields.title,
-                // publish: state => state.fields.publish,
-                description: state => state.fields.description,
-                hasImages: state => state.fields.hasImages
-            }),
-            isUniqueTitleEdit () {
-                return !!this.$store.getters['subCategories/isUniqueTitleEdit'](this.title, this.id);
-            }
-        },
-        created() {
-            this.clearFieldsAction()
-            Promise.all([
-                this.getItemsAction(this.category_type),
-                this.getItemAction({
+        onDelete () {
+            return this.delete({
+                payload: {
                     type: this.category_type,
                     id: this.id
-                })
-            ])
-                .then(() => {
-                    this.setPageTitle(this.title);
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
-        },
-        beforeDestroy () {
-            this.clearFieldsAction()
-        },
-        methods: {
-            ...mapActions('subCategories', {
-                getItemAction: 'getItem',
-                getItemsAction: 'getItems',
-                clearFieldsAction: 'clearItemFields'
-            }),
-            onUpdate () {
-                return this.update({
-                    sendData: {
-                        id: this.id,
-                        type: this.category_type,
-                        data: {
-                            title: this.title,
-                            description: this.description
-                        }
-                    },
-                    title: this.title,
-                    successText: this.pageProps[this.category_type].UPDATE_SUCCESS_TEXT,
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                });
-            },
-            onDelete () {
-                return this.delete({
-                    payload: {
-                        type: this.category_type,
-                        id: this.id
-                    },
-                    title: this.title,
-                    alertText: this.pageProps[this.category_type].DELETE_CONFIRM_TEXT(this.title),
-                    successText: this.pageProps[this.category_type].DELETE_SUCCESS_TEXT,
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                })
-            }
+                },
+                title: this.title,
+                alertText: this.pageProps[this.category_type].DELETE_CONFIRM_TEXT(this.title),
+                successText: this.pageProps[this.category_type].DELETE_SUCCESS_TEXT,
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            })
         }
     }
+}
 </script>

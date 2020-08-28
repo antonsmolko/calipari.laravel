@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="params ? { name: route, params } : { name: route }">
+    <router-link :to="to">
         <md-button :class="`${color} md-just-icon`">
             <md-icon>{{ icon }}</md-icon>
             <md-tooltip :md-direction="direction">{{ title }}</md-tooltip>
@@ -8,33 +8,29 @@
 </template>
 
 <script>
-    export default {
-        name: "RouterButtonLink",
-        props: {
-            route: {
-                type: String,
-                default: 'cms.dashboard'
-            },
-            params: {
-                type: Object,
-                default: null
-            },
-            icon: {
-                type: String,
-                default: 'arrow_back'
-            },
-            color: {
-                type: String,
-                default: 'md-info'
-            },
-            title: {
-                type: String,
-                default: 'Назад'
-            },
-            direction: {
-                type: String,
-                default: 'right'
-            }
+export default {
+    name: "RouterButtonLink",
+    props: {
+        to: {
+            type: [String, Object],
+            default: () => ({ name: 'cms.dashboard' })
+        },
+        icon: {
+            type: String,
+            default: 'arrow_back'
+        },
+        color: {
+            type: String,
+            default: 'md-info'
+        },
+        title: {
+            type: String,
+            default: 'Назад'
+        },
+        direction: {
+            type: String,
+            default: 'right'
         }
     }
+}
 </script>

@@ -5,17 +5,17 @@
 </template>
 
 <script>
-    export default {
-        name: "InputNotificationSameAs",
-        props: {
-            name: {
-                type: String,
-                default: 'Поле'
-            },
-            sameName: {
-                type: String,
-                default: 'Поле 2'
-            }
+export default {
+    name: "InputNotificationSameAs",
+    props: {
+        name: {
+            type: String,
+            default: 'Поле'
+        },
+        sameName: {
+            type: String,
+            default: 'Поле 2'
         }
     }
+}
 </script>

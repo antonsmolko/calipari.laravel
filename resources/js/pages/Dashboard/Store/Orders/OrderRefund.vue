@@ -6,12 +6,11 @@
                     <div>
                         <router-button-link
                             title="К списку заказов"
-                            route="cms.store.orders"/>
+                            :to="{ name: 'cms.store.orders' }"/>
                         <router-button-link
                             title="В заказ"
                             icon="visibility"
-                            :route="redirectRoute.name"
-                            :params="{ id }"/>
+                            :to="redirectRoute" />
                     </div>
                     <div>
                         <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
@@ -84,7 +83,10 @@ export default {
     },
     data() {
         return {
-            redirectRoute: {name: 'cms.store.orders.order', params: {id: this.id}},
+            redirectRoute: {
+                name: 'cms.store.orders.order',
+                params: { id: this.id }
+            },
             storeModule: 'orders'
         }
     },

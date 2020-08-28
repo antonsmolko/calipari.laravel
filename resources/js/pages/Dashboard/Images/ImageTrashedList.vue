@@ -4,7 +4,7 @@
             <div class="md-layout-item">
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
-                        <router-button-link route="cms.images"/>
+                        <router-button-link :to="{ name: 'cms.images' }"/>
                     </md-card-content>
                 </md-card>
             </div>
@@ -36,77 +36,72 @@
 </template>
 
 <script>
-    import { mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
-    import { pageTitle, authCheck } from '@/mixins/base'
-    import { deleteMethod } from '@/mixins/crudMethods'
+import { pageTitle, authCheck } from '@/mixins/base'
+import { deleteMethod } from '@/mixins/crudMethods'
 
-    import ImageTrashedListTable from "@/custom_components/Tables/ImageTrashedListTable";
-    import ImageTrashedTableActions from "@/custom_components/Tables/ImageTrashedTableActions";
-    import swal from "sweetalert2";
+import ImageTrashedListTable from "@/custom_components/Tables/ImageTrashedListTable";
+import ImageTrashedTableActions from "@/custom_components/Tables/ImageTrashedTableActions";
+import swal from "sweetalert2";
 
-    export default {
-        name: 'ImageTrashedList',
-        mixins: [
-            pageTitle,
-            deleteMethod,
-            authCheck
-        ],
-        components: {
-            ImageTrashedListTable,
-            ImageTrashedTableActions
+export default {
+    name: 'ImageTrashedList',
+    mixins: [
+        pageTitle,
+        deleteMethod,
+        authCheck
+    ],
+    components: {
+        ImageTrashedListTable,
+        ImageTrashedTableActions
+    },
+    data: () => ({
+        storeModule: 'images'
+    }),
+    computed: {
+        resourceUrl () {
+            return '/images/trashed/paginate'
+        }
+    },
+    created () {
+        this.setPageTitle('Удаленные изображения')
+    },
+    methods: {
+        ...mapActions({
+            restoreAction: 'images/restore'
+        }),
+        onRestore (id) {
+            this.restoreAction(id)
+                .then(() => swal.fire({
+                    title: `Изображение восстановлено!`,
+                    text: `«${id}»`,
+                    timer: 2000,
+                    icon: 'success',
+                    showConfirmButton: false
+                }))
         },
-        data () {
-            return {
-                storeModule: 'images'
-            }
-        },
-        computed: {
-            resourceUrl () {
-                return '/images/trashed/paginate'
-            }
-        },
-        created () {
-            this.setPageTitle('Удаленные изображения')
-        },
-        beforeDestroy () {
-
-        },
-        methods: {
-            ...mapActions({
-                restoreAction: 'images/restore'
-            }),
-            onRestore (id) {
-                this.restoreAction(id)
-                    .then(() => swal.fire({
-                        title: `Изображение восстановлено!`,
-                        text: `«${id}»`,
-                        timer: 2000,
-                        icon: 'success',
-                        showConfirmButton: false
-                    }))
-            },
-            onDelete (item) {
-                this.delete({
-                    payload: item.id,
-                    title: item.id,
-                    alertText: `изображение «${item.id}»`,
-                    successText: 'Изображение удалено!',
-                    storeModule: this.storeModule,
-                    tableMode: 'table',
-                    force: true
-                })
-            }
+        onDelete (item) {
+            this.delete({
+                payload: item.id,
+                title: item.id,
+                alertText: `изображение «${item.id}»`,
+                successText: 'Изображение удалено!',
+                storeModule: this.storeModule,
+                tableMode: 'table',
+                force: true
+            })
         }
     }
+}
 </script>
 
 <style lang="scss" scoped>
-    .md-between {
-        display: flex;
-        justify-content: space-between;
-    }
-    .md-progress-bar__container {
-        height: 4px;
-    }
+.md-between {
+    display: flex;
+    justify-content: space-between;
+}
+.md-progress-bar__container {
+    height: 4px;
+}
 </style>

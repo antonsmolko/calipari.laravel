@@ -34,36 +34,34 @@
     </div>
 </template>
 <script>
-    import {CollapseTransition} from "vue2-transitions";
+import { CollapseTransition } from "vue2-transitions";
 
-    export default {
-        components: {
-            CollapseTransition
+export default {
+    components: {
+        CollapseTransition
+    },
+    props: {
+        title: {
+            type: String,
+            default: ''
         },
-        props: {
-            title: {
-                type: String,
-                default: ''
-            },
-            avatar: {
-                type: String,
-                default: "./img/faces/avatar.jpg"
-            }
-        },
-        data() {
-            return {
-                isClosed: true
-            };
-        },
-        methods: {
-            clicked: function (e) {
-                e.preventDefault();
-            },
-            toggleMenu: function () {
-                this.isClosed = !this.isClosed;
-            }
+        avatar: {
+            type: String,
+            default: "./img/faces/avatar.jpg"
         }
-    };
+    },
+    data: () => ({
+        isClosed: true
+    }),
+    methods: {
+        clicked: function (e) {
+            e.preventDefault();
+        },
+        toggleMenu: function () {
+            this.isClosed = !this.isClosed;
+        }
+    }
+};
 </script>
 
 <style>

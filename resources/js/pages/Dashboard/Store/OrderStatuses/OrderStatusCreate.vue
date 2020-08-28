@@ -4,7 +4,7 @@
             <div class="md-layout-item">
                 <md-card>
                     <md-card-content class="md-between">
-                        <router-button-link :route="redirectRoute.name" title="Назад" />
+                        <router-button-link :to="redirectRoute" title="Назад" />
                         <slide-y-down-transition v-show="!$v.$invalid">
                             <control-button title="Создать статус заказа" @click="onCreate"/>
                         </slide-y-down-transition>
@@ -65,97 +65,95 @@
 </template>
 
 <script>
-    import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-    import { required, minLength, numeric } from 'vuelidate/lib/validators'
+import { required, minLength, numeric } from 'vuelidate/lib/validators'
 
-    import { pageTitle } from '@/mixins/base'
-    import { createMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base'
+import { createMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'OrderStatusCreate',
-        mixins: [ pageTitle, createMethod ],
-        data() {
-            return {
-                redirectRoute: { name: 'cms.store.orderStatuses' },
-                responseData: false,
-                storeModule: 'orderStatuses'
+export default {
+    name: 'OrderStatusCreate',
+    mixins: [ pageTitle, createMethod ],
+    data: () => ({
+        redirectRoute: { name: 'cms.store.orderStatuses' },
+        responseData: false,
+        storeModule: 'orderStatuses'
+    }),
+    validations: {
+        title: {
+            required,
+            touch: false,
+            minLength: minLength(2),
+            isUnique (value) {
+                return (value.trim() === '') && !this.$v.title.$dirty
+                    ? true
+                    : !this.isUniqueTitle
             }
         },
-        validations: {
-            title: {
-                required,
-                touch: false,
-                minLength: minLength(2),
-                isUnique (value) {
-                    return (value.trim() === '') && !this.$v.title.$dirty
-                        ? true
-                        : !this.isUniqueTitle
-                }
+        alias: {
+            required,
+            touch: false,
+            testAlias (value) {
+                return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
             },
-            alias: {
-                required,
-                touch: false,
-                testAlias (value) {
-                    return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
-                },
-                minLength: minLength(2),
-                isUnique (value) {
-                    return ((value.trim() === '') && !this.$v.alias.$dirty) || !this.isUniqueAlias
-                },
+            minLength: minLength(2),
+            isUnique (value) {
+                return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAlias
             },
-            order: {
-                numeric,
-                touch: false
-            },
-            description: {
-                touch: false
-            }
         },
-        computed: {
-            ...mapState('orderStatuses', {
-                title: state => state.fields.title,
-                alias: state => state.fields.alias,
-                order: state => state.fields.order,
-                publish: state => state.fields.publish,
-                description: state => state.fields.description
-            }),
-            isUniqueTitle() {
-                return !!this.$store.getters['orderStatuses/isUniqueTitle'](this.title);
-            },
-            isUniqueAlias () {
-                return !!this.$store.getters['orderStatuses/isUniqueAlias'](this.alias);
-            }
+        order: {
+            numeric,
+            touch: false
         },
-        methods: {
-            ...mapActions('orderStatuses', {
-                getItemsAction: 'getItems',
-                clearFieldsAction: 'clearFields',
-            }),
-            onCreate() {
-                return this.create({
-                    sendData: {
-                        title: this.title,
-                        alias: this.alias,
-                        order: +this.order,
-                        publish: +this.publish,
-                        description: this.description
-                    },
-                    title: this.title,
-                    successText: 'Статус заказа создан!',
-                    storeModule: this.storeModule,
-                    redirectRoute: this.redirectRoute
-                })
-            }
-        },
-        created() {
-            this.clearFieldsAction();
-            this.getItemsAction()
-                .then(() => {
-                    this.setPageTitle('Новый статус заказа');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push(this.redirectRoute));
+        description: {
+            touch: false
         }
+    },
+    computed: {
+        ...mapState('orderStatuses', {
+            title: state => state.fields.title,
+            alias: state => state.fields.alias,
+            order: state => state.fields.order,
+            publish: state => state.fields.publish,
+            description: state => state.fields.description
+        }),
+        isUniqueTitle () {
+            return this.$store.getters['orderStatuses/isUniqueTitle'](this.title);
+        },
+        isUniqueAlias () {
+            return this.$store.getters['orderStatuses/isUniqueAlias'](this.alias);
+        }
+    },
+    methods: {
+        ...mapActions('orderStatuses', {
+            getItemsAction: 'getItems',
+            clearFieldsAction: 'clearFields',
+        }),
+        onCreate () {
+            return this.create({
+                sendData: {
+                    title: this.title,
+                    alias: this.alias,
+                    order: +this.order,
+                    publish: +this.publish,
+                    description: this.description
+                },
+                title: this.title,
+                successText: 'Статус заказа создан!',
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
+            })
+        }
+    },
+    created () {
+        this.clearFieldsAction();
+        this.getItemsAction()
+            .then(() => {
+                this.setPageTitle('Новый статус заказа');
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push(this.redirectRoute));
     }
+}
 </script>

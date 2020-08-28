@@ -5,7 +5,7 @@
                 <md-card-content class="md-between">
                     <router-button-link title="В панель управления" />
                     <router-button-link title="Создать привилегию" icon="add" color="md-success"
-                                        route="cms.permissions.create" />
+                                        :to="{ name: 'cms.permissions.create' }" />
                 </md-card-content>
             </md-card>
 
@@ -53,49 +53,47 @@
 </template>
 
 <script>
-    import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
-    import TableActions from "@/custom_components/Tables/TableActions";
+import TableActions from "@/custom_components/Tables/TableActions";
 
-    import { pageTitle } from '@/mixins/base'
-    import { deleteMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base'
+import { deleteMethod } from '@/mixins/crudMethods'
 
-    export default {
-        name: 'PermissionList',
-        components: { TableActions },
-        mixins: [ pageTitle, deleteMethod ],
-        data() {
-            return {
-                responseData: false,
-                storeModule: 'permissions'
-            }
+export default {
+    name: 'PermissionList',
+    components: { TableActions },
+    mixins: [ pageTitle, deleteMethod ],
+    data: () => ({
+        responseData: false,
+        storeModule: 'permissions'
+    }),
+    computed: {
+        ...mapState('permissions', [
+            'items'
+        ]),
+    },
+    methods: {
+        ...mapActions('permissions', {
+            getItemsAction: 'getItems'
+        }),
+        onDelete (item) {
+            return this.delete({
+                payload: item.id,
+                title: item.display_name,
+                alertText: `привилегию «${item.display_name}»`,
+                storeModule: this.storeModule,
+                successText: 'Привилегия удалена!'
+            })
         },
-        computed: {
-            ...mapState('permissions', [
-                'items'
-            ]),
-        },
-        methods: {
-            ...mapActions('permissions', {
-                getItemsAction: 'getItems'
-            }),
-            onDelete(item) {
-                return this.delete({
-                    payload: item.id,
-                    title: item.display_name,
-                    alertText: `привилегию «${item.display_name}»`,
-                    storeModule: this.storeModule,
-                    successText: 'Привилегия удалена!'
-                })
-            },
-        },
-        created() {
-            this.getItemsAction()
-                .then(() => {
-                    this.setPageTitle('Привилегии');
-                    this.responseData = true;
-                })
-                .catch(() => this.$router.push({ name: 'cms.dashboard' }));
-        },
+    },
+    created () {
+        this.getItemsAction()
+            .then(() => {
+                this.setPageTitle('Привилегии');
+                this.responseData = true;
+            })
+            .catch(() => this.$router.push({ name: 'cms.dashboard' }));
     }
+}
 </script>

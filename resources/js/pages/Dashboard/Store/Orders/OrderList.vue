@@ -3,7 +3,7 @@
         <div class="md-layout-item">
             <md-card class="mt-0">
                 <md-card-content>
-                    <router-button-link title="В панель магазина" :route="redirectRoute.name"/>
+                    <router-button-link title="В панель магазина" :to="redirectRoute"/>
                 </md-card-content>
             </md-card>
 
@@ -63,18 +63,24 @@
                             <md-table-cell md-label="Действия">
                                 <div class="table-actions" v-if="item">
 
-                                    <router-button-link v-if="authCheck('order-refund') && refundAvailability(item)"
-                                                        title="Возместить"
-                                                        icon="money_off"
-                                                        color="md-warning"
-                                                        route="cms.store.orders.order.refund"
-                                                        :params="{ id: item.id }" />
+                                    <router-button-link
+                                        v-if="authCheck('order-refund') && refundAvailability(item)"
+                                        title="Возместить"
+                                        icon="money_off"
+                                        color="md-warning"
+                                        :to="{
+                                            name: 'cms.store.orders.order.refund',
+                                            params: { id: item.id }
+                                        }" />
 
-                                    <router-button-link title="Подробнее"
-                                                        icon="visibility"
-                                                        color="md-info"
-                                                        route="cms.store.orders.order"
-                                                        :params="{ id: item.id }" />
+                                    <router-button-link
+                                        title="Подробнее"
+                                        icon="visibility"
+                                        color="md-info"
+                                        :to="{
+                                            name: 'cms.store.orders.order',
+                                            params: { id: item.id }
+                                        }" />
 
                                     <control-button title="Удалить"
                                                     icon="delete"
@@ -123,18 +129,24 @@
 
                             <md-table-cell md-label="Действия">
                                 <div class="table-actions" v-if="item">
-                                    <router-button-link v-if="authCheck('order-refund') && refundAvailability(item)"
-                                                        title="Возместить"
-                                                        icon="money_off"
-                                                        color="md-warning"
-                                                        route="cms.store.orders.order.refund"
-                                                        :params="{ id: item.id }" />
+                                    <router-button-link
+                                        v-if="authCheck('order-refund') && refundAvailability(item)"
+                                        title="Возместить"
+                                        icon="money_off"
+                                        color="md-warning"
+                                        :to="{
+                                            name: 'cms.store.orders.order.refund',
+                                            params: { id: item.id }
+                                        }" />
 
-                                    <router-button-link title="Подробнее"
-                                                        icon="visibility"
-                                                        color="md-info"
-                                                        route="cms.store.orders.order"
-                                                        :params="{ id: item.id }" />
+                                    <router-button-link
+                                        title="Подробнее"
+                                        icon="visibility"
+                                        color="md-info"
+                                        :to="{
+                                            name: 'cms.store.orders.order',
+                                            params: { id: item.id }
+                                        }" />
 
                                     <control-button v-if="authCheck('order-delete')"
                                                     title="Удалить"
@@ -178,11 +190,14 @@
                             <md-table-cell md-label="Действия">
                                 <div class="table-actions" v-if="item">
 
-                                    <router-button-link title="Подробнее"
-                                                        icon="visibility"
-                                                        color="md-info"
-                                                        route="cms.store.orders.order"
-                                                        :params="{ id: item.id }" />
+                                    <router-button-link
+                                        title="Подробнее"
+                                        icon="visibility"
+                                        color="md-info"
+                                        :to="{
+                                            name: 'cms.store.orders.order',
+                                            params: { id: item.id }
+                                        }" />
 
                                     <control-button v-if="authCheck('order-delete')"
                                                     title="Удалить"
@@ -238,18 +253,24 @@
                             <md-table-cell md-label="Действия">
                                 <div class="table-actions" v-if="item">
 
-                                    <router-button-link v-if="authCheck('order-refund') && refundAvailability(item)"
-                                                        title="Возместить"
-                                                        icon="money_off"
-                                                        color="md-warning"
-                                                        route="cms.store.orders.order.refund"
-                                                        :params="{ id: item.id }" />
+                                    <router-button-link
+                                        v-if="authCheck('order-refund') && refundAvailability(item)"
+                                        title="Возместить"
+                                        icon="money_off"
+                                        color="md-warning"
+                                        :to="{
+                                            name: 'cms.store.orders.order.refund',
+                                            params: { id: item.id }
+                                        }" />
 
-                                    <router-button-link title="Подробнее"
-                                                        icon="visibility"
-                                                        color="md-info"
-                                                        route="cms.store.orders.order"
-                                                        :params="{ id: item.id }" />
+                                    <router-button-link
+                                        title="Подробнее"
+                                        icon="visibility"
+                                        color="md-info"
+                                        :to="{
+                                            name: 'cms.store.orders.order',
+                                            params: { id: item.id }
+                                        }" />
 
                                     <control-button v-if="authCheck('order-delete')"
                                                     title="Удалить"
@@ -295,6 +316,9 @@ export default {
         }
     },
     created() {
+        if (this.$route.params.activeTab) {
+            this.activeTab = this.$route.params.activeTab;
+        }
         this.getStatusesAction()
             .then(() => {
                 this.setPageTitle('Заказы');
