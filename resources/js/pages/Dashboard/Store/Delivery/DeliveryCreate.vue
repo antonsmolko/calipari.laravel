@@ -33,15 +33,6 @@
                                  :module="storeModule"
                                  :vRules="{ required: true, unique: true, minLength: true, alias: true }"/>
 
-                        <v-input title="Стоимость"
-                                 icon="attach_money"
-                                 name="price"
-                                 :vDelay="true"
-                                 :vField="$v.price"
-                                 :maxlength="5"
-                                 :module="storeModule"
-                                 :vRules="{ numeric: true }"/>
-
                         <v-input title="Порядок"
                                  icon="sort"
                                  name="order"
@@ -108,10 +99,6 @@ export default {
                 return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAlias
             },
         },
-        price: {
-            numeric,
-            touch: false
-        },
         order: {
             numeric,
             touch: false
@@ -124,7 +111,6 @@ export default {
         ...mapState('deliveries', {
             title: state => state.fields.title,
             alias: state => state.fields.alias,
-            price: state => state.fields.price,
             order: state => state.fields.order,
             pickup: state => state.fields.pickup,
             description: state => state.fields.description
@@ -143,7 +129,6 @@ export default {
                 sendData: {
                     title: this.title,
                     alias: this.alias,
-                    price: Number(this.price),
                     order: Number(this.order),
                     pickup: Number(this.pickup),
                     description: this.description

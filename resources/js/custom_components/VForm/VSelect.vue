@@ -6,7 +6,7 @@
             <md-select @md-selected="onSelect" :value="value" :multiple="multiple">
                 <md-option v-if="defaultValue !== null" :value="defaultValue">{{ defaultTitle }}</md-option>
                 <md-option v-for="(item, index) in options" :value="item[indexName]" :key="index">
-                    {{ item[nameField] }}
+                    {{ item[nameField] }}{{ namePostfix ? ` - [ ${item[namePostfix]} ]` : ''}}
                 </md-option>
             </md-select>
         </md-field>
@@ -54,6 +54,10 @@ export default {
         nameField: {
             type: String,
             default: 'title'
+        },
+        namePostfix: {
+            type: String,
+            default: null
         },
         indexName: {
             type: [ String, Number ],

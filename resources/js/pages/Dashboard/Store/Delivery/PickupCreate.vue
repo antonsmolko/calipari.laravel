@@ -47,6 +47,7 @@
                                   name="delivery_id"
                                   :vField="$v.delivery"
                                   :options="deliveries"
+                                  namePostfix="alias"
                                   :module="storeModule"/>
 
                         <v-switch :value="publish"

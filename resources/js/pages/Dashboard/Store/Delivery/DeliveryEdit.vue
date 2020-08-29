@@ -40,17 +40,6 @@
                                  :module="storeModule"
                                  :vRules="{ required: true, unique: true, minLength: true, alias: true }"/>
 
-                        <v-input title="Стоимость"
-                                 icon="attach_money"
-                                 name="price"
-                                 :value="price"
-                                 :vDelay="true"
-                                 :vField="$v.price"
-                                 :differ="true"
-                                 :maxlength="5"
-                                 :module="storeModule"
-                                 :vRules="{ numeric: true }"/>
-
                         <v-input title="Порядок"
                                  icon="sort"
                                  name="order"
@@ -133,10 +122,6 @@ export default {
                 return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
             }
         },
-        price: {
-            numeric,
-            touch: false
-        },
         order: {
             numeric,
             touch: false
@@ -152,7 +137,6 @@ export default {
         ...mapState('deliveries', {
             title: state => state.fields.title,
             alias: state => state.fields.alias,
-            price: state => state.fields.price,
             order: state => state.fields.order,
             publish: state => state.fields.publish,
             pickupsRequired: state => state.fields.pickups_required,
@@ -173,7 +157,6 @@ export default {
                     formData: {
                         title: this.title,
                         alias: this.alias,
-                        price: Number(this.price),
                         order: Number(this.order),
                         publish: Number(this.publish),
                         description: this.description

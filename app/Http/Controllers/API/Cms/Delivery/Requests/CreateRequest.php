@@ -26,7 +26,6 @@ class CreateRequest extends FormRequest
         return [
             'title' => 'bail|required|min:' . config('validation.title.min') . '|max:' . config('validation.title.max'),
             'alias' => 'bail|required|unique:deliveries,alias|min:' . config('validation.alias.min') . '|max:' . config('validation.alias.max') . '|regex:' . config('validation.alias.pattern'),
-            'price' => 'bail|integer|nullable',
             'order' => 'bail|integer|nullable',
             'pickup' => 'bail|required|integer',
             'description' => 'max:' . config('validation.description.max')
