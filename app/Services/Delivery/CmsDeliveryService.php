@@ -44,4 +44,14 @@ class CmsDeliveryService extends CmsBaseResourceService
     {
         return $this->repository->getPickupItems();
     }
+
+    /**
+     * Unpublish Items if images_count === 0
+     */
+    public function processUnpublishItems()
+    {
+        $items = $this->repository->getPickupsRequirementsItems();
+
+        $items->each(fn ($item) => $this->repository->unpublish($item));
+    }
 }

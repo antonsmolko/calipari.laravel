@@ -28,7 +28,7 @@
                                  :vField="$v.title"
                                  :differ="true"
                                  :module="storeModule"
-                                 :vRules="{ required: true, unique: true, minLength: true }"/>
+                                 :vRules="{ required: true, minLength: true }"/>
 
                         <v-input title="Алиас"
                                  icon="code"
@@ -120,10 +120,7 @@ export default {
         title: {
             required,
             touch: false,
-            minLength: minLength(2),
-            isUnique (value) {
-                return (value.trim() === '') && !this.$v.title.$dirty || this.isUniqueTitleEdit
-            },
+            minLength: minLength(2)
         },
         alias: {
             required,
@@ -161,9 +158,6 @@ export default {
             pickupsRequired: state => state.fields.pickups_required,
             description: state => state.fields.description
         }),
-        isUniqueTitleEdit () {
-            return this.$store.getters['deliveries/isUniqueTitleEdit'](this.title, this.id);
-        },
         isUniqueAliasEdit () {
             return this.$store.getters['deliveries/isUniqueAliasEdit'](this.alias, this.id);
         }

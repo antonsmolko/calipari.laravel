@@ -44,4 +44,14 @@ class CmsDeliveryRepository extends CmsBaseResourceRepository
             ->select(['id', 'title', 'alias'])
             ->get();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPickupsRequirementsItems()
+    {
+        return $this->model::pickupsRequirements()
+            ->published()
+            ->get();
+    }
 }

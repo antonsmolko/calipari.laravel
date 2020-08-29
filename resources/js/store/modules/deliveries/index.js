@@ -94,8 +94,6 @@ const actions = {
 };
 
 const getters = {
-    isUniqueTitle: state => value => uniqueFieldMixin(state.items, 'title', value),
-    isUniqueTitleEdit: state => (value, id) => uniqueFieldEditMixin(state.items, 'title', value, id),
     isUniqueAlias: state => title => uniqueFieldMixin(state.items, 'alias', title),
     isUniqueAliasEdit: state => (title, id) => uniqueFieldEditMixin(state.items, 'alias', title, id),
 };

@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Events\Models\Delivery\DeliveryDeleted;
 use App\Events\Models\Delivery\DeliverySaved;
 use App\Events\Models\Delivery\DeliveryUpdated;
+use Illuminate\Database\Eloquent\Builder;
 
 class Delivery extends Model
 {
@@ -44,5 +45,17 @@ class Delivery extends Model
     public function pickupsRequired(): bool
     {
         return (bool) ($this->pickup && !$this->publishedPickups()->count());
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopePickupsRequirements(Builder $query): Builder
+    {
+        return $query
+            ->where('pickup', 1)
+            ->whereDoesntHave('pickups', fn ($query) => $query
+                ->where('publish', self::PUBLISHED));
     }
 }

@@ -6,6 +6,7 @@ namespace App\Services\Delivery\Repositories;
 
 use App\Models\Delivery;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
+use App\Services\Delivery\Resources\DeliveryClient as DeliveryResource;
 use Illuminate\Database\Eloquent\Collection;
 
 class ClientDeliveryRepository extends ClientBaseResourceRepository
@@ -20,11 +21,13 @@ class ClientDeliveryRepository extends ClientBaseResourceRepository
     }
 
     /**
-     * @return Collection
+     * @return Collection|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index(): Collection
+    public function index()
     {
-        return $this->model::published()
-            ->orderBy('order')->get();
+        return DeliveryResource::collection($this->model::published()
+            ->orderBy('order')
+            ->get()
+            ->load('pickups'));
     }
 }

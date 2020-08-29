@@ -137,6 +137,21 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Clear\DeliveryCacheClear::class,
         ],
 
+        \App\Events\Models\Pickup\PickupSaved::class => [
+            \App\Listeners\Cache\Clear\DeliveryCacheClear::class,
+            \App\Listeners\Delivery\CheckPickupsRequirementCount::class,
+        ],
+
+        \App\Events\Models\Pickup\PickupUpdated::class => [
+            \App\Listeners\Cache\Clear\DeliveryCacheClear::class,
+            \App\Listeners\Delivery\CheckPickupsRequirementCount::class,
+        ],
+
+        \App\Events\Models\Pickup\PickupDeleted::class => [
+            \App\Listeners\Cache\Clear\DeliveryCacheClear::class,
+            \App\Listeners\Delivery\CheckPickupsRequirementCount::class,
+        ],
+
         \App\Events\Models\Order\OrderCreated::class => [
             \App\Listeners\Cache\Clear\OrderCacheClear::class,
             \App\Listeners\Mail\Order\SendByStatus::class,
