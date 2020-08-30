@@ -12,7 +12,6 @@ class Refunded extends Mailable
     use Queueable, SerializesModels;
 
     public array $order;
-    public string $title;
     public string $titlePostfix;
 
     /**
