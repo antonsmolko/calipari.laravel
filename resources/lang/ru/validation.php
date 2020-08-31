@@ -170,7 +170,10 @@ return [
         'date' => '«Дата»',
         'order' => '«Порядок»',
         'native_payment_id' => '«Настоящий ID платежа»',
-        'payment_id' => '«ID платежа»'
+        'payment_id' => '«ID платежа»',
+        'quality_rate' => '«Оценка за качество»',
+        'service_rate' => '«Оценка за сервис»',
+        'comment' => '«Комментарий»',
     ],
 
 ];

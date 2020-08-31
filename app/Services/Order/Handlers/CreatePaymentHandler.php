@@ -6,7 +6,7 @@ namespace App\Services\Order\Handlers;
 
 use App\Services\Order\Repositories\ClientOrderRepository;
 use App\Services\Payment\PaymentService;
-use App\Services\Order\Resources\ForPaymentClient as OrderResource;
+use App\Services\Order\Resources\ByHashClient as OrderResource;
 
 class CreatePaymentHandler
 {

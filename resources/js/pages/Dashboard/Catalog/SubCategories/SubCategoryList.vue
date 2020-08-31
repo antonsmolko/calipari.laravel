@@ -73,11 +73,13 @@ export default {
     components: {
         CategoryTableActions
     },
-    data: () => ({
-        resourceUrl: `/catalog/${this.category_type}`,
-        storeModule: 'subCategories',
-        responseData: false
-    }),
+    data () {
+        return {
+            resourceUrl: `/catalog/${this.category_type}`,
+            storeModule: 'subCategories',
+            responseData: false
+        }
+    },
     created () {
         this.setPageTitle(this.pageProps[this.category_type].PAGE_TITLE);
         this.responseData = true;

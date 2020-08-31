@@ -138,10 +138,10 @@ class Order extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function review()
     {
-        return $this->belongsTo('App\Models\Review', 'order_id');
+        return $this->hasOne('App\Models\Review');
     }
 }

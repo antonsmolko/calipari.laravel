@@ -311,6 +311,18 @@ const ProjectCreate = resolve => {
     })
 };
 
+/** Reviews */
+const ReviewList = resolve => {
+    require.ensure(['@/pages/Dashboard/Store/Reviews/ReviewList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Store/Reviews/ReviewList.vue'))
+    })
+};
+const Review = resolve => {
+    require.ensure(['@/pages/Dashboard/Store/Reviews/Review.vue'], () => {
+        resolve(require('@/pages/Dashboard/Store/Reviews/Review.vue'))
+    })
+};
+
 /** Pages */
 const PagesPanel = resolve => {
     require.ensure(['@/pages/Dashboard/Pages/PagesPanel.vue'], () => {
@@ -908,6 +920,29 @@ const cmsOrderPages = {
     ]
 };
 
+const cmsReviewsPages = {
+    path: '/cms/store',
+    component: DashboardLayout,
+    meta: {
+        auth: true
+    },
+    children: [
+        {
+            path: 'reviews',
+            name: 'cms.store.reviews',
+            component: ReviewList,
+            meta: getPathMeta('reviews')
+        },
+        {
+            path: 'reviews/:id',
+            name: 'cms.store.reviews.revies',
+            component: Review,
+            props: true,
+            meta: getPathMeta('reviews')
+        }
+    ]
+};
+
 const cmsCartItemsPages = {
     path: '/cms/store',
         component: DashboardLayout,
@@ -1068,6 +1103,7 @@ const routes = [
     cmsDeliveriesPages,
     cmsOrderPages,
     cmsOrderStatusPages,
+    cmsReviewsPages,
     cmsCartItemsPages,
     cmsMenuPages,
     cmsLockPages,

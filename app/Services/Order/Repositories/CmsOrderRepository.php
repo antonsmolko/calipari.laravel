@@ -7,8 +7,8 @@ use App\Events\Models\Order\OrderSetStatus;
 use App\Models\Order;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
 use App\Services\Order\Resources\CmsOrder as OrderResource;
-use App\Services\Order\Resources\CmsOrderFromList as OrderFromListResource;
-use App\Services\Order\Resources\CmsOrderFromListCollection as OrderFromListCollection;
+use App\Services\Order\Resources\CmsOrderForList as OrderFromListResource;
+use App\Services\Order\Resources\CmsOrderForListCollection as OrderFromListCollection;
 
 class CmsOrderRepository extends CmsBaseResourceRepository
 {

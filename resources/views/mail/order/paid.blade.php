@@ -11,8 +11,7 @@
 @component('components.mail.space')
 @endcomponent
 
-@component('mail::block-centered')
-# СУММА ОПЛАТЫ <span class="text-red">{{ number_format($order['price'], 0, '.', ' ') }} ₽</span>
-В ближайшее время Ваш заказ поступит в производство.
+@component('mail::order-details-item', ['title' => 'СУММА ОПЛАТЫ'])
+    <strong class="text-red">{{ number_format($order['price'], 0, '.', ' ') }} ₽</strong>
 @endcomponent
 @endcomponent

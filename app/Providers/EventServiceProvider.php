@@ -169,6 +169,22 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Mail\Order\SendByStatus::class,
         ],
 
+        \App\Events\Models\Review\ReviewCreated::class => [
+            \App\Listeners\Cache\Clear\OrderCacheClear::class,
+            \App\Listeners\Cache\Clear\ReviewCacheClear::class,
+            \App\Listeners\Mail\Review\FeedbackReceived::class,
+        ],
+
+        \App\Events\Models\Review\ReviewUpdated::class => [
+            \App\Listeners\Cache\Clear\OrderCacheClear::class,
+            \App\Listeners\Cache\Clear\ReviewCacheClear::class,
+        ],
+
+        \App\Events\Models\Review\ReviewDeleted::class => [
+            \App\Listeners\Cache\Clear\OrderCacheClear::class,
+            \App\Listeners\Cache\Clear\ReviewCacheClear::class,
+        ],
+
         \App\Events\Models\User\UserSaved::class => [
             \App\Listeners\Cache\Clear\UserCacheClear::class,
             \App\Listeners\Cache\Clear\OrderCacheClear::class,

@@ -17,8 +17,8 @@ class CreateReviewsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->string('content', 1000);
-            $table->unsignedSmallInteger('quality_mark')->nullable();
-            $table->unsignedSmallInteger('service_mark')->nullable();
+            $table->unsignedSmallInteger('quality_rate')->nullable();
+            $table->unsignedSmallInteger('service_rate')->nullable();
             $table->unsignedTinyInteger('publish')->default(0);
             $table->timestamps();
         });

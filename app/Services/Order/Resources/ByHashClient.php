@@ -2,10 +2,10 @@
 
 namespace App\Services\Order\Resources;
 
-use App\Services\OrderItem\Resources\ClientOrderItem as OrderItemResource;
+
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ForPaymentClient extends JsonResource
+class ByHashClient extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,7 +19,8 @@ class ForPaymentClient extends JsonResource
             'id' => $this->id,
             'number' => $this->number,
             'price' => $this->price,
-            'paid' => $this->paid
+            'paid' => $this->paid,
+            'review' => $this->review
         ];
     }
 }

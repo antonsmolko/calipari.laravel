@@ -7,29 +7,36 @@
                 </md-card-content>
             </md-card>
         </div>
+
         <panel-card-link v-if="authCheck('store-settings')"
                          :to="{ name: 'cms.store.settings' }"
                          icon="tune"
                          title="Настройки"
-                         color="blue-grey"/>
+                         color="blue-grey" />
 
         <panel-card-link v-if="authCheck('deliveries')"
                          :to="{ name: 'cms.store.deliveries' }"
                          icon="local_shipping"
                          title="Доставка"
-                         color="teal"/>
+                         color="teal" />
 
         <panel-card-link v-if="authCheck('order-statuses')"
                          :to="{ name: 'cms.store.orderStatuses' }"
                          icon="update"
                          title="Статусы заказа"
-                         color="blue"/>
+                         color="blue" />
 
         <panel-card-link v-if="authCheck('orders')"
                          :to="{ name: 'cms.store.orders' }"
                          icon="shopping_cart"
                          title="Заказы"
-                         color="deep-purple"/>
+                         color="deep-purple" />
+
+        <panel-card-link v-if="authCheck('reviews')"
+                         :to="{ name: 'cms.store.reviews' }"
+                         icon="grading"
+                         title="Отзывы"
+                         color="brown" />
     </div>
 </template>
 

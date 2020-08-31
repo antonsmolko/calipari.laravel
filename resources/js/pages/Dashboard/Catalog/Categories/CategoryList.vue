@@ -81,7 +81,6 @@ import { categoryPage, tableTitle } from '@/mixins/categories'
 import { pageTitle } from '@/mixins/base'
 import { deleteMethod } from '@/mixins/crudMethods'
 
-
 export default {
     name: 'CategoryList',
     mixins: [
@@ -94,10 +93,12 @@ export default {
     components: {
         CategoryTableActions
     },
-    data: () => ({
-        resourceUrl: `/catalog/categories/type/${this.category_type}`,
-        responseData: false
-    }),
+    data () {
+        return {
+            resourceUrl: `/catalog/categories/type/${this.category_type}`,
+            responseData: false
+        }
+    },
     computed: {
         ...mapState('categories', {
             items: state => state.items,

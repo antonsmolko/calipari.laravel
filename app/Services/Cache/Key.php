@@ -11,6 +11,7 @@ class Key
     const DELIVERY_PREFIX = 'deliveries';
     const SETTINGS_PREFIX = 'settings';
     const ORDERS_PREFIX = 'orders';
+    const REVIEWS_PREFIX = 'reviews';
     const CDEK_PREFIX = 'cdek';
     const SEARCH_PREFIX = 'search';
     const COLOR_COLLECTIONS_PREFIX = 'colorCollections';

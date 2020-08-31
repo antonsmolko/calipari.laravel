@@ -150,6 +150,13 @@ Route::group(['prefix' => 'orders'], function() {
     Route::get('payment-confirmation/{token}', 'Client\Order\OrderController@confirmPaymentCompletion');
 });
 
+/** Reviews */
+Route::prefix('reviews')
+    ->group(function() {
+        Route::post('/', 'Client\Review\ReviewController@getItems');
+        Route::post('store', 'Client\Review\ReviewController@store');
+    });
+
 /** Carts */
 Route::prefix('carts')
     ->group(function() {
@@ -507,7 +514,9 @@ Route::prefix('cms')
                 ->middleware('role:super_admin|owner');
         });
 
+
         /** OrderItems */
+
         Route::prefix('order-items')
             ->group(function () {
                 Route::get('{id}/pdf-label', 'Cms\OrderItem\OrderItemController@getPdfLabel')
@@ -516,18 +525,31 @@ Route::prefix('cms')
                     ->where('id', '[0-9]+');
             });
 
+
         /** Carts */
+
         Route::prefix('cart-items')
             ->group(function() {
                 Route::post('/', 'Cms\CartItem\CartItemController@store');
             });
+
 
         /** Order Statuses */
 
         Route::get('order-statuses/{id}/publish', 'Cms\OrderStatus\OrderStatusController@publish')
             ->where('id', '[0-9]+');
         Route::get('order-statuses/published', 'Cms\OrderStatus\OrderStatusController@getPublishedItems');
-        Route::apiResource('order-statuses', 'Cms\OrderStatus\OrderStatusController');
+        Route::apiResource('order-statuses', 'Cms\OrderStatus\OrderStatusController')
+            ->except(['create', 'edit']);
+
+
+        /** Reviews */
+
+        Route::get('reviews/{id}/publish', 'Cms\Review\ReviewController@publish')
+            ->where('id', '[0-9]+');
+        Route::post('reviews', 'Cms\Review\ReviewController@getItems');
+        Route::get('reviews/{id}', 'Cms\Review\ReviewController@getItem');
+        Route::delete('reviews/{id}', 'Cms\Review\ReviewController@destroy');
     });
 
 

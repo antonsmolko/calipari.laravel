@@ -14,6 +14,7 @@ class Tag
     const DELIVERY_TAG = 'deliveries';
     const SETTINGS_TAG = 'settings';
     const ORDERS_TAG = 'orders';
+    const REVIEWS_TAG = 'reviews';
     const CDEK_TAG = 'cdek';
     const FILTERS_TAG = 'filters';
     const USERS_TAG = 'users';

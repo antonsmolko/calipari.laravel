@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\Order\Resources;
+namespace App\Services\Review\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class CmsOrderFromListCollection extends ResourceCollection
+class ForListCmsCollection extends ResourceCollection
 {
     /**
      * Transform the resource into an array.

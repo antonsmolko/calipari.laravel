@@ -2,7 +2,7 @@
 
 namespace App\Services\Payment\Handlers;
 
-use App\Services\Order\Resources\ForPaymentClient as OrderResource;
+use App\Services\Order\Resources\ByHashClient as OrderResource;
 
 class GetPaymentWithIdOptionHandler
 {

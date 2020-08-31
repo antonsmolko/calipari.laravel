@@ -22,7 +22,7 @@ use App\Services\Pdf\PdfService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use App\Services\Order\Resources\CmsOrder as OrderResource;
-use App\Services\Order\Resources\CmsOrderFromList as OrderFromListResource;
+use App\Services\Order\Resources\CmsOrderForList as OrderFromListResource;
 
 class CmsOrderService extends CmsBaseResourceService
 {
@@ -77,7 +77,7 @@ class CmsOrderService extends CmsBaseResourceService
 
     /**
      * @param array $requestData
-     * @return Resources\CmsOrderFromListCollection
+     * @return Resources\CmsOrderForListCollection
      */
     public function getCurrentItems(array $requestData)
     {
@@ -110,7 +110,7 @@ class CmsOrderService extends CmsBaseResourceService
 
     /**
      * @param array $requestData
-     * @return Resources\CmsOrderFromListCollection
+     * @return Resources\CmsOrderForListCollection
      */
     public function getCanceledItems(array $requestData)
     {
@@ -126,7 +126,7 @@ class CmsOrderService extends CmsBaseResourceService
 
     /**
      * @param array $requestData
-     * @return Resources\CmsOrderFromListCollection
+     * @return Resources\CmsOrderForListCollection
      */
     public function getRefundedItems(array $requestData)
     {

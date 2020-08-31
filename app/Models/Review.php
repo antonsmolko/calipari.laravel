@@ -3,6 +3,10 @@
 namespace App\Models;
 
 
+use App\Events\Models\Review\ReviewCreated;
+use App\Events\Models\Review\ReviewDeleted;
+use App\Events\Models\Review\ReviewUpdated;
+
 class Review extends Model
 {
     /**
@@ -10,12 +14,18 @@ class Review extends Model
      */
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    protected $dispatchesEvents = [
+        'created' => ReviewCreated::class,
+        'updated' => ReviewUpdated::class,
+        'deleted' => ReviewDeleted::class,
+    ];
+
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function order()
     {
-        return $this->hasOne('App\Models\Order', 'id', 'order_id');
+        return $this->belongsTo('App\Models\Order');
     }
 
     /**
@@ -24,5 +34,13 @@ class Review extends Model
     public function user()
     {
         return $this->hasOneThrough('App\Models\User', 'App\Models\Order');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderCustomer()
+    {
+        return $this->order->getCustomer();
     }
 }

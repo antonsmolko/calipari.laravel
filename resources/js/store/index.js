@@ -9,21 +9,22 @@ import categories from './modules/categories';
 import colorCollections from './modules/color-collections';
 import dashboard from './modules/dashboard';
 import deliveries from './modules/deliveries';
-import subCategories from './modules/sub-categories';
-import textures from './modules/textures';
-import users from './modules/users';
-import roles from './modules/roles';
-import permissions from './modules/permissions';
-import settings from './modules/settings';
-import settingGroups from './modules/setting-groups';
+import homePurchaseSteps from './modules/home/purchase-steps';
+import homeInteriors from './modules/home/interiors';
 import orders from './modules/orders';
 import orderStatuses from './modules/order-statuses';
 import pages from './modules/pages';
 import pickups from './modules/pickups';
 import posts from './modules/posts';
+import permissions from './modules/permissions';
+import reviews from './modules/reviews';
+import roles from './modules/roles';
+import settings from './modules/settings';
+import settingGroups from './modules/setting-groups';
+import subCategories from './modules/sub-categories';
 import table from './modules/table';
-import homePurchaseSteps from './modules/home/purchase-steps';
-import homeInteriors from './modules/home/interiors';
+import textures from './modules/textures';
+import users from './modules/users';
 import workExamples from './modules/work-examples';
 
 Vue.use(Vuex);
@@ -147,6 +148,7 @@ export default new Vuex.Store({
         permissions,
         pickups,
         posts,
+        reviews,
         roles,
         settingGroups,
         settings,

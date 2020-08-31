@@ -10,7 +10,7 @@ use App\Models\OrderStatus;
 use App\Models\User;
 use App\Services\Order\Resources\ClientOrder as ClientOrderResource;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
-use App\Services\Order\Resources\ForPaymentClient as ForPaymentResource;
+use App\Services\Order\Resources\ByHashClient as ForPaymentResource;
 
 class ClientOrderRepository extends ClientBaseResourceRepository
 {
@@ -85,5 +85,24 @@ class ClientOrderRepository extends ClientBaseResourceRepository
     public function getItemByCompletionToken(string $token)
     {
         return $this->model::where('completion_token', $token)->firstOrFail();
+    }
+
+    /**
+     * @param string $number
+     * @return mixed
+     */
+    public function getItemByNumber(string $number)
+    {
+        return $this->model::where('number', $number)->firstOrFail();
+    }
+
+    /**
+     * @param Order $order
+     * @param array $reviewData
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function createReview(Order $order, array $reviewData)
+    {
+        return $order->review()->create($reviewData);
     }
 }

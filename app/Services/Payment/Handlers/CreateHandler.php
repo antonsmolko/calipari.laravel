@@ -2,7 +2,7 @@
 
 namespace App\Services\Payment\Handlers;
 
-use App\Services\Order\Resources\ForPaymentClient as ForPaymentResource;
+use App\Services\Order\Resources\ByHashClient as ForPaymentResource;
 use Illuminate\Support\Arr;
 use YandexCheckout\Client;
 

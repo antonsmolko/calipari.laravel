@@ -8,14 +8,16 @@ export const categoryPage = {
             require: true
         }
     },
-    data: () => ({
-        pageProps,
-        storeModule: 'categories',
-        redirectRoute: {
-            name: 'cms.catalog.categories.list',
-            params: { category_type: this.category_type }
+    data () {
+        return {
+            pageProps,
+            storeModule: 'categories',
+            redirectRoute: {
+                name: 'cms.catalog.categories.list',
+                params: { category_type: this.category_type }
+            }
         }
-    }),
+    },
     computed: {
         ...mapState({
             pageTitle: state => state.pageTitle
@@ -35,14 +37,16 @@ export const subCategoryPage = {
             require: true
         }
     },
-    data: () => ({
-        pageProps,
-        storeModule: 'subCategories',
-        redirectRoute: {
-            name: 'cms.catalog.subcategories.list',
-            params: { category_type: this.category_type }
+    data () {
+        return {
+            pageProps,
+            storeModule: 'subCategories',
+            redirectRoute: {
+                name: 'cms.catalog.subcategories.list',
+                params: { category_type: this.category_type }
+            }
         }
-    }),
+    },
     computed: {
         ...mapState({
             pageTitle: state => state.pageTitle

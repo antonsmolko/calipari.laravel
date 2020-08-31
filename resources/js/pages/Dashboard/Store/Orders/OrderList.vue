@@ -303,19 +303,17 @@ export default {
     name: 'OrderList',
     mixins: [ pageTitle, deleteMethod, authCheck ],
     components: { Tabs, VExtendedTable, TableActions },
-    data() {
-        return {
-            activeTab: '',
-            currentResourceUrl: '/store/orders/current',
-            completedResourceUrl: '/store/orders/completed',
-            canceledResourceUrl: '/store/orders/canceled',
-            refundedResourceUrl: '/store/orders/refunded',
-            responseData: false,
-            redirectRoute: { name: 'cms.store' },
-            storeModule: 'orders'
-        }
-    },
-    created() {
+    data: () => ({
+        activeTab: '',
+        currentResourceUrl: '/store/orders/current',
+        completedResourceUrl: '/store/orders/completed',
+        canceledResourceUrl: '/store/orders/canceled',
+        refundedResourceUrl: '/store/orders/refunded',
+        responseData: false,
+        redirectRoute: { name: 'cms.store' },
+        storeModule: 'orders'
+    }),
+    created () {
         if (this.$route.params.activeTab) {
             this.activeTab = this.$route.params.activeTab;
         }
@@ -361,7 +359,7 @@ export default {
                 buttonsStyling: false
             })
         },
-        onDelete(item) {
+        onDelete (item) {
             return this.delete({
                 payload: item.id,
                 title: item.number,

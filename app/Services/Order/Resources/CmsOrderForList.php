@@ -5,7 +5,7 @@ namespace App\Services\Order\Resources;
 use App\Services\OrderStatus\Resources\OrderStatusWithPivotDate;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CmsOrderFromList extends JsonResource
+class CmsOrderForList extends JsonResource
 {
     /**
      * Transform the resource into an array.
