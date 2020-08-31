@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\Cache;
 
 class CmsReviewService extends CmsBaseResourceService
 {
+    /**
+     * CmsReviewService constructor.
+     * @param CmsReviewRepository $repository
+     * @param ClearCacheHandler $clearCacheHandler
+     * @param CacheKeyManager $cacheKeyManager
+     */
     public function __construct(
         CmsReviewRepository $repository,
         ClearCacheHandler $clearCacheHandler,
@@ -22,6 +28,22 @@ class CmsReviewService extends CmsBaseResourceService
     {
         parent::__construct($repository, $clearCacheHandler, $cacheKeyManager);
         $this->cacheTag = Tag::REVIEWS_TAG;
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function getDetailsItem(int $id)
+    {
+        $key = $this->cacheKeyManager
+            ->getResourceKey(Key::REVIEWS_PREFIX, ['cms', 'details']);
+
+        return Cache::tags(Tag::REVIEWS_TAG)
+            ->remember(
+                $key,
+                TTL::REVIEWS_TTL,
+                fn() => $this->repository->getDetailsItem($id));
     }
 
     /**

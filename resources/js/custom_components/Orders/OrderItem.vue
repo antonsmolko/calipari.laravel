@@ -47,12 +47,14 @@
                     <div class="price">
                         <h3>{{ formatPrice }}</h3>
                     </div>
-                    <md-button class="md-success" @click="downloadLabel">
-                        <md-icon>get_app</md-icon> Этикетка
-                    </md-button>
-                    <md-button class="md-success" @click="downloadLayout">
-                        <md-icon>get_app</md-icon> Макет
-                    </md-button>
+                    <template v-if="pdf">
+                        <md-button class="md-success" @click="downloadLabel">
+                            <md-icon>get_app</md-icon> Этикетка
+                        </md-button>
+                        <md-button class="md-success" @click="downloadLayout">
+                            <md-icon>get_app</md-icon> Макет
+                        </md-button>
+                    </template>
                 </div>
             </template>
         </product-card>
@@ -71,6 +73,10 @@ export default {
         item: {
             type: Object,
             required: true
+        },
+        pdf: {
+            type: Boolean,
+            default: true
         }
     },
     computed: {

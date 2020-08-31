@@ -19,32 +19,29 @@ const mutations = {
                 item.publish = payload.publish;
             }
         });
+    },
+    SET_ITEM_PUBLISH (state, publish) {
+        state.item.publish = publish;
     }
 };
 
 const actions = {
-    getItems ({ commit }) {
-        return axiosAction('get', commit, {
-            url: '/reviews',
-            thenContent: response => commit('SET_ITEMS', response.data)
-        })
-    },
     getItem ({ commit }, id) {
         return axiosAction('get', commit, {
-            url: `/review/${id}`,
+            url: `/store/reviews/${id}`,
             thenContent: response => commit('SET_ITEM', response.data)
         })
     },
     publish ({ commit }, id) {
         return axiosAction('get', commit, {
-            url: `/posts/${id}/publish`,
-            thenContent: response => commit('CHANGE_PUBLISH', response.data)
-        })
+            url: `/store/reviews/${id}/publish`,
+            thenContent: response => commit('SET_ITEM_PUBLISH', response.data.publish)
+        });
     },
     delete ({ commit, dispatch }, { payload, tableMode = false }) {
         return axiosAction('delete', commit, {
-            url: `/review/${payload}`,
-            thenContent: response => {
+            url: `/store/reviews/${payload}`,
+            thenContent: (response) => {
                 if (tableMode === 'table') {
                     dispatch('table/getItemsPost', null, { root: true });
                     dispatch('table/deleteSearchedItem', payload, { root: true });

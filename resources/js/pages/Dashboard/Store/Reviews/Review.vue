@@ -3,19 +3,29 @@
         <div class="md-layout-item md-size-100">
             <md-card class="mt-0">
                 <md-card-content class="md-between">
-                    <router-button-link :route="redirectRoute.name" title="К списку отзывов" />
-                    <div>
-                        <slide-y-down-transition v-show="controlSaveVisibilities && $v.$anyDirty && !$v.$invalid">
-                            <control-button title="Сохранить" @click="onUpdate" />
-                        </slide-y-down-transition>
+                    <router-button-link :to="redirectRoute" title="К списку отзывов" />
+                    <control-button
+                        v-if="authCheck('reviews-delete')"
+                        title="Удалить"
+                        @click="onDelete"
+                        icon="delete"
+                        class="md-danger" />
+                </md-card-content>
+            </md-card>
+        </div>
+        <div class="md-layout-item md-size-100">
+            <md-card>
+                <card-icon-header title="Отзыв" icon="grading"/>
+                <md-card-content>
+                    <md-table :value="reviewData" class="tm-order-item__table table-striped table-hover">
+                        <md-table-row slot="md-table-row" slot-scope="{ item }">
+                            <md-table-cell class="tm-width-1-2"><h4 class="card-title mb-0 mt-0">{{ item.title }}</h4></md-table-cell>
+                            <md-table-cell><span class="md-title"><small>{{ item.content }}</small></span></md-table-cell>
+                        </md-table-row>
+                    </md-table>
 
-                        <control-button
-                            v-if="authCheck('reviews')"
-                            title="Удалить"
-                            @click="onDelete"
-                            icon="delete"
-                            class="md-danger" />
-                    </div>
+                    <h4>Опубликовать</h4>
+                    <md-switch :value="!review.publish" @change="publish(review.id)" />
                 </md-card-content>
             </md-card>
         </div>
@@ -23,6 +33,7 @@
             <order-item
                 v-for="item in review.order.items"
                 :key="item.id"
+                :pdf="false"
                 :item="item" />
         </div>
         <div class="md-layout-item md-xsmall-size-100 md-medium-size-50 md-large-size-66 md-xlarge-size-75">
@@ -82,25 +93,6 @@
                     <span v-else class="md-title"><small>Незарегистрированный</small></span>
                 </md-card-content>
             </md-card>
-            <md-card>
-                <card-icon-header title="Статусы" icon="update"/>
-                <md-card-content>
-                    <md-table
-                        md-sort="date"
-                        md-sort-order="desc"
-                        :value="sortedStatuses"
-                        class="tm-order-item__table table-striped table-hover">
-                        <md-table-row slot="md-table-row" slot-scope="{ item }">
-                            <md-table-cell class="tm-width-1-2">
-                                <h4 class="card-title mb-0 mt-0">{{ item.title }}</h4>
-                            </md-table-cell>
-                            <md-table-cell>
-                                <span class="md-title"><small>{{ item.date }}</small></span>
-                            </md-table-cell>
-                        </md-table-row>
-                    </md-table>
-                </md-card-content>
-            </md-card>
         </div>
     </div>
 </template>
@@ -135,17 +127,21 @@ export default {
         ...mapState('reviews', {
             review: state => state.item
         }),
-        sortedStatuses () {
-            return this.$store.getters['orders/getSortedItemStatuses'];
+        reviewData () {
+            return [
+                { title: 'Комментарий', content: this.review.comment },
+                { title: 'Оценка за качество', content: this.review.quality_rate },
+                { title: 'Оценка за сервис', content: this.review.service_rate }
+            ]
         },
         currentStatus () {
-            return getCurrentStatus(this.order.statuses);
+            return getCurrentStatus(this.review.order.statuses);
         },
         baseTableData () {
             return [
                 { title: 'Номер', content: this.review.order.number },
                 { title: 'Дата', content: this.review.order.date },
-                { title: 'Статус', content: this.review.currentStatus.title }
+                { title: 'Статус', content: this.currentStatus.title }
             ];
         },
         priceTableData () {
@@ -171,7 +167,7 @@ export default {
             ];
         },
         userTableData () {
-            const user = this.order.user
+            const user = this.review.order.user
             return user
                 ? [
                     { title: 'ID', content: user.id},
@@ -184,20 +180,21 @@ export default {
     created() {
         this.getItemAction(this.id)
             .then(() => {
-                this.setPageTitle(`Отзыв на заказ № ${this.order.number}`);
+                this.setPageTitle(`Отзыв на заказ № ${this.review.order.number}`);
                 this.responseData = true;
             })
             .catch(() => this.$router.push(this.redirectRoute));
     },
     methods: {
         ...mapActions({
-            getItemAction: 'reviews/getItem'
+            getItemAction: 'reviews/getItem',
+            publishAction: 'reviews/publish'
         }),
         onDelete() {
             return this.delete({
                 payload: this.id,
                 title: this.title,
-                alertText: `отзыв на заказ № «${this.order.number}»`,
+                alertText: `отзыв на заказ № «${this.review.order.number}»`,
                 successText: 'Отзыв удален!',
                 storeModule: this.storeModule,
                 redirectRoute: this.redirectRoute
@@ -211,6 +208,9 @@ export default {
         },
         getArticle (imageId) {
             return getArticle(imageId);
+        },
+        publish () {
+            this.publishAction(this.id);
         }
     }
 }

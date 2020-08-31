@@ -935,7 +935,7 @@ const cmsReviewsPages = {
         },
         {
             path: 'reviews/:id',
-            name: 'cms.store.reviews.revies',
+            name: 'cms.store.reviews.review',
             component: Review,
             props: true,
             meta: getPathMeta('reviews')

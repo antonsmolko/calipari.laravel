@@ -21,6 +21,7 @@ class DetailsCms extends JsonResource
             'quality_rate' => $this->quality_rate,
             'service_rate' => $this->service_rate,
             'comment' => $this->comment,
+            'publish' => $this->publish,
             'date' => $this->created_at->format('d.m.Y - H:i:s')
         ];
     }

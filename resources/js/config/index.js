@@ -66,6 +66,7 @@ export default {
         permissions: 's',
         projects: 's,a,o',
         reviews: 's,a,o',
+        'reviews-delete': 's,o',
         roles: 's,a,o',
         settings: 's,a,o,m',
         'settings/administration': 's,a',

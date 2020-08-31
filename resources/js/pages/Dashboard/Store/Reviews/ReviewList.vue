@@ -45,8 +45,8 @@
                                 {{ item.service_rate }}
                             </md-table-cell>
 
-                            <md-table-cell md-label="Цена">
-                                <span class="md-subheading">{{ $helpers.getFormatPrice(item.price) }}</span>
+                            <md-table-cell md-label="Опубл.">
+                                <md-switch :value="!item.publish" @change="togglePublish(item.id)" />
                             </md-table-cell>
 
                             <md-table-cell md-label="Действия">
@@ -56,7 +56,7 @@
                                         title="Подробнее"
                                         icon="visibility"
                                         color="md-info"
-                                        :to="{ name: 'cms.store.reviews', params: { id: item.id } }" />
+                                        :to="{ name: 'cms.store.reviews.review', params: { id: item.id } }" />
 
                                     <control-button v-if="authCheck('reviews-delete')"
                                                     title="Удалить"
@@ -97,7 +97,6 @@ export default {
     },
     methods: {
         ...mapActions({
-            getItemsAction: 'reviews/getItems',
             togglePublishAction: 'table/togglePublish'
         }),
         onDelete (item) {
@@ -111,7 +110,7 @@ export default {
             })
         },
         togglePublish (id) {
-            this.togglePublishAction(`/reviews/${id}/publish`);
+            this.togglePublishAction(`/store/reviews/${id}/publish`);
         }
     }
 }

@@ -10,7 +10,7 @@
                         <router-button-link
                             title="В заказ"
                             icon="visibility"
-                            :to="redirectRoute" />
+                            :to="redirectRoute"/>
                     </div>
                     <div>
                         <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
@@ -66,10 +66,10 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex';
-import {numeric, sameAs, required, between} from 'vuelidate/lib/validators'
+import { mapActions, mapState } from 'vuex';
+import { numeric, sameAs, required, between } from 'vuelidate/lib/validators'
 
-import {pageTitle} from '@/mixins/base';
+import { pageTitle } from '@/mixins/base';
 import swal from "sweetalert2";
 
 export default {
@@ -81,16 +81,14 @@ export default {
             required: true
         }
     },
-    data() {
-        return {
-            redirectRoute: {
-                name: 'cms.store.orders.order',
-                params: { id: this.id }
-            },
-            storeModule: 'orders'
-        }
-    },
-    validations() {
+    data: () => ({
+        redirectRoute: {
+            name: 'cms.store.orders.order',
+            params: {id: this.id}
+        },
+        storeModule: 'orders'
+    }),
+    validations () {
         return {
             refundAmount: {
                 required,
@@ -115,16 +113,16 @@ export default {
             refundAmount: state => state.fields.refundAmount,
             refundReason: state => state.fields.refundReason
         }),
-        refundAvailable() {
+        refundAvailable () {
             return this.order.paid && (this.availableRefundAmount > 0)
         },
-        availableRefundAmount() {
+        availableRefundAmount () {
             const amount = this.order.price - Number(this.order.refund_amount);
 
             return amount > 0 ? amount : 0;
         }
     },
-    async created() {
+    async created () {
         await this.getItemAction(this.id)
             .then(() => {
                 if (!this.refundAvailable) {
@@ -148,7 +146,7 @@ export default {
             refundReason: this.order.refund_reason || '',
         });
     },
-    beforeDestroy() {
+    beforeDestroy () {
         this.setOrderFieldsAction({
             comparedPaymentId: '',
             refundAmount: 0,
@@ -163,7 +161,7 @@ export default {
             setOrderFieldAction: 'orders/setItemField',
             setOrderFieldsAction: 'orders/setItemFields'
         }),
-        async refund() {
+        async refund () {
             const data = {
                 payment_id: this.comparedPaymentId,
                 refund_amount: this.refundAmount,
@@ -171,7 +169,7 @@ export default {
             };
             const response = await this.confirm('Возврат средств невозможно отменить!')
             if (response.value) {
-                await this.refundAction({ id: this.id, data })
+                await this.refundAction({id: this.id, data})
                 await swal.fire({
                     title: `Заказ № ${this.order.number} возмещен!`,
                     text: `Сумма возмещения - ${this.refundAmount} ₽`,
@@ -183,7 +181,7 @@ export default {
 
             }
         },
-        confirm(text) {
+        confirm (text) {
             return swal.fire({
                 title: 'Внимание?',
                 text,

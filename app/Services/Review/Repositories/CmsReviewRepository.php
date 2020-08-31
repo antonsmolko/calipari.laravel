@@ -6,6 +6,7 @@ namespace App\Services\Review\Repositories;
 
 use App\Models\Review;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
+use App\Services\Review\Resources\DetailsCms as DetailsReviewResource;
 use App\Services\Review\Resources\ForListCmsCollection as ReviewResourceCollection;
 
 class CmsReviewRepository extends CmsBaseResourceRepository
@@ -17,6 +18,15 @@ class CmsReviewRepository extends CmsBaseResourceRepository
     public function __construct(Review $model)
     {
         $this->model = $model;
+    }
+
+    /**
+     * @param int $id
+     * @return DetailsReviewResource
+     */
+    public function getDetailsItem(int $id)
+    {
+        return new DetailsReviewResource($this->model::findOrFail($id));
     }
 
     /**

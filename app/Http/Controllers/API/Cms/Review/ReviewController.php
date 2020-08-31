@@ -19,6 +19,15 @@ class ReviewController extends BaseResourceController
     }
 
     /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getItem(int $id): JsonResponse
+    {
+        return response()->json($this->service->getDetailsItem($id));
+    }
+
+    /**
      * @param FormRequest $request
      * @return JsonResponse
      */
