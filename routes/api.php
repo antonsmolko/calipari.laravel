@@ -368,6 +368,7 @@ Route::prefix('cms')
     /** Textures */
 
     Route::group(['prefix' => 'textures'], function() {
+        Route::get('basic', 'Cms\Texture\TextureController@getItems');
         Route::post('{id}', 'Cms\Texture\TextureController@update')
             ->where('id', '[0-9]+')
             ->middleware('optimizeImages');
@@ -545,11 +546,49 @@ Route::prefix('cms')
 
         /** Reviews */
 
-        Route::get('reviews/{id}/publish', 'Cms\Review\ReviewController@publish')
-            ->where('id', '[0-9]+');
-        Route::post('reviews', 'Cms\Review\ReviewController@getItems');
-        Route::get('reviews/{id}', 'Cms\Review\ReviewController@getItem');
-        Route::delete('reviews/{id}', 'Cms\Review\ReviewController@destroy');
+        Route::prefix('reviews')
+            ->group(function () {
+                Route::get('{id}/publish', 'Cms\Review\ReviewController@publish')
+                    ->where('id', '[0-9]+');
+                Route::post('/', 'Cms\Review\ReviewController@getItems');
+                Route::get('{id}', 'Cms\Review\ReviewController@getItem')
+                    ->where('id', '[0-9]+');
+                Route::delete('{id}', 'Cms\Review\ReviewController@destroy')
+                    ->where('id', '[0-9]+');
+            });
+
+
+        /** Sales */
+
+        Route::prefix('sales')
+            ->group(function () {
+                Route::get('{id}/publish', 'Cms\Sale\SaleController@publish')
+                    ->where('id', '[0-9]+');
+                Route::get('articles', 'Cms\Sale\SaleController@getArticles');
+                Route::get('{id}/rest-articles', 'Cms\Sale\SaleController@getRestArticles')
+                    ->where('id', '[0-9]+');
+                Route::post('{status}', 'Cms\Sale\SaleController@getItemsByStatus')
+                    ->where('status', '^('
+                        . \App\Models\Sale::FOR_SALE . '|'
+                        . \App\Models\Sale::IN_ORDER . '|'
+                        . \App\Models\Sale::SOLD . '|)$');
+                Route::get('{id}', 'Cms\Sale\SaleController@show')
+                    ->where('id', '[0-9]+');
+                Route::get('{id}/change-status/{status}', 'Cms\Sale\SaleController@changeStatus')
+                    ->where([
+                        'id' => '[0-9]+',
+                        'status' => '^('
+                        . \App\Models\Sale::FOR_SALE . '|'
+                        . \App\Models\Sale::IN_ORDER . '|'
+                        . \App\Models\Sale::SOLD . '|)$'
+                    ]);
+                Route::get('{id}/on-sale', 'Cms\Sale\SaleController@onSale')
+                    ->where('id', '[0-9]+');
+                Route::delete('{id}', 'Cms\Sale\SaleController@destroy')
+                    ->where('id', '[0-9]+');
+                Route::post('/', 'Cms\Sale\SaleController@store');
+                Route::post('{id}', 'Cms\Sale\SaleController@update');
+            });
     });
 
 

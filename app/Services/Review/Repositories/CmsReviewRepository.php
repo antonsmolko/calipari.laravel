@@ -38,6 +38,7 @@ class CmsReviewRepository extends CmsBaseResourceRepository
         return new ReviewResourceCollection(
             $this->model::when(!empty($requestData['query']),
                     fn ($query) => $query->where('number', 'like', $requestData['query'] . '%'))
+                ->with(['order:id,number,customer'])
                 ->orderBy($requestData['sort_by'], $requestData['sort_order'])
                 ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']));
     }

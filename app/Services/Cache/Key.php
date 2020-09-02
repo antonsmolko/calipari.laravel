@@ -19,6 +19,7 @@ class Key
     const FILTERS_PREFIX = 'filters';
     const USERS_PREFIX = 'users';
     const POSTS_PREFIX = 'posts';
+    const SALES_PREFIX = 'sales';
     const WORK_EXAMPLES_PREFIX = 'workExamples';
     const TEXTURES_PREFIX = 'textures';
 }

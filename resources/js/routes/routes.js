@@ -227,6 +227,23 @@ const SettingGroupEdit = resolve => {
     })
 };
 
+/** Sales */
+const SaleList = resolve => {
+    require.ensure(['@/pages/Dashboard/Store/Sales/SaleList.vue'], () => {
+        resolve(require('@/pages/Dashboard/Store/Sales/SaleList.vue'))
+    })
+};
+const SaleCreate = resolve => {
+    require.ensure(['@/pages/Dashboard/Store/Sales/SaleCreate.vue'], () => {
+        resolve(require('@/pages/Dashboard/Store/Sales/SaleCreate.vue'))
+    })
+};
+const SaleEdit = resolve => {
+    require.ensure(['@/pages/Dashboard/Store/Sales/SaleEdit.vue'], () => {
+        resolve(require('@/pages/Dashboard/Store/Sales/SaleEdit.vue'))
+    })
+};
+
 /** Store */
 const StorePanel = resolve => {
     require.ensure(['@/pages/Dashboard/Store/StorePanel.vue'], () => {
@@ -943,6 +960,32 @@ const cmsReviewsPages = {
     ]
 };
 
+const cmsSalesPages = {
+    path: '/cms/store',
+    component: DashboardLayout,
+    children: [
+        {
+            path: 'sales',
+            name: 'cms.store.sales',
+            component: SaleList,
+            meta: getPathMeta('sales'),
+        },
+        {
+            path: 'sales/create',
+            name: 'cms.store.sales.create',
+            component: SaleCreate,
+            meta: getPathMeta('sales'),
+        },
+        {
+            path: 'sales/:id',
+            name: 'cms.store.sales.edit',
+            component: SaleEdit,
+            props: true,
+            meta: getPathMeta('sales')
+        }
+    ]
+};
+
 const cmsCartItemsPages = {
     path: '/cms/store',
         component: DashboardLayout,
@@ -1104,6 +1147,7 @@ const routes = [
     cmsOrderPages,
     cmsOrderStatusPages,
     cmsReviewsPages,
+    cmsSalesPages,
     cmsCartItemsPages,
     cmsMenuPages,
     cmsLockPages,

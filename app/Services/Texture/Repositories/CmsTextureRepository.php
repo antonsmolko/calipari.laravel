@@ -5,6 +5,7 @@ namespace App\Services\Texture\Repositories;
 
 use App\Models\Texture;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
+use App\Services\Texture\Resources\BasicProps as TextureBasicResource;
 use App\Services\Texture\Resources\CmsFromEdit as FromEditResource;
 use App\Services\Texture\Resources\CmsFromList as FromListResource;
 
@@ -27,6 +28,14 @@ class CmsTextureRepository extends CmsBaseResourceRepository
         return FromListResource::collection($this->model::orderBy('order')
             ->withCount('orders')
             ->get());
+    }
+
+    /**
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getItems()
+    {
+        return TextureBasicResource::collection($this->model::orderBy('order')->get());
     }
 
     /**

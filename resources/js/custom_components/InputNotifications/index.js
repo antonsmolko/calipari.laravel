@@ -2,6 +2,7 @@ import InputNotificationRequire from "./InputNotificationRequire";
 import InputNotificationUnique from "./InputNotificationUnique";
 import InputNotificationMinString from "./InputNotificationMinString";
 import InputNotificationAlias from "./InputNotificationAlias";
+import InputNotificationArticle from "./InputNotificationArticle";
 import InputNotificationNum from "./InputNotificationNum";
 import InputNotificationAlphaNum from "./InputNotificationAlphaNum";
 import InputNotificationKey from "./InputNotificationKey";
@@ -16,6 +17,7 @@ export {
     InputNotificationUnique,
     InputNotificationMinString,
     InputNotificationAlias,
+    InputNotificationArticle,
     InputNotificationNum,
     InputNotificationAlphaNum,
     InputNotificationSameAsPassword,

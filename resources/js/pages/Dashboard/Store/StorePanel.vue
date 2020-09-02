@@ -37,6 +37,12 @@
                          icon="grading"
                          title="Отзывы"
                          color="brown" />
+
+        <panel-card-link v-if="authCheck('sales')"
+                         :to="{ name: 'cms.store.sales' }"
+                         icon="gavel"
+                         title="Распродажа"
+                         color="indigo" />
     </div>
 </template>
 

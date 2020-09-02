@@ -1,5 +1,6 @@
 import maxBy from 'lodash/maxBy'
 import head from 'lodash/head'
+import find from 'lodash/find'
 import { uniqueFieldEditMixin, uniqueFieldMixin } from "../../mixins/getters";
 import { axiosAction, axiosPatch } from "../../mixins/actions";
 
@@ -58,7 +59,7 @@ const mutations = {
 const actions = {
     getItems ({ commit }) {
         return axiosAction('get', commit, {
-            url: '/textures',
+            url: '/textures/basic',
             thenContent: response => commit('SET_ITEMS', response.data)
         })
     },
@@ -129,7 +130,8 @@ const getters = {
     isUniqueName: state => name => uniqueFieldMixin(state.items, 'name', name),
     isUniqueNameEdit: state => (name, id) => uniqueFieldEditMixin(state.items, 'name', name, id),
     nextOrderNumber: state => state.items.length ? maxBy(state.items, 'order').order + 1 : 1,
-    defaultItemId: state => state.items.length ? head(state.items).id : null
+    defaultItemId: state => state.items.length ? head(state.items).id : null,
+    getById: state => id => state.items.length ? find(state.items, { id }) : null
 };
 
 export default {

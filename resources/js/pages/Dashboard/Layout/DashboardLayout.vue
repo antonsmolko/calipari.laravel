@@ -32,6 +32,7 @@
                         :link="{name: 'Статусы заказа', icon: 'update', path: '/cms/store/order-statuses'}"/>
                     <sidebar-item v-if="authCheck('orders')" :link="{name: 'Заказы', icon: 'shopping_cart', path: '/cms/store/orders'}"/>
                     <sidebar-item v-if="authCheck('reviews')" :link="{name: 'Отзывы', icon: 'grading', path: '/cms/store/reviews'}"/>
+                    <sidebar-item v-if="authCheck('sales')" :link="{name: 'Распродажа', icon: 'gavel', path: '/cms/store/sales'}"/>
                 </sidebar-item>
                 <sidebar-item v-if="authCheck('catalog')" :link="{name: 'Каталог', icon: 'category'}">
                     <sidebar-item :link="{name: 'Темы', path: '/cms/catalog/categories/topics'}"/>

@@ -19,6 +19,7 @@ class Tag
     const FILTERS_TAG = 'filters';
     const USERS_TAG = 'users';
     const POSTS_TAG = 'posts';
+    const SALES_TAG = 'sales';
     const WORK_EXAMPLES_TAG = 'workExamples';
     const TEXTURES_TAG = 'textures';
 }

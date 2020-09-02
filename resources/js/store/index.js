@@ -19,6 +19,7 @@ import posts from './modules/posts';
 import permissions from './modules/permissions';
 import reviews from './modules/reviews';
 import roles from './modules/roles';
+import sales from './modules/sales';
 import settings from './modules/settings';
 import settingGroups from './modules/setting-groups';
 import subCategories from './modules/sub-categories';
@@ -150,6 +151,7 @@ export default new Vuex.Store({
         posts,
         reviews,
         roles,
+        sales,
         settingGroups,
         settings,
         subCategories,

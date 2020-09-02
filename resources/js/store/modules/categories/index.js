@@ -83,6 +83,7 @@ const actions = {
         for (const [field, value] of Object.entries(payload)) {
             data.append(field, value);
         }
+
         return axiosAction('post', commit, { url: `/catalog/categories`, data })
     },
     update ({ commit }, payload) {

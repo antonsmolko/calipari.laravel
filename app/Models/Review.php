@@ -29,11 +29,11 @@ class Review extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
+     * @return mixed
      */
     public function user()
     {
-        return $this->hasOneThrough('App\Models\User', 'App\Models\Order');
+        return $this->order->user;
     }
 
     /**

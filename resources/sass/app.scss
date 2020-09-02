@@ -75,12 +75,12 @@
     margin: 0 !important;
 }
 
-.mr-1 {
+.m-1 {
     margin: .6em !important;
 }
 
 .mr-10 {
-    margin-right: .6em;
+    margin-right: .6em !important;
 }
 
 .mt-0 {
@@ -271,6 +271,12 @@
     }
 }
 
+// Text
+
+.text-line-through {
+    text-decoration-line: line-through;
+}
+
 // Tables
 
 .md-table-cell-container {
@@ -286,6 +292,11 @@
     background-color: #dddddd;
     border-radius: 3px;
     margin: 3px;
+}
+
+.table-actions {
+    display: flex;
+    justify-content: flex-end;
 }
 
 // Tabs

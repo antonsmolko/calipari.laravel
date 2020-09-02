@@ -168,6 +168,7 @@ import ProductCard from "@/components/Cards/ProductCard";
 import ResourceImage from "@/custom_components/Images/ResourceImage";
 import VSelect from "@/custom_components/VForm/VSelect"
 import { createMethod } from '@/mixins/crudMethods'
+import { pageTitle } from '@/mixins/base';
 import { required, requiredIf, email, numeric } from "vuelidate/lib/validators"
 import { getHash } from '@/helpers'
 
@@ -178,7 +179,7 @@ export default {
         ResourceImage,
         VSelect
     },
-    mixins: [createMethod],
+    mixins: [createMethod, pageTitle],
     props: {
         imageId: {
             type: [String, Number],
@@ -269,6 +270,7 @@ export default {
                     });
                     this.goBack();
                 }
+                this.setPageTitle('Новый проект');
                 this.setProjectFieldAction({ field: 'texture', value: this.defaultTextureId });
                 this.setProjectAddedCostsFieldAction({ field: 'imageProcessing', value: this.settings.image_processing });
                 this.setProjectAddedCostsFieldAction({ field: 'imageSearch', value: this.settings.image_search });

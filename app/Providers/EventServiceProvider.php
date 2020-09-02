@@ -185,6 +185,18 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Clear\ReviewCacheClear::class,
         ],
 
+        \App\Events\Models\Sale\SaleCreated::class => [
+            \App\Listeners\Cache\Clear\SaleCacheClear::class,
+        ],
+
+        \App\Events\Models\Sale\SaleUpdated::class => [
+            \App\Listeners\Cache\Clear\SaleCacheClear::class,
+        ],
+
+        \App\Events\Models\Sale\SaleDeleted::class => [
+            \App\Listeners\Cache\Clear\SaleCacheClear::class,
+        ],
+
         \App\Events\Models\User\UserSaved::class => [
             \App\Listeners\Cache\Clear\UserCacheClear::class,
             \App\Listeners\Cache\Clear\OrderCacheClear::class,

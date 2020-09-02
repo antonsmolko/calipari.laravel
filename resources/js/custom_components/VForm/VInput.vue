@@ -29,6 +29,7 @@
                 <input-notification-unique v-else-if="!vField.isUnique && vRules.unique" :name="title"/>
                 <input-notification-min-string v-else-if="!vField.minLength && vRules.minLength" :name="title" :min="min"/>
                 <input-notification-alias v-else-if="!vField.testAlias && vRules.alias" :name="title"/>
+                <input-notification-article v-else-if="!vField.testArticle && vRules.article" :name="title"/>
                 <input-notification-key v-else-if="!vField.testKey && vRules.key" :name="title"/>
                 <input-notification-num v-else-if="!vField.numeric && vRules.numeric" :name="title"/>
                 <input-notification-alpha-num v-else-if="!vField.alphaNum && vRules.alphaNum" :name="title"/>
@@ -49,6 +50,7 @@ import {
     InputNotificationUnique,
     InputNotificationMinString,
     InputNotificationAlias,
+    InputNotificationArticle,
     InputNotificationKey,
     InputNotificationAlphaNum,
     InputNotificationNum,
@@ -65,6 +67,7 @@ export default {
         InputNotificationUnique,
         InputNotificationMinString,
         InputNotificationAlias,
+        InputNotificationArticle,
         InputNotificationNum,
         InputNotificationSameAsPassword,
         InputNotificationSameAs,
@@ -150,7 +153,6 @@ export default {
             type: Boolean,
             default: false
         }
-
     },
     data: () => ({
         referenceValue: ''

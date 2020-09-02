@@ -60,7 +60,7 @@
         "es6-promise": "^4.2.8",
         "fuse.js": "^6.3.1",
         "jvectormap-next": "^3.1.1",
-        "nouislider": "^14.6.0",
+        "nouislider": "^14.6.1",
         "perfect-scrollbar": "^1.5.0",
         "sweetalert2": "^9.15.2",
         "uikit": "^3.5.4",

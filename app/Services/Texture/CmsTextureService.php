@@ -7,12 +7,15 @@ namespace App\Services\Texture;
 use App\Models\Texture;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
+use App\Services\Cache\Key;
 use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Cache\Tag;
+use App\Services\Cache\TTL;
 use App\Services\Texture\Repositories\CmsTextureRepository;
 use App\Services\Texture\Handlers\StoreTextureHandler;
 use App\Services\Texture\Handlers\DeleteTextureHandler;
 use App\Services\Texture\Handlers\UpdateTextureHandler;
+use Illuminate\Support\Facades\Cache;
 
 class CmsTextureService extends CmsBaseResourceService
 {
@@ -52,6 +55,17 @@ class CmsTextureService extends CmsBaseResourceService
     public function getItem(int $id)
     {
         return $this->repository->getItemFromEdit($id);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItems()
+    {
+        $key = $this->cacheKeyManager->getResourceKey(Key::TEXTURES_PREFIX, ['cms', 'list', 'basic']);
+
+        return Cache::tags(Tag::TEXTURES_TAG)
+            ->remember($key,TTL::TEXTURES_TTL, fn() => $this->repository->getItems());
     }
 
     /**

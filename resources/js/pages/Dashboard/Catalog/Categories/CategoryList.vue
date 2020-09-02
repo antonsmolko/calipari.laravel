@@ -5,10 +5,7 @@
                 <md-card-content class="md-between">
                     <router-button-link :to="{ name: 'cms.catalog' }" title="В каталог" />
                     <router-button-link
-                        :to="{
-                            name: 'cms.catalog.categories.create',
-                            params: { category_type }
-                        }"
+                        :to="{ name: 'cms.catalog.categories.create', params: { category_type } }"
                         icon="add"
                         color="md-success"
                         title="Создать категорию" />

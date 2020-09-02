@@ -6,7 +6,7 @@ namespace App\Services\Texture\Repositories;
 
 use App\Models\Texture;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
-use App\Services\Texture\Resources\FromEditor as FromEditorResource;
+use App\Services\Texture\Resources\BasicProps as FromEditorResource;
 
 class ClientTextureRepository extends ClientBaseResourceRepository
 {

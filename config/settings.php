@@ -1,6 +1,7 @@
 <?php
 return [
     'image_article_length' => 5,
+    'sale_article_max_length' => 10,
     'order_number_length' => 7, // < 20 !!!
     'order_phone_formats' => [
         '10' => '+7 ### ### ####',

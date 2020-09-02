@@ -62,10 +62,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.table-actions {
-    display: flex;
-    justify-content: flex-end;
-}
-</style>

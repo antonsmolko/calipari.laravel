@@ -5,7 +5,7 @@ namespace App\Services\Texture\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FromEditor extends JsonResource
+class BasicProps extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,11 +19,9 @@ class FromEditor extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'sample_path' => $this->sample_path,
-            'background_path' => $this->background_path,
             'price' => $this->price,
             'width' => $this->width,
-            'seamless' => $this->seamless,
-            'description' => $this->description
+            'seamless' => $this->seamless
         ];
     }
 }

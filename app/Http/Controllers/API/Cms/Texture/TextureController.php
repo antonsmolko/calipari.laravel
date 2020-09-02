@@ -20,6 +20,14 @@ class TextureController extends BaseResourceController
     }
 
     /**
+     * @return JsonResponse
+     */
+    public function getItems(): JsonResponse
+    {
+        return response()->json($this->service->getItems());
+    }
+
+    /**
      * @param CreateTextureRequest $request
      * @return JsonResponse
      */

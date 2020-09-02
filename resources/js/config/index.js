@@ -18,6 +18,7 @@ export default {
     awsBucket,
 
     ALIAS_REGEXP: /^([a-z0-9]+[-]?)+[a-z0-9]$/,
+    ARTICLE_REGEXP: /^([a-zA-Z0-9]+[-]?)+[a-zA-Z0-9]$/,
     SNAKE_CASE_REGEXP: /^([a-z0-9]+[_]?)+[a-z0-9]$/,
 
     pagesIds: {
@@ -68,6 +69,7 @@ export default {
         reviews: 's,a,o',
         'reviews-delete': 's,o',
         roles: 's,a,o',
+        sales: 's,a,o,m',
         settings: 's,a,o,m',
         'settings/administration': 's,a',
         store: 's,a,o',
