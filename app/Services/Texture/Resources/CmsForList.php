@@ -5,7 +5,7 @@ namespace App\Services\Texture\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CmsFromEdit extends JsonResource
+class CmsForList extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,14 +18,10 @@ class CmsFromEdit extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'price' => $this->price,
-            'width' => $this->width,
-            'order' => $this->order,
             'sample_path' => $this->sample_path,
-            'background_path' => $this->background_path,
-            'seamless' => $this->seamless,
+            'orders_count' => $this->orders_count,
             'publish' => $this->publish,
-            'description' => $this->description
+            'order' => $this->order
         ];
     }
 }

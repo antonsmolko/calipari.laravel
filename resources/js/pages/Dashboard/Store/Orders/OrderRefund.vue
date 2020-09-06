@@ -4,13 +4,8 @@
             <md-card class="mt-0">
                 <md-card-content class="md-between">
                     <div>
-                        <router-button-link
-                            title="К списку заказов"
-                            :to="{ name: 'cms.store.orders' }"/>
-                        <router-button-link
-                            title="В заказ"
-                            icon="visibility"
-                            :to="redirectRoute"/>
+                        <router-button-link title="К списку заказов" :to="{ name: 'cms.store.orders' }"/>
+                        <router-button-link title="В заказ" icon="visibility" :to="redirectRoute"/>
                     </div>
                     <div>
                         <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">

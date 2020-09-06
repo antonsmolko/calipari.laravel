@@ -16,6 +16,8 @@ return [
     'order_item_thumb_url' => '/thumb',
     'pdf_label_order_item_image_url' => '/pdf-label-order-item',
     'pdf_layout_order_item_image_url' => '/pdf-layout-order-item',
+    'pdf_label_sale_image_url' => '/pdf-label-sale',
+    'pdf_layout_sale_image_url' => '/pdf-layout-sale',
     'pdf_project_image_url' => '/pdf-project',
     'slack' => [
         'emoji' => [

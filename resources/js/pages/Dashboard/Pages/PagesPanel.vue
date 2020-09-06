@@ -16,6 +16,8 @@
         <panel-card-link :to="{ name: 'cms.pages.policy' }" icon="policy" title="Политика конфиденциальности" color="light-green" />
         <panel-card-link :to="{ name: 'cms.pages.contract-offer' }" icon="grading" title="Договор оферты" color="amber" />
         <panel-card-link :to="{ name: 'cms.pages.shipping-payment' }" icon="local_shipping" title="Доставка, оплата" color="deep-orange" />
+        <panel-card-link :to="{ name: 'cms.pages.sales' }" icon="storefront" title="Распродажа" color="brown" />
+        <panel-card-link :to="{ name: 'cms.pages.reviews' }" icon="star_rate" title="Отзывы клиентов" color="grey" />
     </div>
 </template>
 

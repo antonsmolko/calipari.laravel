@@ -67,6 +67,15 @@
 
                             <md-table-cell md-label="Действия">
                                 <div class="table-actions" v-if="item">
+                                    <control-button title="Скачать этикетку"
+                                                    icon="ballot"
+                                                    color="md-primary"
+                                                    @click="downloadLabel(item)" />
+
+                                    <control-button title="Скачать макет"
+                                                    icon="aspect_ratio"
+                                                    color="md-primary"
+                                                    @click="downloadLayout(item)" />
 
                                     <control-button title="В «Проданные»"
                                                     icon="checkroom"
@@ -271,7 +280,9 @@ export default {
         ...mapActions({
             changeStatusAction: 'sales/changeStatus',
             togglePublishAction: 'table/togglePublish',
-            getTexturesAction: 'textures/getItems'
+            getTexturesAction: 'textures/getItems',
+            downloadPdfLabelAction: 'sales/downloadPdfLabel',
+            downloadPdfLayoutAction: 'sales/downloadPdfLayout'
         }),
         async toSold (item) {
             const response = await this.changeStatusConfirm()
@@ -339,17 +350,25 @@ export default {
             const texture = this.getTexture(texture_id);
             const texturePrice = texture.price;
 
-            return Math.round(width_cm * height_cm / 1000000 * texturePrice) * 100;
+            return Math.ceil(width_cm * height_cm / 1000000 * texturePrice) * 100;
         },
         getPrice (item) {
             const oldPrice = this.getOldPrice(item);
-            const price = Math.round(oldPrice / 100 * (100 - item.discount));
+            const price = Math.ceil(oldPrice / 100 * (100 - item.discount));
 
             return this.$helpers.getFormatPrice(price);
         },
         getTexture (id) {
             return this.$store.getters['textures/getById'](id);
-        }
+        },
+        downloadLabel (item) {
+            const fileName = `sale-label-${item.article}.pdf`;
+            this.downloadPdfLabelAction({ id: item.id, fileName });
+        },
+        downloadLayout (item) {
+            const fileName = `sale-layout-${item.article}.pdf`;
+            this.downloadPdfLayoutAction({ id: item.id, fileName });
+        },
     }
 }
 </script>

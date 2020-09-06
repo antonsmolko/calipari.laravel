@@ -34,6 +34,14 @@ class Order extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sales()
+    {
+        return $this->hasMany('App\Models\Sale');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
     public function images()

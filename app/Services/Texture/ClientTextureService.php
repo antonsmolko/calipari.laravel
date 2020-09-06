@@ -41,4 +41,19 @@ class ClientTextureService extends ClientBaseResourceService
                 TTL::TEXTURES_TTL,
                 fn () => $this->repository->getItems());
     }
+
+    /**
+     * @return array|mixed
+     */
+    public function getItemsLessDetailed()
+    {
+        $key = $this->cacheKeyManager
+            ->getResourceKey(Key::TEXTURES_PREFIX, ['client', 'list', 'less-detailed']);
+
+        return Cache::tags(Tag::TEXTURES_TAG)
+            ->remember(
+                $key,
+                TTL::TEXTURES_TTL,
+                fn () => $this->repository->getItemsLessDetailed());
+    }
 }

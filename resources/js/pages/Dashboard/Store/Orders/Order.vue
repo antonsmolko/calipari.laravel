@@ -3,7 +3,7 @@
         <div class="md-layout-item md-size-100">
             <md-card class="mt-0">
                 <md-card-content class="md-between">
-                    <router-button-link :route="redirectRoute.name" title="К списку заказов" />
+                    <router-button-link :to="redirectRoute" title="К списку заказов" />
                     <div>
                         <slide-y-down-transition v-show="controlSaveVisibilities && $v.$anyDirty && !$v.$invalid">
                             <control-button title="Сохранить" @click="onUpdate" />

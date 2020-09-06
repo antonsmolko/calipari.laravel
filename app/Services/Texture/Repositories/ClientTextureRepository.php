@@ -6,7 +6,8 @@ namespace App\Services\Texture\Repositories;
 
 use App\Models\Texture;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
-use App\Services\Texture\Resources\BasicProps as FromEditorResource;
+use App\Services\Texture\Resources\ForListClient as TextureResource;
+use App\Services\Texture\Resources\LessDetailed as TextureLessDetailedResource;
 
 class ClientTextureRepository extends ClientBaseResourceRepository
 {
@@ -24,7 +25,17 @@ class ClientTextureRepository extends ClientBaseResourceRepository
      */
     public function getItems()
     {
-        return FromEditorResource::collection($this->model::published()
+        return TextureResource::collection($this->model::published()
+            ->orderBy('order', 'asc')
+            ->get());
+    }
+
+    /**
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getItemsLessDetailed()
+    {
+        return TextureLessDetailedResource::collection($this->model::published()
             ->orderBy('order', 'asc')
             ->get());
     }

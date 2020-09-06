@@ -3,7 +3,7 @@
 namespace App\Services\Sale\Resources;
 
 
-use App\Services\Texture\Resources\BasicProps as TextureResource;
+use App\Services\Texture\Resources\LessDetailed as TextureResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ForListCms extends JsonResource

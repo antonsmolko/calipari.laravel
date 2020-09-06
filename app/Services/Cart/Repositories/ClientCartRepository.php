@@ -6,6 +6,7 @@ namespace App\Services\Cart\Repositories;
 
 use App\Models\Cart;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
+use Illuminate\Support\Collection;
 
 class ClientCartRepository extends ClientBaseResourceRepository
 {
@@ -38,5 +39,34 @@ class ClientCartRepository extends ClientBaseResourceRepository
     public function addItem(Cart $cart, array $storeData)
     {
         return $cart->items()->create($storeData);
+    }
+
+    /**
+     * @param Cart $cart
+     * @param $syncData
+     * @return array
+     */
+    public function syncSales(Cart $cart, $syncData): array
+    {
+        return $cart->sales()->sync($syncData);
+    }
+
+    /**
+     * @param Cart $cart
+     * @param $saleId
+     */
+    public function attachSale(Cart $cart, $saleId)
+    {
+        $cart->sales()->attach($saleId);
+    }
+
+    /**
+     * @param Cart $cart
+     * @param $saleId
+     * @return int
+     */
+    public function detachSale(Cart $cart, $saleId): int
+    {
+        return $cart->sales()->detach($saleId);
     }
 }

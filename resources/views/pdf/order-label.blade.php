@@ -45,7 +45,11 @@
                     </tr>
                     <tr>
                         <td colspan="3" class="spec-item spec-title">Артикул изображения:</td>
-                        <td colspan="2" class="spec-item spec-value text-emphasis">{{ $details->image->getArticle() }}</td>
+                        @if(!empty($details->image))
+                            <td colspan="2" class="spec-item spec-value text-emphasis">{{ $details->image->getArticle() }}</td>
+                        @else
+                            <td colspan="2" class="spec-item spec-value text-emphasis">{{ getImageArticle($details->image_id) }}</td>
+                        @endif
                     </tr>
                     <tr>
                         <td colspan="3" class="spec-item spec-title">Ширина полотна:</td>

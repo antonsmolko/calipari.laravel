@@ -5,9 +5,9 @@ namespace App\Services\Texture\Repositories;
 
 use App\Models\Texture;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
-use App\Services\Texture\Resources\BasicProps as TextureBasicResource;
-use App\Services\Texture\Resources\CmsFromEdit as FromEditResource;
-use App\Services\Texture\Resources\CmsFromList as FromListResource;
+use App\Services\Texture\Resources\LessDetailed as TextureLessDetailedResource;
+use App\Services\Texture\Resources\CmsForEdit as FromEditResource;
+use App\Services\Texture\Resources\CmsForList as FromListResource;
 
 class CmsTextureRepository extends CmsBaseResourceRepository
 {
@@ -35,7 +35,7 @@ class CmsTextureRepository extends CmsBaseResourceRepository
      */
     public function getItems()
     {
-        return TextureBasicResource::collection($this->model::orderBy('order')->get());
+        return TextureLessDetailedResource::collection($this->model::orderBy('order')->get());
     }
 
     /**

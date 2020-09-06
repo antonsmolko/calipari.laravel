@@ -444,6 +444,18 @@ const ShippingPaymentPage = resolve => {
     })
 };
 
+const SalesPage = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Sales'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Sales'))
+    })
+};
+
+const ReviewsPage = resolve => {
+    require.ensure(['@/pages/Dashboard/Pages/Reviews'], () => {
+        resolve(require('@/pages/Dashboard/Pages/Reviews'))
+    })
+};
+
 /** Lock Pages */
 
 const LockLayout = resolve => {
@@ -1103,6 +1115,16 @@ const cmsMenuPages = {
             path: 'shipping-payment',
             name: 'cms.pages.shipping-payment',
             component: ShippingPaymentPage
+        },
+        {
+            path: 'sales',
+            name: 'cms.pages.sales',
+            component: SalesPage
+        },
+        {
+            path: 'reviews',
+            name: 'cms.pages.reviews',
+            component: ReviewsPage
         }
     ]
 };

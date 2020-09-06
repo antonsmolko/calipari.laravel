@@ -151,6 +151,24 @@ class ImageResizeController extends Controller
     }
 
     /**
+     * @param string $path
+     * @return mixed
+     */
+    public function getPDFSaleLabelImage(string $path)
+    {
+        return $this->service->getPDFSaleLabelImage($path);
+    }
+
+    /**
+     * @param string $path
+     * @return mixed
+     */
+    public function getPDFSaleLayoutImage(string $path)
+    {
+        return $this->service->getPDFSaleLayoutImage($path);
+    }
+
+    /**
      * @param string $width
      * @param string $height
      * @param string $x

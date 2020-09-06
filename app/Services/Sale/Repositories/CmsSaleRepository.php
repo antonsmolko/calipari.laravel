@@ -20,6 +20,17 @@ class CmsSaleRepository extends CmsBaseResourceRepository
     }
 
     /**
+     * @param int $id
+     * @return mixed
+     */
+    public function getItemWithTexture(int $id)
+    {
+        return $this->model::where('id', $id)
+            ->with('texture:id,name,width,seamless')
+            ->firstOrFail();
+    }
+
+    /**
      * @return \Illuminate\Support\Collection
      */
     public function getArticles()

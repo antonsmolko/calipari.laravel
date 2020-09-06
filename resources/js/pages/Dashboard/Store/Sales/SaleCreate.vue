@@ -7,11 +7,18 @@
                     <md-card-content class="md-between">
                         <router-button-link :to="redirectRoute"/>
                         <slide-y-down-transition v-show="!$v.$invalid">
-                            <control-button @click="onCreate"/>
+                            <control-button @click="onCreate" :disabled="loading" />
                         </slide-y-down-transition>
                     </md-card-content>
                 </md-card>
             </div>
+        </div>
+
+        <div class="md-layout-item md-size-100 mt-1 mb-1 md-progress-bar__container">
+            <md-progress-bar
+                v-if="loading"
+                class="md-info"
+                md-mode="indeterminate"/>
         </div>
 
         <div class="md-layout">
@@ -193,7 +200,8 @@ export default {
             textureId: state => state.sales.fields.texture_id,
             discount: state => state.sales.fields.discount,
             description: state => state.sales.fields.description,
-            publish: state => state.sales.fields.publish
+            publish: state => state.sales.fields.publish,
+            loading: state => state.loading
         }),
         ...mapGetters('textures', {
             defaultTextureId: 'defaultItemId'

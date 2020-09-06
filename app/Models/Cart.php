@@ -26,4 +26,22 @@ class Cart extends Model
     {
         return $this->hasMany('App\Models\CartItem');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function sales()
+    {
+        return $this->belongsToMany('App\Models\Sale');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function availableSales()
+    {
+        return $this->sales()
+            ->where('status', Sale::FOR_SALE)
+            ->where('publish', Sale::PUBLISHED);
+    }
 }

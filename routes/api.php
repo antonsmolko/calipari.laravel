@@ -131,6 +131,7 @@ Route::prefix('catalog')
 
 /** Textures */
 Route::get('/textures', 'Client\Texture\TextureController@getItems');
+Route::get('/textures/less-detailed', 'Client\Texture\TextureController@getItemsLessDetailed');
 
 
 /** Delivery */
@@ -160,8 +161,16 @@ Route::prefix('reviews')
 /** Carts */
 Route::prefix('carts')
     ->group(function() {
-        Route::post('sync', 'Client\Cart\CartController@sync');
-        Route::post('add', 'Client\Cart\CartController@add')
+        Route::post('sync', 'Client\Cart\CartController@sync')
+            ->middleware('jwt.auth');
+        Route::post('add-item', 'Client\Cart\CartController@addItem')
+            ->middleware('jwt.auth');
+        Route::get('add-sale/{id}', 'Client\Cart\CartController@addSale')
+            ->middleware('jwt.auth');
+        Route::post('sync-sales', 'Client\Cart\CartController@syncSales')
+            ->middleware('jwt.auth');
+        Route::get('detach-sale/{id}', 'Client\Cart\CartController@detachSale')
+            ->where('id', '[0-9]+')
             ->middleware('jwt.auth');
     });
 
@@ -174,6 +183,11 @@ Route::prefix('cart-items')
 Route::apiResource('cart-items', 'Client\CartItem\CartItemController')
     ->except(['index', 'create', 'edit', 'show']);
 
+/** Sales */
+Route::post('sales', 'Client\Sale\SaleController@getItems');
+Route::post('sales/get-by-keys', 'Client\Sale\SaleController@getItemsByKeys');
+Route::post('sales/get-available-by-keys', 'Client\Sale\SaleController@getAvailableItemsByKeys');
+Route::post('sales/sync', 'Client\Sale\SaleController@syncKeys');
 
 /** PAGES */
 
@@ -583,6 +597,10 @@ Route::prefix('cms')
                         . \App\Models\Sale::SOLD . '|)$'
                     ]);
                 Route::get('{id}/on-sale', 'Cms\Sale\SaleController@onSale')
+                    ->where('id', '[0-9]+');
+                Route::get('{id}/pdf-label', 'Cms\Sale\SaleController@getPdfLabel')
+                    ->where('id', '[0-9]+');
+                Route::get('{id}/pdf-layout', 'Cms\Sale\SaleController@getPdfLayout')
                     ->where('id', '[0-9]+');
                 Route::delete('{id}', 'Cms\Sale\SaleController@destroy')
                     ->where('id', '[0-9]+');

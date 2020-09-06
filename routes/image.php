@@ -87,6 +87,16 @@ Route::get(
     'ImageResizeController@getPDFProjectImage')
     ->where(['path' => '[\w\.]+']);
 
+Route::get(
+    config('settings.pdf_label_sale_image_url') . '/{path}',
+    'ImageResizeController@getPDFSaleLabelImage')
+    ->where(['path' => '[\w\.]+']);
+
+Route::get(
+    config('settings.pdf_layout_sale_image_url') . '/{path}',
+    'ImageResizeController@getPDFSaleLayoutImage')
+    ->where(['path' => '[\w\.]+']);
+
 Route::get('fit/{width}/{height}/{path}','ImageResizeController@fit')
     ->where([
         'width' => '\d+',

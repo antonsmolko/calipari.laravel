@@ -13,6 +13,8 @@ abstract class ClientBaseResourceService
     protected ClientBaseResourceRepository $repository;
     protected CacheKeyManager $cacheKeyManager;
 
+    protected string $cacheTag;
+
     /**
      * ClientBaseResourceService constructor.
      * @param ClientBaseResourceRepository $repository
@@ -25,6 +27,7 @@ abstract class ClientBaseResourceService
     {
         $this->repository = $repository;
         $this->cacheKeyManager = $cacheKeyManager;
+        $this->cacheTag = '';
     }
 
     /**

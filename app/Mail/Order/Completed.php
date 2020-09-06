@@ -21,7 +21,7 @@ class Completed extends Mailable
     public function __construct(array $order)
     {
         $this->order = $order;
-        $this->link = '/review?hash=' . $this->order['hash_number'];
+        $this->link = '/reviews/create?hash=' . $this->order['hash_number'];
     }
 
     /**

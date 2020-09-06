@@ -1,4 +1,4 @@
-import { axiosAction } from "../../mixins/actions";
+import {axiosAction, axiosWithDownload} from "../../mixins/actions";
 
 const state = {
     fields: {
@@ -100,6 +100,15 @@ const actions = {
             }
         })
     },
+    downloadPdfLabel: ({ commit }, { id, fileName }) => axiosWithDownload(
+        'get',
+        commit,
+        { url: `/store/sales/${id}/pdf-label`, fileName }),
+    downloadPdfLayout: ({ commit }, { id, fileName }) => axiosWithDownload(
+        'get',
+        commit,
+        { url: `/store/sales/${id}/pdf-layout`, fileName }
+    ),
     setItemField ({ commit }, payload) {
         commit('SET_ITEM_FIELD', payload);
     },

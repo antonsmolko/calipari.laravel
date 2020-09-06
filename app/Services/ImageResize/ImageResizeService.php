@@ -212,7 +212,33 @@ class ImageResizeService
         list($file, $ext) = $this->getFileEntriesHandler->handle($path);
 
         return $this->getPDFProjectImageHandler
-            ->handle($file)
+            ->handle($file, 1600, 1200)
+            ->response($ext, 100);
+    }
+
+    /**
+     * @param string $path
+     * @return mixed
+     */
+    public function getPDFSaleLabelImage(string $path)
+    {
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+
+        return $this->getPDFProjectImageHandler
+            ->handle($file, 900, 670)
+            ->response($ext, 100);
+    }
+
+    /**
+     * @param string $path
+     * @return mixed
+     */
+    public function getPDFSaleLayoutImage(string $path)
+    {
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+
+        return $this->getPDFProjectImageHandler
+            ->handle($file, 1600, 1045)
             ->response($ext, 100);
     }
 

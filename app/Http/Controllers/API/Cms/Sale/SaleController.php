@@ -77,4 +77,22 @@ class SaleController extends BaseResourceController
     {
         return response()->json($this->service->changeStatus($id, $status));
     }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function getPdfLabel(int $id)
+    {
+        return $this->service->getPdfLabel($id);
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function getPdfLayout(int $id)
+    {
+        return $this->service->getPdfLayout($id);
+    }
 }

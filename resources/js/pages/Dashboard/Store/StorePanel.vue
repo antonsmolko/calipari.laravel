@@ -40,7 +40,7 @@
 
         <panel-card-link v-if="authCheck('sales')"
                          :to="{ name: 'cms.store.sales' }"
-                         icon="gavel"
+                         icon="storefront"
                          title="Распродажа"
                          color="indigo" />
     </div>

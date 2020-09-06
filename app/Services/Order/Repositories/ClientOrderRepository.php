@@ -7,6 +7,7 @@ namespace App\Services\Order\Repositories;
 use App\Events\Models\Order\OrderSetStatus;
 use App\Models\Order;
 use App\Models\OrderStatus;
+use App\Models\Sale;
 use App\Models\User;
 use App\Services\Order\Resources\ClientOrder as ClientOrderResource;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;

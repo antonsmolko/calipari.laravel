@@ -9,8 +9,6 @@ use App\Services\ImageResize\Builders\ImageProcessingBuilder;
 class GetPDFProjectImageHandler
 {
     private const CANVAS_COLOR = 'FFFFFF';
-    private const CANVAS_WITH = 1600;
-    private const CANVAS_HEIGHT = 1200;
 
     private ImageProcessingBuilder $imageProcessingBuilder;
 
@@ -25,14 +23,16 @@ class GetPDFProjectImageHandler
 
     /**
      * @param string $file
+     * @param int $width
+     * @param int $height
      * @return \Intervention\Image\Image
      */
-    public function handle(string $file)
+    public function handle(string $file, int $width, int $height)
     {
         return $this->imageProcessingBuilder
             ->make($file)
-            ->resizeWithAspectRatio(self::CANVAS_WITH, self::CANVAS_HEIGHT)
-            ->cropCanvas(self::CANVAS_WITH, self::CANVAS_HEIGHT, self::CANVAS_COLOR)
+            ->resizeWithAspectRatio($width, $height)
+            ->cropCanvas($width, $height, self::CANVAS_COLOR)
             ->get();
     }
 }

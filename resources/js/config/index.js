@@ -30,7 +30,9 @@ export default {
         blog: 6,
         policy: 7,
         contractOffer: 8,
-        shippingPayment: 9
+        shippingPayment: 9,
+        sales: 10,
+        reviews: 11
     },
 
     postTypes: [

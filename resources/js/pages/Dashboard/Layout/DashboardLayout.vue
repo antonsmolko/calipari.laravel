@@ -23,6 +23,8 @@
                     <sidebar-item :link="{name: 'Политика', path: '/cms/pages/policy'}"/>
                     <sidebar-item :link="{name: 'Договор оферты', path: '/cms/pages/contract-offer'}"/>
                     <sidebar-item :link="{name: 'Доставка, оплата', path: '/cms/pages/shipping-payment'}"/>
+                    <sidebar-item :link="{name: 'Распродажа', path: '/cms/pages/sales'}"/>
+                    <sidebar-item :link="{name: 'Отзывы клиентов', path: '/cms/pages/reviews'}"/>
                 </sidebar-item>
                 <sidebar-item v-if="authCheck('store')" :link="{name: 'Магазин', icon: 'local_mall', path: '/cms/store'}">
                     <sidebar-item v-if="authCheck('store-settings')" :link="{name: 'Настройки', icon: 'tune', path: '/cms/store/settings'}"/>
@@ -32,7 +34,7 @@
                         :link="{name: 'Статусы заказа', icon: 'update', path: '/cms/store/order-statuses'}"/>
                     <sidebar-item v-if="authCheck('orders')" :link="{name: 'Заказы', icon: 'shopping_cart', path: '/cms/store/orders'}"/>
                     <sidebar-item v-if="authCheck('reviews')" :link="{name: 'Отзывы', icon: 'grading', path: '/cms/store/reviews'}"/>
-                    <sidebar-item v-if="authCheck('sales')" :link="{name: 'Распродажа', icon: 'gavel', path: '/cms/store/sales'}"/>
+                    <sidebar-item v-if="authCheck('sales')" :link="{name: 'Распродажа', icon: 'storefront', path: '/cms/store/sales'}"/>
                 </sidebar-item>
                 <sidebar-item v-if="authCheck('catalog')" :link="{name: 'Каталог', icon: 'category'}">
                     <sidebar-item :link="{name: 'Темы', path: '/cms/catalog/categories/topics'}"/>

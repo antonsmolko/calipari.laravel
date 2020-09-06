@@ -74,7 +74,15 @@ return [
         '9' => [
             'title' => 'Доставка, оплата',
             'alias' => 'shipping-payment'
-        ]
+        ],
+        '10' => [
+            'title' => 'Распродажа',
+            'alias' => 'sales'
+        ],
+        '11' => [
+            'title' => 'Отзывы клиентов',
+            'alias' => 'reviews'
+        ],
     ],
     'formats' => [
         '1' => [

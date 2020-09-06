@@ -172,16 +172,27 @@ class Image extends Model
         return $this->width / $this->height;
     }
 
+    /**
+     * @return string
+     */
     public function getArticleAttribute()
     {
         return str_pad($this->id, config('settings.image_article_length'), "0", STR_PAD_LEFT);
     }
 
+    /**
+     * @return string
+     */
     public function getArticle()
     {
         return str_pad($this->id, config('settings.image_article_length'), "0", STR_PAD_LEFT);
     }
 
+    /**
+     * @param $query
+     * @param int $id
+     * @return mixed
+     */
     public function scopeWhereCategory($query, int $id)
     {
         return $query
@@ -190,6 +201,11 @@ class Image extends Model
                 ->where('id', $id));
     }
 
+    /**
+     * @param $query
+     * @param int $id
+     * @return mixed
+     */
     public function scopeWhereArtCollection($query, int $id)
     {
         return $query
@@ -199,6 +215,11 @@ class Image extends Model
                 ->where('id', $id));
     }
 
+    /**
+     * @param $query
+     * @param int $id
+     * @return mixed
+     */
     public function scopeWhereColorCollection($query, int $id)
     {
         return $query
@@ -208,6 +229,11 @@ class Image extends Model
                 ->where('id', $id));
     }
 
+    /**
+     * @param $query
+     * @param string $value
+     * @return mixed
+     */
     public function scopeWhereKeys($query, string $value)
     {
         $ids = explode(';', $value);
@@ -217,6 +243,11 @@ class Image extends Model
             ->whereIn('id', $ids);
     }
 
+    /**
+     * @param $query
+     * @param string $value
+     * @return mixed
+     */
     public function scopeWhereFormats($query, string $value)
     {
         $ids = explode(';', $value);
@@ -226,6 +257,11 @@ class Image extends Model
                 ->whereIn('id', $ids));
     }
 
+    /**
+     * @param $query
+     * @param string $value
+     * @return mixed
+     */
     public function scopeWhereTags($query, string $value)
     {
         $ids = explode(';', $value);
@@ -235,6 +271,11 @@ class Image extends Model
                 ->whereIn('id', $ids));
     }
 
+    /**
+     * @param $query
+     * @param string $value
+     * @return mixed
+     */
     public function scopeWhereTopics($query, string $value)
     {
         $ids = explode(';', $value);
@@ -244,6 +285,11 @@ class Image extends Model
                 ->whereIn('id', $ids));
     }
 
+    /**
+     * @param $query
+     * @param string $value
+     * @return mixed
+     */
     public function scopeWhereColors($query, string $value)
     {
         $ids = explode(';', $value);
@@ -253,6 +299,11 @@ class Image extends Model
                 ->whereIn('id', $ids));
     }
 
+    /**
+     * @param $query
+     * @param string $value
+     * @return mixed
+     */
     public function scopeWhereInteriors($query, string $value)
     {
         $ids = explode(';', $value);

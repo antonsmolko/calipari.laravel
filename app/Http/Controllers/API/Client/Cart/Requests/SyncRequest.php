@@ -24,7 +24,8 @@ class SyncRequest extends FormRequest
     public function rules()
     {
         return [
-            'items' => 'array'
+            'itemKeys' => 'array',
+            'saleKeys' => 'array'
         ];
     }
 }

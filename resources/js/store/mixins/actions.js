@@ -3,11 +3,13 @@ import axios from 'axios';
 import config from '@/config';
 
 export const axiosAction = (method, commit, { url, data = null, thenContent = null, options = null }) => {
+    commit('SET_LOADING', true, { root: true });
     const fullUrl = `${config.baseUrl}${url}`;
 
     return axios[method](fullUrl, data, options)
         .then((response) => {
             commit('CLEAR_ERRORS', null, { root: true });
+            commit('SET_LOADING', false, { root: true });
 
             if (thenContent) {
                 return thenContent(response);
@@ -16,6 +18,7 @@ export const axiosAction = (method, commit, { url, data = null, thenContent = nu
         .catch(error => {
             commit('UPDATE_ERRORS', error.response, { root: true });
             commit('CHANGE_FILE_PROGRESS', 0);
+            commit('SET_LOADING', false, { root: true });
             throw error;
         });
 }
