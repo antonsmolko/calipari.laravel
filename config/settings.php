@@ -13,6 +13,7 @@ return [
     'base_image_url' => env('APP_URL') . '/api/image',
     'order_item_full_url' => '/order-full',
     'mail_order_item_thumb_url' => '/mail-thumb',
+    'mail_order_sale_thumb_url' => '/mail-sale-thumb',
     'order_item_thumb_url' => '/thumb',
     'pdf_label_order_item_image_url' => '/pdf-label-order-item',
     'pdf_layout_order_item_image_url' => '/pdf-layout-order-item',

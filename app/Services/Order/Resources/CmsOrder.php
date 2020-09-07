@@ -4,6 +4,7 @@ namespace App\Services\Order\Resources;
 
 use App\Services\OrderItem\Resources\CmsOrderItem as OrderItemResource;
 use App\Services\OrderStatus\Resources\OrderStatusWithPivotDate;
+use App\Services\Sale\Resources\ForOrderCms as SaleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CmsOrder extends JsonResource
@@ -21,8 +22,9 @@ class CmsOrder extends JsonResource
             'number' => $this->number,
             'user' => $this->user,
             'items' => OrderItemResource::collection($this->items),
-            'delivery' => json_decode($this->delivery, true),
-            'customer' => json_decode($this->customer, true),
+            'sales' => SaleResource::collection($this->sales),
+            'delivery' => $this->getDelivery(),
+            'customer' => $this->getCustomer(),
             'price' => $this->price,
             'payment_id' => $this->payment_id,
             'paid' => $this->paid,

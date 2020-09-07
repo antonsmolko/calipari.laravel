@@ -106,4 +106,13 @@ class ClientOrderRepository extends ClientBaseResourceRepository
     {
         return $order->review()->create($reviewData);
     }
+
+    /**
+     * @param Order $order
+     * @param $attachData
+     */
+    public function attachSales(Order $order, $attachData)
+    {
+        $order->sales()->attach($attachData);
+    }
 }

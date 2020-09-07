@@ -4,7 +4,6 @@
 namespace App\Services\Sale\Repositories;
 
 
-use App\Models\Order;
 use App\Models\Sale;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
 use App\Services\Sale\Resources\ForListClient as SaleResource;
@@ -76,13 +75,11 @@ class ClientSaleRepository extends ClientBaseResourceRepository
 
     /**
      * @param Sale $sale
-     * @param Order $order
-     * @return bool
+     * @param int $status
      */
-    public function orderAssociate(Sale $sale, Order $order): bool
+    public function setStatus(Sale $sale, int $status)
     {
-        $sale->order()->associate($order);
-        $sale->status = $this->model::IN_ORDER;
-        return $sale->save();
+        $sale->status = $status;
+        $sale->save();
     }
 }

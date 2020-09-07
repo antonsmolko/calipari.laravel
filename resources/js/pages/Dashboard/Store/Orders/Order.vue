@@ -33,8 +33,14 @@
                 v-for="item in order.items"
                 :key="item.id"
                 :item="item"
-                @downloadLabel="downloadLabel"
-                @downloadLayout="downloadLayout"/>
+                @downloadLabel="downloadItemLabel"
+                @downloadLayout="downloadItemLayout"/>
+            <order-sale
+                v-for="sale in order.sales"
+                :key="sale.id"
+                :item="sale"
+                @downloadLabel="downloadSaleLabel"
+                @downloadLayout="downloadSaleLayout" />
         </div>
         <div class="md-layout-item md-xsmall-size-100 md-medium-size-50 md-large-size-66 md-xlarge-size-75">
             <md-card>
@@ -136,6 +142,7 @@
 import { mapActions, mapState } from 'vuex';
 import { getFormatPrice, getArticle, getCurrentStatus } from "@/helpers";
 import OrderItem from "@/custom_components/Orders/OrderItem";
+import OrderSale from "@/custom_components/Orders/OrderSale";
 
 import { pageTitle, authCheck } from '@/mixins/base';
 import { updateMethod, deleteMethod } from '@/mixins/crudMethods';
@@ -144,6 +151,7 @@ import swal from "sweetalert2";
 export default {
     name: 'Order',
     components: {
+        OrderSale,
         OrderItem
     },
     mixins: [pageTitle, authCheck, updateMethod, deleteMethod],
@@ -181,9 +189,9 @@ export default {
         },
         priceTableData () {
             return [
-                { title: 'Цена заказа', content: getFormatPrice(this.order.price - this.order.delivery.price) },
+                { title: 'Цена заказа', content: getFormatPrice(this.order.price) },
                 { title: 'Цена доставки', content: getFormatPrice(this.order.delivery.price) },
-                { title: 'Итого', content: getFormatPrice(this.order.price) }
+                { title: 'Итого', content: getFormatPrice(this.order.price + this.order.delivery.price) }
             ];
         },
         deliveryTableData () {
@@ -239,6 +247,8 @@ export default {
             downloadPdfLabelAction: 'orders/downloadPdfLabel',
             downloadPdfLayoutAction: 'orders/downloadPdfLayout',
             downloadPdfDetailsAction: 'orders/downloadPdfDetails',
+            downloadPdfSaleLabelAction: 'sales/downloadPdfLabel',
+            downloadPdfSaleLayoutAction: 'sales/downloadPdfLayout'
         }),
         onUpdate() {
             return this.update({
@@ -255,7 +265,7 @@ export default {
         onDelete() {
             return this.delete({
                 payload: this.id,
-                title: this.title,
+                title: this.order.number,
                 alertText: `заказ № «${this.order.number}»`,
                 successText: 'Заказ удален!',
                 storeModule: this.storeModule,
@@ -305,13 +315,21 @@ export default {
         getArticle (imageId) {
             return getArticle(imageId);
         },
-        downloadLabel (itemId) {
+        downloadItemLabel (itemId) {
             const fileName = `order-label-${this.order.number}-${itemId}.pdf`;
             this.downloadPdfLabelAction({ itemId, fileName });
         },
-        downloadLayout (itemId) {
+        downloadItemLayout (itemId) {
             const fileName = `order-layout-${this.order.number}-${itemId}.pdf`;
             this.downloadPdfLayoutAction({ itemId, fileName });
+        },
+        downloadSaleLabel ({id, article}) {
+            const fileName = `sale-label-${article}.pdf`;
+            this.downloadPdfSaleLabelAction({ id, fileName });
+        },
+        downloadSaleLayout ({id, article }) {
+            const fileName = `sale-layout-${article}.pdf`;
+            this.downloadPdfSaleLayoutAction({ id, fileName });
         },
         downloadDetails () {
             const fileName = `order-details-${this.order.number}.pdf`;

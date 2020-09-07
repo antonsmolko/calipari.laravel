@@ -23,7 +23,7 @@
                                     </td>
                                     <td style="text-align: right; padding-left: 13px">
                                         @if($details->texture->seamless)
-                                            <img style="width: 30px; height: auto" src="{{ env('APP_URL') }}/img/svg/pdf/label/landscape.svg" alt="">
+                                            <img style="width: 30px; height: auto" src="{{ env('APP_URL') }}/img/svg/pdf/label/seamless.svg" alt="">
                                         @else
                                             <img style="width: 30px; height: auto" src="{{ env('APP_URL') }}/img/svg/pdf/label/stripes.svg" alt="">
                                         @endif

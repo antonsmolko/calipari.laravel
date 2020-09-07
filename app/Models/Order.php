@@ -34,11 +34,11 @@ class Order extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function sales()
     {
-        return $this->hasMany('App\Models\Sale');
+        return $this->belongsToMany('App\Models\Sale')->withPivot('selling_price');
     }
 
     /**
@@ -88,6 +88,32 @@ class Order extends Model
     public function getPaidAttribute(): bool
     {
         return (bool) $this->statuses()->firstWhere('alias', 'paid');
+    }
+
+    /**
+     * @return int
+     */
+    public function getPriceAttribute(): int
+    {
+        $salesPrice = (int) $this->sales()->sum('selling_price');
+        $itemsPrice = (int) $this->items->sum(function ($item) {
+            return $item->price * $item->qty;
+        });
+
+        return $salesPrice + $itemsPrice;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrice(): int
+    {
+        $salesPrice = (int) $this->sales()->sum('selling_price');
+        $itemsPrice = (int) $this->items->sum(function ($item) {
+            return $item->price * $item->qty;
+        });
+
+        return $salesPrice + $itemsPrice;
     }
 
     /**

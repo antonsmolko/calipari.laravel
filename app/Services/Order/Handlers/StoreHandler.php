@@ -5,11 +5,11 @@ namespace App\Services\Order\Handlers;
 
 
 use App\Models\Order;
+use App\Models\Sale;
 use App\Services\Cart\Repositories\ClientCartRepository;
 use App\Services\CartItem\Repositories\ClientCartItemRepository;
 use App\Services\Order\Repositories\ClientOrderRepository;
 use App\Services\OrderItem\OrderItemService;
-use App\Services\Sale\ClientSaleService;
 use App\Services\Sale\Repositories\ClientSaleRepository;
 use Illuminate\Support\Arr;
 
@@ -24,6 +24,7 @@ class StoreHandler
     private ClientCartItemRepository $cartItemRepository;
     private ClientSaleRepository $saleRepository;
     private ClientCartRepository $cartRepository;
+    private AttachSalesHandler $attachSalesHandler;
 
     /**
      * StoreHandler constructor.
@@ -36,6 +37,7 @@ class StoreHandler
      * @param ClientCartItemRepository $cartItemRepository
      * @param ClientSaleRepository $saleRepository
      * @param ClientCartRepository $cartRepository
+     * @param AttachSalesHandler $attachSalesHandler
      */
     public function __construct(
         ClientOrderRepository $repository,
@@ -46,7 +48,8 @@ class StoreHandler
         OrderItemService $itemService,
         ClientCartItemRepository $cartItemRepository,
         ClientSaleRepository $saleRepository,
-        ClientCartRepository $cartRepository
+        ClientCartRepository $cartRepository,
+        AttachSalesHandler $attachSalesHandler
     )
     {
         $this->repository = $repository;
@@ -58,6 +61,7 @@ class StoreHandler
         $this->cartItemRepository = $cartItemRepository;
         $this->saleRepository = $saleRepository;
         $this->cartRepository = $cartRepository;
+        $this->attachSalesHandler = $attachSalesHandler;
     }
 
     /**
@@ -70,7 +74,6 @@ class StoreHandler
         $delivery = $this->getOrderDeliveryHandler->handle(json_decode($requestData['delivery'], true));
         $customer = $this->getOrderCustomerHandler->handle(json_decode($requestData['customer'], true));
         list($items, $itemsDetails) = $this->getOrderItemsHandler->handle($requestData['items']);
-        $price = $this->getOrderPriceHandler->handle($itemsDetails, $delivery['price']);
 
         $orderData = [
             'number' => $number,
@@ -78,7 +81,6 @@ class StoreHandler
             'user_id' => $requestData['userId'],
             'delivery' => json_encode($delivery, true),
             'customer' => json_encode($customer, true),
-            'price' => $price,
             'comment' => $requestData['comment']
         ];
 
@@ -91,13 +93,18 @@ class StoreHandler
 
         $items->each(fn ($item) => $this->cartItemRepository->forceDelete($item));
 
-        if (!empty($requestData['sales'])) {
-            $sales = $this->saleRepository->getRawItemsByKeys($requestData['sales']);
-            $sales->each(fn($sale) => $this->saleRepository->orderAssociate($sale, $order));
+
+        $sales = !empty($requestData['sales'])
+            ? $this->saleRepository->getRawItemsByKeys($requestData['sales'])
+            : null;
+
+        if ($sales) {
+            $this->attachSalesHandler->handle($order, $sales);
+            $sales->each(fn($sale) => $this->saleRepository->setStatus($sale, Sale::IN_ORDER));
 
             $user = auth()->user();
             if ($user && $requestData['userId'] === $user->id) {
-                $sales->each(fn($sale) => $this->cartRepository->syncSales($user->cart, []));
+                $this->cartRepository->syncSales($user->cart, []);
             }
         }
 

@@ -169,6 +169,15 @@ class ImageResizeController extends Controller
     }
 
     /**
+     * @param string $path
+     * @return mixed
+     */
+    public function getMailSaleImageThumb(string $path)
+    {
+        return $this->service->getMailSaleImageThumb($path);
+    }
+
+    /**
      * @param string $width
      * @param string $height
      * @param string $x

@@ -15,8 +15,10 @@
 @component('components.mail.divider')
 @endcomponent
 
+@if(!empty($order['items']))
 @component('components.mail.order.order-items', ['items' => $order['items']])
 @endcomponent
+@endif
 
 @component('mail::order-details-item', ['title' => 'СПОСОБ ДОСТАВКИ'])
 {{ $order['delivery']['title'] }}
@@ -42,7 +44,7 @@ __{{ number_format($order['delivery']['price'], 0, '.', ' ') }} ₽__
 __{{ number_format($order['price'], 0, '.', ' ') }} ₽__
 @endcomponent
 
-@component('mail::order-total-price', ['price' => $order['price']])
+@component('mail::order-total-price', ['price' => $order['price'] + $order['delivery']['price']])
 @endcomponent
 
 @component('mail::block-centered')

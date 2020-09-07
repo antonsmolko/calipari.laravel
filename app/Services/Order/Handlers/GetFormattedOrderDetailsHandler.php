@@ -20,11 +20,11 @@ class GetFormattedOrderDetailsHandler
             'hash_number' => $order->hash_number,
             'date' => $order->created_at->format('d.m.Y'),
             'status' => $order->statuses->last()->title,
-            'items' => $this->getFormattedItems($order->items),
+            'items' => $this->getConcatItems($order->items, $order->sales),
             'delivery' => $order->getDelivery(),
             'customer' => $order->getCustomer(),
-            'goodsQty' => $this->getGoodsQtyString($order->items),
-            'price' => $order->price,
+            'goodsQty' => $this->getGoodsQtyString($order->items, $order->sales),
+            'price' => $order->getPrice(),
             'comment' => $order->comment,
             'refund_amount' => $order->refund_amount,
             'refund_reason' => $order->refund_reason
@@ -33,11 +33,12 @@ class GetFormattedOrderDetailsHandler
 
     /**
      * @param Collection $items
+     * @param Collection $sales
      * @return string
      */
-    private function getGoodsQtyString(Collection $items): string
+    private function getGoodsQtyString(Collection $items, Collection $sales): string
     {
-        $qty = $this->getGoodsQty($items);
+        $qty = $items->sum('qty') + $sales->count();
 
         return $qty . ' ' . wordsDeclension($qty, [
             'ТОВАР',
@@ -48,23 +49,28 @@ class GetFormattedOrderDetailsHandler
 
     /**
      * @param Collection $items
-     * @return int
+     * @param Collection $sales
+     * @return Collection
      */
-    private function getGoodsQty(Collection $items): int
+    private function getConcatItems(Collection $items, Collection $sales): Collection
     {
-        return $items->reduce(fn($carry, $item) => $carry + $item['qty'], 0);
+        return $this->getFormattedItems($items)->concat($this->getFormattedSales($sales));
     }
 
-    private function getFormattedItems(Collection $items)
+    /**
+     * @param Collection $items
+     * @return Collection
+     */
+    private function getFormattedItems(Collection $items): Collection
     {
         return $items->map(fn ($item) => [
             'article' => getImageArticle($item->image_id),
-            'dimensions' => $item->width_cm . ' см × ' . $item->height_cm . ' см',
+            'dimensions' => getOrderItemDimensions($item->width_cm, $item->height_cm),
             'texture' => $item->texture->name,
             'filter' => $item->filter_details,
             'qty' => $item->qty,
             'price' => $item->price,
-            'stripes_count' => $item->texture->seamless ? 1 : ceil($item->width_cm / $item->texture->width),
+            'stripes_count' => getStripesCount($item->width_cm, $item->texture->width, $item->texture->seamless),
             'added_costs' => $item->getAddedCosts(),
             'added_costs_amount' => $item->getAddedCostsAmount(),
             'image_url' => config('settings.base_image_url') .
@@ -73,6 +79,25 @@ class GetFormattedOrderDetailsHandler
             'mail_thumb_url' => config('settings.base_image_url') .
                 config('settings.mail_order_item_thumb_url') .
                 getOrderItemPath($item),
+        ]);
+    }
+
+    private function getFormattedSales(Collection $items)
+    {
+        return $items->map(fn ($item) => [
+            'article' => $item->article,
+            'dimensions' => getOrderItemDimensions($item->width_cm, $item->height_cm),
+            'texture' => $item->texture->name,
+            'qty' => 1,
+            'price' => $item->pivot->selling_price,
+            'stripes_count' => getStripesCount($item->width_cm, $item->texture->width, $item->texture->seamless),
+            'added_costs_amount' => 0,
+            'image_url' => config('settings.base_image_url') .
+                config('settings.pdf_label_sale_image_url') .
+                '/' . $item->image_path,
+            'mail_thumb_url' => config('settings.base_image_url') .
+                config('settings.mail_order_sale_thumb_url') .
+                '/' . $item->image_path
         ]);
     }
 }

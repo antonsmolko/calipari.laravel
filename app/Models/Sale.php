@@ -44,11 +44,11 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function order()
     {
-        return $this->belongsTo('App\Models\Order');
+        return $this->belongsToMany('App\Models\Order');
     }
 
     /**
@@ -63,6 +63,14 @@ class Sale extends Model
      * @return int
      */
     public function getOldPriceAttribute(): int
+    {
+        return getItemPrice($this->width_cm, $this->height_cm, $this->texture->price);
+    }
+
+    /**
+     * @return int
+     */
+    public function getPriceAttribute(): int
     {
         return getItemPrice($this->width_cm, $this->height_cm, $this->texture->price);
     }

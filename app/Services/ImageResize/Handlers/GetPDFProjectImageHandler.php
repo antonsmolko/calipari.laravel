@@ -25,14 +25,15 @@ class GetPDFProjectImageHandler
      * @param string $file
      * @param int $width
      * @param int $height
+     * @param string $color
      * @return \Intervention\Image\Image
      */
-    public function handle(string $file, int $width, int $height)
+    public function handle(string $file, int $width, int $height, string $color = self::CANVAS_COLOR)
     {
         return $this->imageProcessingBuilder
             ->make($file)
             ->resizeWithAspectRatio($width, $height)
-            ->cropCanvas($width, $height, self::CANVAS_COLOR)
+            ->cropCanvas($width, $height, $color)
             ->get();
     }
 }

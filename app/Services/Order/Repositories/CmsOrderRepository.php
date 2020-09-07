@@ -82,6 +82,7 @@ class CmsOrderRepository extends CmsBaseResourceRepository
             ->with([
                 'user:id,email,name',
                 'items',
+                'sales',
                 'statuses'
             ])
             ->firstOrFail());

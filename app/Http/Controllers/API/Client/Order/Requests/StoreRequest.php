@@ -25,8 +25,8 @@ class StoreRequest extends FormRequest
     {
         return [
             'user_id' => 'bail|integer|exists:users,id|nullable',
-            'items' => 'bail|required|array',
-            'sales' => 'bail|array',
+            'items' => 'bail|required_without:sales|array',
+            'sales' => 'bail|required_without:items|array',
             'delivery' => 'bail|required|json',
             'customer' => 'bail|required|json',
             'comment' => 'string|nullable|max:' . config('validation.text.max')

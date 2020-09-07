@@ -302,11 +302,12 @@ if (! function_exists('getItemPrice')) {
      * @param int $width
      * @param int $height
      * @param int $texturePrice
+     * @param int $discount
      * @return int
      */
-    function getItemPrice(int $width, int $height, int $texturePrice): int
+    function getItemPrice(int $width, int $height, int $texturePrice, int $discount = 0): int
     {
-        return (int) round($width * $height / 1e6 * $texturePrice, 0) * 100;
+        return ceil($width * $height / 1e6 * $texturePrice) * (100 - $discount);
     }
 }
 
@@ -363,5 +364,17 @@ if (! function_exists('getStripesCount')) {
     function getStripesCount(int $projectWidth, int $textureWidth, bool $seamless = false): int
     {
         return $seamless ? 1 : ceil($projectWidth / $textureWidth);
+    }
+}
+
+if (! function_exists('getOrderItemDimensions')) {
+    /**
+     * @param int $width
+     * @param int $height
+     * @return string
+     */
+    function getOrderItemDimensions(int $width, int $height): string
+    {
+        return $width . ' см × ' . $height . ' см';
     }
 }

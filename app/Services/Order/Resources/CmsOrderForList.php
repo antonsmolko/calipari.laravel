@@ -15,12 +15,14 @@ class CmsOrderForList extends JsonResource
      */
     public function toArray($request)
     {
+        $delivery = $this->getDelivery();
+
         return [
             'id' => $this->id,
             'number' => $this->number,
             'email' => $this->user ? $this->user->email : null,
-            'delivery' => json_decode($this->delivery, true)['title'],
-            'price' => $this->price,
+            'delivery' => $delivery['title'],
+            'price' => $this->price + $delivery['price'],
             'refund_amount' => $this->refund_amount,
             'refund_reason' => $this->refund_reason,
             'paid' => $this->paid,

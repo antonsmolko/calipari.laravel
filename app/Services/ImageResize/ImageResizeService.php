@@ -244,6 +244,19 @@ class ImageResizeService
 
     /**
      * @param string $path
+     * @return mixed
+     */
+    public function getMailSaleImageThumb(string $path)
+    {
+        list($file, $ext) = $this->getFileEntriesHandler->handle($path);
+
+        return $this->getPDFProjectImageHandler
+            ->handle($file, 450, 335, 'EEEEEE')
+            ->response($ext, 100);
+    }
+
+    /**
+     * @param string $path
      * @param string $width
      * @param string $height
      * @param string $x

@@ -18,7 +18,6 @@ class CreateOrdersTable extends Migration
             $table->string('number');
             $table->string('hash_number');
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedInteger('price');
             $table->json('delivery');
             $table->json('customer');
             $table->text('comment')->nullable();

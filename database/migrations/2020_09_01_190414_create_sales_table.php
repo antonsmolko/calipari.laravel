@@ -15,7 +15,6 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id')->nullable();
             $table->unsignedBigInteger('image_id');
             $table->string('article', config('settings.sale_article_max_length'))->unique();
             $table->string('image_path', 100);
@@ -35,9 +34,6 @@ class CreateSalesTable extends Migration
 
             $table->foreign('texture_id')->references('id')->on('textures')
                 ->onDelete('cascade')->onUpdate('cascade');
-
-            $table->foreign('order_id')->references('id')->on('orders')
-                ->onDelete('set null')->onUpdate('cascade');
         });
     }
 
@@ -48,9 +44,6 @@ class CreateSalesTable extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function(Blueprint $table) {
-            $table->dropForeign(['order_id']);
-        });
         Schema::dropIfExists('sales');
     }
 }

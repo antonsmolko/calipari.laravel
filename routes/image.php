@@ -93,6 +93,11 @@ Route::get(
     ->where(['path' => '[\w\.]+']);
 
 Route::get(
+    config('settings.mail_order_sale_thumb_url') . '/{path}',
+    'ImageResizeController@getMailSaleImageThumb')
+    ->where(['path' => '[\w\.]+']);
+
+Route::get(
     config('settings.pdf_layout_sale_image_url') . '/{path}',
     'ImageResizeController@getPDFSaleLayoutImage')
     ->where(['path' => '[\w\.]+']);
