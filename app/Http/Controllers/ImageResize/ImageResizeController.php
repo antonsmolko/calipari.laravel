@@ -4,8 +4,6 @@ namespace App\Http\Controllers\ImageResize;
 
 use App\Services\ImageResize\ImageResizeService;
 use App\Http\Controllers\Controller;
-use Image;
-use File;
 
 class ImageResizeController extends Controller
 {

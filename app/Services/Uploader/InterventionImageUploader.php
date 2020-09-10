@@ -86,6 +86,6 @@ class InterventionImageUploader
 
     public function syncStorageFromLocalToS3()
     {
-//        return Artisan::call('storage:sync');
+        return Artisan::queue('storage:sync');
     }
 }
