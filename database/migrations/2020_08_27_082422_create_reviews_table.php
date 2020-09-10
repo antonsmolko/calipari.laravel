@@ -19,6 +19,7 @@ class CreateReviewsTable extends Migration
             $table->string('content', 1000);
             $table->unsignedSmallInteger('quality_rate')->nullable();
             $table->unsignedSmallInteger('service_rate')->nullable();
+            $table->json('images')->nullable();
             $table->unsignedTinyInteger('publish')->default(0);
             $table->timestamps();
         });

@@ -327,14 +327,14 @@ export default {
     methods: {
         ...mapActions({
             getStatusesAction: 'orderStatuses/getPublishedItems',
-            changeStatusAction: 'orders/changeStatus'
+            setStatusAction: 'orders/setStatus'
         }),
         async onStatusChange (value, item) {
             const status = this.getStatusById(value);
 
             const response = await this.changeStatusConfirm()
             if (response.value) {
-                await this.changeStatusAction({ id: item.id, status: value })
+                await this.setStatusAction({ id: item.id, status: value })
                 await swal.fire({
                     title: `Заказ № ${item.number} обновлен!`,
                     text: `Установлен статус «${status.title}»`,

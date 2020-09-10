@@ -73,9 +73,9 @@ class SaleController extends BaseResourceController
      * @param int $status
      * @return JsonResponse
      */
-    public function changeStatus(int $id, int $status): JsonResponse
+    public function setStatus(int $id, int $status): JsonResponse
     {
-        return response()->json($this->service->changeStatus($id, $status));
+        return response()->json($this->service->setStatus($id, $status));
     }
 
     /**

@@ -127,10 +127,15 @@ class Uploader
         return $imageData;
     }
 
+    public function interventionImageUpload(\Intervention\Image\Image $image)
+    {
+
+    }
+
     /**
      * @param UploadedFile $uploadedFile
-     * @param string $name
-     * @return array|void
+     * @param string|null $name
+     * @return array
      */
     public function store(UploadedFile $uploadedFile, string $name = null)
     {

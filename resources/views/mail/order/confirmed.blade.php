@@ -43,7 +43,7 @@ __{{ number_format($order['delivery']['price'], 0, '.', ' ') }} ₽__
 __{{ number_format($order['price'], 0, '.', ' ') }} ₽__
 @endcomponent
 
-@component('mail::order-total-price', ['price' => $order['price']])
+@component('mail::order-total-price', ['price' => $order['price'] + $order['delivery']['price']])
 @endcomponent
 
 @component('components.mail.divider')

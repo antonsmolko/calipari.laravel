@@ -91,9 +91,9 @@ const actions = {
             }
         })
     },
-    changeStatus ({ commit, dispatch }, { id, status }) {
+    setStatus ({ commit, dispatch }, { id, status }) {
         return axiosAction('get', commit, {
-            url: `/store/sales/${id}/change-status/${status}`,
+            url: `/store/sales/${id}/set-status/${status}`,
             thenContent: (response) => {
                 dispatch('table/updateItemsPost', null, { root: true })
                 dispatch('table/deleteSearchedItem', id, { root: true });

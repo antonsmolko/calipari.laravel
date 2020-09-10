@@ -13,6 +13,7 @@ return [
     'can_not_create_directory' => 'Не могу создать директорию «:path»!',
     'not_writable_directory' => 'Директория «:path» не доступна для записи!',
     'wrong_proportions' => 'Пропорции изображения «:file_name» не входят в допустимые пределы!',
+    'wrong_file_format' => 'Неправильный формат файла «:file_name»!',
     'unable_to_delete_main_image_of_collection' => 'Невозможно удалить главное изображение коллекции!',
     'unable_to_unpublish_main_image_of_color_collection' => 'Невозможно отменить публикацию главного изображения цветовой коллекции!',
     'unable_to_remove_image_of_color_collection' => 'Невозможно отвязать изображение цветовой коллекции!',

@@ -2,10 +2,10 @@
 
 namespace App\Services\Review\Resources;
 
-use App\Services\Order\Resources\CmsOrder as OrderResource;
+use Creativeorange\Gravatar\Facades\Gravatar;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DetailsCms extends JsonResource
+class ForListClient extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,13 +17,14 @@ class DetailsCms extends JsonResource
     {
         return [
             'id' => $this->id,
-            'order' => new OrderResource($this->order),
+            'gravatar' => $this->user ? Gravatar::get($this->user->email, ['size'=>150]) : null,
+            'customer_name' => $this->customer_name,
             'quality_rate' => $this->quality_rate,
             'service_rate' => $this->service_rate,
             'comment' => $this->comment,
             'publish' => $this->publish,
             'images' => $this->getImages(),
-            'date' => $this->created_at->format('d.m.Y - H:i:s')
+            'date' => $this->created_at->format('d F Y')
         ];
     }
 }

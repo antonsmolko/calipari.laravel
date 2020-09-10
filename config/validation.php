@@ -28,8 +28,8 @@ return [
     ],
     'upload' => [
         'min_size' => 3,
-        'max_size' => 5120,
-        'mimes' => 'jpeg,png,webp'
+        'max_size' => 10240,
+        'mimes' => 'jpeg,png,gif,webp'
     ],
     'images' => [
         'max_id_number' => 99999,

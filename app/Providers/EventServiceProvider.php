@@ -167,6 +167,7 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\Models\Order\OrderSetStatus::class => [
             \App\Listeners\Cache\Clear\OrderCacheClear::class,
             \App\Listeners\Mail\Order\SendByStatus::class,
+            \App\Listeners\Sale\SetStatus::class,
         ],
 
         \App\Events\Models\Review\ReviewCreated::class => [

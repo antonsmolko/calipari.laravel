@@ -66,7 +66,7 @@ class CmsSaleRepository extends CmsBaseResourceRepository
      * @param int $status
      * @return bool
      */
-    public function changeStatus(Sale $item, int $status): bool
+    public function setStatus(Sale $item, int $status): bool
     {
         $item->status = $status;
 

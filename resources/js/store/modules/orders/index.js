@@ -73,7 +73,7 @@ const actions = {
             }
         }
     }),
-    changeStatus: ({ commit, dispatch }, { id, status, list = true }) => axiosAction('post', commit, {
+    setStatus: ({ commit, dispatch }, { id, status, list = true }) => axiosAction('post', commit, {
         url: `/store/orders/${id}/status`,
         data: { status, list },
         thenContent: (response) => list

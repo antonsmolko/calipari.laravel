@@ -93,7 +93,7 @@ class CmsOrderRepository extends CmsBaseResourceRepository
      * @param int $status
      * @return Order
      */
-    public function changeStatus(Order $order, int $status)
+    public function setStatus(Order $order, int $status)
     {
         $order->statuses()->syncWithoutDetaching([$status]);
         event(new OrderSetStatus($order));

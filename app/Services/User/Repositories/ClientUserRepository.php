@@ -148,7 +148,7 @@ class ClientUserRepository
     public function getOrders($user)
     {
         return OrderResource::collection($user->orders()
-            ->with(['items', 'statuses'])
+            ->with(['items', 'statuses', 'review'])
             ->orderBy('id', 'desc')
             ->get());
     }
@@ -162,7 +162,7 @@ class ClientUserRepository
     {
         return new OrderResource($user->orders()
             ->where('number', $number)
-            ->with(['items', 'statuses'])
+            ->with(['items', 'statuses', 'review'])
             ->firstOrFail());
     }
 

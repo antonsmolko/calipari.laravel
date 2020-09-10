@@ -243,7 +243,7 @@ export default {
         ...mapActions({
             getStatusesAction: 'orderStatuses/getPublishedItems',
             getItemAction: 'orders/getItem',
-            changeStatusAction: 'orders/changeStatus',
+            setStatusAction: 'orders/setStatus',
             downloadPdfLabelAction: 'orders/downloadPdfLabel',
             downloadPdfLayoutAction: 'orders/downloadPdfLayout',
             downloadPdfDetailsAction: 'orders/downloadPdfDetails',
@@ -277,7 +277,7 @@ export default {
 
             const response = await this.confirm('Смена статуса вызывает отправку уведомления клиенту!')
             if (response.value) {
-                await this.changeStatusAction({
+                await this.setStatusAction({
                     id: this.order.id,
                     status: value,
                     list: false

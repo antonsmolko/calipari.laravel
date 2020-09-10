@@ -27,7 +27,8 @@ class CreateRequest extends FormRequest
             'hash' => 'bail|required|string',
             'comment' => 'bail|required|max:' . config('validation.text.max'),
             'quality_rate' => 'bail|integer|between:1,5',
-            'service_rate' => 'bail|integer|between:1,5'
+            'service_rate' => 'bail|integer|between:1,5',
+            'files' => 'array|nullable'
         ];
     }
 }

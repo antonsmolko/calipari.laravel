@@ -177,10 +177,10 @@ class CmsOrderService extends CmsBaseResourceService
      * @param array $requestData
      * @return OrderFromListResource|OrderResource
      */
-    public function changeStatus(int $id, array $requestData)
+    public function setStatus(int $id, array $requestData)
     {
         $order = $this->repository->getItem($id);
-        $changeStatusOrder = $this->repository->changeStatus($order, $requestData['status']);
+        $changeStatusOrder = $this->repository->setStatus($order, $requestData['status']);
 
         return !empty($requestData['list'])
             ? new OrderFromListResource($changeStatusOrder)
@@ -238,7 +238,7 @@ class CmsOrderService extends CmsBaseResourceService
             : Order::PARTIALLY_REFUNDED_STATUS;
 
         $status = $this->orderStatusRepository->getItemByAlias($statusAlias);
-        $this->repository->changeStatus($refundedOrder, $status->id);
+        $this->repository->setStatus($refundedOrder, $status->id);
 
         return $this->repository->getItemDetails($order->id);
     }
@@ -284,5 +284,21 @@ class CmsOrderService extends CmsBaseResourceService
             'order-details',
             $order->number
         );
+    }
+
+    /**
+     * @param int $id
+     * @return int
+     * @throws \Exception
+     */
+    public function destroy(int $id): int
+    {
+        $item = $this->repository->getItem($id);
+
+        if ($item->status !== Order::CANCELED_STATUS || $item->status !== Order::COMPLETED_STATUS) {
+            abort(400, __('order.not_canceled_or_not_completed_order_cannot_be_destroyed'));
+        }
+
+        return $this->repository->destroy($item);
     }
 }

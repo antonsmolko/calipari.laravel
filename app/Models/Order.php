@@ -83,6 +83,14 @@ class Order extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function review()
+    {
+        return $this->hasOne('App\Models\Review');
+    }
+
+    /**
      * @return bool
      */
     public function getPaidAttribute(): bool
@@ -95,12 +103,17 @@ class Order extends Model
      */
     public function getPriceAttribute(): int
     {
-        $salesPrice = (int) $this->sales()->sum('selling_price');
-        $itemsPrice = (int) $this->items->sum(function ($item) {
-            return $item->price * $item->qty;
-        });
+        return $this->getPrice();
+    }
 
-        return $salesPrice + $itemsPrice;
+    /**
+     * @return int|mixed
+     */
+    public function getFullPriceAttribute()
+    {
+        $delivery = $this->getDelivery();
+
+        return $this->getPrice() + $delivery['price'];
     }
 
     /**
@@ -109,9 +122,7 @@ class Order extends Model
     public function getPrice(): int
     {
         $salesPrice = (int) $this->sales()->sum('selling_price');
-        $itemsPrice = (int) $this->items->sum(function ($item) {
-            return $item->price * $item->qty;
-        });
+        $itemsPrice = (int) $this->items->sum(fn($item) => $item->price * $item->qty);
 
         return $salesPrice + $itemsPrice;
     }
@@ -172,10 +183,10 @@ class Order extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return bool
      */
-    public function review()
+    public function getHasReviewAttribute(): bool
     {
-        return $this->hasOne('App\Models\Review');
+        return (bool) $this->review;
     }
 }

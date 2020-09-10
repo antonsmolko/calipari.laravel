@@ -72,9 +72,9 @@ class OrderController extends BaseResourceController
      * @param int $id
      * @return JsonResponse
      */
-    public function changeStatus(ChangeStatusRequest $request, int $id ): JsonResponse
+    public function setStatus(ChangeStatusRequest $request, int $id ): JsonResponse
     {
-        return response()->json($this->service->changeStatus($id, $request->all()));
+        return response()->json($this->service->setStatus($id, $request->all()));
     }
 
     /**

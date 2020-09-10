@@ -12,9 +12,11 @@ use App\Services\Cache\Tag;
 use App\Services\Cache\TTL;
 use App\Services\Pdf\PdfService;
 use App\Services\Sale\Handlers\GetFormattedItemDetailsHandler;
+use App\Services\Sale\Handlers\GetStatusByOrderStatusHandler;
 use App\Services\Sale\Handlers\StoreHandler;
 use App\Services\Sale\Handlers\UpdateHandler;
 use App\Services\Sale\Repositories\CmsSaleRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class CmsSaleService extends CmsBaseResourceService
@@ -23,6 +25,7 @@ class CmsSaleService extends CmsBaseResourceService
     private UpdateHandler $updateHandler;
     private PdfService $pdfService;
     private GetFormattedItemDetailsHandler $getFormattedItemDetailsHandler;
+    private GetStatusByOrderStatusHandler $getStatusByOrderStatusHandler;
 
     /**
      * CmsSaleService constructor.
@@ -33,6 +36,7 @@ class CmsSaleService extends CmsBaseResourceService
      * @param UpdateHandler $updateHandler
      * @param PdfService $pdfService
      * @param GetFormattedItemDetailsHandler $getFormattedItemDetailsHandler
+     * @param GetStatusByOrderStatusHandler $getStatusByOrderStatusHandler
      */
     public function __construct(
         CmsSaleRepository $repository,
@@ -41,7 +45,8 @@ class CmsSaleService extends CmsBaseResourceService
         StoreHandler $storeHandler,
         UpdateHandler $updateHandler,
         PdfService $pdfService,
-        GetFormattedItemDetailsHandler $getFormattedItemDetailsHandler)
+        GetFormattedItemDetailsHandler $getFormattedItemDetailsHandler,
+        GetStatusByOrderStatusHandler $getStatusByOrderStatusHandler)
     {
         parent::__construct($repository, $clearCacheHandler, $cacheKeyManager);
         $this->cacheTag = Tag::SALES_TAG;
@@ -49,6 +54,7 @@ class CmsSaleService extends CmsBaseResourceService
         $this->updateHandler = $updateHandler;
         $this->pdfService = $pdfService;
         $this->getFormattedItemDetailsHandler = $getFormattedItemDetailsHandler;
+        $this->getStatusByOrderStatusHandler = $getStatusByOrderStatusHandler;
     }
 
     /**
@@ -94,11 +100,11 @@ class CmsSaleService extends CmsBaseResourceService
      * @param int $status
      * @return mixed
      */
-    public function changeStatus(int $id, int $status)
+    public function setStatus(int $id, int $status)
     {
         $item = $this->repository->getItem($id);
 
-        return $this->repository->changeStatus($item, $status);
+        return $this->repository->setStatus($item, $status);
     }
 
     /**
@@ -135,5 +141,18 @@ class CmsSaleService extends CmsBaseResourceService
         $itemDetails = $this->getFormattedItemDetailsHandler->handle($id, 'layout');
 
         return $this->pdfService->getOrderItemLayout($itemDetails, $itemDetails['article']);
+    }
+
+    /**
+     * @param Collection $sales
+     * @param string $orderStatus
+     */
+    public function setItemsStatus(Collection $sales, string $orderStatus)
+    {
+        $status = $this->getStatusByOrderStatusHandler->handle($orderStatus);
+
+        if ($status !== null) {
+            $sales->each(fn($sale) => $this->repository->setStatus($sale, $status));
+        }
     }
 }

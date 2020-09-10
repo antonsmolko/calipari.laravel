@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Client\Review;
 
 use App\Http\Controllers\API\Client\Base\BaseResourceController;
 use App\Http\Controllers\API\Client\Review\Requests\CreateRequest;
+use App\Http\Requests\FormRequest;
 use App\Services\Review\ClientReviewService;
 use Illuminate\Http\JsonResponse;
 
@@ -25,5 +26,14 @@ class ReviewController extends BaseResourceController
     public function store(CreateRequest $request): JsonResponse
     {
         return response()->json($this->service->store($request->all()));
+    }
+
+    /**
+     * @param FormRequest $request
+     * @return JsonResponse
+     */
+    public function getItems(FormRequest $request): JsonResponse
+    {
+        return response()->json($this->service->getItems($request->all()));
     }
 }

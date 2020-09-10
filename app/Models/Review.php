@@ -31,9 +31,19 @@ class Review extends Model
     /**
      * @return mixed
      */
-    public function user()
+    public function getUserAttribute()
     {
         return $this->order->user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomerNameAttribute()
+    {
+        $customer = $this->getOrderCustomer();
+
+        return $customer['name'];
     }
 
     /**
@@ -42,5 +52,13 @@ class Review extends Model
     public function getOrderCustomer()
     {
         return $this->order->getCustomer();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImages()
+    {
+        return json_decode($this->images, true);
     }
 }

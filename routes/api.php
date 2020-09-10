@@ -155,7 +155,8 @@ Route::group(['prefix' => 'orders'], function() {
 Route::prefix('reviews')
     ->group(function() {
         Route::post('/', 'Client\Review\ReviewController@getItems');
-        Route::post('store', 'Client\Review\ReviewController@store');
+        Route::post('store', 'Client\Review\ReviewController@store')
+            ->middleware('optimizeImages');
     });
 
 /** Carts */
@@ -208,7 +209,7 @@ Route::get('home-interiors', 'Client\HomeModuleInterior\HomeModuleInteriorContro
 
 /** Portfolio Module: Work Examples */
 
-Route::post('work-examples/list', 'Client\WorkExample\WorkExampleController@getItems');
+Route::post('work-examples', 'Client\WorkExample\WorkExampleController@getItems');
 
 
 /** Blog Module: Posts */
@@ -512,7 +513,7 @@ Route::prefix('cms')
                 ->where('id', '[0-9]+');
             Route::get('{id}/details', 'Cms\Order\OrderController@getItemDetails')
                 ->where('id', '[0-9]+');
-            Route::post('{id}/status', 'Cms\Order\OrderController@changeStatus')
+            Route::post('{id}/status', 'Cms\Order\OrderController@setStatus')
                 ->where('id', '[0-9]+');
             Route::post('{id}/refund', 'Cms\Order\OrderController@refund')
                 ->middleware('role:super_admin|owner')
@@ -588,7 +589,7 @@ Route::prefix('cms')
                         . \App\Models\Sale::SOLD . '|)$');
                 Route::get('{id}', 'Cms\Sale\SaleController@show')
                     ->where('id', '[0-9]+');
-                Route::get('{id}/change-status/{status}', 'Cms\Sale\SaleController@changeStatus')
+                Route::get('{id}/set-status/{status}', 'Cms\Sale\SaleController@setStatus')
                     ->where([
                         'id' => '[0-9]+',
                         'status' => '^('

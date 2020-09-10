@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\WorkExample\Resources;
+namespace App\Services\Review\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class FromListClientCollection extends ResourceCollection
+class ForListClientCollection extends ResourceCollection
 {
     /**
      * Transform the resource into an array.

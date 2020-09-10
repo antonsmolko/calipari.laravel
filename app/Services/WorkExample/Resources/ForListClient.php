@@ -5,7 +5,7 @@ namespace App\Services\WorkExample\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Jenssegers\Date\Date;
 
-class FromListCms extends JsonResource
+class ForListClient extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,12 +20,11 @@ class FromListCms extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'date' => Date::createFromTimestamp(round($this->date / 1000))->format('d.m.Y'),
+            'date' => Date::createFromTimestamp(round($this->date / 1000))->format('j F Y г.'),
+            'article' => getImageArticle($this->image_id),
             'image_id' => $this->image_id,
-            'images' => json_decode($this->images),
-            'image_path' => $this->image_path,
-            'publish' => $this->publish,
-            'has_images' => $this->hasImages
+            'images' => json_decode($this->images, true),
+            'image_path' => $this->image_path
         ];
     }
 }

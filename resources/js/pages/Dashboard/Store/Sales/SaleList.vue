@@ -278,7 +278,7 @@ export default {
     },
     methods: {
         ...mapActions({
-            changeStatusAction: 'sales/changeStatus',
+            setStatusAction: 'sales/setStatus',
             togglePublishAction: 'table/togglePublish',
             getTexturesAction: 'textures/getItems',
             downloadPdfLabelAction: 'sales/downloadPdfLabel',
@@ -287,7 +287,7 @@ export default {
         async toSold (item) {
             const response = await this.changeStatusConfirm()
             if (response.value) {
-                await this.changeStatusAction({ id: item.id, status: 2 })
+                await this.setStatusAction({ id: item.id, status: 2 })
                 await swal.fire({
                     title: 'Помещено в проданные',
                     text: `Фотопанно арт. № ${item.article}`,
@@ -300,7 +300,7 @@ export default {
         async onSell (item) {
             const response = await this.changeStatusConfirm()
             if (response.value) {
-                await this.changeStatusAction({ id: item.id, status: 0 })
+                await this.setStatusAction({ id: item.id, status: 0 })
                 await swal.fire({
                     title: 'Выставлено на продажу',
                     text: `Фотопанно арт. № ${item.article}`,

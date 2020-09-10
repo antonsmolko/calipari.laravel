@@ -15,7 +15,6 @@ if (! function_exists('getUploadedFileFromPath')) {
         $extension = File::extension($path);
         $originalName = $name . '.' . $extension;
         $mimeType = File::mimeType($path);
-//        $size = File::size($path); // Deprecated: since from v7.0
         $error = null;
         $test = $public;
 
@@ -27,7 +26,13 @@ if (! function_exists('uploader')) {
     function uploader()
     {
         return app()->make(Uploader::class);
-//        return app()->make(\App\Services\Uploader\UploadService::class);
+    }
+}
+
+if (! function_exists('interventionUploader')) {
+    function interventionUploader()
+    {
+        return app()->make(\App\Services\Uploader\InterventionImageUploader::class);
     }
 }
 

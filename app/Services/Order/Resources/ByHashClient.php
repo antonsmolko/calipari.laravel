@@ -18,7 +18,7 @@ class ByHashClient extends JsonResource
         return [
             'id' => $this->id,
             'number' => $this->number,
-            'price' => $this->price,
+            'price' => $this->full_price,
             'paid' => $this->paid,
             'review' => $this->review
         ];

@@ -24,17 +24,6 @@ class SendByStatus implements ShouldQueue
         $this->orderSevice = $orderSevice;
     }
 
-//    /**
-//     * Handle the event.
-//     *
-//     * @param  OrderSetStatus $event
-//     * @return void
-//     */
-//    public function handle(OrderCreated $event)
-//    {
-//        $this->orderSevice->sendMail(\App\Mail\OrderInProcess::class, $event->order);
-//    }
-
     /**
      * * Determine whether the listener should be queued.
      *

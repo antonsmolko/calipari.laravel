@@ -30,7 +30,7 @@ class UploadHandler
     /**
      * @param WorkExample $item
      * @param array $files
-     * @return \App\Services\WorkExample\Resources\FromListCms|mixed
+     * @return \App\Services\WorkExample\Resources\ForListCms|mixed
      */
     public function handle(WorkExample $item, array $files)
     {

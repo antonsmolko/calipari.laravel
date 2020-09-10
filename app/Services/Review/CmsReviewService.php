@@ -10,24 +10,29 @@ use App\Services\Cache\Key;
 use App\Services\Cache\KeyManager as CacheKeyManager;
 use App\Services\Cache\Tag;
 use App\Services\Cache\TTL;
+use App\Services\Review\Handlers\DestroyHandler;
 use App\Services\Review\Repositories\CmsReviewRepository;
 use Illuminate\Support\Facades\Cache;
 
 class CmsReviewService extends CmsBaseResourceService
 {
+    private DestroyHandler $destroyHandler;
     /**
      * CmsReviewService constructor.
      * @param CmsReviewRepository $repository
      * @param ClearCacheHandler $clearCacheHandler
+     * @param DestroyHandler $destroyHandler
      * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
         CmsReviewRepository $repository,
         ClearCacheHandler $clearCacheHandler,
+        DestroyHandler $destroyHandler,
         CacheKeyManager $cacheKeyManager)
     {
         parent::__construct($repository, $clearCacheHandler, $cacheKeyManager);
         $this->cacheTag = Tag::REVIEWS_TAG;
+        $this->destroyHandler = $destroyHandler;
     }
 
     /**
@@ -60,5 +65,16 @@ class CmsReviewService extends CmsBaseResourceService
                 $key,
                 TTL::REVIEWS_TTL,
                 fn() => $this->repository->getItems($requestData));
+    }
+
+    /**
+     * @param int $id
+     * @return int
+     */
+    public function destroy(int $id): int
+    {
+        $item = $this->repository->getItem($id);
+
+        return $this->destroyHandler->handle($item);
     }
 }

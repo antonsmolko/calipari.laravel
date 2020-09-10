@@ -24,6 +24,19 @@
                         </md-table-row>
                     </md-table>
 
+                    <template v-if="review.images">
+                        <div class="md-layout md-gutter mt-2">
+                            <div class="md-layout-item" v-for="(image, index) in review.images" :key="index">
+                                <div class="image-container">
+                                    <resource-image
+                                        :name="image"
+                                        :width="350" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </template>
+
                     <h4>Опубликовать</h4>
                     <md-switch :value="!review.publish" @change="publish(review.id)" />
                 </md-card-content>
@@ -101,6 +114,7 @@
 import { mapActions, mapState } from 'vuex';
 import { getFormatPrice, getArticle, getCurrentStatus } from "@/helpers";
 import OrderItem from "@/custom_components/Orders/OrderItem";
+import ResourceImage from "@/custom_components/Images/ResourceImage";
 
 import { pageTitle, authCheck } from '@/mixins/base';
 import { deleteMethod } from '@/mixins/crudMethods';
@@ -108,7 +122,8 @@ import { deleteMethod } from '@/mixins/crudMethods';
 export default {
     name: 'Order',
     components: {
-        OrderItem
+        OrderItem,
+        ResourceImage
     },
     mixins: [pageTitle, authCheck, deleteMethod],
     props: {
@@ -231,5 +246,9 @@ export default {
         width: 100%;
         text-align: center;
     }
+}
+.image-container {
+    max-width: 350px;
+    min-width: 200px;
 }
 </style>

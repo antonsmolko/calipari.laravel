@@ -6,8 +6,8 @@ namespace App\Services\WorkExample\Repositories;
 
 use App\Models\WorkExample;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
-use App\Services\WorkExample\Resources\FromListCms as FromListResource;
-use App\Services\WorkExample\Resources\FromListCmsCollection as FromListResourceCollection;
+use App\Services\WorkExample\Resources\ForListCms as FromListResource;
+use App\Services\WorkExample\Resources\ForListCmsCollection as FromListResourceCollection;
 use App\Services\WorkExample\Resources\WorkExampleCms as WorkExampleResource;
 
 class CmsWorkExampleRepository extends CmsBaseResourceRepository

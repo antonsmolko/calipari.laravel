@@ -21,12 +21,13 @@ class ClientOrder extends JsonResource
             'hash_number' => $this->hash_number,
             'user_id' => $this->user_id,
             'items' => OrderItemResource::collection($this->items),
-            'delivery' => json_decode($this->delivery, true),
-            'customer' => json_decode($this->customer, true),
+            'delivery' => $this->getDelivery(),
+            'customer' => $this->getCustomer(),
             'price' => $this->price,
             'comment' => $this->comment,
-            'status' => $this->statuses->last(),
-            'paid' => $this->paid
+            'status' => $this->getCurrentStatus(),
+            'paid' => $this->paid,
+            'has_review' => $this->has_review
         ];
     }
 }
