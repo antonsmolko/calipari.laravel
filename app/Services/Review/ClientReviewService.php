@@ -55,9 +55,13 @@ class ClientReviewService extends ClientBaseResourceService
 
         $order = $this->orderRepository->getItemByNumber($orderNumber);
 
+        ini_set("memory_limit", "256M");
+
         $storeData['images'] = !empty($storeData['files'])
             ? json_encode($this->imageUploadHandler->handle($storeData['files']))
             : null;
+
+        ini_set("memory_limit", "128");
 
         $this->orderRepository->createReview($order, [
             'order_id' => $order->id,
