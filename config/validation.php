@@ -28,7 +28,7 @@ return [
     ],
     'upload' => [
         'min_size' => 3,
-        'max_size' => 10240,
+        'max_size' => 5120,
         'mimes' => 'jpeg,png,gif,webp'
     ],
     'images' => [
