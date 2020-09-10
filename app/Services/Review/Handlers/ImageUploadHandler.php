@@ -19,7 +19,7 @@ class ImageUploadHandler
     {
         $this->imageValidate($files);
 
-//        ini_set("memory_limit", "256M");
+        ini_set("memory_limit", "512M");
 
         return array_map(function ($file) {
             $tmpName = $file->getPath() . '/' . $file->getFilename();
