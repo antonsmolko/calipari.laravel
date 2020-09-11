@@ -19,17 +19,16 @@ class ImageUploadHandler
     {
         $this->imageValidate($files);
 
-        $images = array_map(function ($file) {
-            $tmpName = $file->getPath() . '/' . $file->getFilename();
-            return Image::make($tmpName)
-                ->resize(1200, 1200, function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                })
-                ->save($file->getClientOriginalName(), 75);
-        }, $files);
-
-        return interventionUploader()->multipleUpload($images);
+//        $images = array_map(function ($file) {
+//            $tmpName = $file->getPath() . '/' . $file->getFilename();
+//            return Image::make($tmpName)
+//                ->resize(1200, 1200, function ($constraint) {
+//                    $constraint->aspectRatio();
+//                    $constraint->upsize();
+//                })
+//                ->save($file->getClientOriginalName(), 75);
+//        }, $files);
+        return interventionUploader()->multipleUpload($files);
     }
 
     /**
@@ -39,7 +38,8 @@ class ImageUploadHandler
     private function imageValidate(array $files)
     {
         $rules = [
-            'file' => 'required|file|image|mimes:' . config('validation.upload.mimes') . '|max:' . config('validation.upload.max_size'),
+            'file' => 'required|file|image|mimes:' . config('validation.upload.mimes') . '|max:1024',
+//            'file' => 'required|file|image|mimes:' . config('validation.upload.mimes') . '|max:' . config('validation.upload.max_size'),
         ];
 
         array_walk($files, function ($file) use ($rules) {

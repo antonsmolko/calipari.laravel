@@ -2,7 +2,7 @@
 
 namespace App\Services\Uploader;
 
-use Intervention\Image\Image;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 
@@ -23,17 +23,17 @@ class InterventionImageUploader
      */
     public function multipleUpload(array $files)
     {
-        $imagesData = array_map(fn (Image $file) => $this->localStore($file), $files);
+        $imagesData = array_map(fn (UploadedFile $file) => $this->localStore($file), $files);
         $this->syncStorageFromLocalToS3();
 
         return $imagesData;
     }
 
     /**
-     * @param Image $image
+     * @param UploadedFile $image
      * @return string
      */
-    public function upload(Image $image)
+    public function upload(UploadedFile $image)
     {
         $fileName = $this->localStore($image);
         $this->syncStorageFromLocalToS3();
@@ -41,7 +41,11 @@ class InterventionImageUploader
         return $fileName;
     }
 
-    private function localStore(Image $image)
+    /**
+     * @param UploadedFile $image
+     * @return string
+     */
+    private function localStore(UploadedFile $image)
     {
         $fileName = $this->generateSha1Name($image);
         $baseDirPath = $this->getUploadedBaseDirPath($fileName);
@@ -57,10 +61,10 @@ class InterventionImageUploader
     }
 
     /**
-     * @param Image $image
+     * @param UploadedFile $image
      * @return string
      */
-    protected function generateSha1Name(Image $image): string
+    protected function generateSha1Name(UploadedFile $image): string
     {
         $name = $this->getOriginalName($image);
         $ext = $this->getExtension($image);
@@ -69,24 +73,24 @@ class InterventionImageUploader
     }
 
     /**
-     * @param Image $image
+     * @param UploadedFile $image
      * @return string
      */
-    protected function getOriginalName(Image $image) : string
+    protected function getOriginalName(UploadedFile $image) : string
     {
-        $ext = $image->extension;
-        $name = $image->basename;
+        $ext = $image->getClientOriginalExtension();
+        $name = $image->getClientOriginalName();
 
         return preg_replace('/\.' . $ext . '$/', '', $name);
     }
 
     /**
-     * @param Image $image
+     * @param UploadedFile $image
      * @return string
      */
-    protected function getExtension(Image $image): string
+    protected function getExtension(UploadedFile $image): string
     {
-        return mb_strtolower($image->extension);
+        return mb_strtolower($image->getClientOriginalExtension());
     }
 
     /**
