@@ -43,7 +43,7 @@ class InterventionImageUploader
 
     /**
      * @param UploadedFile $image
-     * @return string
+     * @return string|void
      */
     private function localStore(UploadedFile $image)
     {
@@ -51,13 +51,12 @@ class InterventionImageUploader
         $baseDirPath = $this->getUploadedBaseDirPath($fileName);
         $path = $this->uploadPath . '/' . $baseDirPath; // public/uploads/images/3/3e8
 
-        Storage::put($path . '/' . $fileName, $image);
+//        Storage::put($path . '/' . $fileName, $image);
+        $filePath = $image->storeAs($path, $fileName);
 
-        Storage::exists($path)
-        ||
-        abort(400, __('image_validation.error_image_upload'));
-
-        return $fileName;
+        return Storage::exists($filePath)
+            ? $fileName
+            : abort(400, __('image_validation.error_image_upload'));
     }
 
     /**
