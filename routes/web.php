@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return phpinfo();
-})->name('home');
+//Route::get('/', function () {
+//    return phpinfo();
+//})->name('home');
 
 //Route::get('/', function () {
 //    $details = [
