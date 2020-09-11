@@ -18,20 +18,32 @@ class InterventionImageUploader
     }
 
     /**
+     * @param array $files
+     * @return array|array[]|void[]
+     */
+    public function multipleUpload(array $files)
+    {
+        $imagesData = array_map(fn (Image $file) => $this->localStore($file), $files);
+        $this->syncStorageFromLocalToS3();
+
+        return $imagesData;
+    }
+
+    /**
      * @param Image $image
      * @return string
      */
     public function upload(Image $image)
     {
-        $fileName = $this->generateSha1Name($image);
-        $this->localStore($image, $fileName);
+        $fileName = $this->localStore($image);
         $this->syncStorageFromLocalToS3();
 
         return $fileName;
     }
 
-    private function localStore(Image $image, string $fileName)
+    private function localStore(Image $image)
     {
+        $fileName = $this->generateSha1Name($image);
         $baseDirPath = $this->getUploadedBaseDirPath($fileName);
         $path = $this->uploadPath . '/' . $baseDirPath; // public/uploads/images/3/3e8
 
@@ -40,6 +52,8 @@ class InterventionImageUploader
         Storage::exists($path)
         ||
         abort(400, __('image_validation.error_image_upload'));
+
+        return $fileName;
     }
 
     /**

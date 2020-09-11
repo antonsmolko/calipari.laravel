@@ -19,19 +19,17 @@ class ImageUploadHandler
     {
         $this->imageValidate($files);
 
-        ini_set("memory_limit", "512M");
-
-        return array_map(function ($file) {
+        $images = array_map(function ($file) {
             $tmpName = $file->getPath() . '/' . $file->getFilename();
-            $img = Image::make($tmpName)
-                ->resize(1600, 1600, function ($constraint) {
+            return Image::make($tmpName)
+                ->resize(1200, 1200, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })
                 ->save($file->getClientOriginalName(), 75);
-
-            return interventionUploader()->upload($img);
         }, $files);
+
+        return interventionUploader()->multipleUpload($images);
     }
 
     /**
