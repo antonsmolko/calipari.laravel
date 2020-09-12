@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\User;
 use App\Services\Order\Resources\ClientOrder as OrderResource;
+use App\Services\Order\Resources\ForListClient as OrderListResource;
 use App\Services\User\Resources\User as UserResource;
 
 class ClientUserRepository
@@ -147,7 +148,7 @@ class ClientUserRepository
      */
     public function getOrders($user)
     {
-        return OrderResource::collection($user->orders()
+        return OrderListResource::collection($user->orders()
             ->with(['items', 'statuses', 'review'])
             ->orderBy('id', 'desc')
             ->get());
@@ -190,7 +191,6 @@ class ClientUserRepository
 
         /** @var Order $order */
         $order = $user->orders()->where('number', $number)->firstOrFail();
-//        $lastOrderStatus = $order->statuses->last();
 
         $order->statuses()->syncWithoutDetaching([$canceledStatus->id]);
 

@@ -3,10 +3,10 @@
 namespace App\Services\Order\Resources;
 
 use App\Services\OrderItem\Resources\ClientOrderItem as OrderItemResource;
-use App\Services\Sale\Resources\ForOrderClient as SaleResource;
+use App\Services\Sale\Resources\ForOrderListClient as SaleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ClientOrder extends JsonResource
+class ForListClient extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,13 +20,10 @@ class ClientOrder extends JsonResource
             'date' => $this->created_at->format('d.m.Y'),
             'number' => $this->number,
             'hash_number' => $this->hash_number,
-            'user_id' => $this->user_id,
             'items' => OrderItemResource::collection($this->items),
             'sales' => SaleResource::collection($this->sales),
             'delivery' => $this->getDelivery(),
-            'customer' => $this->getCustomer(),
             'price' => $this->price,
-            'comment' => $this->comment,
             'status' => $this->getCurrentStatus(),
             'paid' => $this->paid,
             'has_review' => $this->has_review

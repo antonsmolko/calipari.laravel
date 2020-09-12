@@ -6,7 +6,7 @@ namespace App\Services\Sale\Resources;
 use App\Services\Texture\Resources\LessDetailed as TextureResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ForListClient extends JsonResource
+class ForOrderClient extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,9 +24,7 @@ class ForListClient extends JsonResource
             'width_cm' => $this->width_cm,
             'height_cm' => $this->height_cm,
             'texture' => new TextureResource($this->texture),
-            'discount' => $this->discount,
-            'is_available' => $this->isAvailable,
-            'old_price' => $this->oldPrice
+            'price' => $this->pivot->selling_price
         ];
     }
 }
