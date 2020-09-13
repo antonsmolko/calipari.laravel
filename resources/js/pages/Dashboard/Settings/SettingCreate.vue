@@ -8,10 +8,11 @@
                             title="В администрирование"
                             :to="{ name: 'cms.settings.administration' }" />
                         <slide-y-down-transition v-show="!$v.$invalid">
-                            <control-button @click="onCreate()" />
+                            <control-button @click="onCreate" />
                         </slide-y-down-transition>
                     </md-card-content>
                 </md-card>
+                <progress-bar-loading />
             </div>
         </div>
         <div class="md-layout">

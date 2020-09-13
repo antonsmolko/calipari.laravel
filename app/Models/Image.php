@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use App\Events\Models\Image\ImageDeleted;
+use App\Events\Models\Image\ImageRestored;
 use App\Events\Models\Image\ImageSaved;
 use App\Events\Models\Image\ImageUpdated;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,6 +25,7 @@ class Image extends Model
         'saved' => ImageSaved::class,
         'updated' => ImageUpdated::class,
         'deleted' => ImageDeleted::class,
+        'restored' => ImageRestored::class,
     ];
 
     const IMAGE_QUERY_BUILDER = [

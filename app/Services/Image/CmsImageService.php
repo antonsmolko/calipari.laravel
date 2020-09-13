@@ -180,7 +180,9 @@ class CmsImageService extends CmsBaseResourceService
      */
     public function restore(int $id)
     {
-        return $this->repository->restore($id);
+        $item = $this->repository->getTrashedItem($id);
+
+        return $this->repository->restore($item);
     }
 
     /**

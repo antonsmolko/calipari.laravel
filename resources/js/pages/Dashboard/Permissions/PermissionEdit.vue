@@ -9,10 +9,11 @@
                             <slide-y-down-transition v-show="controlSaveVisibilities && $v.$anyDirty && !$v.$invalid">
                                 <control-button title="Сохранить" @click="onUpdate" />
                             </slide-y-down-transition>
-                            <control-button title="Удалить" @click="onDelete()" icon="delete" class="md-danger" />
+                            <control-button title="Удалить" @click="onDelete" icon="delete" class="md-danger" />
                         </div>
                     </md-card-content>
                 </md-card>
+                <progress-bar-loading />
             </div>
         </div>
         <div class="md-layout">

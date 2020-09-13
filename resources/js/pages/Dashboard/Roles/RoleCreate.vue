@@ -6,10 +6,11 @@
                     <md-card-content class="md-between">
                         <router-button-link title="К списку ролей" :to="{ name: 'cms.roles' }" />
                         <slide-y-down-transition v-show="!$v.$invalid">
-                            <control-button @click="onCreate('auto-close')" />
+                            <control-button @click="onCreate" />
                         </slide-y-down-transition>
                     </md-card-content>
                 </md-card>
+                <progress-bar-loading />
             </div>
         </div>
         <div class="md-layout">

@@ -9,10 +9,15 @@
                             <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
                                 <control-button @click="onUpdate" />
                             </slide-y-down-transition>
-                            <control-button title="Удалить" icon="delete" color="md-danger" @click="onDelete" />
+                            <control-button
+                                title="Удалить"
+                                icon="delete"
+                                color="md-danger"
+                                @click="onDelete" />
                         </div>
                     </md-card-content>
                 </md-card>
+                <progress-bar-loading />
             </div>
         </div>
         <div class="md-layout">

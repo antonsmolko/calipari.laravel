@@ -6,15 +6,13 @@
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
                         <router-button-link
-                            :to="{
-                                name: 'cms.catalog.categories.list',
-                                params: { category_type }
-                            }"/>
+                            :to="{ name: 'cms.catalog.categories.list', params: { category_type } }"/>
                         <slide-y-down-transition v-show="!$v.$invalid">
                             <control-button @click="onCreate"/>
                         </slide-y-down-transition>
                     </md-card-content>
                 </md-card>
+                <progress-bar-loading />
             </div>
         </div>
 

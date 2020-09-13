@@ -7,12 +7,15 @@
                         <router-button-link :to="{ name: 'cms.pages' }" title="В панель страниц" />
                         <div>
                             <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
-                                <control-button title="Сохранить" @click="onUpdate" />
+                                <control-button title="Сохранить" @click="onUpdate" :disabled="loading" />
                             </slide-y-down-transition>
                         </div>
                     </md-card-content>
                 </md-card>
                 <div>
+                    <div class="md-progress-bar__container">
+                        <md-progress-bar v-show="loading" md-mode="indeterminate"></md-progress-bar>
+                    </div>
                     <tabs
                         :tab-name="['Основные настройки', 'Модули', 'SEO']"
                         :activeTab="activeTab"
@@ -150,7 +153,8 @@ export default {
     computed: {
         ...mapState({
             fields: state => state.pages.fields,
-            item: state => state.pages.item
+            item: state => state.pages.item,
+            loading: state => state.loading
         }),
         isUniqueTitle () {
             return this.$store.getters['pages/isUniqueTitle'](this.fields.title, this.item.id);
@@ -192,8 +196,7 @@ export default {
                 },
                 title: this.fields.title,
                 successText: 'Страница обновлена!',
-                storeModule: this.storeModule,
-                redirectRoute: this.redirectRoute
+                storeModule: this.storeModule
             });
         },
         handleDeleteImage () {

@@ -11,7 +11,7 @@
                         </md-button>
                         <div>
                             <slide-y-down-transition v-show="controlSaveVisibilities && $v.$anyDirty">
-                                <control-button @click="onUpdate"/>
+                                <control-button title="Сохранить" @click="onUpdate"/>
                             </slide-y-down-transition>
                             <router-button-link
                                 title="Сформировать проект"
@@ -27,6 +27,7 @@
                         </div>
                     </md-card-content>
                 </md-card>
+                <progress-bar-loading />
             </div>
         </div>
         <div class="md-layout">

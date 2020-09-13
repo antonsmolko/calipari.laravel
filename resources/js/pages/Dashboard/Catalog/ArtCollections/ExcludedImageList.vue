@@ -18,6 +18,7 @@
 
         <div class="md-layout">
             <div class="md-layout-item">
+                <progress-bar-loading />
                 <md-card>
                     <card-icon-header title="Каталог изображений" icon="image" />
                     <md-card-content>
@@ -67,8 +68,7 @@ export default {
     data: () => ({
         storeModule: 'images',
         resourceUrl: `/catalog/art-collections/images/excluded`,
-        selected: [],
-        loading: false
+        selected: []
     }),
     created () {
         this.setPageTitle('Изображения каталога доступные для добавления в Арт-коллекцию.')

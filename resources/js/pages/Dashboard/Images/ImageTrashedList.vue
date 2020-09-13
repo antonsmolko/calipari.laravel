@@ -7,6 +7,7 @@
                         <router-button-link :to="{ name: 'cms.images' }"/>
                     </md-card-content>
                 </md-card>
+                <progress-bar-loading />
             </div>
         </div>
 

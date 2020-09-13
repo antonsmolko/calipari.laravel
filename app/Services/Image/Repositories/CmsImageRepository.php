@@ -130,14 +130,12 @@ class CmsImageRepository extends CmsBaseResourceRepository
     }
 
     /**
-     * @param int $id
+     * @param Image $item
      * @return bool|null
      */
-    public function restore(int $id)
+    public function restore(Image $item)
     {
-        return $this->model::onlyTrashed()
-            ->where('id', $id)
-            ->restore();
+        return $item->restore();
     }
 
     /**

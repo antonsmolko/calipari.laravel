@@ -16,11 +16,17 @@
                     <img :src="imageData" alt="" />
                 </div>
                 <div class="button-container">
-                    <md-button class="md-danger md-just-icon" @click="onFileChange($event, 'remove')" v-if="imageData">
+                    <md-button
+                        :disabled="disabled || loading"
+                        class="md-danger md-just-icon"
+                        @click="onFileChange($event, 'remove')"
+                        v-if="imageData">
                         <md-icon>undo</md-icon>
                         <md-tooltip md-direction="top">Отменить</md-tooltip>
                     </md-button>
-                    <md-button class="md-success md-just-icon md-fileinput">
+                    <md-button
+                        class="md-success md-just-icon md-fileinput"
+                        :disabled="disabled || loading">
                         <template>
                             <md-icon>add_photo_alternate</md-icon>
                             <md-tooltip md-direction="top">Выберите изображение</md-tooltip>
@@ -29,7 +35,8 @@
                     </md-button>
                     <md-button class="md-danger md-just-icon"
                                @click="onFileChange($event, 'delete')"
-                               v-if="imgDefault && withDelete">
+                               v-if="imgDefault && withDelete && !imageData"
+                               :disabled="disabled || loading" >
                         <md-icon>close</md-icon>
                         <md-tooltip md-direction="top">Удалить</md-tooltip>
                     </md-button>
@@ -43,6 +50,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { InputNotificationRequire } from '@/custom_components/InputNotifications'
 import ResourceImage from "@/custom_components/Images/ResourceImage";
 
@@ -80,14 +88,26 @@ export default {
         withDelete: {
             type: Boolean,
             default: false
+        },
+        disabled: {
+            type: Boolean,
+            default: false
         }
     },
     data: () => ({
         imageData: ''
     }),
     computed: {
+        ...mapState({
+            loading: state => state.loading
+        }),
         storeModule () {
             return this.module ? `${this.module}/` : '';
+        }
+    },
+    watch: {
+        imgDefault () {
+            this.imageData = ''
         }
     },
     methods: {

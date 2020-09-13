@@ -6,7 +6,7 @@
                     <md-card-content class="md-between">
                         <router-button-link :to="redirectRoute" />
                         <div>
-                            <upload-button @change="fileInputChange" />
+                            <upload-button @change="fileInputChange" :disabled="Boolean(fileProgress)" />
                         </div>
                     </md-card-content>
                 </md-card>
@@ -15,7 +15,7 @@
         <div class="md-layout">
             <div class="md-layout-item">
                 <div class="md-layout-item md-progress-bar__container">
-                    <md-progress-bar v-if="fileProgress" class="md-info" :md-value="fileProgress" />
+                    <md-progress-bar v-if="fileProgress" md-mode="indeterminate" :md-value="fileProgress" />
                 </div>
                 <md-card>
                     <card-icon-header title="Список изображений" icon="assignment" />

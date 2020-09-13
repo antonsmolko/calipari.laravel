@@ -6,10 +6,13 @@
                     <md-card-content class="md-between">
                         <router-button-link :to="redirectRoute" title="К списку коллекций" />
                         <slide-y-down-transition v-show="!$v.$invalid">
-                            <control-button title="Создать коллекцию" @click="onCreate"/>
+                            <control-button
+                                title="Создать коллекцию"
+                                @click="onCreate" />
                         </slide-y-down-transition>
                     </md-card-content>
                 </md-card>
+                <progress-bar-loading />
             </div>
         </div>
         <div class="md-layout">

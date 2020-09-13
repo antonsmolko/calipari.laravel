@@ -62,7 +62,14 @@ const actions = {
             data.append(field, value);
         }
 
-        return axiosAction('post', commit, { url: `/pages/${id}`, data })
+        return axiosAction('post', commit, {
+            url: `/pages/${id}`,
+            data,
+            thenContent: response => {
+                commit('SET_ITEM_FIELDS', response.data);
+                commit('SET_FIELD', { field: 'item', value: response.data });
+            }
+        })
     },
     deleteImage ({ commit }, id) {
         return axiosAction('get', commit, {

@@ -132,13 +132,13 @@ const actions = {
     forceDelete ({ commit, dispatch }, { payload }) {
         return axiosAction('get', commit, {
             url: `/images/${payload}/force-delete`,
-            thenContent: response => dispatch('table/updateItemsPost', null, {root: true})
+            thenContent: response => dispatch('table/updateItemsPost', null, { root: true })
         });
     },
     restore ({ commit, dispatch }, id) {
         return axiosAction('get', commit, {
             url: `/images/${id}/restore`,
-            thenContent: response => dispatch('table/updateItemsPost', null, {root: true})
+            thenContent: response => dispatch('table/updateItemsPost', null, { root: true })
         });
     },
     findDuplicates ({ state, commit }, { category_type, id = null }) {

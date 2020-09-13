@@ -1,53 +1,54 @@
-import swal from 'sweetalert2'
+import swal from 'sweetalert2';
 
 export const createMethod = {
     methods: {
-        create({ sendData, title, successText, redirectRoute, storeModule = null, action = 'store' }) {
+        async create ({ sendData, title, successText, redirectRoute, storeModule = null, action = 'store' }) {
+            this.$store.commit('SET_LOADING', true);
             const module = storeModule ? `${storeModule}/` : '';
 
-            return this.$store.dispatch(`${module}${action}`, sendData)
-                .then(() => {
-                    this.$router.push(redirectRoute);
-                    // window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
+            await this.$store.dispatch(`${module}${action}`, sendData)
+            await this.$router.push(redirectRoute);
+            // window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
+            this.$store.commit('SET_LOADING', false);
 
-                    return swal.fire({
-                        title: successText,
-                        text: `«${title}»`,
-                        timer: 2000,
-                        showConfirmButton: false,
-                        icon: 'success'
-                    });
-                });
+            return swal.fire({
+                title: successText,
+                text: `«${title}»`,
+                timer: 2000,
+                showConfirmButton: false,
+                icon: 'success'
+            });
         }
     }
 }
 
 export const updateMethod = {
     methods: {
-        update ({ sendData, title, redirectRoute, successText, storeModule = null }) {
+        async update ({ sendData, title, successText, redirectRoute = null, storeModule = null }) {
+            this.$store.commit('SET_LOADING', true);
             const module = storeModule ? `${storeModule}/` : '';
 
-            return this.$store.dispatch(`${module}update`, sendData)
-                .then(() => {
-                    this.$router.push(redirectRoute);
-                    // window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
+            await this.$store.dispatch(`${module}update`, sendData)
+            if (redirectRoute) {
+                await this.$router.push(redirectRoute);
+            }
+            // window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
+            this.$store.commit('SET_LOADING', false);
 
-                    return swal.fire({
-                        title: successText,
-                        text: `«${title}»`,
-                        timer: 2000,
-                        showConfirmButton: false,
-                        icon: 'success'
-                    });
-
-                });
+            return swal.fire({
+                title: successText,
+                text: `«${title}»`,
+                timer: 2000,
+                showConfirmButton: false,
+                icon: 'success'
+            });
         }
     }
 }
 
 export const deleteMethod = {
     methods: {
-        delete({
+        async delete ({
             payload,
             title,
             alertText,
@@ -61,41 +62,40 @@ export const deleteMethod = {
             const module = storeModule ? `${storeModule}/` : '';
             const method = force ? 'forceDelete' : action;
 
-            return deleteSwalFireConfirm(alertText)
-                .then((result) => {
-                    if (result.value) {
-                        return this.$store.dispatch(`${module}${method}`, { payload, tableMode })
-                            .then(() => {
-                                if (redirectRoute) {
-                                    this.$router.push(redirectRoute);
-                                    // window.history.length > 1
-                                    //     ? this.$router.go(-1)
-                                    //     : this.$router.push(redirectRoute);
-                                }
+            const result = await deleteSwalFireConfirm(alertText)
+            if (result.value) {
+                this.$store.commit('SET_LOADING', true);
+                await this.$store.dispatch(`${module}${method}`, { payload, tableMode })
+                if (redirectRoute) {
+                    await this.$router.push(redirectRoute);
+                    // window.history.length > 1
+                    //     ? this.$router.go(-1)
+                    //     : this.$router.push(redirectRoute);
+                }
+                this.$store.commit('SET_LOADING', false);
 
-                                return deleteSwalFireAlert(successText, title);
-                            });
-                    }
-            });
+                return deleteSwalFireAlert(successText, title);
+            }
         },
     }
 }
 
 export const deleteImageByIndexMethod = {
     methods: {
-        deleteImageByIndex({
+        async deleteImageByIndex ({
            id,
            index,
            alertText,
            successText,
            storeModule = null}) {
-            return deleteSwalFireConfirm(alertText)
-                .then((result) => {
-                    if (result.value) {
-                        return this.$store.dispatch(`${storeModule}/deleteImageByIndex`, { id, index })
-                            .then(() => deleteSwalFireAlert(successText, index));
-                    }
-                });
+            this.$store.commit('SET_LOADING', true);
+
+            const result = await deleteSwalFireConfirm(alertText)
+            if (result.value) {
+                await this.$store.dispatch(`${storeModule}/deleteImageByIndex`, { id, index })
+                this.$store.commit('SET_LOADING', false);
+                await deleteSwalFireAlert(successText, index)
+            }
         },
     }
 }
@@ -132,9 +132,11 @@ export const uploadMethod = {
             const files = Array.from(uploadFiles);
             const module = storeModule ? storeModule : 'categories';
 
-            id
-                ? await this.$store.dispatch(`${module}/uploadImages`, { files, id, type })
-                : await this.$store.dispatch('images/store', files);
+            if (files.length) {
+                id
+                    ? await this.$store.dispatch(`${module}/uploadImages`, { files, id, type })
+                    : await this.$store.dispatch('images/store', files);
+            }
 
             return await swal.fire({
                 title: 'Изображения загружены!',
@@ -149,38 +151,34 @@ export const uploadMethod = {
 
 export const imageAddMethod = {
     methods: {
-        addImages ({ id, data }) {
-            this.$store.dispatch('categories/addSelectedImages',{ id, data })
-                .then(() => {
-                    this.$router.push({ name: 'cms.catalog.categories.images', params: { id } });
+        async addImages ({ id, data }) {
+            await this.$store.dispatch('categories/addSelectedImages',{ id, data })
+            await this.$router.push({ name: 'cms.catalog.categories.images', params: { id } });
 
-                    return swal.fire({
-                        title: 'Изображения добавлены!',
-                        text: '',
-                        timer: 2000,
-                        showConfirmButton: false,
-                        icon: 'success'
-                    });
-                });
+            return swal.fire({
+                title: 'Изображения добавлены!',
+                text: '',
+                timer: 2000,
+                showConfirmButton: false,
+                icon: 'success'
+            });
         }
     }
 }
 
 export const subCategoryImageAddMethod = {
     methods: {
-        addImages ({ type, id, data, redirectRoute }) {
-            this.$store.dispatch('subCategories/addSelectedImages', { type, id, data })
-                .then(() => {
-                    this.$router.push(redirectRoute);
+        async addImages ({ type, id, data, redirectRoute }) {
+            await this.$store.dispatch('subCategories/addSelectedImages', { type, id, data })
+            await this.$router.push(redirectRoute);
 
-                    return swal.fire({
-                        title: 'Изображения добавлены!',
-                        text: '',
-                        timer: 2000,
-                        showConfirmButton: false,
-                        icon: 'success'
-                    });
-                });
+            return swal.fire({
+                title: 'Изображения добавлены!',
+                text: '',
+                timer: 2000,
+                showConfirmButton: false,
+                icon: 'success'
+            });
         }
     }
 }

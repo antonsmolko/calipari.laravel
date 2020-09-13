@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="progress-bar__container">
+        <div class="md-progress-bar__container">
             <md-progress-bar v-show="loading" md-mode="indeterminate"></md-progress-bar>
         </div>
         <div v-if="items">
@@ -310,8 +310,5 @@ export default {
 <style>
 .loading td {
     opacity: 0;
-}
-.progress-bar__container {
-    height: 4px;
 }
 </style>

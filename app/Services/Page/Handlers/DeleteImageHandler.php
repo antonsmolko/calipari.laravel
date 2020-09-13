@@ -27,7 +27,7 @@ class DeleteImageHandler
     public function handle(Page $page)
     {
         if ($page->image_path) {
-            uploader()->remove($page->image_path, true);
+            uploader()->remove($page->image_path);
         }
 
         return $this->repository->update($page, ['image_path' => null]);

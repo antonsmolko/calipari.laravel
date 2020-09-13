@@ -81,6 +81,16 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Image\CheckImagesCount::class,
         ],
 
+        \App\Events\Models\Image\ImageRestored::class => [
+            \App\Listeners\Cache\Clear\CategoryCacheClear::class,
+            \App\Listeners\Cache\Clear\ImageCacheClear::class,
+            \App\Listeners\Cache\Clear\ColorCollectionCacheClear::class,
+            \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
+            \App\Listeners\Cache\Clear\SearchCacheClear::class,
+            \App\Listeners\Cache\Clear\FilterCacheClear::class,
+            \App\Listeners\Image\CheckImagesCount::class,
+        ],
+
         \App\Events\Models\ArtCollection\ArtCollectionSaved::class => [
             \App\Listeners\Cache\Clear\CategoryCacheClear::class,
             \App\Listeners\Cache\Clear\ImageCacheClear::class,

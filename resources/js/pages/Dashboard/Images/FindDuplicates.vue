@@ -13,9 +13,15 @@
                             :to="{ name: 'cms.catalog.categories.images', params: { category_type, id } }"/>
                         <div>
                             <slide-y-down-transition v-show="!$v.$invalid">
-                                <control-button icon="image_search" title="Искать" @click="findDuplicates"/>
+                                <control-button
+                                    icon="image_search"
+                                    title="Искать"
+                                    @click="findDuplicates" />
                             </slide-y-down-transition>
-                            <control-button icon="get_app" title="Загрузить" @click="uploadImage"/>
+                            <control-button
+                                icon="get_app"
+                                title="Загрузить"
+                                @click="uploadImage" />
                         </div>
                     </md-card-content>
                 </md-card>
@@ -141,7 +147,13 @@ export default {
             loading: state => state.loading,
             duplicateFindStatus: state => state.images.duplicateFindStatus,
             fileProgress: state => state.images.fileProgress
-        })
+        }),
+        pending () {
+            return this.duplicateFindStatus === 'progress' || Boolean(this.fileProgress);
+        },
+        categoryId () {
+            return this.id !== 0 ? this.id : null;
+        }
     },
     mounted () {
         this.setPageTitle('Проверка изображения на дубликат');
@@ -161,13 +173,13 @@ export default {
         }),
         findDuplicates () {
             this.setImagesFieldAction({field: 'duplicates', value: []})
-            this.findDuplicatesAction({ category_type: this.category_type, id: this.id })
+            this.findDuplicatesAction({ category_type: this.category_type, id: this.categoryId })
         },
         uploadImage () {
             this.upload({
                 uploadFiles: [this.image],
                 type: this.category_type,
-                id: this.id
+                id: this.categoryId
             });
         }
     }

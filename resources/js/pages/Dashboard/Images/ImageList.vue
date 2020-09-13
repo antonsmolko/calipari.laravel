@@ -30,7 +30,7 @@
                                 color="md-success"
                                 title="Добавить изображения"
                                 :to="{ name: 'cms.catalog.categories.images.excluded', params: { id } }" />
-                            <upload-button @change="fileInputChange"/>
+                            <upload-button @change="fileInputChange" :disabled="Boolean(fileProgress)" />
                         </div>
                     </md-card-content>
                 </md-card>
@@ -72,10 +72,8 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-
 import { pageTitle } from '@/mixins/base'
 import { deleteMethod, uploadMethod } from '@/mixins/crudMethods'
-
 import ImageListTable from "@/custom_components/Tables/ImageListTable";
 import ImageTableActions from "@/custom_components/Tables/ImageTableActions";
 
@@ -160,14 +158,3 @@ export default {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-.md-between {
-    display: flex;
-    justify-content: space-between;
-}
-
-.md-progress-bar__container {
-    height: 4px;
-}
-</style>

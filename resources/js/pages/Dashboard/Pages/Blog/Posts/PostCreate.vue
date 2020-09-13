@@ -10,6 +10,7 @@
                         </slide-y-down-transition>
                     </md-card-content>
                 </md-card>
+                <progress-bar-loading />
                 <tabs
                     :tab-name="['Установки', 'SEO']"
                     color-button="success">

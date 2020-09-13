@@ -17,8 +17,9 @@ export const axiosAction = (method, commit, { url, data = null, thenContent = nu
         })
         .catch(error => {
             commit('UPDATE_ERRORS', error.response, { root: true });
-            commit('CHANGE_FILE_PROGRESS', 0);
+            commit('images/CHANGE_FILE_PROGRESS', 0, { root: true });
             commit('SET_LOADING', false, { root: true });
+            commit('table/SET_FIELD', { field: 'loading', value: false }, { root: true })
             throw error;
         });
 }
