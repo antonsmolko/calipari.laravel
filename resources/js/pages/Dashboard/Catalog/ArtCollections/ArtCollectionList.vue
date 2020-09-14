@@ -25,10 +25,7 @@
                             </md-table-cell>
 
                             <md-table-cell md-label="Превью">
-                                <thumb-table-cell
-                                    :path="item.thumb || $config.imagePlaceholder"
-                                    :static="!item.thumb"
-                                    :width="150" />
+                                <thumb-table-cell :path="item.image_path" :width="150" />
                             </md-table-cell>
 
                             <md-table-cell md-label="Заголовок">

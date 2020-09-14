@@ -206,10 +206,10 @@ export default {
                         title: this.title,
                         alias: this.alias,
                         image: this.image,
-                        publish: +this.publish,
-                        meta_title: this.metaTitle,
-                        description: this.description,
-                        keywords: this.keywords
+                        publish: Number(this.publish),
+                        meta_title: this.metaTitle || '',
+                        description: this.description || '',
+                        keywords: this.keywords || ''
                     }
                 },
                 title: this.title,

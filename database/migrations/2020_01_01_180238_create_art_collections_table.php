@@ -17,7 +17,7 @@ class CreateArtCollectionsTable extends Migration
             $table->increments('id');
             $table->string('title', 50)->unique();
             $table->string('alias', 50)->unique();
-            $table->unsignedBigInteger('image_id')->nullable();
+            $table->string('image_path', 100);
             $table->string('meta_title')->nullable();
             $table->text('description')->nullable();
             $table->string('keywords')->nullable();

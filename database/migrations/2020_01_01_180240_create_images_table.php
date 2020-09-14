@@ -55,11 +55,6 @@ class CreateImagesTable extends Migration
             $table->foreign('main_image_id')->references('id')->on('images')
                 ->onDelete('set null')->onUpdate('cascade');
         });
-
-        Schema::table('art_collections', function(Blueprint $table) {
-            $table->foreign('image_id')->references('id')->on('images')
-                ->onDelete('set null')->onUpdate('cascade');
-        });
     }
 
     /**
@@ -71,9 +66,6 @@ class CreateImagesTable extends Migration
     {
         Schema::table('color_collections', function(Blueprint $table) {
             $table->dropForeign(['main_image_id']);
-        });
-        Schema::table('art_collections', function(Blueprint $table) {
-            $table->dropForeign(['image_id']);
         });
         Schema::table('images', function (Blueprint $table) {
             $table->dropSoftDeletes();

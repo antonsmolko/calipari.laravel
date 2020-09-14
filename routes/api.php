@@ -368,6 +368,8 @@ Route::prefix('cms')
         Route::group(['prefix' => 'art-collections'], function() {
             Route::get('{id}/images', 'Cms\ArtCollection\ArtCollectionController@getImages')
                 ->where('id', '[0-9]+');
+            Route::post('{id}', 'Cms\ArtCollection\ArtCollectionController@update')
+                ->where('id', '[0-9]+');
             Route::get('{id}/publish', 'Cms\ArtCollection\ArtCollectionController@publish')
                 ->where('id', '[0-9]+');
             Route::post('{id}/images/add', 'Cms\ArtCollection\ArtCollectionController@addImages')
@@ -376,7 +378,9 @@ Route::prefix('cms')
                 ->where('id', '[0-9]+');
             Route::post('images/excluded', 'Cms\ArtCollection\ArtCollectionController@getExcludedImages');
         });
-        Route::apiResource('art-collections', 'Cms\ArtCollection\ArtCollectionController');
+        Route::apiResource('art-collections', 'Cms\ArtCollection\ArtCollectionController')
+            ->middleware('optimizeImages')
+            ->except(['create', 'edit', 'update']);
     });
 
 

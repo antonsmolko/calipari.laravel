@@ -27,6 +27,7 @@
                     </div>
                 </md-card-content>
             </md-card>
+            <progress-bar-loading />
         </div>
         <div class="md-layout-item md-xsmall-size-100 md-medium-size-50 md-large-size-33 md-xlarge-size-25">
             <order-item

@@ -6,7 +6,6 @@ namespace App\Services\Category\Handlers;
 
 use App\Models\Category;
 use App\Services\Category\Repositories\CmsCategoryRepository;
-use App\Services\HomeModuleInterior\CmsHomeModuleInteriorService;
 use App\Services\HomeModuleInterior\Repositories\CmsHomeModuleInteriorRepository;
 use Illuminate\Support\Arr;
 

@@ -8,16 +8,11 @@
                                     direction="right"
                                     @click="goBack"/>
                     <slide-y-down-transition v-show="!$v.$invalid">
-                        <control-button title="Создать" @click="onCreate" :disabled="loading" />
+                        <control-button title="Создать" @click="onCreate" />
                     </slide-y-down-transition>
                 </md-card-content>
             </md-card>
-            <div class="md-layout-item md-size-100 mt-1 mb-1 md-progress-bar__container">
-                <md-progress-bar
-                    v-if="loading"
-                    class="md-info"
-                    md-mode="indeterminate"/>
-            </div>
+            <progress-bar-loading />
         </div>
         <div class="md-layout-item md-medium-size-100 md-large-size-33 md-xlarge-size-25">
             <product-card headerAnimation="false">
@@ -250,8 +245,7 @@ export default {
             texture: state => state.orders.project.texture,
             textures: state => state.textures.items,
             addedCosts: state => state.orders.project.addedCosts,
-            settings: state => state.settings.entries,
-            loading: state => state.loading
+            settings: state => state.settings.entries
         }),
         ...mapGetters('textures', {
             defaultTextureId: 'defaultItemId'

@@ -20,7 +20,7 @@ class FromClient extends JsonResource
             'title' => $this->title,
             'alias' => $this->alias,
             'images' => FromCollectionResource::collection($this->images),
-            'background' => $this->backgroundImage ? $this->backgroundImage->path : null,
+            'image_path' => $this->image_path,
             'meta_title' => $this->meta_title,
             'description' => $this->description,
             'keywords' => $this->keywords

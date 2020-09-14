@@ -16,68 +16,53 @@
             </div>
         </div>
         <div class="md-layout">
-            <div class="md-layout-item">
+            <div class="md-layout-item md-medium-size-50 md-small-size-100">
                 <md-card>
                     <card-icon-header />
                     <md-card-content>
-                        <div class="md-layout">
-                            <div class="md-layout-item md-small-size-100">
-                                <v-input title="Заголовок"
-                                         icon="title"
-                                         name="title"
-                                         :vField="$v.title"
-                                         :module="storeModule"
-                                         :vRules="{ required: true, unique: true, minLength: true }" />
-                            </div>
-                            <div class="md-layout-item md-small-size-100">
-                                <v-input title="Алиас"
-                                         icon="code"
-                                         name="alias"
-                                         :vDelay="true"
-                                         :vField="$v.alias"
-                                         :module="storeModule"
-                                         :vRules="{ required: true, unique: true, minLength: true, alias: true }" />
-                            </div>
-                            <div class="md-layout-item md-small-size-100">
-                                <v-input title="ID Изображения"
-                                         icon="image"
-                                         name="image_id"
-                                         :maxlength="5"
-                                         :vField="$v.imageId"
-                                         :module="storeModule"
-                                         :vRules="{ required: true, numeric: true }" />
-                            </div>
-                        </div>
-                        <div class="space-20"></div>
+                        <v-input title="Заголовок"
+                                 icon="title"
+                                 name="title"
+                                 :vField="$v.title"
+                                 :module="storeModule"
+                                 :vRules="{ required: true, unique: true, minLength: true }" />
+
+                        <v-input title="Алиас"
+                                 icon="code"
+                                 name="alias"
+                                 :vDelay="true"
+                                 :vField="$v.alias"
+                                 :module="storeModule"
+                                 :vRules="{ required: true, unique: true, minLength: true, alias: true }" />
+
+                        <v-image name="image"
+                                 :vField="$v.image"
+                                 :vRules="{ required: true }"
+                                 :module="storeModule"/>
+
                     </md-card-content>
                 </md-card>
             </div>
-        </div>
-        <div class="md-layout">
-            <div class="md-layout-item">
+            <div class="md-layout-item md-medium-size-50 md-small-size-100">
                 <md-card>
                     <card-icon-header icon="timeline" title="SEO" />
                     <md-card-content>
-                        <div class="md-layout">
-                            <div class="md-layout-item md-size-100">
-                                <v-input title="Мета заголовок"
-                                         name="meta_title"
-                                         :vField="$v.metaTitle"
-                                         :maxlength="150"
-                                         :module="storeModule" />
-                            </div>
-                            <div class="md-layout-item md-size-50 md-medium-size-100">
-                                <v-textarea name="description"
-                                            :vField="$v.description"
-                                            :module="storeModule" />
-                            </div>
-                            <div class="md-layout-item md-size-50 md-medium-size-100">
-                                <v-textarea title="Ключевые слова"
-                                            name="keywords"
-                                            :vField="$v.keywords"
-                                            :module="storeModule" />
-                            </div>
-                        </div>
+
+                        <v-input title="Мета заголовок"
+                                 name="meta_title"
+                                 :vField="$v.metaTitle"
+                                 :maxlength="150"
+                                 :module="storeModule" />
+
+                        <v-textarea name="description"
+                                    :vField="$v.description"
+                                    :module="storeModule" />
+
+                        <v-textarea title="Ключевые слова"
+                                    name="keywords"
+                                    :vField="$v.keywords"
+                                    :module="storeModule" />
+
                         <div class="space-30"></div>
                     </md-card-content>
                 </md-card>
@@ -121,9 +106,8 @@ export default {
                 return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAlias
             },
         },
-        imageId: {
+        image: {
             required,
-            numeric,
             touch: false
         },
         metaTitle: {
@@ -140,7 +124,7 @@ export default {
         ...mapState('artCollections', {
             title: state => state.fields.title,
             alias: state => state.fields.alias,
-            imageId: state => state.fields.image_id,
+            image: state => state.fields.image,
             metaTitle: state => state.fields.meta_title,
             description: state => state.fields.description,
             keywords: state => state.fields.keywords
@@ -171,7 +155,7 @@ export default {
                 sendData: {
                     title: this.title,
                     alias: this.alias,
-                    image_id: this.imageId,
+                    image: this.image,
                     meta_title: this.metaTitle,
                     description: this.description,
                     keywords: this.keywords

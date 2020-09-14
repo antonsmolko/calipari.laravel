@@ -38,14 +38,6 @@ class ArtCollection extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function backgroundImage()
-    {
-        return $this->belongsTo('App\Models\Image', 'image_id');
-    }
-
-    /**
      * @param $query
      * @return mixed
      */

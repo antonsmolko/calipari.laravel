@@ -5,7 +5,8 @@ const state = {
     fields: {
         title: '',
         alias: '',
-        image_id: '',
+        image: '',
+        image_path: '',
         publish: '',
         meta_title: '',
         description: '',
@@ -37,7 +38,7 @@ const mutations = {
         }
     },
     TOGGLE_PUBLISH_FIELD(state) {
-        state.fields.publish = +!state.fields.publish;
+        state.fields.publish = Number(!state.fields.publish);
     }
 };
 
@@ -54,19 +55,23 @@ const actions = {
             thenContent: response => commit('SET_ITEM_FIELDS', response.data)
         })
     },
-    store ({ commit }, data) {
-        return axiosAction('post', commit, {
-            url: '/catalog/art-collections',
-            data
-        })
+    store ({ commit }, payload) {
+        const data = new FormData();
+        for (const [field, value] of Object.entries(payload)) {
+            data.append(field, value);
+        }
+
+        return axiosAction('post', commit, { url: '/catalog/art-collections', data })
     },
-    update ({ commit }, { id, data }) {
-        return axiosPatch({
-            method: 'PUT',
-            url: `/catalog/art-collections/${id}`,
-            commit,
-            data
-        })
+    update ({ commit }, { id, payload }) {
+        const data = new FormData();
+        for (const [field, value] of Object.entries(payload)) {
+            if (field !== 'image' || value) {
+                data.append(field, value);
+            }
+        }
+
+        return axiosAction('post', commit, { url: `/catalog/art-collections/${id}`, data })
     },
     delete({ commit, dispatch }, { payload, tableMode = false }) {
         return axiosAction('delete', commit, {

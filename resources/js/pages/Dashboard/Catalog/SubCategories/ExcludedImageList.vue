@@ -76,16 +76,18 @@ export default {
             default: null
         },
     },
-    data: () => ({
-        resourceUrl: `/catalog/${this.category_type}/${this.id}/images/excluded`,
-        storeModule: 'images',
-        redirectRoute: {
-            name: 'cms.catalog.subcategories.images',
-            params: { category_type: this.category_type, id: this.id }
-        },
-        responseData: false,
-        selected: []
-    }),
+    data () {
+        return {
+            resourceUrl: `/catalog/${this.category_type}/${this.id}/images/excluded`,
+            storeModule: 'images',
+            redirectRoute: {
+                name: 'cms.catalog.subcategories.images',
+                params: { category_type: this.category_type, id: this.id }
+            },
+            responseData: false,
+            selected: []
+        }
+    },
     computed: {
         ...mapState({
             title: state => state.subCategories.fields.title,

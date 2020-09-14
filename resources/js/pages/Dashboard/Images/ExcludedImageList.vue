@@ -73,12 +73,14 @@ export default {
             default: null
         },
     },
-    data: () => ({
-        storeModule: 'images',
-        resourceUrl: `/catalog/categories/${this.id}/images/excluded`,
-        selected: [],
-        loading: false
-    }),
+    data () {
+        return {
+            storeModule: 'images',
+            resourceUrl: `/catalog/categories/${this.id}/images/excluded`,
+            selected: [],
+            loading: false
+        }
+    },
     computed: {
         ...mapState({
             category: state => state.categories.item

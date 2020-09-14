@@ -37,7 +37,7 @@ const mutations = {
         state.fields[field] = value;
     },
     TOGGLE_PUBLISH_FIELD(state) {
-        state.fields.publish = +!state.fields.publish;
+        state.fields.publish = Number(!state.fields.publish);
     },
     CLEAR_FIELDS(state) {
         for (const field of Object.keys(state.fields)) {

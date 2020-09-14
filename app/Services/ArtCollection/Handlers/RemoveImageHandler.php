@@ -34,12 +34,13 @@ class RemoveImageHandler
     public function handle(ArtCollection $collection, int $imageId): int
     {
         $image = $this->imageRepository->getItem($imageId);
-        $result = $this->imageRepository->dissociateArtCollection($image);
 
-        if (!$collection->images->count()) {
-            $this->repository->unpublish($collection);
-        }
+        return $this->imageRepository->dissociateArtCollection($image);
 
-        return $result;
+//        if (!$collection->images->count()) {
+//            $this->repository->unpublish($collection);
+//        }
+
+//        return $result;
     }
 }

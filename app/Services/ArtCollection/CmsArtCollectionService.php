@@ -5,7 +5,10 @@ namespace App\Services\ArtCollection;
 
 
 use App\Services\ArtCollection\Handlers\AddImagesHandler;
+use App\Services\ArtCollection\Handlers\DestroyHandler;
 use App\Services\ArtCollection\Handlers\RemoveImageHandler;
+use App\Services\ArtCollection\Handlers\StoreHandler;
+use App\Services\ArtCollection\Handlers\UpdateHandler;
 use App\Services\ArtCollection\Repositories\CmsArtCollectionRepository;
 use App\Services\Base\Resource\CmsBaseResourceService;
 use App\Services\Base\Resource\Handlers\ClearCacheHandler;
@@ -19,6 +22,9 @@ class CmsArtCollectionService extends CmsBaseResourceService
 {
     private AddImagesHandler $addImagesHandler;
     private RemoveImageHandler $removeImageHandler;
+    private StoreHandler $storeHandler;
+    private UpdateHandler $updateHandler;
+    private DestroyHandler $destroyHandler;
 
     /**
      * CmsArtCollectionService constructor.
@@ -26,6 +32,9 @@ class CmsArtCollectionService extends CmsBaseResourceService
      * @param ClearCacheHandler $clearCacheByTagHandler
      * @param AddImagesHandler $addImagesHandler
      * @param RemoveImageHandler $removeImageHandler
+     * @param StoreHandler $storeHandler
+     * @param UpdateHandler $updateHandler
+     * @param DestroyHandler $destroyHandler
      * @param CacheKeyManager $cacheKeyManager
      */
     public function __construct(
@@ -33,18 +42,24 @@ class CmsArtCollectionService extends CmsBaseResourceService
         ClearCacheHandler $clearCacheByTagHandler,
         AddImagesHandler $addImagesHandler,
         RemoveImageHandler $removeImageHandler,
+        StoreHandler $storeHandler,
+        UpdateHandler $updateHandler,
+        DestroyHandler $destroyHandler,
         CacheKeyManager $cacheKeyManager
     )
     {
-        parent::__construct(
-            $repository,
-            $clearCacheByTagHandler,
-            $cacheKeyManager);
+        parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
         $this->addImagesHandler = $addImagesHandler;
         $this->removeImageHandler = $removeImageHandler;
+        $this->storeHandler = $storeHandler;
+        $this->updateHandler = $updateHandler;
+        $this->destroyHandler = $destroyHandler;
         $this->cacheTag = Tag::ART_COLLECTIONS_TAG;
     }
 
+    /**
+     * @return array|\Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Contracts\Pagination\Paginator|\Illuminate\Database\Eloquent\Collection|\Illuminate\Http\Resources\Json\ResourceCollection|mixed
+     */
     public function index()
     {
         $key = $this->cacheKeyManager
@@ -64,6 +79,27 @@ class CmsArtCollectionService extends CmsBaseResourceService
     public function getItem(int $id)
     {
         return $this->repository->getItemDetail($id);
+    }
+
+    /**
+     * @param array $storeData
+     * @return mixed
+     */
+    public function store(array $storeData)
+    {
+        return $this->storeHandler->handle($storeData);
+    }
+
+    /**
+     * @param int $id
+     * @param array $updateData
+     * @return mixed
+     */
+    public function update(int $id, array $updateData)
+    {
+        $item = $this->repository->getItem($id);
+
+        return $this->updateHandler->handle($item, $updateData);
     }
 
     /**
@@ -147,5 +183,17 @@ class CmsArtCollectionService extends CmsBaseResourceService
         $items = $this->repository->getWithoutPublishedImagesItems();
 
         $items->each(fn ($item) => $this->repository->unpublish($item));
+    }
+
+    /**
+     * @param int $id
+     * @return int
+     * @throws \Exception
+     */
+    public function destroy(int $id): int
+    {
+        $item = $this->repository->getItem($id);
+
+        return $this->destroyHandler->handle($item);
     }
 }

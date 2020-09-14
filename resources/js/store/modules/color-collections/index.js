@@ -44,7 +44,7 @@ const mutations = {
         }
     },
     TOGGLE_PUBLISH_FIELD(state) {
-        state.fields.publish = +!state.fields.publish;
+        state.fields.publish = Number(!state.fields.publish);
     }
 };
 

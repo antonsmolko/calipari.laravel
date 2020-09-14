@@ -30,7 +30,9 @@ export const updateMethod = {
 
             await this.$store.dispatch(`${module}update`, sendData)
             if (redirectRoute) {
-                await this.$router.push(redirectRoute);
+                window.history.length > 1
+                    ? this.$router.go(-1)
+                    : await this.$router.push(redirectRoute);
             }
             // window.history.length > 1 ? this.$router.go(-1) : this.$router.push(redirectRoute);
             this.$store.commit('SET_LOADING', false);

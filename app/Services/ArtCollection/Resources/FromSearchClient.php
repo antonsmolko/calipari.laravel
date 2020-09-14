@@ -17,7 +17,7 @@ class FromSearchClient extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'image_path' => $this->backgroundImage ? $this->backgroundImage->path : null,
+            'image_path' => $this->image_path,
             'type' => 'art_collection',
         ];
     }

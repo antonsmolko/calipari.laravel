@@ -28,7 +28,7 @@ class CmsArtCollectionRepository extends CmsBaseResourceRepository
     public function index()
     {
         return FromListResource::collection($this->model::orderBy('id')
-            ->with(['images', 'backgroundImage'])
+            ->with(['images'])
             ->withCount([
                 'images',
                 'images as published_count' => fn(Builder $query) => $query

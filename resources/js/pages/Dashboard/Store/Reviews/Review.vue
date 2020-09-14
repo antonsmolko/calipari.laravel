@@ -12,6 +12,7 @@
                         class="md-danger" />
                 </md-card-content>
             </md-card>
+            <progress-bar-loading />
         </div>
         <div class="md-layout-item md-size-100">
             <md-card>
