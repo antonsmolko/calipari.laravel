@@ -77,13 +77,15 @@ export default {
             required: true
         }
     },
-    data: () => ({
-        redirectRoute: {
-            name: 'cms.store.orders.order',
-            params: {id: this.id}
-        },
-        storeModule: 'orders'
-    }),
+    data () {
+        return {
+            redirectRoute: {
+                name: 'cms.store.orders.order',
+                params: { id: this.id }
+            },
+            storeModule: 'orders'
+        }
+    },
     validations () {
         return {
             refundAmount: {
