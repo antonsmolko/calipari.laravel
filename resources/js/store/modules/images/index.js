@@ -17,7 +17,6 @@ const state = {
     },
     item: {},
     items: [],
-    fileProgress: 0,
     duplicates: [],
     duplicateFindStatus: null
 };
@@ -82,13 +81,7 @@ const actions = {
         return axiosAction('post', commit, {
             url: '/images',
             data,
-            options: {
-                onUploadProgress: (imageUpload) => {
-                    commit('CHANGE_FILE_PROGRESS', Math.round( ( imageUpload.loaded / imageUpload.total) * 100 ))
-                }
-            },
             thenContent: (response) => {
-                commit('CHANGE_FILE_PROGRESS', 0);
                 commit('table/SET_PAGINATION_FIELD', { field: 'current_page', value: 1 }, { root: true });
                 dispatch('table/getItemsPost', null, { root: true });
             }
@@ -143,26 +136,24 @@ const actions = {
             thenContent: response => dispatch('table/updateItemsPost', null, { root: true })
         });
     },
-    uploadExamples ({ commit }, { id, payload }) {
+    uploadExamples ({ commit }, { id, images }) {
         const data = new FormData();
 
-        forEach(payload, value => data.append('examples[]', value))
+        forEach(images, image => data.append('examples[]', image))
 
         return axiosAction('post', commit, {
             url: `/images/${id}/examples`,
             data,
-            options: {
-                onUploadProgress: (imageUpload) => {
-                    commit('CHANGE_FILE_PROGRESS', Math.round( ( imageUpload.loaded / imageUpload.total) * 100 ))
-                }
-            },
             thenContent: (response) => commit('SET_ITEM_FIELD', { field: 'examples', value: response.data })
         })
     },
     deleteExample ({ commit }, { id, example }) {
         return axiosAction('delete', commit, {
             url: `/images/${id}/examples/${example}`,
-            thenContent: (response) => commit('SET_ITEM_FIELD', { field: 'examples', value: response.data })
+            thenContent: (response) => {
+                commit('SET_ITEM_FIELD', { field: 'examples', value: response.data })
+                commit('images/CHANGE_FILE_PROGRESS', 0, { root: true });
+            }
         })
     },
     findDuplicates ({ state, commit }, { category_type, id = null }) {

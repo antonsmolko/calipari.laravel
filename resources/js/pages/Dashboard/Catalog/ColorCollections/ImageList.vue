@@ -5,22 +5,14 @@
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
                         <router-button-link :to="redirectRoute"/>
-                        <div>
-                            <upload-button @change="fileInputChange" />
-                        </div>
+                        <image-uploader @change="fileInputChange" :multiple="true" />
                     </md-card-content>
                 </md-card>
+                <progress-bar-loading />
             </div>
         </div>
         <div class="md-layout">
             <div class="md-layout-item">
-                <div class="md-layout-item md-progress-bar__container">
-                    <md-progress-bar
-                        v-if="fileProgress"
-                        class="md-info"
-                        md-mode="indeterminate"
-                        :md-value="fileProgress" />
-                </div>
                 <md-card>
                     <card-icon-header title="Список изображений" icon="assignment" />
                     <md-card-content>
@@ -100,6 +92,7 @@ import { mapState, mapActions } from 'vuex'
 
 import { pageTitle } from '@/mixins/base'
 import { deleteMethod, uploadMethod } from '@/mixins/crudMethods'
+import ImageUploader from "@/custom_components/Uploader/ImageUploader";
 import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
 import PaletteTableCell from "@/custom_components/Tables/PaletteTableCell";
 import TableActions from "@/custom_components/Tables/TableActions";
@@ -112,6 +105,7 @@ export default {
         uploadMethod
     ],
     components: {
+        ImageUploader,
         ThumbTableCell,
         PaletteTableCell,
         TableActions
@@ -132,8 +126,7 @@ export default {
         ...mapState({
             title: state => state.colorCollections.fields.title,
             mainImageId: state => state.colorCollections.fields.main_image_id,
-            images: state => state.images.items,
-            fileProgress: state => state.images.fileProgress
+            images: state => state.images.items
         })
     },
     watch: {
@@ -153,7 +146,7 @@ export default {
                 this.setPageTitle(`Изображения коллекции «${this.title}»`);
                 this.responseData = true;
             })
-            .catch(() => this.$router.push({ name: this.redirectRoute }));
+            .catch(() => this.$router.push(this.redirectRoute));
     },
     methods: {
         ...mapActions({
@@ -162,9 +155,9 @@ export default {
             getImagesAction: 'colorCollections/getImages',
             setMainImageAction: 'colorCollections/setMainImage'
         }),
-        fileInputChange (event) {
+        fileInputChange ({ images }) {
             this.upload({
-                uploadFiles: event.target.files,
+                images,
                 type: this.category_type,
                 id: this.id,
                 storeModule: 'colorCollections'

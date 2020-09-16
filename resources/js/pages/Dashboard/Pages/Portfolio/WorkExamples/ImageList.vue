@@ -5,18 +5,14 @@
                 <md-card class="mt-0">
                     <md-card-content class="md-between">
                         <router-button-link :to="redirectRoute" />
-                        <div>
-                            <upload-button @change="fileInputChange" :disabled="Boolean(fileProgress)" />
-                        </div>
+                        <image-uploader @change="fileInputChange" :multiple="true" />
                     </md-card-content>
                 </md-card>
+                <progress-bar-loading />
             </div>
         </div>
         <div class="md-layout">
             <div class="md-layout-item">
-                <div class="md-layout-item md-progress-bar__container">
-                    <md-progress-bar v-if="fileProgress" md-mode="indeterminate" :md-value="fileProgress" />
-                </div>
                 <md-card>
                     <card-icon-header title="Список изображений" icon="assignment" />
                     <md-card-content>
@@ -65,6 +61,7 @@ import { mapState, mapActions } from 'vuex'
 
 import { pageTitle } from '@/mixins/base'
 import { deleteImageByIndexMethod, uploadMethod } from '@/mixins/crudMethods'
+import ImageUploader from "@/custom_components/Uploader/ImageUploader";
 import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
 
 export default {
@@ -75,6 +72,7 @@ export default {
         uploadMethod
     ],
     components: {
+        ImageUploader,
         ThumbTableCell
     },
     props: {
@@ -95,8 +93,7 @@ export default {
     computed: {
         ...mapState({
             title: state => state.workExamples.fields.title,
-            images: state => state.workExamples.fields.images,
-            fileProgress: state => state.images.fileProgress
+            images: state => state.workExamples.fields.images
         })
     },
     created () {
@@ -113,9 +110,9 @@ export default {
         ...mapActions({
             getItemAction: 'workExamples/getItem'
         }),
-        fileInputChange (event) {
+        fileInputChange ({ images }) {
             this.upload({
-                uploadFiles: event.target.files,
+                images,
                 id: this.id,
                 storeModule: this.storeModule
             });

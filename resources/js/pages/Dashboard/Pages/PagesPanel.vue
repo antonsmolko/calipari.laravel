@@ -31,7 +31,7 @@ export default{
     },
     mixins: [ pageTitle ],
     created () {
-        this.setPageTitle('Страницы');
+        this.setPageTitle('Ресурсы');
     }
 }
 </script>

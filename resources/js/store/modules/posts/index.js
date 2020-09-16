@@ -1,3 +1,4 @@
+import forEach from 'lodash/forEach';
 import { axiosAction } from "../../mixins/actions";
 import { uniqueFieldEditMixin, uniqueFieldMixin } from "../../mixins/getters";
 
@@ -75,6 +76,7 @@ const actions = {
         for (const [field, value] of Object.entries(payload)) {
             data.append(field, value);
         }
+
         return axiosAction('post', commit, {
             url: '/posts',
             data
@@ -103,28 +105,14 @@ const actions = {
             }
         })
     },
-    uploadImages ({ commit, dispatch }, { id, files }) {
+    uploadImages ({ commit, dispatch }, { id, images }) {
         const data = new FormData();
-        for(let file of files) {
-            data.append('images[]', file);
-        }
+        forEach(images, image => data.append('images[]', image))
 
         return axiosAction('post', commit, {
             url: `/posts/${id}/upload`,
             data,
-            options: {
-                onUploadProgress: (imageUpload) => {
-                    commit(
-                        'images/CHANGE_FILE_PROGRESS',
-                        Math.round((imageUpload.loaded / imageUpload.total) * 100),
-                        {root: true}
-                    );
-                }
-            },
-            thenContent: (response) => {
-                commit('images/CHANGE_FILE_PROGRESS', 0, { root: true });
-                commit('SET_ITEM_FIELD', { field: 'images', value: response.data });
-            }
+            thenContent: (response) => commit('SET_ITEM_FIELD', { field: 'images', value: response.data })
         })
     },
     deleteImageByIndex ({ commit }, { id, index }) {

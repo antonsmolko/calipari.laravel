@@ -16,11 +16,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import FileApi from 'fileapi'
-import some from 'lodash/some'
-// import unionWith from 'lodash/unionWith'
-// import { isEqualImages } from '@/helpers'
 
 export default {
     name: "ImageUploader",
@@ -63,7 +60,11 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            setLoadingAction: 'setLoading'
+        }),
         async onChange (e) {
+            this.setLoadingAction(true);
             const files = e.target.files || e.dataTransfer.files;
 
             if (!files.length) {
@@ -77,8 +78,8 @@ export default {
         async handleMultipleChange (files) {
             await this.processMultipleImages(files);
 
-            const previews = Object.assign({}, this.previews);
-            const images = Object.assign({}, this.images);
+            const previews = [...this.previews];
+            const images = [...this.images];
 
             this.$emit('change', { previews, images });
 
@@ -149,15 +150,6 @@ export default {
                         resolve(image);
                     });
             });
-        },
-        addImage (preview, image) {
-            if (!some(this.previews, { name: preview.name, size: preview.size })) {
-                this.previews.push(preview);
-            }
-        },
-        setImage (preview, image) {
-            this.preview = preview;
-            this.image = image;
         },
         dataURItoBlob (dataURI) {
             const byteString = atob(dataURI.split(',')[1]);

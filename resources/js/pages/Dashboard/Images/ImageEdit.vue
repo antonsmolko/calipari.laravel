@@ -188,9 +188,7 @@
                         <h3 class="title">Фото в интерьере</h3>
                     </md-card-header>
                     <md-card-content>
-                        <image-uploader
-                            @change="fileInputChange"
-                            :multiple="true" />
+                        <image-uploader @change="fileInputChange" :multiple="true" />
                         <progress-bar-loading />
                         <template v-if="examples && examples.length">
                             <div class="md-layout md-gutter mt-2">
@@ -303,7 +301,8 @@ export default {
             maxPrintWidth: state => state.images.fields.max_print_width,
             description: state => state.images.fields.description,
             ownerList: state => state.subCategories.itemsByType.owners,
-            examples: state => state.images.fields.examples
+            examples: state => state.images.fields.examples,
+            fileProgress: state => state.images.fileProgress
         }),
         topicList () {
             return this.$store.getters['categories/getItemsByType']('topics');
@@ -385,7 +384,7 @@ export default {
             })
         },
         fileInputChange ({ images }) {
-            this.uploadExamplesAction({ id: this.id, payload: images });
+            this.uploadExamplesAction({ id: this.id, images });
         },
         onExampleDelete (example) {
             this.deleteExampleAction({ id: this.id, example });

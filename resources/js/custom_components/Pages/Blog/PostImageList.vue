@@ -2,15 +2,9 @@
     <div>
         <div class="md-between mt-3">
             <h4>Изображения контента</h4>
-            <upload-button @change="fileInputChange" />
+            <image-uploader @change="fileInputChange" :multiple="true" />
         </div>
-        <div class="md-layout-item md-progress-bar__container mb-1">
-            <md-progress-bar
-                v-if="fileProgress"
-                class="md-info"
-                md-mode="indeterminate"
-                :md-value="fileProgress" />
-        </div>
+        <progress-bar-loading />
         <md-table
             v-if="images.length"
             class="paginated-table table-striped table-hover"
@@ -56,6 +50,7 @@
 import { mapState, mapActions } from 'vuex'
 
 import { deleteImageByIndexMethod, uploadMethod } from '@/mixins/crudMethods'
+import ImageUploader from "@/custom_components/Uploader/ImageUploader";
 import ThumbTableCell from "@/custom_components/Tables/ThumbTableCell";
 
 export default {
@@ -65,6 +60,7 @@ export default {
         uploadMethod
     ],
     components: {
+        ImageUploader,
         ThumbTableCell
     },
     props: {
@@ -82,7 +78,6 @@ export default {
     }),
     computed: {
         ...mapState({
-            fileProgress: state => state.images.fileProgress,
             settings: state => state.settings.entries
         }),
         baseUrl () {
@@ -109,9 +104,9 @@ export default {
         ...mapActions({
             getSettingEntriesAction: 'settings/getEntries'
         }),
-        fileInputChange (event) {
+        fileInputChange ({ images }) {
             this.upload({
-                uploadFiles: event.target.files,
+                images,
                 id: this.id,
                 storeModule: this.storeModule
             });

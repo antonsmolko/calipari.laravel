@@ -11,21 +11,15 @@
                                 color="md-success"
                                 title="Добавить изображения"
                                 :to="{ name: 'cms.catalog.subcategories.images.excluded', params: { id } }" />
-                            <upload-button @change="fileInputChange" />
+                            <image-uploader @change="fileInputChange" :multiple="true" />
                         </div>
                     </md-card-content>
                 </md-card>
+                <progress-bar-loading />
             </div>
         </div>
         <div class="md-layout">
             <div class="md-layout-item">
-                <div class="md-layout-item md-progress-bar__container">
-                    <md-progress-bar
-                        v-if="fileProgress"
-                        class="md-info"
-                        md-mode="indeterminate"
-                        :md-value="fileProgress" />
-                </div>
                 <md-card>
                     <card-icon-header title="Каталог изображений" icon="image" />
                     <md-card-content>
@@ -56,7 +50,7 @@ import { mapState, mapActions } from 'vuex'
 
 import { pageTitle } from '@/mixins/base'
 import { deleteMethod, uploadMethod } from '@/mixins/crudMethods'
-
+import ImageUploader from "@/custom_components/Uploader/ImageUploader";
 import ImageListTable from "@/custom_components/Tables/ImageListTable";
 import ImageTableActions from "@/custom_components/Tables/ImageTableActions";
 
@@ -68,6 +62,7 @@ export default {
         uploadMethod
     ],
     components: {
+        ImageUploader,
         ImageListTable,
         ImageTableActions
     },
@@ -94,8 +89,7 @@ export default {
     },
     computed: {
         ...mapState({
-            title: state => state.subCategories.fields.title,
-            fileProgress: state => state.images.fileProgress
+            title: state => state.subCategories.fields.title
         })
     },
     created () {
@@ -117,9 +111,9 @@ export default {
             togglePublishAction: 'table/togglePublish',
             removeImageAction: 'subCategories/removeImage'
         }),
-        fileInputChange (event) {
+        fileInputChange ({ images }) {
             this.upload({
-                uploadFiles: event.target.files,
+                images,
                 type: this.category_type,
                 id: this.id,
                 storeModule: 'subCategories'

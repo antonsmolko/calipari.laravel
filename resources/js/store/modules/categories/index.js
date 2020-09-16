@@ -1,5 +1,5 @@
+import forEach from 'lodash/forEach';
 import { uniqueFieldEditMixin, uniqueFieldMixin } from "../../mixins/getters";
-
 import { axiosAction } from "../../mixins/actions";
 
 const state = {
@@ -115,26 +115,14 @@ const actions = {
             thenContent: response => dispatch('table/updateItemsPost', null, { root: true })
         })
     },
-    uploadImages ({ commit, dispatch, rootState }, { files, id }) {
+    uploadImages ({ commit, dispatch, rootState }, { images, id }) {
         const data = new FormData();
-        for(let file of files) {
-            data.append('images[]', file);
-        }
+        forEach(images, image => data.append('images[]', image))
 
         return axiosAction('post', commit, {
             url: `/catalog/categories/${id}/upload`,
             data,
-            options: {
-                onUploadProgress: (imageUpload) => {
-                    commit(
-                        'images/CHANGE_FILE_PROGRESS',
-                        Math.round((imageUpload.loaded / imageUpload.total) * 100),
-                        {root: true}
-                    );
-                }
-            },
             thenContent: (response) => {
-                commit('images/CHANGE_FILE_PROGRESS', 0, { root: true });
                 commit('table/SET_PAGINATION_FIELD', { field: 'current_page', value: 1 }, { root: true });
                 if (rootState.table.resourceUrl) {
                     dispatch('table/getItemsPost', null, { root: true });

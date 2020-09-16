@@ -1,4 +1,4 @@
-import {axiosAction, axiosWithDownload} from "../../mixins/actions";
+import { axiosAction, axiosWithDownload } from "../../mixins/actions";
 
 const state = {
     fields: {

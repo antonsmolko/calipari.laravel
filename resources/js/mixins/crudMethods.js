@@ -85,15 +85,15 @@ export const deleteMethod = {
 export const deleteImageByIndexMethod = {
     methods: {
         async deleteImageByIndex ({
-           id,
-           index,
-           alertText,
-           successText,
-           storeModule = null}) {
-            this.$store.commit('SET_LOADING', true);
-
+            id,
+            index,
+            alertText,
+            successText,
+            storeModule = null}) {
             const result = await deleteSwalFireConfirm(alertText)
+
             if (result.value) {
+                this.$store.commit('SET_LOADING', true);
                 await this.$store.dispatch(`${storeModule}/deleteImageByIndex`, { id, index })
                 this.$store.commit('SET_LOADING', false);
                 await deleteSwalFireAlert(successText, index)
@@ -130,14 +130,13 @@ const deleteSwalFireAlert = (successText, title) => {
 
 export const uploadMethod = {
     methods: {
-        async upload ({ uploadFiles, type = null, id = null, storeModule = null }) {
-            const files = Array.from(uploadFiles);
+        async upload ({ images, type = null, id = null, storeModule = null }) {
             const module = storeModule ? storeModule : 'categories';
 
-            if (files.length) {
+            if (images.length) {
                 id
-                    ? await this.$store.dispatch(`${module}/uploadImages`, { files, id, type })
-                    : await this.$store.dispatch('images/store', files);
+                    ? await this.$store.dispatch(`${module}/uploadImages`, { images, id, type })
+                    : await this.$store.dispatch('images/store', images);
             }
 
             return await swal.fire({

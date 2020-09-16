@@ -42,7 +42,7 @@
                                  :module="storeModule"
                                  :vRules="{ required: true, unique: true, minLength: true, alias: true }" />
 
-                        <VDatepicker
+                        <v-datepicker
                             :vField="$v.date"
                             modelType="number"
                             :value="date"
@@ -77,7 +77,7 @@
                                   :options="$config.postTypes"
                                   :module="storeModule" />
 
-                        <ImageList
+                        <post-image-list
                             :id="this.id"
                             :images="images"/>
 
@@ -131,7 +131,7 @@ import { required, numeric, minLength } from 'vuelidate/lib/validators'
 import Tabs from '@/custom_components/Tabs.vue'
 import VDatepicker from "@/custom_components/VForm/VDatepicker"
 import VSelect from "@/custom_components/VForm/VSelect"
-import ImageList from "@/custom_components/Pages/Blog/PostImageList"
+import PostImageList from "@/custom_components/Pages/Blog/PostImageList"
 import TextEditor from '@/custom_components/Editors/TextEditor'
 import { pageTitle } from '@/mixins/base'
 import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
@@ -143,7 +143,7 @@ export default {
         Tabs,
         VDatepicker,
         VSelect,
-        ImageList,
+        PostImageList,
         'text-editor': TextEditor
     },
     mixins: [

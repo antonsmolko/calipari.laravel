@@ -25,18 +25,12 @@
                         </div>
                     </md-card-content>
                 </md-card>
+                <progress-bar-loading />
             </div>
         </div>
 
         <div class="md-layout">
             <div class="md-layout-item md-size-100">
-                <div class="md-layout-item md-progress-bar__container">
-                    <md-progress-bar
-                        v-if="fileProgress"
-                        class="md-info"
-                        md-mode="indeterminate"
-                        :md-value="fileProgress"/>
-                </div>
                 <md-card>
                     <card-icon-header icon="insert_photo"/>
                     <md-card-content>
@@ -145,11 +139,10 @@ export default {
             duplicates: state => state.images.duplicates,
             difference: state => state.images.fields.difference,
             loading: state => state.loading,
-            duplicateFindStatus: state => state.images.duplicateFindStatus,
-            fileProgress: state => state.images.fileProgress
+            duplicateFindStatus: state => state.images.duplicateFindStatus
         }),
         pending () {
-            return this.duplicateFindStatus === 'progress' || Boolean(this.fileProgress);
+            return this.duplicateFindStatus === 'progress' || this.loading;
         },
         categoryId () {
             return this.id !== 0 ? this.id : null;
