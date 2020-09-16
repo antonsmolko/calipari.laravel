@@ -219,4 +219,37 @@ class CmsImageService extends CmsBaseResourceService
     {
         return $this->findDuplicatesHandler->handle($requestData);
     }
+
+    /**
+     * @param int $id
+     * @param array $images
+     * @return array
+     */
+    public function uploadExamples(int $id, array $images): array
+    {
+        $item = $this->repository->getItem($id);
+        $itemExamples = $item->getExamples();
+
+        $uploadsData = uploader()->multipleUpload($images);
+        $uploadedExamples = Arr::pluck($uploadsData, 'path');
+        $examples = Arr::collapse([$itemExamples, $uploadedExamples]);
+        $this->repository->update($item, ['examples' => json_encode($examples)]);
+
+        return $examples;
+    }
+
+    /**
+     * @param int $imageId
+     * @param string $exampleName
+     * @return array
+     */
+    public function deleteExample(int $imageId, string $exampleName)
+    {
+        $item = $this->repository->getItem($imageId);
+        uploader()->remove($exampleName);
+        $examples = array_values(array_filter($item->getExamples(), fn($example) => $example !== $exampleName ));
+        $this->repository->update($item, ['examples' => json_encode($examples)]);
+
+        return $examples;
+    }
 }

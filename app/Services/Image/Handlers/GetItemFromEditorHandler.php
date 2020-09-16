@@ -36,11 +36,11 @@ class GetItemFromEditorHandler
     {
         return [
             'item' => $item,
-            'colorCollection' => $item->colorCollection
+            'colorCollection' => $item->publishedColorCollection
                 ? [$item, ...$this->colorCollectionRepository
                     ->getItemImagesFromEditor($item->colorCollection, $item->id)]
                 : [],
-            'artCollection' => $item->artCollection
+            'artCollection' => $item->publishedArtCollection
                 ? [$item, ...$this->artCollectionRepository
                     ->getItemImagesFromEditor($item->artCollection, $item->id)]
                 : []

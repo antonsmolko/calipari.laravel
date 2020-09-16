@@ -51,7 +51,6 @@ class InterventionImageUploader
         $baseDirPath = $this->getUploadedBaseDirPath($fileName);
         $path = $this->uploadPath . '/' . $baseDirPath; // public/uploads/images/3/3e8
 
-//        Storage::put($path . '/' . $fileName, $image);
         $filePath = $image->storeAs($path, $fileName);
 
         return Storage::exists($filePath)

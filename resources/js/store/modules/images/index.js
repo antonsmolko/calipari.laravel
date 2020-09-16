@@ -1,3 +1,4 @@
+import forEach from 'lodash/forEach';
 import { axiosAction } from "../../mixins/actions";
 
 const state = {
@@ -11,6 +12,7 @@ const state = {
         owner_id: '',
         max_print_width: '',
         description: '',
+        examples: [],
         difference: 50
     },
     item: {},
@@ -58,7 +60,7 @@ const mutations = {
                 item.publish = payload.publish;
             }
         });
-    },
+    }
 };
 
 const actions = {
@@ -140,6 +142,28 @@ const actions = {
             url: `/images/${id}/restore`,
             thenContent: response => dispatch('table/updateItemsPost', null, { root: true })
         });
+    },
+    uploadExamples ({ commit }, { id, payload }) {
+        const data = new FormData();
+
+        forEach(payload, value => data.append('examples[]', value))
+
+        return axiosAction('post', commit, {
+            url: `/images/${id}/examples`,
+            data,
+            options: {
+                onUploadProgress: (imageUpload) => {
+                    commit('CHANGE_FILE_PROGRESS', Math.round( ( imageUpload.loaded / imageUpload.total) * 100 ))
+                }
+            },
+            thenContent: (response) => commit('SET_ITEM_FIELD', { field: 'examples', value: response.data })
+        })
+    },
+    deleteExample ({ commit }, { id, example }) {
+        return axiosAction('delete', commit, {
+            url: `/images/${id}/examples/${example}`,
+            thenContent: (response) => commit('SET_ITEM_FIELD', { field: 'examples', value: response.data })
+        })
     },
     findDuplicates ({ state, commit }, { category_type, id = null }) {
         commit('SET_FIELD', { field: 'duplicateFindStatus', value: 'progress' });

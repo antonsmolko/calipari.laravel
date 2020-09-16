@@ -68,7 +68,7 @@
             v-if="authCheck('pages')"
             :to="{ name: 'cms.pages' }"
             icon="layers"
-            title="Страницы"
+            title="Ресурсы"
             :count="resourcesCount.pages"
             color="brown" />
     </div>

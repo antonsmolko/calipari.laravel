@@ -47,10 +47,6 @@
                                     <h3 class="info-value"><small>{{ item.format }}</small></h3>
                                 </div>
                                 <div class="info-item">
-                                    <h4 class="card-title">Просмотры</h4>
-                                    <h3 class="info-value"><small>{{ item.views }}</small></h3>
-                                </div>
-                                <div class="info-item">
                                     <h4 class="card-title">Лайки</h4>
                                     <h3 class="info-value"><small>{{ item.likes }}</small></h3>
                                 </div>
@@ -119,7 +115,7 @@
                     </md-card-content>
                 </md-card>
             </div>
-            <div class="md-layout-item md-size-100">
+            <div class="md-layout-item md-medium-size-100 md-large-size-50">
                 <md-card>
                     <md-card-header class="md-card-header-icon md-card-header-green">
                         <div class="card-icon">
@@ -182,26 +178,73 @@
                     </md-card-content>
                 </md-card>
             </div>
+
+            <div class="md-layout-item md-medium-size-100 md-large-size-50">
+                <md-card>
+                    <md-card-header class="md-card-header-icon md-card-header-green">
+                        <div class="card-icon">
+                            <md-icon>photo_library</md-icon>
+                        </div>
+                        <h3 class="title">Фото в интерьере</h3>
+                    </md-card-header>
+                    <md-card-content>
+                        <image-uploader
+                            @change="fileInputChange"
+                            :multiple="true" />
+                        <progress-bar-loading />
+                        <template v-if="examples && examples.length">
+                            <div class="md-layout md-gutter mt-2">
+                                <div class="md-layout-item md-size-33 mb-2 md-flex md-flex-column md-flex-middle"
+                                     v-for="(example, index) in examples"
+                                     :key="index"
+                                     :name="example" >
+                                    <resource-image
+                                        class="img-raised rounded"
+                                        style="width: 200px"
+                                        :name="example"
+                                        :width="300" />
+                                    <control-button
+                                        title="Удалить"
+                                        icon="close"
+                                        color="md-danger"
+                                        @click="onExampleDelete(example)"/>
+                                </div>
+                            </div>
+                        </template>
+                        <div class="alert alert-info mt-2" v-else>
+                            <h3>У изображения пока нет примеров. Можете загрузить!</h3>
+                        </div>
+                    </md-card-content>
+                </md-card>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
-
+import unionWith from 'lodash/unionWith'
 import { pageTitle } from '@/mixins/base'
-import { updateMethod, deleteMethod } from '@/mixins/crudMethods'
+import { updateMethod, deleteMethod, uploadMethod } from '@/mixins/crudMethods'
 
 import VSelect from "@/custom_components/VForm/VSelect"
+import ResourceImage from "@/custom_components/Images/ResourceImage";
+import ImageUploader from "@/custom_components/Uploader/ImageUploader";
 import { numeric } from "vuelidate/lib/validators"
+import { isEqualImages } from "@/helpers";
 
 export default {
     name: 'ImageEdit',
-    components: { VSelect },
+    components: {
+        VSelect,
+        ResourceImage,
+        ImageUploader
+    },
     mixins: [
         pageTitle,
         updateMethod,
-        deleteMethod
+        deleteMethod,
+        uploadMethod
     ],
     props: {
         id: {
@@ -214,7 +257,8 @@ export default {
         storeModule: 'images',
         responseData: false,
         controlSaveVisibilities: false,
-        redirectRoute: { name: 'cms.images' }
+        redirectRoute: { name: 'cms.images' },
+        previews: []
     }),
     validations: {
         image: {
@@ -258,7 +302,8 @@ export default {
             tags: state => state.images.fields.tags,
             maxPrintWidth: state => state.images.fields.max_print_width,
             description: state => state.images.fields.description,
-            ownerList: state => state.subCategories.itemsByType.owners
+            ownerList: state => state.subCategories.itemsByType.owners,
+            examples: state => state.images.fields.examples
         }),
         topicList () {
             return this.$store.getters['categories/getItemsByType']('topics');
@@ -303,7 +348,9 @@ export default {
             clearFieldsAction: 'images/clearFields',
             getCategoriesAction: 'categories/getItems',
             getSubcategoriesAction: 'subCategories/getItemsWithType',
-            setTableRouteDetectorFieldAction: 'table/setRouteDetectorField'
+            setTableRouteDetectorFieldAction: 'table/setRouteDetectorField',
+            uploadExamplesAction: 'images/uploadExamples',
+            deleteExampleAction: 'images/deleteExample'
         }),
         onUpdate () {
             return this.update({
@@ -337,8 +384,17 @@ export default {
                 redirectRoute: this.redirectRoute
             })
         },
+        fileInputChange ({ images }) {
+            this.uploadExamplesAction({ id: this.id, payload: images });
+        },
+        onExampleDelete (example) {
+            this.deleteExampleAction({ id: this.id, example });
+        },
         goBack () {
             window.history.length > 1 ? this.$router.go(-1) : this.$router.push(this.redirectRoute)
+        },
+        setPreviews (previews) {
+            unionWith(this.previews, previews, isEqualImages);
         }
     },
     beforeRouteEnter (to, from, next) {

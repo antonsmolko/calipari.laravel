@@ -191,6 +191,14 @@ class Image extends Model
     }
 
     /**
+     * @return mixed
+     */
+    public function getExamples()
+    {
+        return json_decode($this->examples);
+    }
+
+    /**
      * @param $query
      * @param int $id
      * @return mixed

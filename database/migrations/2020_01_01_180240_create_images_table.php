@@ -24,7 +24,7 @@ class CreateImagesTable extends Migration
             $table->unsignedInteger('owner_id')->nullable();
             $table->unsignedInteger('color_collection_id')->nullable();
             $table->unsignedInteger('art_collection_id')->nullable();
-            $table->unsignedInteger('views')->default(0);
+            $table->json('examples')->nullable();
             $table->unsignedTinyInteger('publish')->default(1 );
             $table->text('description')->nullable();
             $table->timestamps();

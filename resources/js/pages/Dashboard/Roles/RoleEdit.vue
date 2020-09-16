@@ -6,7 +6,7 @@
                     <md-card-content class="md-between">
                         <router-button-link title="К списку ролей" :to="{ name: 'cms.roles' }" />
                         <div>
-                            <slide-y-down-transition v-show="controlSaveVisibilities && $v.$anyDirty && !$v.$invalid">
+                            <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
                                 <control-button title="Сохранить" @click="onUpdate" />
                             </slide-y-down-transition>
                             <control-button title="Удалить" @click="onDelete" icon="delete" class="md-danger" />
@@ -25,20 +25,22 @@
                         <v-input title="Имя"
                                  icon="title"
                                  name="display_name"
+                                 :value="displayName"
                                  :vField="$v.displayName"
                                  :differ="true"
-                                 :value="displayName"
+                                 :vDelay="true"
                                  :module="storeModule"
                                  :vRules="{ required: true, unique: true, minLength: true }" />
 
                         <v-input title="Алиас"
                                  icon="code"
                                  name="name"
+                                 :value="name"
                                  :vField="$v.name"
                                  :differ="true"
-                                 :value="name"
+                                 :vDelay="true"
                                  :module="storeModule"
-                                 :vRules="{ required: true, unique: true, alias: true, minLength: true }" />
+                                 :vRules="{ required: true, unique: true, key: true, minLength: true }" />
 
                         <v-textarea name="description"
                                     :vField="$v.description"
@@ -91,29 +93,28 @@ export default {
     data: () => ({
         selectedPermissions: [],
         responseData: false,
-        controlSaveVisibilities: false,
         redirectRoute: { name: 'cms.roles' },
         storeModule: 'roles'
     }),
     validations: {
         name: {
             required,
-            touch: false,
             minLength: minLength(2),
             isUnique (value) {
                 return (value.trim() === '') && !this.$v.name.$dirty || this.isUniqueNameEdit
             },
-            testAlias (value) {
-                return value.trim() === '' || (this.$config.ALIAS_REGEXP).test(value);
-            }
+            testName (value) {
+                return value.trim() === '' || (this.$config.SNAKE_CASE_REGEXP).test(value);
+            },
+            touch: false
         },
         displayName: {
             required,
-            touch: false,
             minLength: minLength(2),
             isUnique (value) {
                 return (value.trim() === '') && !this.$v.displayName.$dirty || this.isUniqueDisplayNameEdit
-            }
+            },
+            touch: false
         },
         description: {
             touch: false
@@ -131,11 +132,11 @@ export default {
             permissions: state => state.roles.fields.permissions,
             permissionList: state => state.permissions.items
         }),
-        isUniqueName () {
-            return this.$store.getters['roles/isUniqueName'](this.name);
+        isUniqueNameEdit () {
+            return this.$store.getters['roles/isUniqueNameEdit'](this.name, this.id);
         },
-        isUniqueDisplayName () {
-            return this.$store.getters['roles/isUniqueDisplayName'](this.displayName);
+        isUniqueDisplayNameEdit () {
+            return this.$store.getters['roles/isUniqueDisplayNameEdit'](this.displayName, this.id);
         }
     },
     async created () {
@@ -148,10 +149,6 @@ export default {
                 this.setPageTitle(this.displayName);
                 this.selectedPermissions = this.permissions.slice(0);
                 this.responseData = true;
-            })
-            .then(() => {
-                this.$v.$reset();
-                this.controlSaveVisibilities = true;
             })
             .catch(() => this.$router.push(this.redirectRoute));
     },

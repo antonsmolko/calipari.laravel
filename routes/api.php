@@ -289,6 +289,13 @@ Route::prefix('cms')
                 ->where('id', '[0-9]+')
                 ->name('images.update')
                 ->middleware('optimizeImages');
+            Route::post('{id}/examples', 'Cms\Image\ImageController@uploadExamples')
+                ->where('id', '[0-9]+')
+                ->name('images.examples')
+                ->middleware('optimizeImages');
+            Route::delete('{id}/examples/{example}', 'Cms\Image\ImageController@deleteExample')
+                ->where('id', '[0-9]+')
+                ->name('images.examples.delete');
         });
     Route::apiResource('images', 'Cms\Image\ImageController')
         ->middleware('optimizeImages')

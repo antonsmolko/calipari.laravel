@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\API\Client\Review\Requests;
+namespace App\Http\Controllers\API\Cms\Image\Requests;
 
 use App\Http\Requests\FormRequest;
 
-class CreateRequest extends FormRequest
+class UploadExamplesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,7 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'hash' => 'bail|required|string',
-            'comment' => 'bail|required|max:' . config('validation.text.max'),
-            'quality_rate' => 'bail|integer|between:1,5',
-            'service_rate' => 'bail|integer|between:1,5',
-            'images' => 'array|nullable'
+            'examples' => 'array|required'
         ];
     }
 }

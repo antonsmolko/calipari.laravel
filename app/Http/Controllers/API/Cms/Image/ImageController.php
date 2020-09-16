@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Cms\Image;
 use App\Http\Controllers\API\Cms\Base\BaseResourceController;
 use App\Http\Controllers\API\Cms\Image\Requests\DuplicateRequest;
 use App\Http\Controllers\API\Cms\Image\Requests\UpdateRequest;
+use App\Http\Controllers\API\Cms\Image\Requests\UploadExamplesRequest;
 use App\Http\Requests\FormRequest;
 use App\Services\Image\CmsImageService;
 use Illuminate\Http\JsonResponse;
@@ -114,5 +115,25 @@ class ImageController extends BaseResourceController
     public function findDuplicates(DuplicateRequest $request): JsonResponse
     {
         return response()->json($this->service->findDuplicates($request->all()));
+    }
+
+    /**
+     * @param UploadExamplesRequest $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function uploadExamples(UploadExamplesRequest $request, int $id): JsonResponse
+    {
+        return response()->json($this->service->uploadExamples($id, $request->examples));
+    }
+
+    /**
+     * @param int $imageId
+     * @param string $exampleName
+     * @return JsonResponse
+     */
+    public function deleteExample(int $imageId, string $exampleName): JsonResponse
+    {
+        return response()->json($this->service->deleteExample($imageId, $exampleName));
     }
 }

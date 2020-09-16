@@ -43,7 +43,6 @@ class ClientReviewService extends ClientBaseResourceService
     /**
      * @param array $storeData
      * @return array
-     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(array $storeData): array
     {
@@ -55,8 +54,8 @@ class ClientReviewService extends ClientBaseResourceService
 
         $order = $this->orderRepository->getItemByNumber($orderNumber);
 
-        $storeData['images'] = !empty($storeData['files'])
-            ? json_encode($this->imageUploadHandler->handle($storeData['files']))
+        $storeData['images'] = !empty($storeData['images'])
+            ? json_encode($this->imageUploadHandler->handle($storeData['images']))
             : null;
 
         $this->orderRepository->createReview($order, [

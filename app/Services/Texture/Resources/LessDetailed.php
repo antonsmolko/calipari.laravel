@@ -19,9 +19,12 @@ class LessDetailed extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'sample_path' => $this->sample_path,
+            'orders_count' => $this->orders_count,
             'price' => $this->price,
             'width' => $this->width,
-            'seamless' => $this->seamless
+            'seamless' => $this->seamless,
+            'publish' => $this->publish,
+            'order' => $this->order
         ];
     }
 }

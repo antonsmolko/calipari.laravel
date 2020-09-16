@@ -32,6 +32,7 @@ class FromEditCms extends JsonResource
             'owner_id' => $this->owner_id,
             'description' => $this->description,
             'max_print_width' => $this->max_print_width,
+            'examples' => $this->getExamples(),
             'created_at' => $this->created_at
         ];
     }

@@ -17,6 +17,7 @@ class Uploader
     private string $uploadPath;
     private array $uploadRules;
     private int $defaultMaxPrintWidth;
+    private string $defaultUploadExtension;
     private ImageValidationBuilder $imageValidationBuilder;
     private Collection $formats;
 
@@ -29,6 +30,7 @@ class Uploader
         $this->uploadPath = ltrim(config('uploads.image_upload_path', ''));
         $this->uploadRules = config('uploads.image_upload_rules', '');
         $this->defaultMaxPrintWidth = config('uploads.default_max_print_width');
+        $this->defaultUploadExtension = config('uploads.default_extension');
     }
 
     protected function setProps($name, $value)
@@ -82,7 +84,7 @@ class Uploader
 
         return $this->imageValidationBuilder
             ->init($this->fileProps, $this->uploadRules)
-            ->isAllowExtension()
+//            ->isAllowExtension()
             ->isAllowMime()
             ->isAllowMinSize()
             ->isAllowMaxSize()
@@ -127,11 +129,6 @@ class Uploader
         return $imageData;
     }
 
-    public function interventionImageUpload(\Intervention\Image\Image $image)
-    {
-
-    }
-
     /**
      * @param UploadedFile $uploadedFile
      * @param string|null $name
@@ -148,11 +145,12 @@ class Uploader
             $this->remove($name);
         }
 
-        $this->localStore();
-
-        return $this->getStorageUploadedFileData();
+        return $this->localStore();
     }
 
+    /**
+     * @return array|void
+     */
     private function localStore()
     {
         $baseDirPath = $this->getUploadedBaseDirPath($this->fileProps['name']);
@@ -160,9 +158,9 @@ class Uploader
 
         $filePath = $this->uploadedFile->storeAs($path, $this->fileProps['name']);
 
-        Storage::exists($filePath)
-        ||
-        abort(400, __('image_validation.error_image_upload'));
+        return Storage::exists($filePath)
+            ? $this->getStorageUploadedFileData()
+            : abort(400, __('image_validation.error_image_upload'));
     }
 
     protected function clearState()
@@ -216,7 +214,7 @@ class Uploader
      * Set the quantitative properties of the uploaded image file
      *
      * @param UploadedFile $uploadedFile
-     * @param string $refreshName
+     * @param string|null $refreshName
      */
     protected function setQuantitativeProps(UploadedFile $uploadedFile, string $refreshName = null)
     {
@@ -241,7 +239,14 @@ class Uploader
         $name = $this->getOriginalName($uploadedFile);
         $ext = $this->getExtension($uploadedFile);
 
-        return sha1($name . microtime(true)) . '.' . $ext; // 3e89bc7b416ccce075e0fca2f2cc1172feb6dc24.jpg
+        return sha1($this->getCrc32Prefix() . $name . microtime(true)) . '.' . $ext; // 3e89bc7b416ccce075e0fca2f2cc1172feb6dc24.jpg
+    }
+
+    /**
+     * @return string
+     */
+    protected function getCrc32Prefix () {
+        return str_pad(sprintf('%u',crc32(microtime())), 6, rand(0, 1e6 - 1));
     }
 
     /**
@@ -264,7 +269,11 @@ class Uploader
      */
     protected function getExtension(UploadedFile $uploadedFile): string
     {
-        return mb_strtolower($uploadedFile->getClientOriginalExtension());
+        $originalExt = $uploadedFile->getClientOriginalExtension();
+
+        return !empty($originalExt)
+            ? mb_strtolower($uploadedFile->getClientOriginalExtension())
+            : $this->defaultUploadExtension;
     }
 
     /**

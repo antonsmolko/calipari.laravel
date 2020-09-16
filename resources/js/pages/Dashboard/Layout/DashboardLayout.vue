@@ -13,7 +13,7 @@
                 <sidebar-item :link="{name: 'Панель управления', icon: 'dashboard', path: '/cms/dashboard'}"/>
                 <sidebar-item v-if="authCheck('settings')" :link="{name: 'Конфигурация', icon: 'settings', path: '/cms/settings'}"/>
                 <sidebar-item v-if="authCheck('images')" :link="{name: 'Изображения', icon: 'image', path: '/cms/images'}"/>
-                <sidebar-item v-if="authCheck('pages')" :link="{name: 'Страницы', icon: 'layers', path: '/cms/pages'}">
+                <sidebar-item v-if="authCheck('pages')" :link="{name: 'Ресурсы', icon: 'layers', path: '/cms/pages'}">
                     <sidebar-item :link="{name: 'Главная', path: '/cms/pages/home'}"/>
                     <sidebar-item :link="{name: 'Каталог', path: '/cms/pages/catalog'}"/>
                     <sidebar-item :link="{name: 'Текстуры', path: '/cms/pages/textures'}"/>
