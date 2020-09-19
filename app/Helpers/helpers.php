@@ -239,21 +239,50 @@ if (! function_exists('addImagesFromResource')) {
     }
 }
 
+if (! function_exists('getCartItemPath')) {
+    /**
+     * @param $item
+     * @param array|null $filter
+     * @return string
+     */
+    function getCartItemPath($item, array $filter)
+    {
+        $filterData = $filter;
+        $w = $item['width_px'];
+        $h = $item['height_px'];
+        $x = $item['x'];
+        $y = $item['y'];
+        $flipH = (int) $filterData['flipH'];
+        $flipV = (int) $filterData['flipV'];
+        $colorize = (bool) $filterData['colorize'] ? $filterData['colorize'] : 0;
+        $imagePath = $item['image_path'];
+
+        return  '/' . $w .
+            '/' . $h .
+            '/' . $x .
+            '/' . $y .
+            '/' . $flipH .
+            '/' . $flipV .
+            '/' . $colorize .
+            '/' . $imagePath;
+    }
+}
+
 if (! function_exists('getOrderItemPath')) {
     /**
-     * @param JsonResource|\App\Models\OrderItem $item
+     * @param $item
      * @return string
      */
     function getOrderItemPath($item)
     {
-        $filter = $item->getFilter();
+        $filterData = $item->getFilter();
         $w = $item->width_px;
         $h = $item->height_px;
         $x = $item->x;
         $y = $item->y;
-        $flipH = (int) $filter['flipH'];
-        $flipV = (int) $filter['flipV'];
-        $colorize = (bool) $filter['colorize'] ? $filter['colorize'] : 0;
+        $flipH = (int) $filterData['flipH'];
+        $flipV = (int) $filterData['flipV'];
+        $colorize = (bool) $filterData['colorize'] ? $filterData['colorize'] : 0;
         $imagePath = $item->image ? $item->image->path : 'placeholder.jpg';
 
         return  '/' . $w .
