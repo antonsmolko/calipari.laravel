@@ -75,6 +75,7 @@ class CmsImageService extends CmsBaseResourceService
         $this->updateHandler = $updateHandler;
         $this->syncUpdateWithColorCollectionHandler = $syncUpdateWithColorCollectionHandler;
         $this->findDuplicatesHandler = $findDuplicatesHandler;
+        $this->forceDeleteHandler = $forceDeleteHandler;
         $this->cacheTag = Tag::IMAGES_TAG;
     }
 

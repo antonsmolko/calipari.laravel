@@ -14,7 +14,7 @@ class ForceDeleteHandler
     /**
      * @param CmsImageRepository $repository
      */
-    public function __constructor(CmsImageRepository $repository)
+    public function __construct(CmsImageRepository $repository)
     {
         $this->repository = $repository;
     }
