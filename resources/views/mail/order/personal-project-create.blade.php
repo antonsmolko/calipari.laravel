@@ -1,6 +1,6 @@
-@component('mail::layout')
-@if(isset($name))
-# Здравствуйте, {{ $name }}!
+@component('mail::order-layout')
+@if(isset($data['name']))
+# Здравствуйте, {{ $data['name'] }}!
 @else
 # Здравстуйте!
 @endif
@@ -9,7 +9,7 @@
 
 Перейдите по ссылке для добавления проекта в корзину и последующего оформления заказа.
 
-@component('mail::button', ['url' => env('CLIENT_BASE_URL') . '/cart'])
+@component('mail::button', ['url' => env('CLIENT_BASE_URL') . '/cart?key=' . $data['key']])
 Перейти ›
 @endcomponent
 

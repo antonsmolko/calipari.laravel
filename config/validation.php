@@ -32,7 +32,7 @@ return [
     ],
     'upload' => [
         'min_size' => 3,
-        'max_size' => 5120,
+        'max_size' => 1024,
         'mimes' => 'jpeg,png,gif,webp'
     ],
     'images' => [

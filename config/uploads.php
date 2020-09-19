@@ -10,7 +10,7 @@ return [
     'image_resize_quality' => 90,
     'image_cache_time' => 60 * 60 * 24 * 7,
     'image_upload_rules' => [
-        'max_size' => 5242880,
+        'max_size' => 1048576,
         'min_size' => 3072,
         'extensions' => [
             'jpeg',

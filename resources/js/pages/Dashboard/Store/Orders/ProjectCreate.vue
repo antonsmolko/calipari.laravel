@@ -1,157 +1,161 @@
 <template>
-    <div class="md-layout" v-if="responseData">
-        <div class="md-layout-item md-size-100">
-            <md-card class="m-0">
-                <md-card-content class="md-between">
-                    <control-button icon="arrow_back"
-                                    title="Назад"
-                                    direction="right"
-                                    @click="goBack"/>
-                    <slide-y-down-transition v-show="!$v.$invalid">
-                        <control-button title="Создать" @click="onCreate" />
-                    </slide-y-down-transition>
-                </md-card-content>
-            </md-card>
-            <progress-bar-loading />
+    <div>
+        <div class="md-layout" v-if="responseData">
+            <div class="md-layout-item md-size-100">
+                <md-card class="mt-0">
+                    <md-card-content class="md-between">
+                        <control-button icon="arrow_back"
+                                        title="Назад"
+                                        direction="right"
+                                        @click="goBack"/>
+                        <slide-y-down-transition v-show="!$v.$invalid">
+                            <control-button title="Создать" @click="onCreate" />
+                        </slide-y-down-transition>
+                    </md-card-content>
+                </md-card>
+                <progress-bar-loading />
+            </div>
         </div>
-        <div class="md-layout-item md-medium-size-100 md-large-size-33 md-xlarge-size-25">
-            <product-card headerAnimation="false">
-                <template slot="imageHeader">
-                    <resource-image :name="image.path" :width="300"/>
-                </template>
-                <template slot="footer">
-                    <span>ID:</span><h3 class="m-0">{{ image.id }}</h3>
-                </template>
-            </product-card>
-        </div>
-        <div class="md-layout-item md-medium-size-100 md-large-size-66 md-xlarge-size-75">
-            <md-card>
-                <card-icon-header/>
-                <md-card-content>
+        <div class="md-layout">
+            <div class="md-layout-item md-medium-size-100 md-large-size-33 md-xlarge-size-25">
+                <product-card headerAnimation="false">
+                    <template slot="imageHeader">
+                        <resource-image :name="image.path" :width="300"/>
+                    </template>
+                    <template slot="footer">
+                        <span>ID:</span><h3 class="m-0">{{ image.id }}</h3>
+                    </template>
+                </product-card>
+            </div>
+            <div class="md-layout-item md-medium-size-100 md-large-size-66 md-xlarge-size-75">
+                <md-card>
+                    <card-icon-header/>
+                    <md-card-content>
 
-                    <v-input
-                        title="Email покупателя"
-                        icon="email"
-                        name="email"
-                        :vField="$v.email"
-                        :vRules="{ required: true, email: true }"
-                        :module="storeModule"
-                        :delay="true"
-                        action="setProjectField"/>
+                        <v-input
+                            title="Email покупателя"
+                            icon="email"
+                            name="email"
+                            :vField="$v.email"
+                            :vRules="{ required: true, email: true }"
+                            :module="storeModule"
+                            :delay="true"
+                            action="setProjectField"/>
 
-                    <v-input
-                        title="Имя покупателя"
-                        icon="face"
-                        name="name"
-                        :vField="$v.name"
-                        :maxlength="50"
-                        :module="storeModule"
-                        action="setProjectField"/>
+                        <v-input
+                            title="Имя покупателя"
+                            icon="face"
+                            name="name"
+                            :vField="$v.name"
+                            :maxlength="50"
+                            :module="storeModule"
+                            action="setProjectField"/>
 
-                    <v-input
-                        class="icon-rotate-90"
-                        title="Ширина полотна, см"
-                        icon="height"
-                        name="width"
-                        :vField="$v.width"
-                        :vRules="{ required: true, numeric: true }"
-                        :maxlength="4"
-                        :module="storeModule"
-                        action="setProjectField"/>
+                        <v-input
+                            class="icon-rotate-90"
+                            title="Ширина полотна, см"
+                            icon="height"
+                            name="width"
+                            :vField="$v.width"
+                            :vRules="{ required: true, numeric: true }"
+                            :maxlength="4"
+                            :module="storeModule"
+                            action="setProjectField"/>
 
-                    <v-input
-                        title="Высота полотна, см"
-                        icon="height"
-                        name="height"
-                        :value="getRelativeHeight(width, image)"
-                        :vField="$v.height"
-                        :vRules="{ required: true, numeric: true }"
-                        :maxlength="4"
-                        :module="storeModule"
-                        action="setProjectField"/>
+                        <v-input
+                            title="Высота полотна, см"
+                            icon="height"
+                            name="height"
+                            :value="getRelativeHeight(width, image)"
+                            :vField="$v.height"
+                            :vRules="{ required: true, numeric: true }"
+                            :maxlength="4"
+                            :module="storeModule"
+                            action="setProjectField"/>
 
-                    <v-select
-                        title="Фактуры"
-                        icon="texture"
-                        name="texture"
-                        :options="textures"
-                        :value="defaultTextureId"
-                        :vField="$v.texture"
-                        :vRule="{ required: true, numeric: true }"
-                        :module="storeModule"
-                        nameField="name"
-                        action="setProjectField"/>
+                        <v-select
+                            title="Фактуры"
+                            icon="texture"
+                            name="texture"
+                            :options="textures"
+                            :value="defaultTextureId"
+                            :vField="$v.texture"
+                            :vRule="{ required: true, numeric: true }"
+                            :module="storeModule"
+                            nameField="name"
+                            action="setProjectField"/>
 
-                </md-card-content>
-            </md-card>
-            <md-card>
-                <card-icon-header class="mt-3" title="Дополнительная оплата" icon="attach_money"/>
-                <md-card-content>
-                    <div class="order-added-costs-item md-flex md-flex-middle">
-                        <md-checkbox v-model="selectedAddedCosts" value="imageProcessing">
-                            <h4 class="card-title mt-0">Обработка изображения, ₽</h4>
-                        </md-checkbox>
-                        <slide-y-down-transition>
-                            <v-input
-                                v-if="selectedAddedCosts.includes('imageProcessing')"
-                                class="md-flex-grow-1"
-                                title="Обработка изображения"
-                                :hiddenTitle="true"
-                                icon="tune"
-                                name="imageProcessing"
-                                :value="settings.image_processing"
-                                :vField="$v.addedCosts.imageProcessing"
-                                :vRules="{ numeric: true }"
-                                :maxlength="4"
-                                :module="storeModule"
-                                action="setProjectAddedCostsField"/>
-                        </slide-y-down-transition>
-                    </div>
+                    </md-card-content>
+                </md-card>
+                <md-card>
+                    <card-icon-header class="mt-3" title="Дополнительная оплата" icon="attach_money"/>
+                    <md-card-content>
+                        <div class="order-added-costs-item md-flex md-flex-middle">
+                            <md-checkbox v-model="selectedAddedCosts" value="imageProcessing">
+                                <h4 class="card-title mt-0">Обработка изображения, ₽</h4>
+                            </md-checkbox>
+                            <slide-y-down-transition>
+                                <v-input
+                                    v-if="selectedAddedCosts.includes('imageProcessing')"
+                                    class="md-flex-grow-1"
+                                    title="Обработка изображения"
+                                    :hiddenTitle="true"
+                                    icon="tune"
+                                    name="imageProcessing"
+                                    :value="settings.image_processing"
+                                    :vField="$v.addedCosts.imageProcessing"
+                                    :vRules="{ numeric: true }"
+                                    :maxlength="4"
+                                    :module="storeModule"
+                                    action="setProjectAddedCostsField"/>
+                            </slide-y-down-transition>
+                        </div>
 
-                    <div class="order-added-costs-item md-flex md-flex-middle">
-                        <md-checkbox v-model="selectedAddedCosts" value="imageSearch">
-                            <h4 class="card-title mt-0">Поиск изображения, ₽</h4>
-                        </md-checkbox>
-                        <slide-y-down-transition>
-                            <v-input
-                                v-if="selectedAddedCosts.includes('imageSearch')"
-                                class="md-flex-grow-1"
-                                title="Поиск изображения"
-                                :hiddenTitle="true"
-                                icon="image_search"
-                                name="imageSearch"
-                                :value="settings.image_search"
-                                :vField="$v.addedCosts.imageSearch"
-                                :vRules="{ numeric: true }"
-                                :maxlength="4"
-                                :module="storeModule"
-                                action="setProjectAddedCostsField"/>
-                        </slide-y-down-transition>
-                    </div>
+                        <div class="order-added-costs-item md-flex md-flex-middle">
+                            <md-checkbox v-model="selectedAddedCosts" value="imageSearch">
+                                <h4 class="card-title mt-0">Поиск изображения, ₽</h4>
+                            </md-checkbox>
+                            <slide-y-down-transition>
+                                <v-input
+                                    v-if="selectedAddedCosts.includes('imageSearch')"
+                                    class="md-flex-grow-1"
+                                    title="Поиск изображения"
+                                    :hiddenTitle="true"
+                                    icon="image_search"
+                                    name="imageSearch"
+                                    :value="settings.image_search"
+                                    :vField="$v.addedCosts.imageSearch"
+                                    :vRules="{ numeric: true }"
+                                    :maxlength="4"
+                                    :module="storeModule"
+                                    action="setProjectAddedCostsField"/>
+                            </slide-y-down-transition>
+                        </div>
 
-                    <div class="order-added-costs-item md-flex md-flex-middle">
-                        <md-checkbox v-model="selectedAddedCosts" value="imageCosts">
-                            <h4 class="card-title mt-0">Покупка изображения, ₽</h4>
-                        </md-checkbox>
-                        <slide-y-down-transition>
-                            <v-input
-                                v-if="selectedAddedCosts.includes('imageCosts')"
-                                class="md-flex-grow-1"
-                                title="Покупка изображения"
-                                :hiddenTitle="true"
-                                icon="payment"
-                                name="imageCosts"
-                                :vField="$v.addedCosts.imageCosts"
-                                :vRules="{ numeric: true }"
-                                :maxlength="4"
-                                :module="storeModule"
-                                action="setProjectAddedCostsField"/>
-                        </slide-y-down-transition>
-                    </div>
+                        <div class="order-added-costs-item md-flex md-flex-middle">
+                            <md-checkbox v-model="selectedAddedCosts" value="imageCosts">
+                                <h4 class="card-title mt-0">Покупка изображения, ₽</h4>
+                            </md-checkbox>
+                            <slide-y-down-transition>
+                                <v-input
+                                    v-if="selectedAddedCosts.includes('imageCosts')"
+                                    class="md-flex-grow-1"
+                                    title="Покупка изображения"
+                                    :hiddenTitle="true"
+                                    icon="payment"
+                                    name="imageCosts"
+                                    :vField="$v.addedCosts.imageCosts"
+                                    :vRules="{ numeric: true }"
+                                    :maxlength="4"
+                                    :module="storeModule"
+                                    action="setProjectAddedCostsField"/>
+                            </slide-y-down-transition>
+                        </div>
 
-                    <div class="space-20"></div>
-                </md-card-content>
-            </md-card>
+                        <div class="space-20"></div>
+                    </md-card-content>
+                </md-card>
+            </div>
         </div>
     </div>
 </template>

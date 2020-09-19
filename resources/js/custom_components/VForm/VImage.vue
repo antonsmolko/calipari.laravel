@@ -53,6 +53,7 @@
 import { mapState } from 'vuex'
 import { InputNotificationRequire } from '@/custom_components/InputNotifications'
 import ResourceImage from "@/custom_components/Images/ResourceImage";
+import imageUploader from '@/mixins/imageUploader'
 
 export default {
     name: "VImage",
@@ -60,6 +61,7 @@ export default {
         ResourceImage,
         InputNotificationRequire
     },
+    mixins: [imageUploader],
     props: {
         title: {
             type: [String, Boolean],
@@ -68,6 +70,18 @@ export default {
         name: {
             type: String,
             default: 'image'
+        },
+        maxFileSize: {
+            type: Number,
+            default: 15
+        },
+        width: {
+            type: Number,
+            default: 1600
+        },
+        height: {
+            type: Number,
+            default: 1200
         },
         vField: {
             type: Object,
@@ -112,7 +126,7 @@ export default {
     },
     methods: {
         onFileChange (e, action = 'change') {
-            switch(action) {
+            switch (action) {
                 case 'change':
                     this.addImage(e);
                     break;
@@ -130,21 +144,20 @@ export default {
                     break;
             }
         },
-
-        addImage (e) {
+        async addImage (e) {
             let files = e.target.files || e.dataTransfer.files;
 
             if (!files.length)
                 return;
 
-            this.createImage(files[0]);
+            const { preview, image } = await this.processImage(files[0], this.width, this.height);
+            this.imageData = preview;
 
             if (this.vField)
                 this.vField.$touch();
 
-            this.fileAction(files[0]);
+            this.fileAction(image);
         },
-
         removeImage () {
             this.imageData = '';
 
@@ -153,22 +166,9 @@ export default {
 
             this.fileAction('');
         },
-
         deleteImage () {
             this.$emit('delete');
         },
-
-        createImage (file) {
-            const reader = new FileReader();
-            const vm = this;
-
-            reader.onload = (e) => {
-                vm.imageData = e.target.result;
-            };
-
-            reader.readAsDataURL(file);
-        },
-
         fileAction (value) {
             this.$store.dispatch(`${this.storeModule}setItemField`, { field: this.name, value });
         }

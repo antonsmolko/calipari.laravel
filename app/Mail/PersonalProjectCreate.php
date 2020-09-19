@@ -40,7 +40,7 @@ class PersonalProjectCreate extends Mailable
         return $this
             ->subject('Фотопанно | Проект № ' . $this->data['number'])
             ->attachData($this->pdf, $this->fileName)
-            ->markdown('emails.orders.personal-project-create')
+            ->markdown('mail.order.personal-project-create')
             ->with(['data' => $this->data]);
     }
 }

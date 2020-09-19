@@ -7,7 +7,7 @@
                         <router-button-link :to="{ name: 'cms.pages' }" title="В панель страниц" />
                         <div>
                             <slide-y-down-transition v-show="$v.$anyDirty && !$v.$invalid">
-                                <control-button title="Сохранить" @click="onUpdate" :disabled="loading" />
+                                <control-button title="Сохранить и выйти" @click="onUpdate" :disabled="loading" />
                             </slide-y-down-transition>
                         </div>
                     </md-card-content>
@@ -181,8 +181,8 @@ export default {
             getItemsAction: 'getItems',
             deleteImageAction: 'deleteImage'
         }),
-        onUpdate () {
-            return this.update({
+        async onUpdate () {
+            await this.update({
                 sendData: {
                     id: this.item.id,
                     formData: {
@@ -196,7 +196,8 @@ export default {
                 },
                 title: this.fields.title,
                 successText: 'Страница обновлена!',
-                storeModule: this.storeModule
+                storeModule: this.storeModule,
+                redirectRoute: this.redirectRoute
             });
         },
         handleDeleteImage () {

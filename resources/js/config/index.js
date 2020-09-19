@@ -43,6 +43,10 @@ export default {
     ],
     defaultPostType: { index: 'guide', title: 'Гид'},
 
+    images: {
+      maxFileSize: 30 // 30MB
+    },
+
     /** Auth */
     DEFAULT_ROLE: 'user',
 

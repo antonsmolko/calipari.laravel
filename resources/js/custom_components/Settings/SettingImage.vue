@@ -31,10 +31,12 @@
 <script>
 import { mapActions } from 'vuex'
 import ResourceImage from "@/custom_components/Images/ResourceImage";
+import imageUploader from '@/mixins/imageUploader'
 
 export default {
     name: 'setting-image',
     components: { ResourceImage },
+    mixins: [imageUploader],
     props: {
         title: String,
         name: String,
@@ -48,31 +50,28 @@ export default {
         }
     },
     data: () => ({
-        imageData: ''
+        imageData: '',
+        width: 1600,
+        height: 1200
     }),
     methods: {
         ...mapActions({
-            updateAction: 'settings/setImageValue'
+            updateAction: 'settings/setImageValue',
+            addNotificationAction: 'addNotification'
         }),
-        onFileChange(e) {
+        async onFileChange(e) {
             const files = e.target.files || e.dataTransfer.files;
+
             if (!files.length)
                 return;
-            this.createImage(files[0]);
+
+            const { preview, image } = await this.processImage(files[0], this.width, this.height);
+            this.imageData = preview;
 
             this.updateAction({
                 key_name: this.name,
-                value: e.target.files[0]
+                value: image
             });
-        },
-        createImage(file) {
-            const reader = new FileReader();
-            const vm = this;
-
-            reader.onload = (e) => {
-                vm.imageData = e.target.result;
-            };
-            reader.readAsDataURL(file);
         }
     }
 }

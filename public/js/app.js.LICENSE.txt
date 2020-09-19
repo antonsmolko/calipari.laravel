@@ -47,6 +47,10 @@
  * @license MIT
  */
 
+/*! FileAPI 2.1.1 - BSD | git://github.com/mailru/FileAPI.git
+ * FileAPI — a set of  javascript tools for working with files. Multiupload, drag'n'drop and chunked file upload. Images: crop, resize and auto orientation by EXIF.
+ */
+
 /*! nouislider - 14.6.1 - 8/17/2020 */
 
 /**!

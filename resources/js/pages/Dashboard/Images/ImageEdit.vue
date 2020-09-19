@@ -356,14 +356,14 @@ export default {
                 sendData: {
                     formData: {
                         image: this.image,
-                        publish: +this.publish,
+                        publish: Number(this.publish),
                         topics: this.topics,
                         colors: this.colors,
                         interiors: this.interiors,
                         owner_id: this.owner,
                         max_print_width: this.maxPrintWidth,
                         tags: this.tags,
-                        description: this.description
+                        description: this.description || ''
                     },
                     id: this.id
                 },

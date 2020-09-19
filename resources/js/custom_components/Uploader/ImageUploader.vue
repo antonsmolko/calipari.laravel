@@ -17,10 +17,11 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import FileApi from 'fileapi'
+import imageUploader from '@/mixins/imageUploader'
 
 export default {
     name: "ImageUploader",
+    mixins: [imageUploader],
     props: {
         multiple: {
             type: Boolean,
@@ -105,86 +106,9 @@ export default {
             }
         },
         async processSingleImage (file) {
-            const process = await this.processImage(file);
-            this.image = process.image;
-            this.preview = process.preview;
-        },
-        async processImage (file) {
-            return new Promise((resolve, reject) => {
-                const validation = this.validate(file);
-
-                if (!validation.status) {
-                    this.$emit('failed', validation);
-                    reject();
-                }
-
-                const reader = new FileReader();
-                let preview = {};
-
-                reader.onload = async (e) => {
-                    preview = {
-                        name: file.name,
-                        size: file.size,
-                        content: e.target.result
-                    }
-
-                    const image = await this.transform(file);
-                    resolve({ preview, image })
-                };
-
-                reader.readAsDataURL(file);
-            });
-
-        },
-        transform (file) {
-            return new Promise((resolve, reject) => {
-                FileApi.Image(file)
-                    .resize(this.width, this.height, 'max')
-                    .get((err, img) => {
-                        if (err) {
-                            reject(err);
-                        }
-                        const dataUri = FileApi.toDataURL(img, 'image/jpeg');
-                        const image = this.dataURItoBlob(dataUri);
-
-                        resolve(image);
-                    });
-            });
-        },
-        dataURItoBlob (dataURI) {
-            const byteString = atob(dataURI.split(',')[1]);
-            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-            const ab = new ArrayBuffer(byteString.length);
-            const ia = new Uint8Array(ab);
-            for (let i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
-            }
-
-            return new Blob([ab], { type: mimeString });
-        },
-        validate (file) {
-            if (!file) {
-                return {
-                    status: false,
-                    message: 'Ошибка загрузки файла!'
-                }
-            }
-
-            if (!/\.(jpe?g|png|gif)$/i.test(file.name)) {
-                return {
-                    status: false,
-                    message: 'Неправильный формат файла!'
-                }
-            }
-
-            if (file.size > this.maxFileSize * 1048576) {
-                return {
-                    status: false,
-                    message: `Превышен максимально допустимый размер файла ${this.maxFileSize} МБ!`
-                }
-            }
-
-            return { status: true }
+            const { preview, image } = await this.processImage(file, this.width, this.height);
+            this.preview = preview;
+            this.image = image;
         }
     }
 }

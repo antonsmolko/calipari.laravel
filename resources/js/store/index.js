@@ -90,11 +90,11 @@ const mutations = {
             }
         });
     },
-    ADD_NOTIFICATION (state, { message, status, timeout = null }) {
+    ADD_NOTIFICATION (state, { message, type, timeout = null }) {
         state.notifications.push({
             id: getHash(),
             message,
-            status,
+            type,
             timeout
         })
     },
