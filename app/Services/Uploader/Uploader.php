@@ -7,7 +7,6 @@ use App\Services\Format\FormatService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class Uploader
@@ -179,7 +178,6 @@ class Uploader
     {
         $dir = $this->getUploadedBaseDirPath($path);
         $filePath = $dir . '/' . $path;
-
         Storage::disk('s3')->delete($filePath);
 
         return Storage::delete($this->uploadPath . '/' . $filePath);

@@ -12,6 +12,7 @@ use App\Services\Cache\TTL;
 use App\Services\ColorCollection\Repositories\CmsColorCollectionRepository;
 use App\Services\Image\Handlers\DeleteImageHandler;
 use App\Services\Image\Handlers\FindDuplicatesHandler;
+use App\Services\Image\Handlers\ForceDeleteHandler;
 use App\Services\Image\Handlers\GetSyncDataHandler;
 use App\Services\Image\Handlers\SyncUpdateWithColorCollectionHandler;
 use App\Services\Image\Handlers\UpdateHandler;
@@ -33,6 +34,7 @@ class CmsImageService extends CmsBaseResourceService
     private UpdateHandler $updateHandler;
     private SyncUpdateWithColorCollectionHandler $syncUpdateWithColorCollectionHandler;
     private FindDuplicatesHandler $findDuplicatesHandler;
+    private ForceDeleteHandler $forceDeleteHandler;
 
     /**
      * CmsImageService constructor.
@@ -47,6 +49,7 @@ class CmsImageService extends CmsBaseResourceService
      * @param SyncUpdateWithColorCollectionHandler $syncUpdateWithColorCollectionHandler
      * @param CacheKeyManager $cacheKeyManager
      * @param FindDuplicatesHandler $findDuplicatesHandler
+     * @param ForceDeleteHandler $forceDeleteHandler
      */
     public function __construct(
         CmsImageRepository $repository,
@@ -59,7 +62,8 @@ class CmsImageService extends CmsBaseResourceService
         UpdateHandler $updateHandler,
         SyncUpdateWithColorCollectionHandler $syncUpdateWithColorCollectionHandler,
         CacheKeyManager $cacheKeyManager,
-        FindDuplicatesHandler $findDuplicatesHandler
+        FindDuplicatesHandler $findDuplicatesHandler,
+        ForceDeleteHandler $forceDeleteHandler
     )
     {
         parent::__construct($repository, $clearCacheByTagHandler, $cacheKeyManager);
@@ -164,14 +168,13 @@ class CmsImageService extends CmsBaseResourceService
 
     /**
      * @param int $id
-     * @return mixed
+     * @return bool|null
      */
     public function forceDelete(int $id)
     {
         $item = $this->repository->getTrashedItem($id);
-        uploader()->remove($item->path);
 
-        return $this->repository->forceDelete($item);
+        return $this->forceDeleteHandler->handle($item);
     }
 
     /**

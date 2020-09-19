@@ -142,6 +142,7 @@ import VSelect from '@/custom_components/VForm/VSelect';
 import VSlider from '@/custom_components/VForm/VSlider';
 import { updateMethod, deleteMethod } from '@/mixins/crudMethods';
 import { pageTitle } from '@/mixins/base';
+import { getPrice } from '@/helpers';
 
 export default {
     name: 'SaleEdit',
@@ -236,9 +237,9 @@ export default {
             return this.$store.getters['sales/isUniqueArticle'](this.article);
         },
         price () {
-            return this.texture && this.width && this.height
-                ? Math.round(this.width * this.height / 1000000 * this.texture.price) * 100
-                : 0;
+            const texturePrice = this.texture ? this.texture.price : null;
+
+            return getPrice(this.width, this.height, texturePrice);
         },
         formatDiscount () {
             return this.discount ? `${this.discount} %` : 0;
@@ -285,7 +286,7 @@ export default {
                         height_cm: Number(this.height),
                         texture_id: Number(this.textureId),
                         discount: Number(this.discount),
-                        description: this.description,
+                        description: this.description || '',
                         publish: Number(this.publish)
                     }
                 },

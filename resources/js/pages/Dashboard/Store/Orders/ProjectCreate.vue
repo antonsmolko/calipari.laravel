@@ -26,6 +26,17 @@
                         <span>ID:</span><h3 class="m-0">{{ image.id }}</h3>
                     </template>
                 </product-card>
+                <slide-y-down-transition v-show="price">
+                    <md-card>
+                        <card-icon-header title="Цена" icon="attach_money"/>
+                        <md-card-content>
+                            <div class="md-flex md-between">
+                                <h4 class="md-card-title m-0">Цена:</h4>
+                                <span class="md-title">{{ formatPrice }}</span>
+                            </div>
+                        </md-card-content>
+                    </md-card>
+                </slide-y-down-transition>
             </div>
             <div class="md-layout-item md-medium-size-100 md-large-size-66 md-xlarge-size-75">
                 <md-card>
@@ -169,7 +180,7 @@ import VSelect from "@/custom_components/VForm/VSelect"
 import { createMethod } from '@/mixins/crudMethods'
 import { pageTitle } from '@/mixins/base';
 import { required, requiredIf, email, numeric } from "vuelidate/lib/validators"
-import { getHash } from '@/helpers'
+import { getHash, getPrice, getFormatPrice } from '@/helpers'
 
 export default {
     name: "ProjectCreate",
@@ -251,8 +262,24 @@ export default {
             addedCosts: state => state.orders.project.addedCosts,
             settings: state => state.settings.entries
         }),
-        ...mapGetters('textures', {
-            defaultTextureId: 'defaultItemId'
+        price () {
+            const panePrice = getPrice(this.width, this.height, this.texturePrice);
+
+            return panePrice ? panePrice + this.addedCostsAmount : 0;
+        },
+        addedCostsAmount () {
+            return this.selectedAddedCosts.reduce((acc, item) => acc + Number(this.addedCosts[item]), 0);
+        },
+        texturePrice () {
+            const texture = this.$store.getters['textures/getById'](this.texture);
+
+            return texture ? texture.price : null;
+        },
+        formatPrice () {
+            return getFormatPrice(this.price);
+        },
+        ...mapGetters({
+            defaultTextureId: 'textures/defaultItemId'
         })
     },
     created () {

@@ -1,4 +1,4 @@
-import orderBy from 'lodash/orderBy'
+import orderBy from 'lodash/orderBy';
 import { axiosAction, axiosWithDownload } from "../../mixins/actions";
 
 const state = {
