@@ -248,6 +248,14 @@ Route::prefix('profile')
         });
     });
 
+/** Mail Receive */
+
+Route::prefix('mail')
+    ->group(function() {
+        Route::post('feedback', 'Client\Mail\MailController@receiveFeedbackForm');
+        Route::post('back-call', 'Client\Mail\MailController@receiveBackCallForm');
+    });
+
 
 /**
  * CMS

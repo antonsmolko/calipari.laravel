@@ -69,7 +69,7 @@ class ClientReviewService extends ClientBaseResourceService
         event(new OrderFeedbackReceived($order));
 
         return [
-            'message' => __('common.feedback_received_successfully', ['order_number' => $order->number]),
+            'message' => __('common.order_feedback_received_successfully', ['order_number' => $order->number]),
             'status' => 'success',
             'timeout' => 10000
         ];
