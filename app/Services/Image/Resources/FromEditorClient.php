@@ -24,6 +24,7 @@ class FromEditorClient extends JsonResource
             'max_print_width' => $this->max_print_width,
             'hasColorCollection' => (bool) $this->publishedColorCollection()->count(),
             'hasArtCollection' => (bool) $this->publishedArtCollection()->count(),
+            'examples' => $this->getExamples()
         ];
     }
 }

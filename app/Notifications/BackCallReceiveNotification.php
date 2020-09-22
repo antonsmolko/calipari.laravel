@@ -21,7 +21,7 @@ class BackCallReceiveNotification extends Notification
      * @param array $formData
      * @param string $emoji
      */
-    public function __construct(array $formData, string $emoji = 'incoming_envelope')
+    public function __construct(array $formData, string $emoji = 'telephone_receiver')
     {
         $this->formData = $formData;
         $this->emoji = $emoji;

@@ -22,7 +22,8 @@ class FromClient extends JsonResource
             'likesCount' => $this->likes_count,
             'ratio' => $this->ratio,
             'colorCollection' => $this->publishedColorCollection,
-            'artCollection' => $this->publishedArtCollection
+            'artCollection' => $this->publishedArtCollection,
+            'examples' => $this->getExamples()
         ];
     }
 }
