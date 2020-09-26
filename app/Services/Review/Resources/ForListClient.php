@@ -4,6 +4,7 @@ namespace App\Services\Review\Resources;
 
 use Creativeorange\Gravatar\Facades\Gravatar;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Jenssegers\Date\Date;
 
 class ForListClient extends JsonResource
 {
@@ -15,6 +16,8 @@ class ForListClient extends JsonResource
      */
     public function toArray($request)
     {
+        Date::setLocale('ru');
+
         return [
             'id' => $this->id,
             'gravatar' => $this->user ? Gravatar::get($this->user->email, ['size'=>150]) : null,
@@ -24,7 +27,7 @@ class ForListClient extends JsonResource
             'comment' => $this->comment,
             'publish' => $this->publish,
             'images' => $this->getImages(),
-            'date' => $this->created_at->format('d F Y')
+            'date' => Date::createFromTimeString($this->created_at)->format('j F Y г.'),
         ];
     }
 }

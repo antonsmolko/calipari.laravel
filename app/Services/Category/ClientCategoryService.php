@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Cache;
 
 class ClientCategoryService extends ClientBaseResourceService
 {
-
     /**
      * ClientCategoryService constructor.
      * @param ClientCategoryRepository $repository

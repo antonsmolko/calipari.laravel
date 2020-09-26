@@ -49,25 +49,6 @@ class ClientCategoryRepository extends ClientBaseResourceRepository
         return $this->model::where('alias', $alias)->firstOrFail();
     }
 
-//    /**
-//     * @param Category $category
-//     * @param array $pagination
-//     * @param array|null $filter
-//     * @return FromClientCollection
-//     */
-//    public function getImages(Category $category, array $pagination, array $filter = null)
-//    {
-//        return new FromClientCollection(
-//            $category->images()
-//                ->published()
-//                ->when($filter, function ($query, $filter) {
-//                    return $query->filtered($filter);
-//                })
-//                ->orderBy($pagination['sort_by'], $pagination['sort_order'])
-//                ->paginate($pagination['per_page'], ['*'], '', $pagination['current_page'])
-//        );
-//    }
-
     /**
      * @param int $id
      * @return mixed
