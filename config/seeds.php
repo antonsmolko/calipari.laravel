@@ -117,21 +117,21 @@ return [
     'deliveries' => [
         [
             'title' => 'Самовывоз',
-            'alias' => config('delivery.alias.pickup'),
+            'alias' => 'pickup',
             'order' => 1,
             'publish' => 1,
             'description' => 'г. Брянск'
         ],
         [
             'title' => 'Транспортная компания CDEK',
-            'alias' => config('delivery.alias.cdek'),
+            'alias' => 'cdek',
             'order' => 2,
             'publish' => 1,
             'description' => 'до пункта самовывоза'
         ],
         [
             'title' => 'Курьер CDEK',
-            'alias' => config('delivery.alias.cdek_courier'),
+            'alias' => 'cdek-courier',
             'order' => 3,
             'publish' => 1,
             'description' => 'до двери'

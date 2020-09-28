@@ -28,6 +28,7 @@ class ClientCategoryRepository extends ClientBaseResourceRepository
         return $this->model::select(['id', 'type', 'title', 'alias', 'image_path'])
             ->has('images')
             ->published()
+            ->orderBy('title')
             ->get();
     }
 
