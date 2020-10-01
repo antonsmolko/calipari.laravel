@@ -36,4 +36,18 @@ class ClientArtCollectionService extends ClientBaseResourceService
                 TTL::ART_COLLECTIONS_TTL,
                 fn () => $this->repository->getItemByAliasWithImages($alias));
     }
+
+    /**
+     * @return array|mixed
+     */
+    public function getItemsForSitemap()
+    {
+        $key = $this->cacheKeyManager->getCategoriesKey(['client', 'sitemap']);
+
+        return Cache::tags(Tag::ART_COLLECTIONS_TAG)
+            ->remember(
+                $key,
+                TTL::ART_COLLECTIONS_TTL,
+                fn () => $this->repository->getItemsForSitemap());
+    }
 }

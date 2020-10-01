@@ -4,7 +4,7 @@ namespace App\Services\Post\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class FromListClientCollection extends ResourceCollection
+class ForCmsCollection extends ResourceCollection
 {
     /**
      * Transform the resource into an array.
@@ -16,13 +16,11 @@ class FromListClientCollection extends ResourceCollection
     {
         return [
             'data' => $this->collection,
-            'pagination' => [
-                'total' => $this->total(),
-                'current_page' => $this->currentPage(),
-                'per_page' => $this->perPage(),
-                'from' => $this->firstItem(),
-                'to' => $this->lastItem()
-            ]
+            'total' => $this->total(),
+            'current_page' => $this->currentPage(),
+            'per_page' => $this->perPage(),
+            'from' => $this->firstItem(),
+            'to' => $this->lastItem()
         ];
     }
 }

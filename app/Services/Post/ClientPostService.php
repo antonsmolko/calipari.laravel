@@ -69,4 +69,18 @@ class ClientPostService extends ClientBaseResourceService
     {
         return $this->repository->getItemByAlias($alias);
     }
+
+    /**
+     * @return array|mixed
+     */
+    public function getItemsForSitemap()
+    {
+        $key = $this->cacheKeyManager->getCategoriesKey(['client', 'sitemap']);
+
+        return Cache::tags(Tag::POSTS_TAG)
+            ->remember(
+                $key,
+                TTL::POSTS_TTL,
+                fn () => $this->repository->getItemsForSitemap());
+    }
 }

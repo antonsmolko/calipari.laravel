@@ -4,7 +4,7 @@ namespace App\Services\Category\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FromEdit extends JsonResource
+class ForEdit extends JsonResource
 {
     /**
      * Transform the resource into an array.

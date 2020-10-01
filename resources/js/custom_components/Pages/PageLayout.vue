@@ -44,6 +44,11 @@
                                              :vField="$v.fields.content"
                                              :differ="true"
                                              :module="storeModule" />
+
+                                    <div>
+                                        <h4 class="card-title">Опубликовать</h4>
+                                        <md-switch :value="!item.publish" @change="onPublish" />
+                                    </div>
                                 </div>
 
                             </div>
@@ -179,7 +184,8 @@ export default {
         ...mapActions('pages', {
             getItemAction: 'getItem',
             getItemsAction: 'getItems',
-            deleteImageAction: 'deleteImage'
+            deleteImageAction: 'deleteImage',
+            togglePublishAction: 'togglePublish'
         }),
         async onUpdate () {
             await this.update({
@@ -202,6 +208,9 @@ export default {
         },
         handleDeleteImage () {
             this.deleteImageAction(this.item.id);
+        },
+        onPublish () {
+            this.togglePublishAction(this.item.id);
         }
     }
 }

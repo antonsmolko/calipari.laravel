@@ -69,4 +69,18 @@ class ClientCategoryService extends ClientBaseResourceService
                 TTL::CATEGORIES_TTL,
                 fn () => $this->repository->getItemTags($id));
     }
+
+    /**
+     * @return array|mixed
+     */
+    public function getItemsForSitemap()
+    {
+        $key = $this->cacheKeyManager->getCategoriesKey(['client', 'sitemap']);
+
+        return Cache::tags(Tag::CATEGORIES_TAG)
+            ->remember(
+                $key,
+                TTL::CATEGORIES_TTL,
+                fn () => $this->repository->getItemsForSitemap());
+    }
 }

@@ -6,7 +6,7 @@ namespace App\Services\Post\Repositories;
 
 use App\Models\Post;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
-use App\Services\Post\Resources\FromListClientCollection as FromListResourceCollection;
+use App\Services\Post\Resources\ForListClientCollection as FromListResourceCollection;
 use App\Services\Post\Resources\PostClient as PostResource;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -49,5 +49,16 @@ class ClientPostRepository extends ClientBaseResourceRepository
     public function getItemByAlias(string $alias)
     {
         return new PostResource($this->model::where('alias', $alias)->firstOrFail());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemsForSitemap()
+    {
+        return $this->model::published()
+            ->select(['alias'])
+            ->orderBy('alias')
+            ->get();
     }
 }

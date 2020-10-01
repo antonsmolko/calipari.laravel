@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API\Cms\Page;
 
 use App\Http\Controllers\API\Cms\Base\BaseResourceController;
-use App\Http\Controllers\API\Cms\Page\Requests\StoreRequest;
 use App\Http\Controllers\API\Cms\Page\Requests\UpdateRequest;
 use App\Services\Page\CmsPageService;
 
@@ -17,15 +16,6 @@ class PageController extends BaseResourceController
     {
         parent::__construct($service);
     }
-
-//    /**
-//     * @param StoreRequest $request
-//     * @return mixed
-//     */
-//    public function store(StoreRequest $request)
-//    {
-//        return $this->service->store($request->all());
-//    }
 
     /**
      * @param UpdateRequest $request

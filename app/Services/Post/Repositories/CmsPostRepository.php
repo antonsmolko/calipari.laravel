@@ -6,7 +6,7 @@ namespace App\Services\Post\Repositories;
 
 use App\Models\Post;
 use App\Services\Base\Resource\Repositories\CmsBaseResourceRepository;
-use App\Services\Post\Resources\FromListCmsCollection as FromListResourceCollection;
+use App\Services\Post\Resources\ForCmsCollection as FromListResourceCollection;
 use App\Services\Post\Resources\PostCms as PostResource;
 
 class CmsPostRepository extends CmsBaseResourceRepository

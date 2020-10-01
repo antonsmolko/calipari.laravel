@@ -71,6 +71,12 @@ const actions = {
             }
         })
     },
+    togglePublish({ commit }, id) {
+        return axiosAction('get', commit, {
+            url: `/pages/${id}/publish`,
+            thenContent: response => commit('SET_FIELD', { field: 'item', value: response.data })
+        })
+    },
     deleteImage ({ commit }, id) {
         return axiosAction('get', commit, {
             url: `/pages/${id}/delete-image`,

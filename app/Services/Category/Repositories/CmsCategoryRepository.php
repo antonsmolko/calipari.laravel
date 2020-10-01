@@ -6,8 +6,8 @@ namespace App\Services\Category\Repositories;
 
 use App\Models\Category;
 use App\Services\Base\Category\Repositories\CmsBaseCategoryRepository;
-use App\Services\Category\Resources\FromEdit as FromEditResource;
-use App\Services\Category\Resources\FromList as FromListResource;
+use App\Services\Category\Resources\ForEdit as FromEditResource;
+use App\Services\Category\Resources\ForList as FromListResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 

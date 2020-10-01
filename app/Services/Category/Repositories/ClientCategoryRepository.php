@@ -6,8 +6,7 @@ namespace App\Services\Category\Repositories;
 
 use App\Models\Category;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
-use App\Services\Category\Resources\FromSearchClient as FromSearchResource;
-use App\Services\Image\Resources\FromClientCollection;
+use App\Services\Category\Resources\ForSearchClient as ForSearchResource;
 use Illuminate\Database\Eloquent\Collection;
 
 class ClientCategoryRepository extends ClientBaseResourceRepository
@@ -24,7 +23,8 @@ class ClientCategoryRepository extends ClientBaseResourceRepository
     /**
      * @return Collection
      */
-    public function index(): Collection {
+    public function index(): Collection
+    {
         return $this->model::select(['id', 'type', 'title', 'alias', 'image_path'])
             ->has('images')
             ->published()
@@ -77,8 +77,20 @@ class ClientCategoryRepository extends ClientBaseResourceRepository
      */
     public function getSearchedItems(string $search)
     {
-        return FromSearchResource::collection($this->model::search($search)
+        return ForSearchResource::collection($this->model::search($search)
             ->where('publish', $this->model::PUBLISHED)
             ->get());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemsForSitemap()
+    {
+        return $this->model::where('type', '<>', 'tags')
+            ->published()
+            ->select(['alias'])
+            ->orderBy('alias')
+            ->get();
     }
 }

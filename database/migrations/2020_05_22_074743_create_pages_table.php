@@ -20,6 +20,7 @@ class CreatePagesTable extends Migration
             $table->string('meta_title', 150)->nullable();
             $table->string('image_path', 100)->nullable();
             $table->text('content')->nullable();
+            $table->unsignedSmallInteger('public')->default(1);
             $table->text('description')->nullable();
             $table->string('keywords')->nullable();
             $table->timestamps();

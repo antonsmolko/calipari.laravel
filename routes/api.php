@@ -221,6 +221,10 @@ Route::group(['prefix' => 'posts'], function () {
         ->where('id', '[0-9]+');
 });
 
+/** Sitemap */
+
+Route::get('/sitemap', 'Client\Sitemap\SitemapController');
+
 
 /** User Profile */
 
@@ -636,6 +640,8 @@ Route::prefix('cms')
         Route::post('/{id}', 'Cms\Page\PageController@update')
             ->middleware('optimizeImages');
         Route::get('/{id}/delete-image', 'Cms\Page\PageController@deleteImage');
+        Route::get('{id}/publish', 'Cms\Page\PageController@publish')
+            ->where('id', '[0-9]+');
     });
     Route::apiResource('pages', 'Cms\Page\PageController')
         ->except(['create', 'update', 'edit'])

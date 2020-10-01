@@ -5,7 +5,7 @@ namespace App\Services\Post\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Jenssegers\Date\Date;
 
-class FromListClient extends JsonResource
+class ForListClient extends JsonResource
 {
     /**
      * Transform the resource into an array.

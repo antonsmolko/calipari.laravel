@@ -47,4 +47,15 @@ class ClientArtCollectionRepository extends ClientBaseResourceRepository
             ->where('publish', $this->model::PUBLISHED)
             ->get());
     }
+
+    /**
+     * @return mixed
+     */
+    public function getItemsForSitemap()
+    {
+        return $this->model::published()
+            ->select(['alias'])
+            ->orderBy('alias')
+            ->get();
+    }
 }
