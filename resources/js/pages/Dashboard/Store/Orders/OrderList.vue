@@ -38,11 +38,11 @@
                             </md-table-cell>
 
                             <md-table-cell md-label="Цена">
-                                <span class="md-subheading">{{ $helpers.getFormatPrice(item.price) }}</span>
+                                <span class="md-subheading">{{ $helpers.getFormatPrice(getPrice(item)) }}</span>
                             </md-table-cell>
 
                             <md-table-cell md-label="Доставка">
-                                {{ item.delivery }}
+                                {{ item.delivery.title }}
                             </md-table-cell>
                             <md-table-cell md-label="Статус">
                                 <md-field v-if="getRestItems(item).length">
@@ -120,11 +120,11 @@
                             </md-table-cell>
 
                             <md-table-cell md-label="Цена">
-                                <span class="md-subheading">{{ $helpers.getFormatPrice(item.price) }}</span>
+                                <span class="md-subheading">{{ $helpers.getFormatPrice(getPrice(item)) }}</span>
                             </md-table-cell>
 
                             <md-table-cell md-label="Доставка">
-                                {{ item.delivery }}
+                                {{ item.delivery.title }}
                             </md-table-cell>
 
                             <md-table-cell md-label="Действия">
@@ -239,7 +239,7 @@
                             </md-table-cell>
 
                             <md-table-cell md-label="Цена">
-                                <span class="md-subheading">{{ $helpers.getFormatPrice(item.price) }}</span>
+                                <span class="md-subheading">{{ $helpers.getFormatPrice(getPrice(item)) }}</span>
                             </md-table-cell>
 
                             <md-table-cell md-label="Сумма возмещения">
@@ -298,6 +298,8 @@ import Tabs from '@/custom_components/Tabs.vue'
 import VExtendedTable from "@/custom_components/Tables/VExtendedTable";
 import TableActions from "@/custom_components/Tables/TableActions";
 import swal from "sweetalert2";
+import find from 'lodash/find';
+import sumBy from 'lodash/sumBy'
 
 export default {
     name: 'OrderList',
@@ -376,7 +378,20 @@ export default {
             return this.$store.getters['orderStatuses/getRestItems'](item.status.order);
         },
         refundAvailability (item) {
-            return item.paid && item.price > Number(item.refund_amount);
+            const price = this.getPrice(item);
+
+            return this.paid(item) && price > Number(item.refund_amount);
+        },
+        paid (item) {
+            return Boolean(find(item.statuses, { alias: 'paid' }));
+        },
+        getPrice (item) {
+            const salesPrice = sumBy(item.sales, 'pivot.selling_price');
+            const itemsPrice = item.items
+                .reduce((acc, item) => acc += Number(item.price) * Number(item.qty), 0);
+            const deliveryPrice = item.delivery.price;
+
+            return salesPrice + itemsPrice + deliveryPrice;
         }
     }
 }

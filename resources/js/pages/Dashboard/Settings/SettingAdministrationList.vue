@@ -18,8 +18,11 @@
                     </template>
                     <template v-else>
                         <div class="md-justify-end">
-                            <router-button-link title="Создать настройку" icon="add" color="md-success"
-                                                route="cms.settings.create" />
+                            <router-button-link
+                                title="Создать настройку"
+                                icon="add"
+                                color="md-success"
+                                :to="{ name: 'cms.settings.create' }" />
                         </div>
 
                         <md-table v-if="settings.length"

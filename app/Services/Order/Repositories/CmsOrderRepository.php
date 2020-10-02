@@ -43,7 +43,7 @@ class CmsOrderRepository extends CmsBaseResourceRepository
             )
                 ->when(!empty($requestData['query']),
                     fn ($query) => $query->where('number', 'like', $requestData['query'] . '%'))
-                ->with(['statuses', 'user:id,email'])
+                ->with(['statuses', 'user:id,email', 'items', 'sales'])
                 ->orderBy($requestData['sort_by'], $requestData['sort_order'])
                 ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']));
     }
@@ -59,6 +59,7 @@ class CmsOrderRepository extends CmsBaseResourceRepository
             ->whereHas('statuses', fn ($query) => $query->where('alias', $status))
             ->when(!empty($requestData['query']),
                 fn ($query) => $query->where('number', 'like', $requestData['query'] . '%'))
+            ->with(['statuses', 'user:id,email', 'items', 'sales'])
             ->orderBy($requestData['sort_by'], $requestData['sort_order'])
             ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']));
     }
