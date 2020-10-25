@@ -41,12 +41,13 @@
                                  :module="storeModule"
                                  :vRules="{ required: true, unique: true, minLength: true, alias: true }" />
 
-                        <div v-if="category_type === 'colors'">
+                        <div v-if="isTypeColors">
                             <h4 class="card-title">Цвет</h4>
                             <div class="md-color-sample mt-2" :style="`background-color: ${alias}`"></div>
                         </div>
 
-                        <v-image name="image"
+                        <v-image v-if="!isTypeColors"
+                                 name="image"
                                  :imgDefault="imagePath"
                                  :vField="$v.image"
                                  :vRules="{ required: true }"
@@ -70,7 +71,7 @@
                         <v-input title="Мета заголовок"
                                  name="meta_title"
                                  :value="metaTitle"
-                                 :maxlength="150"
+                                 :maxlength="250"
                                  :vField="$v.metaTitle"
                                  :module="storeModule" />
 
@@ -169,6 +170,9 @@ export default {
             keywords: state => state.fields.keywords,
             hasPublishedImages: state => state.fields.has_published_images
         }),
+        isTypeColors () {
+            return this.category_type === 'colors'
+        },
         isUniqueTitleEdit () {
             return this.$store.getters['categories/isUniqueTitleEdit'](this.title, this.id);
         },

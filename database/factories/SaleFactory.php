@@ -2,7 +2,6 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Image;
+use App\Models\Sale;
 
-$factory->define(Image::class, fn() => []);
-
+$factory->define(Sale::class, fn() => []);

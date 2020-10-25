@@ -18,7 +18,7 @@ class CreateCategoriesTable extends Migration
             $table->string('type', 50);
             $table->string('alias', 50)->unique();
             $table->string('title', 50)->unique();
-            $table->string('image_path', 100);
+            $table->string('image_path', 100)->nullable();
             $table->unsignedTinyInteger('publish')->default(0);
             $table->string('meta_title')->nullable();
             $table->text('description')->nullable();

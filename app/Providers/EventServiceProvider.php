@@ -24,13 +24,14 @@ class EventServiceProvider extends ServiceProvider
             'SocialiteProviders\\Yandex\\YandexExtendSocialite@handle',
         ],
 
-        \App\Events\Models\Category\CategorySaved::class => [
+        \App\Events\Models\Category\CategoryCreated::class => [
             \App\Listeners\Cache\Clear\CategoryCacheClear::class,
             \App\Listeners\Cache\Clear\ImageCacheClear::class,
             \App\Listeners\Cache\Clear\ColorCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\SearchCacheClear::class,
             \App\Listeners\Cache\Clear\FilterCacheClear::class,
+            \App\Listeners\HomeModuleInterior\Create::class,
         ],
 
         \App\Events\Models\Category\CategoryUpdated::class => [
@@ -40,6 +41,7 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\SearchCacheClear::class,
             \App\Listeners\Cache\Clear\FilterCacheClear::class,
+            \App\Listeners\HomeModuleInterior\Update::class,
         ],
 
         \App\Events\Models\Category\CategoryDeleted::class => [
@@ -49,6 +51,7 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\Cache\Clear\ArtCollectionCacheClear::class,
             \App\Listeners\Cache\Clear\SearchCacheClear::class,
             \App\Listeners\Cache\Clear\FilterCacheClear::class,
+            \App\Listeners\HomeModuleInterior\Delete::class,
         ],
 
         \App\Events\Models\Image\ImageSaved::class => [

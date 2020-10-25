@@ -16,6 +16,7 @@ class Uploader
     private string $uploadPath;
     private array $uploadRules;
     private int $defaultMaxPrintWidth;
+    private int $defaultMaxPrintHeight;
     private string $defaultUploadExtension;
     private ImageValidationBuilder $imageValidationBuilder;
     private Collection $formats;
@@ -29,6 +30,7 @@ class Uploader
         $this->uploadPath = ltrim(config('uploads.image_upload_path', ''));
         $this->uploadRules = config('uploads.image_upload_rules', '');
         $this->defaultMaxPrintWidth = config('uploads.default_max_print_width');
+        $this->defaultMaxPrintHeight = config('uploads.default_max_print_height');
         $this->defaultUploadExtension = config('uploads.default_extension');
     }
 
@@ -288,11 +290,12 @@ class Uploader
      */
     public function getStorageUploadedFileData(): array
     {
-        $maxPrintWidth = round(
-            $this->defaultMaxPrintWidth *
-            $this->fileProps['width'] /
-            $this->fileProps['height'] /
-            10) * 10;
+        $ratio = $this->fileProps['width'] / $this->fileProps['height'];
+        $defaultSizesRatio = $this->defaultMaxPrintWidth / $this->defaultMaxPrintHeight;
+
+        $maxPrintWidth = $ratio > $defaultSizesRatio
+            ? $this->defaultMaxPrintWidth
+            : round($this->defaultMaxPrintHeight * $ratio / 10) * 10;
 
         return [
             'path' => $this->fileProps['name'],

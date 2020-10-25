@@ -62,7 +62,7 @@ if (! function_exists('isImageValid')) {
             ->isAllowExtension()
             ->isAllowMime()
             ->isAllowMinSize()
-            ->isAllowMaxSize()
+//            ->isAllowMaxSize()
             ->isAllow();
     }
 }
@@ -118,26 +118,50 @@ if (! function_exists('getFakerImageFromLocal')) {
     }
 }
 
+if (! function_exists('copyImagesToSeedStorageDir')) {
+    /**
+     * @param array $images
+     * @param string $sourceDir
+     * @param string $destDir
+     */
+    function copyImagesToSeedStorageDir(array $images, string $sourceDir, string $destDir)
+    {
+        array_walk($images, function ($image) use ($sourceDir, $destDir) {
+            $sourceImage = $sourceDir . $image;
+            $destImage = $destDir . $image;
+            ImageOptimizer::optimize($sourceImage);
+
+            copy($sourceImage, $destImage);
+        });
+    }
+}
+
 if (! function_exists('getImageByNameFromLocal')) {
     /**
      * @param array $images
      * @param string $name
-     * @param string $seedsUploadImageDir
+     * @param string $subDir
      * @param string $seedsImageDir
      * @return UploadedFile|null
      */
-    function getImageByNameFromLocal(array $images, string $name, string $seedsUploadImageDir, string $seedsImageDir)
+    function getImageByNameFromLocal(array $images, string $name, string $subDir, string $seedsImageDir)
     {
+//        list($targetName) = explode('.', $name);
+
         $image = Arr::first($images, function ($value, $key) use ($name) {
-            return $value === $name;
+            list($baseName) = explode( '.', $value);
+
+            return $baseName === $name;
         });
 
-        if (! $image) {
+        if (!$image) {
             abort(404, 'SeedsException: Image with name "' . $name . '" not found');
         }
 
-        $sourceImage = $seedsUploadImageDir . '/' . $image;
+        $sourceImage = config('seed_settings.seeds_data_path') . $subDir . '/' . $image;
         $destImage = $seedsImageDir . $image;
+
+        ImageOptimizer::optimize($destImage);
 
         copy($sourceImage, $destImage);
 
@@ -410,5 +434,85 @@ if (! function_exists('getOrderItemDimensions')) {
     function getOrderItemDimensions(int $width, int $height): string
     {
         return $width . ' см × ' . $height . ' см';
+    }
+}
+
+if (! function_exists('parseCsv')) {
+    /**
+     * @param string $filePath
+     * @return array|null
+     */
+    function parseCsv(string $filePath)
+    {
+        if (File::exists($filePath) && File::isReadable($filePath) && File::isFile($filePath)) {
+            $csv = array_map('str_getcsv', file($filePath));
+            array_walk($csv, function(&$a) use ($csv) {
+                $a = array_combine($csv[0], $a);
+            });
+            array_shift($csv);
+
+            return $csv;
+        }
+
+        return null;
+    }
+}
+
+if (! function_exists('seedProcessOfLoadingImages')) {
+    /**
+     * @param string $seedImagesDir
+     * @param string $csvFileName
+     * @param \Illuminate\Database\Seeder $seeder
+     * @param string $callback
+     */
+    function seedProcessOfLoadingImages(
+        string $seedImagesDir,
+        string $csvFileName,
+        \Illuminate\Database\Seeder $seeder,
+        string $callback)
+    {
+        // Донорская директория с изображениями
+        $seedsUploadImageDir = config('seed_settings.seeds_data_path') . $seedImagesDir. '/';
+
+        // Временная донорская директория в storage
+        // (заполняется перед загрузкой изображений в storage/uploads)
+        $seedsImagePath = config('seed_settings.seeds_uploads_path');
+        Storage::deleteDirectory($seedsImagePath);
+        Storage::makeDirectory($seedsImagePath);
+
+        // Информация о всех изображениях в seeds_data в виде ['1' => '72.jpg']
+        $seedImagesData = getImagesFromLocal($seedsUploadImageDir);
+
+        // Абсолютный путь до временной донорской директории в storage
+        // (заполняется перед загрузкой изображений в storage/uploads)
+        $storageSeedsImageDir = storage_path("app/" . $seedsImagePath);
+
+        // Копирование изображений из app/seed_data/images в app/storage/app/seed_uploads
+        copyImagesToSeedStorageDir($seedImagesData, $seedsUploadImageDir, $storageSeedsImageDir);
+
+        $csvPath = base_path(config('seed_settings.seeds_data_path')) . 'csv/' . $csvFileName . '.csv';
+        $csv = parseCsv($csvPath);
+
+        array_walk(
+            $csv,
+            fn ($item) => call_user_func_array(
+                [$seeder, $callback], [$item, $seedImagesData, $storageSeedsImageDir])
+        );
+
+        Storage::deleteDirectory($seedsImagePath);
+    }
+}
+
+if (! function_exists('getSeedCsv')) {
+    /**
+     * @param string $fileName
+     * @return array|null
+     */
+    function getSeedCsv(string $fileName)
+    {
+        $seedDataPath = base_path(config('seed_settings.seeds_data_path'));
+        $csvPath = $seedDataPath . 'csv/' . $fileName . '.csv';
+
+        return parseCsv($csvPath);
     }
 }

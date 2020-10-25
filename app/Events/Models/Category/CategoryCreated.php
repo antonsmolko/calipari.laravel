@@ -9,7 +9,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class CategoryUpdated extends Model
+class CategoryCreated extends Model
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

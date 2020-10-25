@@ -45,14 +45,6 @@ class UpdateHandler
             $updateData['publish'] = 0;
         }
 
-        $category = $this->repository->update($item, $updateData);
-
-        if ($category['type'] === 'interiors') {
-            $moduleInteriorItem = $this->homeModuleInteriorRepository->getItemByInteriorId($category->id);
-            $this->homeModuleInteriorRepository
-                ->update($moduleInteriorItem, ['title' => $category['title']]);
-        }
-
-        return $category;
+        return $this->repository->update($item, $updateData);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 
+use Illuminate\Database\Seeder;
 
 class ImagesTableSeeder extends Seeder
 {
@@ -12,24 +12,33 @@ class ImagesTableSeeder extends Seeder
      */
     public function run()
     {
-        $uploadDir = config('uploads.image_upload_path');
-        Storage::deleteDirectory($uploadDir);
+        seedProcessOfLoadingImages(
+            'images',
+            'calipari.images',
+            $this,
+            'store');
+    }
 
-        $seedsUploadImageDir = config('seed_settings.seeds_data_path') . 'images';
-        $seedsImagePath = config('seed_settings.seeds_uploads_path');
-        Storage::deleteDirectory($seedsImagePath);
-        Storage::makeDirectory($seedsImagePath);
+    /**
+     * @param array $item
+     * @param array $seedImagesData
+     * @param string $storageSeedsImageDir
+     */
+    public function store(array $item, array $seedImagesData, string $storageSeedsImageDir) {
+        $imageFile = getImageByNameFromLocal(
+            $seedImagesData,
+            $item['baseName'],
+            'images',
+            $storageSeedsImageDir);
 
-        $images = getImagesFromLocal($seedsUploadImageDir);
-        $seedsImageDir = storage_path("app/" . $seedsImagePath);
+        $imageData = uploader()->store($imageFile);
 
-        $i = 0;
-        while ($i < config('seed_settings.images_count')) {
-            $uploadImage = getFakerImageFromLocal($images, $seedsUploadImageDir, $seedsImageDir);
-            factory(App\Models\Image::class)->create(uploader()->store($uploadImage));
-            $i++;
+        if (!empty($item['owner_id'])) {
+            $imageData = \Illuminate\Support\Arr::collapse([$imageData, [
+                'owner_id' => $item['owner_id']
+            ]]);
         }
 
-        Storage::deleteDirectory($seedsImagePath);
+        DB::table('images')->insert($imageData);
     }
 }

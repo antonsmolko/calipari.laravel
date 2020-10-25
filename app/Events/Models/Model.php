@@ -6,19 +6,21 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 abstract class Model
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public EloquentModel $model;
+
     /**
-     * Create a new event instance.
-     *
-     * @return void
+     * Model constructor.
+     * @param EloquentModel $model
      */
-    public function __construct()
+    public function __construct(EloquentModel $model)
     {
-        //
+        $this->model = $model;
     }
 
     /**

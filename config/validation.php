@@ -15,13 +15,13 @@ return [
     ],
     'meta_title' => [
         'min' => 2,
-        'max' => 150
-    ],
-    'description' => [
         'max' => 250
     ],
+    'description' => [
+        'max' => 500
+    ],
     'keywords' => [
-        'max' => 100
+        'max' => 200
     ],
     'text' => [
         'max' => 1000
@@ -41,7 +41,7 @@ return [
     ],
     'alias' => [
         'min' => 2,
-        'max' => 50,
+        'max' => 100,
         'pattern' => '/^([a-z0-9]+[-]?)+(?<!-)$/'
     ],
     'setting' => [

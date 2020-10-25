@@ -4,15 +4,6 @@ use Illuminate\Database\Seeder;
 
 class TexturesTableSeeder extends Seeder
 {
-    private string $seedsUploadImagePath;
-    private string $seedsImagePath;
-
-    public function __construct()
-    {
-        $this->seedsUploadImagePath = config('seed_settings.seeds_data_path') . 'textures';
-        $this->seedsImagePath = config('seed_settings.seeds_uploads_path');
-    }
-
     /**
      * Run the database seeds.
      *
@@ -20,35 +11,43 @@ class TexturesTableSeeder extends Seeder
      */
     public function run()
     {
-        Storage::deleteDirectory($this->seedsImagePath);
-        Storage::makeDirectory($this->seedsImagePath);
-
-        $images = getImagesFromLocal($this->seedsUploadImagePath);
-
-        foreach (config('seeds.textures') as $texture) {
-            DB::table('textures')->insert([
-                'name' => $texture['name'],
-                'sample_path' => $this->getTextureImagePath($images, 'sample', $texture['image_key']),
-                'background_path' => $this->getTextureImagePath($images, 'background', $texture['image_key']),
-                'width' => $texture['width'],
-                'price' => $texture['price'],
-                'description' => $texture['description'],
-                'publish' => 1,
-                'order' => $texture['order']
-            ]);
-        }
-
-        Storage::deleteDirectory($this->seedsImagePath);
+        seedProcessOfLoadingImages(
+            'textures',
+            'calipari.textures',
+            $this,
+            'store');
     }
 
-    protected function getTextureImagePath(array $images, string $article, string $imageKey)
-    {
-        $imageName = 'texture-' . $article . '-' . $imageKey . '.jpg';
-        $seedsImageDir = storage_path("app/" . $this->seedsImagePath);
+    /**
+     * @param array $item
+     * @param array $seedImagesData
+     * @param string $storageSeedsImageDir
+     */
+    public function store(array $item, array $seedImagesData, string $storageSeedsImageDir) {
+        $sampleFile = getImageByNameFromLocal(
+            $seedImagesData,
+            $item['alias'],
+            'textures',
+            $storageSeedsImageDir);
 
-        $imageUploadFile = getImageByNameFromLocal($images, $imageName, $this->seedsUploadImagePath, $seedsImageDir);
-        $imageAttributes = uploader()->store($imageUploadFile);
+        $exampleFile = getImageByNameFromLocal(
+            $seedImagesData,
+            'example-' . $item['alias'],
+            'textures',
+            $storageSeedsImageDir);
 
-        return $imageAttributes['path'];
+        $sampleData = uploader()->store($sampleFile);
+        $exampleData = uploader()->store($exampleFile);
+
+        factory(App\Models\Texture::class)->create([
+            'name' => $item['name'],
+            'sample_path' => $sampleData['path'],
+            'background_path' => $exampleData['path'],
+            'width' => $item['width'],
+            'price' => $item['price'],
+            'description' => $item['description'],
+            'seamless' => $item['seamless'],
+            'publish' => 1
+        ]);
     }
 }

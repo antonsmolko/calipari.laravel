@@ -14,5 +14,9 @@ class DeliveriesTableSeeder extends Seeder
         foreach (config('seeds.deliveries') as $delivery) {
             DB::table('deliveries')->insert($delivery);
         }
+
+        foreach (config('seeds.pickups') as $pickup) {
+            DB::table('pickups')->insert($pickup);
+        }
     }
 }

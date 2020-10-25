@@ -11,8 +11,10 @@ class OwnersTableSeeder extends Seeder
      */
     public function run()
     {
-        foreach (config('seeds.owners') as $format) {
-            DB::table('owners')->insert($format);
-        }
+        $csvPath = base_path(config('seed_settings.seeds_data_path')) . 'csv/calipari.owners.csv';
+        $csv = parseCsv($csvPath);
+
+        array_walk($csv, fn ($owner) => DB::table('owners')
+            ->insert(['title' => $owner['title']]));
     }
 }

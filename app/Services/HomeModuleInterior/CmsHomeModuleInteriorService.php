@@ -51,6 +51,18 @@ class CmsHomeModuleInteriorService extends CmsBaseResourceService
     }
 
     /**
+     * @param int $interiorId
+     * @param array $updateData
+     * @return mixed
+     */
+    public function update(int $interiorId, array $updateData)
+    {
+        $item = $this->repository->getItemByInteriorId($interiorId);
+
+        return $this->repository->update($item, $updateData);
+    }
+
+    /**
      * @param int $id
      * @return mixed
      */
@@ -68,6 +80,17 @@ class CmsHomeModuleInteriorService extends CmsBaseResourceService
     public function destroy(int $id): int
     {
         $item = $this->repository->getItem($id);
+
+        return $this->destroyHandler->handle($item);
+    }
+
+    /**
+     * @param int $interiorId
+     * @return int
+     */
+    public function destroyByInteriorId(int $interiorId): int
+    {
+        $item = $this->repository->getItemByInteriorId($interiorId);
 
         return $this->destroyHandler->handle($item);
     }

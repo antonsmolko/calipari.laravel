@@ -107,7 +107,7 @@ export default {
         },
         maxlength: {
             type: Number,
-            default: 30
+            default: 100
         },
         icon: {
             type: String,

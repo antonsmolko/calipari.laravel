@@ -33,19 +33,11 @@ class StoreHandler
      */
     public function handle(array $storeData)
     {
-        $uploadAttributes = uploader()->upload($storeData['image']);
-
-        $storeData = Arr::add(Arr::except($storeData, ['image']),'image_path', $uploadAttributes['path']);
-
-        $category = $this->repository->store($storeData);
-
-        if ($category['type'] === 'interiors') {
-            $this->homeModuleInteriorService->store([
-                'title' => $category['title'],
-                'interior_id' => $category['id']
-            ]);
+        if (!empty($storeData['image'])) {
+            $uploadAttributes = uploader()->upload($storeData['image']);
+            $storeData = Arr::add(Arr::except($storeData, ['image']),'image_path', $uploadAttributes['path']);
         }
 
-        return $category;
+        return $this->repository->store($storeData);
     }
 }

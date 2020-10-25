@@ -37,12 +37,13 @@
                                  :module="storeModule"
                                  :vRules="{ required: true, unique: true, minLength: true, alias: true }"/>
 
-                        <div v-if="category_type === 'colors'">
+                        <div v-if="isTypeColors">
                             <h4 class="card-title">Цвет</h4>
                             <div class="md-color-sample mt-2" :style="`background-color: ${alias}`"></div>
                         </div>
 
-                        <v-image name="image"
+                        <v-image v-if="!isTypeColors"
+                                 name="image"
                                  :vField="$v.image"
                                  :vRules="{ required: true }"
                                  :module="storeModule"/>
@@ -81,7 +82,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 
-import { required, minLength } from 'vuelidate/lib/validators'
+import { required, requiredUnless, minLength } from 'vuelidate/lib/validators'
 
 import { categoryPage } from '@/mixins/categories'
 import { createMethod } from '@/mixins/crudMethods'
@@ -108,7 +109,7 @@ export default {
             touch: false,
             minLength: minLength(2),
             isUnique(value) {
-                return ((value.trim() === '') && !this.$v.title.$dirty) || this.isUniqueTitle
+                return ((value.trim() === '') && !this.$v.title.$dirty) || this.isUniqueTitle;
             }
         },
         alias: {
@@ -119,11 +120,11 @@ export default {
             },
             minLength: minLength(2),
             isUnique(value) {
-                return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAlias
+                return ((value.trim() === '') && !this.$v.alias.$dirty) || this.isUniqueAlias;
             },
         },
         image: {
-            required,
+            required: requiredUnless('isTypeColors'),
             touch: false
         },
         metaTitle: {
@@ -146,6 +147,9 @@ export default {
             description: state => state.fields.description,
             keywords: state => state.fields.keywords
         }),
+        isTypeColors () {
+            return this.category_type === 'colors'
+        },
         isUniqueTitle () {
             return this.$store.getters['categories/isUniqueTitle'](this.title);
         },

@@ -15,8 +15,7 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('image_id');
-            $table->string('article', config('settings.sale_article_max_length'))->unique();
+            $table->unsignedBigInteger('image_id')->nullable();
             $table->string('image_path', 100);
             $table->unsignedSmallInteger('width_cm');
             $table->unsignedSmallInteger('height_cm');
@@ -30,7 +29,7 @@ class CreateSalesTable extends Migration
 
         Schema::table('sales', function(Blueprint $table) {
             $table->foreign('image_id')->references('id')->on('images')
-                ->onDelete('cascade')->onUpdate('cascade');
+                ->onDelete('set null')->onUpdate('set null');
 
             $table->foreign('texture_id')->references('id')->on('textures')
                 ->onDelete('cascade')->onUpdate('cascade');

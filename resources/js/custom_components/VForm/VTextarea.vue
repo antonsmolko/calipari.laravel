@@ -37,7 +37,7 @@ export default {
         },
         maxlength: {
             type: Number,
-            default: 250
+            default: 500
         },
         module: {
             type: String,

@@ -19,12 +19,12 @@ return [
         ],
         '4' => [
             'title' => 'Согласовываем макет',
-            'description' => 'Мы подготовим изображение и отправим Вам на почту для согласования, перед печатью. ',
+            'description' => 'Мы подготовим изображение и отправим Вам на почту для согласования, перед печатью.',
             'image_key' => '4'
         ],
         '5' => [
             'title' => 'Оплата',
-            'description' => 'После утверждения макета произведите оплату заказа. ',
+            'description' => 'После утверждения макета произведите оплату заказа.',
             'image_key' => '5'
         ],
         '6' => [
@@ -117,7 +117,7 @@ return [
     'deliveries' => [
         [
             'title' => 'Самовывоз',
-            'alias' => 'pickup',
+            'alias' => 'pickup-bryansk',
             'order' => 1,
             'publish' => 1,
             'description' => 'г. Брянск'
@@ -137,6 +137,22 @@ return [
             'description' => 'до двери'
         ]
     ],
+    'pickups' => [
+        [
+            'delivery_id' => 1,
+            'title' => 'Московский, 99',
+            'locality' => 'Брянская обл., Брянск',
+            'address' => 'пр-кт Московский, дом 99, строительный комплекс «Твой Дом», павильон 34',
+            'publish' => 1
+        ],
+        [
+            'delivery_id' => 1,
+            'title' => 'Кромская, 50',
+            'locality' => 'Брянская обл., Брянск',
+            'address' => 'ул. Кромская, дом 50, «Сервисбаза», склад 3Б',
+            'publish' => 1
+        ]
+    ],
     'setting_groups' => [
         [
             'title' => 'Основные',
@@ -149,14 +165,9 @@ return [
             'description' => 'Телефон, email, адрес, социальные сети'
         ],
         [
-            'title' => 'Изображения',
-            'alias' => 'images',
-            'description' => 'Изображения для оформления сайта'
-        ],
-        [
-            'title' => 'Пункты самовывоза',
-            'alias' => 'pickups',
-            'description' => 'Группа настроек содержащих адреса пунктов самовывоза'
+            'title' => 'Schema Org',
+            'alias' => 'schema-org',
+            'description' => 'Настройки для Schema Org'
         ],
         [
             'title' => 'CDEK',
@@ -225,499 +236,66 @@ return [
             'group_id' => 2
         ],
         [
-            'display_name' => 'Изображение 1',
-            'key_name' => 'image_1',
+            'display_name' => 'OG Image',
+            'key_name' => 'default_og_image',
             'type' => 'file',
             'group_id' => 3
         ],
         [
-            'display_name' => 'Изображение 2',
-            'key_name' => 'image_2',
-            'type' => 'file',
-            'group_id' => 3
-        ],
-        [
-            'display_name' => 'Изображение 3',
-            'key_name' => 'image_3',
-            'type' => 'file',
-            'group_id' => 3
-        ],
-        [
-            'display_name' => 'Изображение 4',
-            'key_name' => 'image_4',
-            'type' => 'file',
-            'group_id' => 3
-        ],
-        [
-            'display_name' => 'Изображение 5',
-            'key_name' => 'image_5',
-            'type' => 'file',
-            'group_id' => 3
-        ],
-        [
-            'display_name' => 'Изображение 6',
-            'key_name' => 'image_6',
-            'type' => 'file',
-            'group_id' => 3
-        ],
-        [
-            'display_name' => 'Московский 99',
-            'key_name' => 'pickup_1',
+            'display_name' => 'OG Image Alt',
+            'key_name' => 'default_og_image_alt',
             'type' => 'text',
-            'value' => 'г. Брянск, пр-кт Московский, дом 99, строительный комплекс «Твой Дом», павильон 34',
-            'group_id' => 4
-        ],
-        [
-            'display_name' => 'Кромская 50',
-            'key_name' => 'pickup_2',
-            'type' => 'text',
-            'value' => 'г. Брянск, ул. Кромская, дом 50, «Сервисбаза», склад 3Б',
-            'group_id' => 4
+            'group_id' => 3
         ],
         [
             'display_name' => 'Почтовый индекс отправителя',
             'key_name' => config('cdek.post_code_setting_key'), //!!! Don't touch !!!
             'value' => config('cdek.default_post_code'), //!!! Don't touch !!!
             'type' => 'text',
-            'group_id' => 5
+            'group_id' => 4
         ],
         [
             'display_name' => 'Вес упакавки',
             'key_name' => config('cdek.package_weight_setting_key'),
             'value'=> config('cdek.package.weight'), //!!! Don't touch !!!
             'type' => 'text',
-            'group_id' => 5
+            'group_id' => 4
         ],
         [
             'display_name' => 'Высота упаковки',
             'key_name' => config('cdek.package_height_setting_key'),
             'value'=> config('cdek.package.dimensions.height'), //!!! Don't touch !!!
             'type' => 'text',
-            'group_id' => 5
+            'group_id' => 4
         ],
         [
             'display_name' => 'Ширина упаковки',
             'key_name' => config('cdek.package_width_setting_key'),
             'value'=> config('cdek.package.dimensions.width'), //!!! Don't touch !!!
             'type' => 'text',
-            'group_id' => 5
+            'group_id' => 4
         ],
         [
             'display_name' => 'Длина упаковки',
             'key_name' => config('cdek.package_length_setting_key'),
             'value'=> config('cdek.package.dimensions.length'), //!!! Don't touch !!!
             'type' => 'text',
-            'group_id' => 5
+            'group_id' => 4
         ],
         [
             'display_name' => 'Обработка изображения',
             'key_name' => 'image_processing',
             'value'=> '1500',
             'type' => 'text',
-            'group_id' => 6
+            'group_id' => 5
         ],
         [
             'display_name' => 'Поиск изображения',
             'key_name' => 'image_search',
             'value'=> '500',
             'type' => 'text',
-            'group_id' => 6
+            'group_id' => 5
         ]
-    ],
-    'owners' => [
-        [
-            'title' => 'Shutterstock',
-            'description' => 'https://shutterstock.com/ru/'
-        ],
-        [
-            'title' => 'Depositphotos',
-            'description' => 'https://ru.depositphotos.com/'
-        ],
-        [
-            'title' => 'Эдуард',
-            'description' => ''
-        ],
-    ],
-    'categories' => [
-        'topics' => [
-            [
-                'type' => 'topics',
-                'title' => 'Абстракция',
-                'alias' => 'abstraction',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Архитектура',
-                'alias' => 'architecture',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Геометрия',
-                'alias' => 'geometry',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Живопись',
-                'alias' => 'painting',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Животные',
-                'alias' => 'animals',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Замки',
-                'alias' => 'castles',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Карты',
-                'alias' => 'maps',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Корабли',
-                'alias' => 'ships',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Космос',
-                'alias' => 'space',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Мегаполис',
-                'alias' => 'megalopolis',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Природа',
-                'alias' => 'nature',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Ретро',
-                'alias' => 'retro',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Текстуры',
-                'alias' => 'textures',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Улицы, улочки, дома',
-                'alias' => 'streets-houses',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Флористика',
-                'alias' => 'floristics',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Фоны',
-                'alias' => 'backgrounds',
-                'description' => '',
-                'keywords' => ''
-            ],
-            [
-                'type' => 'topics',
-                'title' => 'Цветы и растения',
-                'alias' => 'flowers-plants',
-                'description' => '',
-                'keywords' => ''
-            ]
-        ],
-        'colors' => [
-            [
-                'type' => 'colors',
-                'title' => 'Белый',
-                'alias' => 'white',
-                'description' => 'Изображения преимущественно белого цвета',
-                'keywords' => 'белый, white'
-            ],
-            [
-                'type' => 'colors',
-                'title' => 'Черный',
-                'alias' => 'black',
-                'description' => 'Изображения преимущественно черного цвета',
-                'keywords' => 'черный, black'
-            ],
-            [
-                'type' => 'colors',
-                'title' => 'Красный',
-                'alias' => 'tomato',
-                'description' => 'Изображения преимущественно красного цвета',
-                'keywords' => 'красный, red'
-            ],
-            [
-                'type' => 'colors',
-                'title' => 'Зеленый',
-                'alias' => 'limegreen',
-                'description' => 'Изображения преимущественно зеленого цвета',
-                'keywords' => 'зеленый, green'
-            ],
-            [
-                'type' => 'colors',
-                'title' => 'Синий',
-                'alias' => 'dodgerblue',
-                'description' => 'Изображения преимущественно синего цвета',
-                'keywords' => 'синий, blue, голубой'
-            ],
-            [
-                'type' => 'colors',
-                'title' => 'Фиолетовый',
-                'alias' => 'darkviolet',
-                'description' => 'Изображения преимущественно фиолетового цвета',
-                'keywords' => 'фиолетовый, violet'
-            ]
-        ],
-        'interiors' => [
-            [
-                'type' => 'interiors',
-                'title' => 'Гостиная',
-                'alias' => 'living-room',
-                'description' => 'Изображения для гостиной',
-                'keywords' => 'гостиная, living room'
-            ],
-            [
-                'type' => 'interiors',
-                'title' => 'Спальня',
-                'alias' => 'bad-room',
-                'description' => 'Изображения для спальной',
-                'keywords' => 'спальня, bad room'
-            ],
-            [
-                'type' => 'interiors',
-                'title' => 'Кухня',
-                'alias' => 'kitchen',
-                'description' => 'Изображения для кухни',
-                'keywords' => 'кухня, kitchen'
-            ],
-            [
-                'type' => 'interiors',
-                'title' => 'Детская',
-                'alias' => 'child-room',
-                'description' => 'Изображения для детской',
-                'keywords' => 'детская, child room'
-            ],
-            [
-                'type' => 'interiors',
-                'title' => 'Прихожая',
-                'alias' => 'hallway',
-                'description' => 'Изображения для коридора',
-                'keywords' => 'прихожая, hallway'
-            ],
-            [
-                'type' => 'interiors',
-                'title' => 'Офис',
-                'alias' => 'office',
-                'description' => 'Изображения для офиса',
-                'keywords' => 'офис, office'
-            ]
-        ],
-        'tags' => [
-            [
-                'title' => 'Праздники',
-                'alias' => 'holidays',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Машинки',
-                'alias' => 'cars',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Мультики',
-                'alias' => 'cartoons',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Мстители',
-                'alias' => 'avengers',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Железный человек',
-                'alias' => 'iron-man',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Халк',
-                'alias' => 'hulk',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Звездные войны',
-                'alias' => 'star-wars',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Дарт Вейдер',
-                'alias' => 'dart-weider',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Чубака',
-                'alias' => 'chewbuck',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Футбол',
-                'alias' => 'football',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Месси',
-                'alias' => 'messi',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Роналду',
-                'alias' => 'ronaldu',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Леброн Джеймс',
-                'alias' => 'lebron',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Баскетбол',
-                'alias' => 'basketball',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Майкл Джордан',
-                'alias' => 'mj',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Стефен Карри',
-                'alias' => 'stef',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Формула 1',
-                'alias' => 'f1',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Ferrari',
-                'alias' => 'ferrari',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Lamborghini',
-                'alias' => 'lamborghini',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Aston Martin',
-                'alias' => 'aston-martin',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Mercedes Benz',
-                'alias' => 'mercedes-benz',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'BMV',
-                'alias' => 'bmv',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'Audi',
-                'alias' => 'audi',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ],
-            [
-                'title' => 'McLaren',
-                'alias' => 'mclaren',
-                'type' => 'tags',
-                'keywords' => '',
-                'description' => '',
-            ]
-        ],
     ],
     'textures' => [
         [

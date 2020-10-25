@@ -11,73 +11,61 @@ class CategoriesTableSeeder extends Seeder
      */
     public function run()
     {
-        $seedsImagePath = config('seed_settings.seeds_uploads_path');
-        Storage::deleteDirectory($seedsImagePath);
-        Storage::makeDirectory($seedsImagePath);
-
-        foreach (config('seeds.categories.topics') as $category) {
-            $category = factory(App\Models\Category::class)->create($category);
-            $images = $this->getAttachData(config('seed_settings.group_images_count'));
-
-            $category->images()->attach($images, ['category_type' => 'topics']);
-            $category->publish = 1;
-            $category->save();
-        }
-
-        foreach (config('seeds.categories.colors') as $category) {
-            $category = factory(App\Models\Category::class)->create($category);
-            $images = $this->getAttachData(config('seed_settings.group_images_count'));
-
-            $category->images()->attach($images, ['category_type' => 'colors']);
-            $category->publish = 1;
-            $category->save();
-        }
-
-        foreach (config('seeds.categories.interiors') as $category) {
-            $category = factory(App\Models\Category::class)->create($category);
-            $images = $this->getAttachData(config('seed_settings.group_images_count'));
-
-            $category->images()->attach($images, ['category_type' => 'interiors']);
-            $category->publish = 1;
-            $category->save();
-
-            $lastInterior = DB::table('home_module_interiors')
-                ->orderBy('id', 'desc')
-                ->first();
-
-            factory(App\Models\HomeModuleInterior::class)->create([
-                'title' => $category->title,
-                'interior_id' => $category->id,
-                'order' => $lastInterior ? $lastInterior->id + 1 : 1
-            ]);
-        }
-
-        foreach (config('seeds.categories.tags') as $category) {
-            $category = factory(App\Models\Category::class)->create($category);
-            $images = $this->getAttachData(config('seed_settings.group_images_count'));
-
-            $category->images()->attach($images, ['category_type' => 'tags']);
-            $category->publish = 1;
-            $category->save();
-        }
-
-        Storage::deleteDirectory($seedsImagePath);
+        seedProcessOfLoadingImages(
+            'categories-covers',
+            'calipari.categories',
+            $this,
+            'store');
     }
 
     /**
-     * @param int $count
-     * @return mixed
+     * @param array $item
+     * @param array $seedImagesData
+     * @param string $storageSeedsImageDir
      */
-    protected function getAttachData(int $count)
-    {
-        return Arr::random($this->getRangeImageIds(), $count);
+    public function store(array $item, array $seedImagesData, string $storageSeedsImageDir) {
+        $imageData = null;
+
+        if ($item['type'] !== 'colors') {
+            $imageFile = getImageByNameFromLocal(
+                $seedImagesData,
+                $item['alias'],
+                'categories-covers',
+                $storageSeedsImageDir);
+
+            $imageData = uploader()->store($imageFile);
+        }
+
+        $category = factory(App\Models\Category::class)->create([
+            'type' => $item['type'],
+            'title' => $item['title'],
+            'alias' => $item['alias'],
+            'image_path' => $imageData ? $imageData['path'] : null,
+            'meta_title' => $item['metaTitle'],
+            'description' => $item['description']
+        ]);
+
+        $imageKeys = $this->getImagesKeyByCategoryId($item['id']);
+
+        $category->images()->attach($imageKeys, ['category_type' => $item['type']]);
+        $category->publish = 1;
+        $category->save();
     }
 
     /**
+     * @param int $id
      * @return array
      */
-    protected function getRangeImageIds()
+    protected function getImagesKeyByCategoryId(int $id)
     {
-        return range(1, config('seed_settings.images_count'));
+        $csv = getSeedCsv('calipari.category-image');
+
+        return array_reduce($csv, function ($carry, $item) use ($id) {
+            if ((int) $item['category_id'] === $id) {
+                array_push($carry, (int) $item['image_id']);
+            }
+
+            return $carry;
+        }, []);
     }
 }

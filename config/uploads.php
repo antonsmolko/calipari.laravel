@@ -1,8 +1,9 @@
 <?php
 
 return [
-    's3_api_endpoint' => 'https://d33ghnif9htj1j.cloudfront.net',
-    'default_max_print_width' => 250,
+//    's3_api_endpoint' => 'https://d33ghnif9htj1j.cloudfront.net',
+    'default_max_print_width' => 640,
+    'default_max_print_height' => 320,
     'default_extension' => 'jpg',
     'image_upload_path' => 'public/uploads/images',
     'no_image_path' => 'public/uploads/no_image/image_placeholder.jpg',
@@ -10,7 +11,7 @@ return [
     'image_resize_quality' => 90,
     'image_cache_time' => 60 * 60 * 24 * 7,
     'image_upload_rules' => [
-        'max_size' => 1048576,
+        'max_size' => 5242880,
         'min_size' => 3072,
         'extensions' => [
             'jpeg',

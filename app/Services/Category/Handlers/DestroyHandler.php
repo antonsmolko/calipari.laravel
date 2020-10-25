@@ -40,10 +40,6 @@ class DestroyHandler
     {
         uploader()->remove($category->image_path);
 
-        if ($category->type === 'interior') {
-            $moduleInteriorItem = $this->homeModuleInteriorRepository->getItemByInteriorId($category->id);
-            $this->moduleInteriorDestroyHandler->handle($moduleInteriorItem);
-        }
         return $this->repository->destroy($category);
     }
 }

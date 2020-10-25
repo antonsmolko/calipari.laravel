@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class PurchaseStepsTableSeeder extends Seeder
+class SalesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,8 +12,8 @@ class PurchaseStepsTableSeeder extends Seeder
     public function run()
     {
         seedProcessOfLoadingImages(
-            'purchase-steps',
-            'calipari.purchase-steps',
+            'sales',
+            'calipari.sales',
             $this,
             'store');
     }
@@ -26,16 +26,18 @@ class PurchaseStepsTableSeeder extends Seeder
     public function store(array $item, array $seedImagesData, string $storageSeedsImageDir) {
         $imageFile = getImageByNameFromLocal(
             $seedImagesData,
-            $item['id'],
-            'purchase-steps',
+            $item['fileName'],
+            'sales',
             $storageSeedsImageDir);
 
         $imageData = uploader()->store($imageFile);
 
-        DB::table('purchase_steps')->insert([
-            'title' => $item['title'],
-            'description' => $item['description'],
-            'image_path' => $imageData['path']
+        factory(App\Models\Sale::class)->create([
+            'image_path' => $imageData['path'],
+            'width_cm' => $item['width'],
+            'height_cm' => $item['height'],
+            'texture_id' => $item['texture_id'],
+            'discount' => $item['discount']
         ]);
     }
 }

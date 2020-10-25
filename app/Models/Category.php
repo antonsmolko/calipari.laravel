@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Events\Models\Category\CategoryDeleted;
-use App\Events\Models\Category\CategorySaved;
+use App\Events\Models\Category\CategoryCreated;
 use App\Events\Models\Category\CategoryUpdated;
 use App\Models\Filter\Filtered;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,7 +22,7 @@ class Category extends Model
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $dispatchesEvents = [
-        'saved' => CategorySaved::class,
+        'created' => CategoryCreated::class,
         'updated' => CategoryUpdated::class,
         'deleted' => CategoryDeleted::class,
     ];
