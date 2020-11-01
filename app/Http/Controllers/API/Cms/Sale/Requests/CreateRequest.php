@@ -24,8 +24,7 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'image_id' => 'bail|required|exists:images,id',
-            'article' => 'bail|required|unique:sales,article|min:' . config('settings.image_article_length') . '|max:' . config('settings.sale_article_max_length'),
+            'image_id' => 'bail|exists:images,id|nullable',
             'image' => 'bail|required|file|image|mimes:' . config('validation.upload.mimes') . '|min:' . config('validation.upload.min_size') . '|max:' . config('validation.upload.max_size'),
             'width_cm' => 'bail|required|integer|min:' . config('settings.order_min_size'),
             'height_cm' => 'bail|required|integer|min:' . config('settings.order_min_size'),

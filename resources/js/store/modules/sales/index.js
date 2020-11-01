@@ -46,14 +46,6 @@ const mutations = {
 };
 
 const actions = {
-    getArticles: ({ commit }) => axiosAction('get', commit, {
-        url: '/store/sales/articles',
-        thenContent: response => commit('SET_FIELD', { field: 'articles', value: response.data })
-    }),
-    getRestArticles: ({ commit }, id) => axiosAction('get', commit, {
-        url: `/store/sales/${id}/rest-articles`,
-        thenContent: response => commit('SET_FIELD', { field: 'articles', value: response.data })
-    }),
     getItem ({ commit }, id) {
         return axiosAction('get', commit, {
             url: `/store/sales/${id}`,

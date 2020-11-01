@@ -36,8 +36,7 @@
                                  :value="imageId"
                                  :differ="true"
                                  :vField="$v.imageId"
-                                 :module="storeModule"
-                                 :vRules="{ required: true }"/>
+                                 :module="storeModule" />
 
                         <v-image name="image"
                                  :imgDefault="imagePath"
@@ -155,7 +154,6 @@ export default {
     }),
     validations: {
         imageId: {
-            required,
             touch: false
         },
         image: {
@@ -196,7 +194,6 @@ export default {
             textures: state => state.textures.items,
             imageId: state => state.sales.fields.image_id,
             imagePath: state => state.sales.fields.image_path,
-            article: state => state.sales.fields.article,
             image: state => state.sales.fields.image,
             width: state => state.sales.fields.width_cm,
             height: state => state.sales.fields.height_cm,
@@ -229,10 +226,9 @@ export default {
         Promise.all([
             this.getItemAction(this.id),
             this.getTexturesAction(),
-            this.getRestArticlesAction(this.id)
         ])
             .then(() => {
-                this.setPageTitle(`Позиция на продажу арт. № ${this.article}`);
+                this.setPageTitle(`Позиция на продажу ID № ${this.id}`);
                 this.responseData = true;
             })
             .catch(() => this.$router.push(this.redirectRoute));
@@ -245,7 +241,6 @@ export default {
             getItemAction: 'sales/getItem',
             getTexturesAction: 'textures/getItems',
             setFieldAction: 'sales/setItemField',
-            getRestArticlesAction: 'sales/getRestArticles',
             clearFieldsAction: 'sales/clearItemFields'
         }),
         onUpdate () {
@@ -253,7 +248,7 @@ export default {
                 sendData: {
                     id: this.id,
                     formData: {
-                        image_id: Number(this.imageId),
+                        image_id: Number(this.imageId) || '',
                         image: this.image,
                         width_cm: Number(this.width),
                         height_cm: Number(this.height),
@@ -263,7 +258,7 @@ export default {
                         publish: Number(this.publish)
                     }
                 },
-                title: `Арт. № ${this.article}`,
+                title: `ID № ${this.id}`,
                 successText: 'Позиция обновлена!',
                 storeModule: this.storeModule,
                 redirectRoute: this.redirectRoute
@@ -272,8 +267,8 @@ export default {
         onDelete () {
             return this.delete({
                 payload: this.id,
-                title: this.article.toUpperCase(),
-                alertText: `Арт. № ${this.article}`,
+                title: this.id,
+                alertText: `ID № ${this.id}`,
                 successText: 'Позиция удалена!',
                 storeModule: this.storeModule,
                 redirectRoute: this.redirectRoute

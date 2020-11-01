@@ -31,8 +31,7 @@
                                  icon="qr_code"
                                  name="image_id"
                                  :vField="$v.imageId"
-                                 :module="storeModule"
-                                 :vRules="{ required: true }"/>
+                                 :module="storeModule" />
 
                         <v-image name="image"
                                  :vField="$v.image"
@@ -133,10 +132,6 @@ export default {
         redirectRoute: { name: 'cms.store.sales' }
     }),
     validations: {
-        imageId: {
-            required,
-            touch: false
-        },
         image: {
             required,
             touch: false
@@ -203,10 +198,7 @@ export default {
         }
     },
     created () {
-        Promise.all([
-            this.getTexturesAction(),
-            this.getArticlesAction()
-        ])
+        this.getTexturesAction()
             .then(() => {
                 this.setPageTitle('Новая позиция на продажу');
                 this.clearFieldsAction();
@@ -222,7 +214,6 @@ export default {
         ...mapActions({
             getTexturesAction: 'textures/getItems',
             setFieldAction: 'sales/setItemField',
-            getArticlesAction: 'sales/getArticles',
             clearFieldsAction: 'sales/clearItemFields'
         }),
         onCreate () {

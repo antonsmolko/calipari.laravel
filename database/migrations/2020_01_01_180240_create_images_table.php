@@ -27,6 +27,7 @@ class CreateImagesTable extends Migration
             $table->json('examples')->nullable();
             $table->unsignedTinyInteger('publish')->default(1 );
             $table->text('description')->nullable();
+            $table->unsignedInteger('views')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

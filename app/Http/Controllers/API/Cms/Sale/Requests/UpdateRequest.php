@@ -23,11 +23,8 @@ class UpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $id = $this->route('id');
-
         return [
-            'image_id' => 'bail|required|exists:images,id',
-            'article' => 'bail|required|unique:sales,article,' . $id . '|min:' . config('settings.image_article_length') . '|max:' . config('settings.sale_article_max_length'),
+            'image_id' => 'bail|nullable|exists:images,id',
             'image' => 'bail|file|image|mimes:' . config('validation.upload.mimes') . '|min:' . config('validation.upload.min_size') . '|max:' . config('validation.upload.max_size'),
             'width_cm' => 'bail|required|integer|min:' . config('settings.order_min_size'),
             'height_cm' => 'bail|required|integer|min:' . config('settings.order_min_size'),

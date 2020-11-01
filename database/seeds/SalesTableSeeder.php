@@ -37,7 +37,8 @@ class SalesTableSeeder extends Seeder
             'width_cm' => $item['width'],
             'height_cm' => $item['height'],
             'texture_id' => $item['texture_id'],
-            'discount' => $item['discount']
+            'discount' => $item['discount'],
+            'publish' => 1
         ]);
     }
 }

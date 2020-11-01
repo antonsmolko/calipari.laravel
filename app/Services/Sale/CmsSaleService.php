@@ -79,23 +79,6 @@ class CmsSaleService extends CmsBaseResourceService
     }
 
     /**
-     * @return mixed
-     */
-    public function getArticles()
-    {
-        return $this->repository->getArticles();
-    }
-
-    /**
-     * @param int $id
-     * @return mixed
-     */
-    public function getRestArticles(int $id)
-    {
-        return $this->repository->getRestArticles($id);
-    }
-
-    /**
      * @param int $id
      * @param int $status
      * @return mixed

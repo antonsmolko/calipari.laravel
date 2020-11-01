@@ -31,23 +31,6 @@ class CmsSaleRepository extends CmsBaseResourceRepository
     }
 
     /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function getArticles()
-    {
-        return $this->model::all()->pluck('article');
-    }
-
-    /**
-     * @param int $id
-     * @return mixed
-     */
-    public function getRestArticles(int $id)
-    {
-        return $this->model::where('id', '<>', $id)->get()->pluck('article');
-    }
-
-    /**
      * @param array $requestData
      * @param string $status
      * @return SaleForListCollection

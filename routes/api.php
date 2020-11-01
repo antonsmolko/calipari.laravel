@@ -611,9 +611,6 @@ Route::prefix('cms')
             ->group(function () {
                 Route::get('{id}/publish', 'Cms\Sale\SaleController@publish')
                     ->where('id', '[0-9]+');
-                Route::get('articles', 'Cms\Sale\SaleController@getArticles');
-                Route::get('{id}/rest-articles', 'Cms\Sale\SaleController@getRestArticles')
-                    ->where('id', '[0-9]+');
                 Route::post('{status}', 'Cms\Sale\SaleController@getItemsByStatus')
                     ->where('status', '^('
                         . \App\Models\Sale::FOR_SALE . '|'

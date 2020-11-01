@@ -42,23 +42,6 @@ class SaleController extends BaseResourceController
     }
 
     /**
-     * @return JsonResponse
-     */
-    public function getArticles(): JsonResponse
-    {
-        return response()->json($this->service->getArticles());
-    }
-
-    /**
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function getRestArticles(int $id): JsonResponse
-    {
-        return response()->json($this->service->getRestArticles($id));
-    }
-
-    /**
      * @param FormRequest $request
      * @param int $status
      * @return JsonResponse

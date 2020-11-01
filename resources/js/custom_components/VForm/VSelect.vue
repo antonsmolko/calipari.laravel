@@ -3,7 +3,7 @@
         <h4 v-if="title" class="card-title">{{ title }}</h4>
         <md-field>
             <label>{{ placeholder }}</label>
-            <md-select @md-selected="onSelect" :value="value" :multiple="multiple">
+            <md-select @md-selected="onSelect" :value="value">
                 <md-option v-if="defaultValue !== null" :value="defaultValue">{{ defaultTitle }}</md-option>
                 <md-option v-for="(item, index) in options" :value="item[indexName]" :key="index">
                     {{ item[nameField] }}{{ namePostfix ? ` - [ ${item[namePostfix]} ]` : ''}}
