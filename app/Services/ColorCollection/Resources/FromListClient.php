@@ -4,7 +4,7 @@ namespace App\Services\ColorCollection\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FromList extends JsonResource
+class FromListClient extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,14 +18,7 @@ class FromList extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'alias' => $this->alias,
-            'topics' => $this->topics,
-            'interiors' => $this->interiors,
-            'tags' => $this->tags,
-            'owner' => $this->owner,
-            'thumb' => $this->image_path,
-            'images_count' => $this->images->count(),
-            'has_published_images' => (bool) $this->publishedImages->count(),
-            'publish' => $this->publish
+            'image_path' => $this->image_path,
         ];
     }
 }

@@ -101,14 +101,26 @@ Route::prefix('catalog')
 
         /** Color Collections */
 
-        Route::get('color-collections/{collection}', 'Client\ColorCollection\ColorCollectionController@getItemByAliasWithImages')
-            ->where('collection', '^([a-z0-9]+-?)+[a-z0-9]$');
+        Route::prefix('color-collections')
+            ->group(function () {
+                Route::get('/', 'Client\ColorCollection\ColorCollectionController@index');
+                Route::get(
+                    '{collection}',
+                    'Client\ColorCollection\ColorCollectionController@getItemByAliasWithImages')
+                    ->where('collection', '^([a-z0-9]+-?)+[a-z0-9]$');
+            });
 
 
         /** Art Collections */
 
-        Route::get('art-collections/{collection}', 'Client\ArtCollection\ArtCollectionController@getItemByAliasWithImages')
-            ->where('collection', '^([a-z0-9]+-?)+[a-z0-9]$');
+        Route::prefix('art-collections')
+            ->group(function () {
+                Route::get('/', 'Client\ArtCollection\ArtCollectionController@index');
+                Route::get(
+                    '{collection}',
+                    'Client\ArtCollection\ArtCollectionController@getItemByAliasWithImages')
+                    ->where('collection', '^([a-z0-9]+-?)+[a-z0-9]$');
+            });
 
 
         /** Filters */
@@ -313,11 +325,9 @@ Route::prefix('cms')
         ->middleware('optimizeImages')
         ->except(['index', 'create', 'edit', 'update']);
 
-
     /** Catalog */
 
     Route::group(['prefix' => 'catalog'], function () {
-
 
         /** Categories */
 
@@ -346,7 +356,6 @@ Route::prefix('cms')
         Route::apiResource('categories', 'Cms\Category\CategoryController')
             ->middleware('optimizeImages')
             ->except(['create', 'edit', 'update']);
-
 
         /** Owners */
 

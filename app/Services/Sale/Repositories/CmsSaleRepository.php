@@ -55,8 +55,6 @@ class CmsSaleRepository extends CmsBaseResourceRepository
     public function getItemsByStatus(array $requestData, int $status)
     {
         return new SaleForListCollection($this->model::where('status', $status)
-            ->when(!empty($requestData['query']),
-                fn ($query) => $query->where('article', 'like', $requestData['query'] . '%'))
             ->orderBy($requestData['sort_by'], $requestData['sort_order'])
             ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']));
     }

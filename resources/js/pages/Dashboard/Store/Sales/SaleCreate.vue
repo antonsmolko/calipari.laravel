@@ -34,14 +34,6 @@
                                  :module="storeModule"
                                  :vRules="{ required: true }"/>
 
-                        <v-input title="Артикул"
-                                 icon="money"
-                                 name="article"
-                                 :vDelay="true"
-                                 :vField="$v.article"
-                                 :module="storeModule"
-                                 :vRules="{ required: true, unique: true, minLength: true, article: true }"/>
-
                         <v-image name="image"
                                  :vField="$v.image"
                                  :vRules="{ required: true }"
@@ -145,17 +137,6 @@ export default {
             required,
             touch: false
         },
-        article: {
-            required,
-            touch: false,
-            testArticle (value) {
-                return value.trim() === '' || (this.$config.ARTICLE_REGEXP).test(value);
-            },
-            minLength: minLength(5),
-            isUnique(value) {
-                return ((value.trim() === '') && !this.$v.article.$dirty) || this.isUniqueArticle
-            },
-        },
         image: {
             required,
             touch: false
@@ -194,7 +175,6 @@ export default {
         ...mapState({
             textures: state => state.textures.items,
             imageId: state => state.sales.fields.image_id,
-            article: state => state.sales.fields.article,
             image: state => state.sales.fields.image,
             width: state => state.sales.fields.width_cm,
             height: state => state.sales.fields.height_cm,
@@ -209,9 +189,6 @@ export default {
         }),
         texture () {
             return this.$store.getters['textures/getById'](this.textureId);
-        },
-        isUniqueArticle () {
-            return this.$store.getters['sales/isUniqueArticle'](this.article);
         },
         price () {
             const texturePrice = this.texture ? this.texture.price : null;
@@ -249,12 +226,9 @@ export default {
             clearFieldsAction: 'sales/clearItemFields'
         }),
         onCreate () {
-            const article = this.article.toUpperCase();
-
             return this.create({
                 sendData: {
                     image_id: Number(this.imageId),
-                    article,
                     image: this.image,
                     width_cm: Number(this.width),
                     height_cm: Number(this.height),
@@ -263,7 +237,6 @@ export default {
                     description: this.description || '',
                     publish: Number(this.publish)
                 },
-                title: article,
                 successText: 'Позиция на продажу создана!',
                 storeModule: this.storeModule,
                 redirectRoute: this.redirectRoute

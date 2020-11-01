@@ -19,7 +19,7 @@ class DeliveryCms extends JsonResource
             'title' => $this->title,
             'alias' => $this->alias,
             'price' => $this->price,
-            'pickup' => $this->pickup,
+            'is_pickup' => $this->is_pickup,
             'pickups_count' => $this->pickups->count(),
             'pickups_required' => $this->pickupsRequired(),
             'order' => $this->order,

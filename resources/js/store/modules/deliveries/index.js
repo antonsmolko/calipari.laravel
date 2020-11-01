@@ -6,7 +6,7 @@ const state = {
         title: '',
         alias: '',
         order: '',
-        pickup: '',
+        is_pickup: '',
         pickups_required: '',
         publish: '',
         description: ''
@@ -25,7 +25,7 @@ const mutations = {
         state.fields.publish = Number(!state.fields.publish);
     },
     TOGGLE_PICKUP_FIELD (state) {
-        state.fields.pickup = Number(!state.fields.pickup);
+        state.fields.is_pickup = Number(!state.fields.is_pickup);
     },
     DELETE_ITEM (state, payload) {
         state.items = state.items.filter(item => item.id !== payload);

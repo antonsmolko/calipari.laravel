@@ -108,6 +108,14 @@ class ColorCollection extends Model
     }
 
     /**
+     * @return string|null
+     */
+    public function getImagePathAttribute()
+    {
+        return $this->mainImage ? $this->mainImage->path : null;
+    }
+
+    /**
      * @param $query
      * @return mixed
      */

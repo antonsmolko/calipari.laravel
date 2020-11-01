@@ -19,8 +19,8 @@ class DeliveryClient extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'alias' => $this->alias,
-            'pickup' => $this->pickup,
-            $this->mergeWhen($this->pickup, [
+            'is_pickup' => $this->is_pickup,
+            $this->mergeWhen($this->is_pickup, [
                 'pickups' => PickupResource::collection($this->publishedPickups()),
             ]),
             'order' => $this->order,

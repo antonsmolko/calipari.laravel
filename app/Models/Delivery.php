@@ -44,7 +44,7 @@ class Delivery extends Model
      */
     public function pickupsRequired(): bool
     {
-        return (bool) ($this->pickup && !$this->publishedPickups()->count());
+        return (bool) ($this->is_pickup && !$this->publishedPickups()->count());
     }
 
     /**
@@ -54,7 +54,7 @@ class Delivery extends Model
     public function scopePickupsRequirements(Builder $query): Builder
     {
         return $query
-            ->where('pickup', 1)
+            ->where('is_pickup', 1)
             ->whereDoesntHave('pickups', fn ($query) => $query
                 ->where('publish', self::PUBLISHED));
     }

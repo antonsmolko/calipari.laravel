@@ -20,8 +20,7 @@
                     <v-extended-table :serverPagination="true"
                                   :resourceUrl="currentResourceUrl"
                                   defaultSortOrder="desc"
-                                  emptyContent="У Вас еще нет позиций на реализации!"
-                                  :searchFields="[ 'article' ]" >
+                                  emptyContent="У Вас еще нет позиций на реализации!" >
 
                         <template slot-scope="{ item }">
 
@@ -31,14 +30,6 @@
 
                             <md-table-cell md-label="Превью">
                                 <thumb-table-cell :path="item.image_path" />
-                            </md-table-cell>
-
-                            <md-table-cell md-label="ID изобр.">
-                                {{ item.image_id }}
-                            </md-table-cell>
-
-                            <md-table-cell md-label="Артикул">
-                                <span class="md-subheading">{{ item.article }}</span>
                             </md-table-cell>
 
                             <md-table-cell md-label="Размеры">
@@ -102,8 +93,7 @@
                     <v-extended-table :serverPagination="true"
                                       :resourceUrl="inOrderResourceUrl"
                                       defaultSortOrder="desc"
-                                      emptyContent="У Вас еще позиций в заказах!"
-                                      :searchFields="[ 'article' ]" >
+                                      emptyContent="У Вас еще позиций в заказах!" >
                         <template slot-scope="{ item }">
 
                             <md-table-cell md-label="#" style="width: 50px" md-sort-by="id">
@@ -112,14 +102,6 @@
 
                             <md-table-cell md-label="Превью">
                                 <thumb-table-cell :path="item.image_path" />
-                            </md-table-cell>
-
-                            <md-table-cell md-label="ID изобр.">
-                                {{ item.image_id }}
-                            </md-table-cell>
-
-                            <md-table-cell md-label="Артикул">
-                                <span class="md-subheading">{{ item.article }}</span>
                             </md-table-cell>
 
                             <md-table-cell md-label="Размеры">
@@ -166,8 +148,7 @@
                     <v-extended-table :serverPagination="true"
                                       :resourceUrl="soldResourceUrl"
                                       defaultSortOrder="desc"
-                                      emptyContent="У Вас еще нет проданных позиций!"
-                                      :searchFields="[ 'article' ]" >
+                                      emptyContent="У Вас еще нет проданных позиций!" >
                         <template slot-scope="{ item }">
 
                             <md-table-cell md-label="#" style="width: 50px" md-sort-by="id">
@@ -176,14 +157,6 @@
 
                             <md-table-cell md-label="Превью">
                                 <thumb-table-cell :path="item.image_path" />
-                            </md-table-cell>
-
-                            <md-table-cell md-label="ID изобр.">
-                                {{ item.image_id }}
-                            </md-table-cell>
-
-                            <md-table-cell md-label="Артикул">
-                                <span class="md-subheading">{{ item.article }}</span>
                             </md-table-cell>
 
                             <md-table-cell md-label="Размеры">

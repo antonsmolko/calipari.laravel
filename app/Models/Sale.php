@@ -68,6 +68,14 @@ class Sale extends Model
     }
 
     /**
+     * @return string
+     */
+    public function getArticleAttribute(): string
+    {
+        return 'S-' . str_pad($this->id, 5, 0);
+    }
+
+    /**
      * @return int
      */
     public function getPriceAttribute(): int

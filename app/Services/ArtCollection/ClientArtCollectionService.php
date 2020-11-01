@@ -14,11 +14,31 @@ use Illuminate\Support\Facades\Cache;
 
 class ClientArtCollectionService extends ClientBaseResourceService
 {
+    /**
+     * ClientArtCollectionService constructor.
+     * @param ClientArtCollectionRepository $repository
+     * @param CacheKeyManager $cacheKeyManager
+     */
     public function __construct(
         ClientArtCollectionRepository $repository,
         CacheKeyManager $cacheKeyManager)
     {
         parent::__construct($repository, $cacheKeyManager);
+    }
+
+    /**
+     * @return array|\Illuminate\Database\Eloquent\Collection|mixed
+     */
+    public function index()
+    {
+        $key = $this->cacheKeyManager
+            ->getResourceKey(Key::ART_COLLECTIONS_PREFIX, ['client']);
+
+        return Cache::tags(Tag::ART_COLLECTIONS_TAG)
+            ->remember(
+                $key,
+                TTL::ART_COLLECTIONS_TTL,
+                fn () => $this->repository->index());
     }
 
     /**

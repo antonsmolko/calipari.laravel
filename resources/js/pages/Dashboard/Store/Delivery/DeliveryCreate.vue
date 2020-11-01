@@ -43,8 +43,8 @@
                                  :vRules="{ numeric: true }"/>
 
                         <v-switch title="Самовывоз"
-                                  name="pickup"
-                                  :value="pickup"
+                                  name="isPickup"
+                                  :value="is_pickup"
                                   :module="storeModule"/>
 
                     </md-card-content>
@@ -113,7 +113,7 @@ export default {
             title: state => state.fields.title,
             alias: state => state.fields.alias,
             order: state => state.fields.order,
-            pickup: state => state.fields.pickup,
+            isPickup: state => state.fields.is_pickup,
             description: state => state.fields.description
         }),
         isUniqueAlias () {
@@ -131,7 +131,7 @@ export default {
                     title: this.title,
                     alias: this.alias,
                     order: Number(this.order),
-                    pickup: Number(this.pickup),
+                    is_pickup: Number(this.isPickup),
                     description: this.description
                 },
                 title: this.title,

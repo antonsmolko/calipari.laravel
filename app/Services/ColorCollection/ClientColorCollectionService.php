@@ -28,6 +28,21 @@ class ClientColorCollectionService extends ClientBaseResourceService
     }
 
     /**
+     * @return array|\Illuminate\Database\Eloquent\Collection|mixed
+     */
+    public function index()
+    {
+        $key = $this->cacheKeyManager
+            ->getResourceKey(Key::COLOR_COLLECTIONS_PREFIX, ['client']);
+
+        return Cache::tags(Tag::COLOR_COLLECTIONS_TAG)
+            ->remember(
+                $key,
+                TTL::COLOR_COLLECTIONS_TTL,
+                fn () => $this->repository->index());
+    }
+
+    /**
      * @param string $alias
      * @return mixed
      */

@@ -18,7 +18,7 @@ class CreateDeliveriesTable extends Migration
             $table->string('title');
             $table->string('alias')->unique();
             $table->integer('order')->default(0);
-            $table->unsignedTinyInteger('pickup')->default(0);
+            $table->unsignedTinyInteger('is_pickup')->default(0);
             $table->unsignedTinyInteger('publish')->default(0);
             $table->string('description')->nullable();
             $table->timestamps();

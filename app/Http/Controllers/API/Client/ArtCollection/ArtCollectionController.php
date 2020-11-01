@@ -18,6 +18,14 @@ class ArtCollectionController extends BaseResourceController
     }
 
     /**
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
+    {
+        return response()->json($this->service->index());
+    }
+
+    /**
      * @param string $alias
      * @return JsonResponse
      */

@@ -40,7 +40,7 @@ class CmsDeliveryRepository extends CmsBaseResourceRepository
      */
     public function getPickupItems()
     {
-        return $this->model::where('pickup', 1)
+        return $this->model::where('is_pickup', 1)
             ->select(['id', 'title', 'alias'])
             ->get();
     }

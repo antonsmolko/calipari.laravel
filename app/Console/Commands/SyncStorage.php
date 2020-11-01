@@ -12,7 +12,7 @@ class SyncStorage extends Command
      * @var string
      */
     protected $signature = 'storage:sync
-                           {reference=local : Еhe tag name is associated with the storage method. Allowed: s3, local}
+                           {reference=local : The tag name is associated with the storage method. Allowed: s3, local}
                            {--delete : Delete files in the vault if they were deleted from the reference folder}';
 
     /**

@@ -7,6 +7,7 @@ namespace App\Services\ColorCollection\Repositories;
 use App\Models\ColorCollection as ColorCollection;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
 use App\Services\ColorCollection\Resources\FromClient as FromClientResource;
+use App\Services\ColorCollection\Resources\FromListClient as FromListClientResource;
 use App\Services\ColorCollection\Resources\FromSearchClient as FromSearchResource;
 use App\Services\Image\Resources\FromEditorClient as ImageFromEditorResource;
 
@@ -19,6 +20,17 @@ class ClientColorCollectionRepository extends ClientBaseResourceRepository
     public function __construct(ColorCollection $model)
     {
         $this->model = $model;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function index()
+    {
+        return FromListClientResource::collection($this->model::published()
+            ->with('mainImage')
+            ->orderBy('title')
+            ->get());
     }
 
     /**

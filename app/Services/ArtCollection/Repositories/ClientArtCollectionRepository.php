@@ -6,15 +6,30 @@ namespace App\Services\ArtCollection\Repositories;
 
 use App\Models\ArtCollection;
 use App\Services\ArtCollection\Resources\FromClient as FromClientResource;
+use App\Services\ArtCollection\Resources\FromListClient as FromListClientResource;
 use App\Services\ArtCollection\Resources\FromSearchClient as FromSearchResource;
 use App\Services\Base\Resource\Repositories\ClientBaseResourceRepository;
 use App\Services\Image\Resources\FromEditorClient as ImageFromEditorResource;
 
 class ClientArtCollectionRepository extends ClientBaseResourceRepository
 {
+    /**
+     * ClientArtCollectionRepository constructor.
+     * @param ArtCollection $model
+     */
     public function __construct(ArtCollection $model)
     {
         $this->model = $model;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function index()
+    {
+        return FromListClientResource::collection($this->model::published()
+            ->orderBy('alias')
+            ->get());
     }
 
     /**

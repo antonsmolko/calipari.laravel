@@ -39,16 +39,6 @@
                                  :module="storeModule"
                                  :vRules="{ required: true }"/>
 
-                        <v-input title="Артикул"
-                                 icon="money"
-                                 name="article"
-                                 :value="article"
-                                 :differ="true"
-                                 :vDelay="true"
-                                 :vField="$v.article"
-                                 :module="storeModule"
-                                 :vRules="{ required: true, unique: true, minLength: true, article: true }"/>
-
                         <v-image name="image"
                                  :imgDefault="imagePath"
                                  :vField="$v.image"
@@ -168,17 +158,6 @@ export default {
             required,
             touch: false
         },
-        article: {
-            required,
-            touch: false,
-            testArticle (value) {
-                return value.trim() === '' || (this.$config.ARTICLE_REGEXP).test(value);
-            },
-            minLength: minLength(5),
-            isUnique(value) {
-                return ((value.trim() === '') && !this.$v.article.$dirty) || this.isUniqueArticle
-            },
-        },
         image: {
             touch: false
         },
@@ -233,9 +212,6 @@ export default {
         texture () {
             return this.$store.getters['textures/getById'](this.textureId);
         },
-        isUniqueArticle () {
-            return this.$store.getters['sales/isUniqueArticle'](this.article);
-        },
         price () {
             const texturePrice = this.texture ? this.texture.price : null;
 
@@ -273,14 +249,11 @@ export default {
             clearFieldsAction: 'sales/clearItemFields'
         }),
         onUpdate () {
-            const article = this.article.toUpperCase();
-
             return this.update({
                 sendData: {
                     id: this.id,
                     formData: {
                         image_id: Number(this.imageId),
-                        article,
                         image: this.image,
                         width_cm: Number(this.width),
                         height_cm: Number(this.height),
@@ -290,7 +263,7 @@ export default {
                         publish: Number(this.publish)
                     }
                 },
-                title: `Арт. № ${article}`,
+                title: `Арт. № ${this.article}`,
                 successText: 'Позиция обновлена!',
                 storeModule: this.storeModule,
                 redirectRoute: this.redirectRoute

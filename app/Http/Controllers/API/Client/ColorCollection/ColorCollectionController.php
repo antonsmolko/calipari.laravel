@@ -26,12 +26,11 @@ class ColorCollectionController extends BaseResourceController
         return response()->json($this->service->getItemByAliasWithImages($alias));
     }
 
-//    /**
-//     * @param int $id
-//     * @return JsonResponse
-//     */
-//    public function getItemTags(int $id): JsonResponse
-//    {
-//        return response()->json($this->service->getItemTags($id));
-//    }
+    /**
+     * @return JsonResponse
+     */
+    public function getItems(): JsonResponse
+    {
+        return response()->json($this->service->index());
+    }
 }

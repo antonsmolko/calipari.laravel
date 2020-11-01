@@ -29,7 +29,7 @@ class ClientSaleRepository extends ClientBaseResourceRepository
         return new SaleResourceCollection($this->model::where('status', $this->model::FOR_SALE)
             ->published()
             ->with('texture')
-            ->orderBy('article')
+            ->orderBy('id', 'desc')
             ->paginate($requestData['per_page'], ['*'], '', $requestData['current_page']));
     }
 
